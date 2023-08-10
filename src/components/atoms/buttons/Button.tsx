@@ -1,5 +1,3 @@
-import { outfitSemiBold } from '~/settings/fontSetting';
-
 type ButtonProps = {
   name: string;
   onClick: VoidFunction;
