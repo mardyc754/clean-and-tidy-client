@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { Navbar } from '../organisms';
+import { Footer, Navbar } from '../organisms';
 
 type PageWrapperProps = {
   title: string;
@@ -18,6 +18,7 @@ const PageWrapper = ({ title, children }: PageWrapperProps) => {
       <main className="flex min-h-screen flex-col bg-slate-300">
         {children}
       </main>
+      <Footer />
     </>
   );
 };

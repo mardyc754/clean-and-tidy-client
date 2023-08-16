@@ -7,7 +7,7 @@ const Navbar = () => {
       <div className="flex w-1/2">
         <Logo />
       </div>
-      <nav className="flex w-1/2 justify-evenly">
+      <nav className="w-1/2">
         <NavbarButtons />
       </nav>
     </header>

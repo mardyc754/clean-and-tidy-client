@@ -1,7 +1,13 @@
 import { robotoBold } from '~/settings/fontSetting';
 
-const Logo = () => {
-  return <p className={robotoBold.className}>Clean and Tide</p>;
+type LogoProps = {
+  color?: string;
+};
+
+const Logo = ({ color = 'black' }: LogoProps) => {
+  return (
+    <p className={`${robotoBold.className} text-${color}`}>Clean and Tide</p>
+  );
 };
 
 export default Logo;
