@@ -3,16 +3,17 @@ import { Listbox, Transition } from '@headlessui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faCheck } from '@fortawesome/free-solid-svg-icons';
 
-const people = [
-  { id: 1, name: 'Durward Reynolds', unavailable: false },
-  { id: 2, name: 'Kenton Towne', unavailable: false },
-  { id: 3, name: 'Therese Wunsch', unavailable: false },
-  { id: 4, name: 'Benedict Kessler', unavailable: true },
-  { id: 5, name: 'Katelyn Rohan', unavailable: false }
+const options = [
+  { id: 1, name: 'Normal cleaning' },
+  { id: 2, name: 'Renovations' },
+  { id: 3, name: 'Disinfection' },
+  { id: 4, name: 'Furniture Cleaning' },
+  { id: 5, name: 'Window Cleaning' },
+  { id: 6, name: 'Custom' }
 ];
 
 const Dropdown = () => {
-  const [selected, setSelected] = useState(people[0]);
+  const [selected, setSelected] = useState(options[0]);
 
   return (
     <div className="w-60">
@@ -35,7 +36,7 @@ const Dropdown = () => {
             leaveTo="opacity-0"
           >
             <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-              {people.map((person, personIdx) => (
+              {options.map((option, personIdx) => (
                 <Listbox.Option
                   key={personIdx}
                   className={({ active }) =>
@@ -43,7 +44,7 @@ const Dropdown = () => {
                       active ? 'bg-cyan-100 text-cyan-900' : 'text-gray-900'
                     }`
                   }
-                  value={person}
+                  value={option}
                 >
                   {({ selected }) => (
                     <>
@@ -52,7 +53,7 @@ const Dropdown = () => {
                           selected ? 'font-medium' : 'font-normal'
                         }`}
                       >
-                        {person.name}
+                        {option.name}
                       </span>
                       {selected ? (
                         <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-cyan-600">
