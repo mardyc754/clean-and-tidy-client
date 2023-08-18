@@ -3,7 +3,7 @@ import { HeroSection } from '~/components/organisms';
 
 const Home = () => {
   return (
-    <PageWrapper title="Clean and Tide">
+    <PageWrapper title="Home page">
       <HeroSection />
     </PageWrapper>
   );
