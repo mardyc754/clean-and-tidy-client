@@ -1,4 +1,4 @@
-import { NavbarButton, Button } from '../atoms/buttons';
+import { NavbarButton, NavigationButton } from '../atoms/buttons';
 
 const NavbarButtons = () => {
   return (
@@ -21,12 +21,7 @@ const NavbarButtons = () => {
           /** TODO */
         }}
       />
-      <Button
-        name="Login"
-        onClick={() => {
-          /** TODO */
-        }}
-      />
+      <NavigationButton name="Login" navigateOnClickTo="/login" />
     </div>
   );
 };
