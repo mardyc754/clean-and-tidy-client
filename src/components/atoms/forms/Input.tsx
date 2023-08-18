@@ -1,16 +1,7 @@
-type InputProps = {
-  name: string;
-  placeholder: string;
-};
+import type { InputHTMLAttributes } from 'react';
 
-const Input = ({ name, placeholder }: InputProps) => {
-  return (
-    <input
-      name={name}
-      placeholder={placeholder}
-      className="rounded-lg px-8 py-4"
-    />
-  );
+const Input = (props: InputHTMLAttributes<HTMLInputElement>) => {
+  return <input {...props} className="rounded-lg px-8 py-4" />;
 };
 
 export default Input;

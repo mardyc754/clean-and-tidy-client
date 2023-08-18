@@ -5,9 +5,9 @@ import { RegularLink } from '~/components/atoms/links';
 const LoginForm = () => {
   return (
     <>
-      <form className="grid grid-rows-3 items-center gap-y-4 p-8">
+      <form className="grid grid-rows-3 items-center gap-y-4 self-stretch px-16 py-8">
         <Textfield name="username" label="Username" />
-        <Textfield name="password" label="Password" />
+        <Textfield name="password" label="Password" type="password" />
         <SubmitButton name="Login" />
       </form>
       <p>

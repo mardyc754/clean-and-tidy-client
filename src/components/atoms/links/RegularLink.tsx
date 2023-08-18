@@ -7,7 +7,7 @@ type RegularLinkProps = {
 const RegularLink = ({ href, children }: RegularLinkProps) => {
   return (
     <Link href={href}>
-      <span className="font-link text-cyan-300 underline">{children}</span>
+      <span className="font-link text-cyan-400 underline">{children}</span>
     </Link>
   );
 };
