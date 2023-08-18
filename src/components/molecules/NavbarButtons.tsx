@@ -2,7 +2,7 @@ import { NavbarButton, Button } from '../atoms/buttons';
 
 const NavbarButtons = () => {
   return (
-    <>
+    <div className="flex w-full justify-evenly">
       <NavbarButton
         name="For home"
         onClick={() => {
@@ -27,7 +27,7 @@ const NavbarButtons = () => {
           /** TODO */
         }}
       />
-    </>
+    </div>
   );
 };
 
