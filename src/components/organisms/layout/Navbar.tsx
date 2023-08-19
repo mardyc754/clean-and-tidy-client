@@ -1,5 +1,5 @@
-import { NavbarButtons } from '../molecules';
-import { Logo } from '../atoms/logo';
+import { NavbarButtons } from '~/components/molecules';
+import { Logo } from '~/components/atoms/logo';
 
 const Navbar = () => {
   return (
