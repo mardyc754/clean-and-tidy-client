@@ -1,6 +1,6 @@
-import { FooterButtons } from '../molecules';
-import { Logo } from '../atoms/logo';
-import SmallTypography from '../atoms/typography/regular-text/SmallTypography';
+import { FooterButtons } from '~/components/molecules';
+import { SmallTypography } from '~/components/atoms/typography/regular-text';
+import { Logo } from '~/components/atoms/logo';
 
 const Footer = () => {
   return (

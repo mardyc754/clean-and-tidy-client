@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { Footer, Navbar } from '../organisms';
+import { Footer, Navbar } from '../organisms/layout';
 
 type PageWrapperProps = {
   title: string;
