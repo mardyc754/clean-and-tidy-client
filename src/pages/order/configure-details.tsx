@@ -1,4 +1,5 @@
 import { Heading1 } from '~/components/atoms/typography/headings';
+import { CleaningDetailsForm } from '~/components/organisms/forms';
 import { MultiStepFormIndicator } from '~/components/molecules';
 import { PageWrapper } from '~/components/template';
 
@@ -11,8 +12,9 @@ const ConfigureDetails = () => {
         <MultiStepFormIndicator
           stepIndicatorData={configureDetailsIndicatorData}
         />
-        <div className="flex py-16">
+        <div className="flex flex-col py-16">
           <Heading1>Configure Details</Heading1>
+          <CleaningDetailsForm />
         </div>
       </div>
     </PageWrapper>
