@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-
+import { Calendar } from '~/components/molecules/calendar';
 import {
   LabeledCheckbox,
   Textfield,
@@ -55,6 +55,7 @@ const CleaningDetailsForm = () => {
         min={1}
         max={12}
       />
+      <Calendar label="Cleaning start date" />
     </form>
   );
 };
