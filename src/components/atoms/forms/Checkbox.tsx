@@ -32,7 +32,7 @@ const Checkbox = ({ checked, onChangeChecked, ...props }: CheckboxProps) => {
       <input
         type="checkbox"
         className="absolute top-0 h-6 w-6 cursor-pointer appearance-none rounded-lg"
-        checked={checked}
+        defaultChecked={checked}
         onClick={onChangeChecked}
         {...props}
       />

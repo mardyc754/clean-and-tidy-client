@@ -13,7 +13,7 @@ const RadioGroup = ({ label, data }: RadioGroupProps) => {
   const [selected, setSelected] = useState(data[0]);
 
   return (
-    <div className="py-16">
+    <div className="py-4">
       <HeadlessRadioGroup value={selected} onChange={setSelected}>
         <HeadlessRadioGroup.Label className="py-1">
           {label}

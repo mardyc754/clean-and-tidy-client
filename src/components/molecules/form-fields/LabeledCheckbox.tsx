@@ -16,10 +16,11 @@ const LabeledCheckbox = ({
   name,
   checked,
   onChangeChecked,
+  className,
   ...props
 }: LabeledCheckboxProps) => {
   return (
-    <div className="flex flex-col">
+    <div className={`flex flex-col ${className}`}>
       {label && <Label htmlFor={name}>{label}</Label>}
       <div className="flex items-center">
         <Checkbox
