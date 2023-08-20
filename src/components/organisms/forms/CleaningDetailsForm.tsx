@@ -1,6 +1,6 @@
-import { useMemo } from 'react';
+import { useState, useMemo } from 'react';
 
-import { Textfield } from '~/components/molecules/form-fields';
+import { LabeledCheckbox, Textfield } from '~/components/molecules/form-fields';
 import { RadioGroup } from '../form-fields';
 
 const CleaningDetailsForm = () => {
@@ -19,6 +19,12 @@ const CleaningDetailsForm = () => {
     []
   );
 
+  const [includeDetergents, setIncludeDetergents] = useState(false);
+
+  const onChangeIncludeDetergents = () => {
+    setIncludeDetergents((prev) => !prev);
+  };
+
   return (
     <form>
       <Textfield
@@ -27,6 +33,13 @@ const CleaningDetailsForm = () => {
         placeholder="Area size (in m2)"
       />
       <RadioGroup label="Cleaning frequency" data={cleaningFrequencyData} />
+      <LabeledCheckbox
+        label="Detergents"
+        caption="Include detergents (+25zł)"
+        name="detergents"
+        checked={includeDetergents}
+        onChangeChecked={onChangeIncludeDetergents}
+      />
     </form>
   );
 };

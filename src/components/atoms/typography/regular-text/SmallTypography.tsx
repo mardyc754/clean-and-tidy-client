@@ -3,7 +3,7 @@ type SmallTypographyProps = {
 };
 
 const MediumTypography = ({ children }: SmallTypographyProps) => {
-  return <p>{children}</p>;
+  return <p className="text-sm">{children}</p>;
 };
 
 export default MediumTypography;
