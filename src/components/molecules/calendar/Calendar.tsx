@@ -19,8 +19,15 @@ const Calendar = ({ label, ...props }: CalendarProps) => {
   const [value, onChange] = useState<Value>(new Date());
   return (
     <div className="flex flex-col">
-      <MediumTypography>{label}</MediumTypography>
-      <ReactCalendar onChange={onChange} value={value} {...props} />
+      <MediumTypography className="py-1">{label}</MediumTypography>
+      <ReactCalendar
+        onChange={onChange}
+        value={value}
+        // temporary in order to quiet hydrate errors
+        calendarType="iso8601"
+        locale="en-US"
+        {...props}
+      />
     </div>
   );
 };
