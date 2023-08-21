@@ -1,13 +1,15 @@
 type LargeTypographyProps = {
-  children: string;
+  children: React.ReactNode;
+  className?: string;
   color?: string;
 };
 
 const LargeTypography = ({
   children,
-  color = 'black'
+  color = 'black',
+  className = ''
 }: LargeTypographyProps) => {
-  return <p className={`text-${color} text-xl`}>{children}</p>;
+  return <p className={`text-${color} text-xl ${className}`}>{children}</p>;
 };
 
 export default LargeTypography;

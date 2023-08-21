@@ -2,8 +2,8 @@ type SmallTypographyProps = {
   children: string;
 };
 
-const MediumTypography = ({ children }: SmallTypographyProps) => {
-  return <p className="text-sm">{children}</p>;
+const SmallTypography = ({ children }: SmallTypographyProps) => {
+  return <p className="text-xs">{children}</p>;
 };
 
-export default MediumTypography;
+export default SmallTypography;
