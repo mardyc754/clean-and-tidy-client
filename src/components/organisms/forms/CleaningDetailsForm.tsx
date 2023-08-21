@@ -3,9 +3,10 @@ import { Calendar } from '~/components/molecules/calendar';
 import {
   LabeledCheckbox,
   Textfield,
-  LabeledNumericInput
+  LabeledNumericInput,
+  HourSelection
 } from '~/components/molecules/form-fields';
-import { RadioGroup } from '../form-fields';
+import { CalendarWithHours, RadioGroup } from '../form-fields';
 
 const CleaningDetailsForm = () => {
   const cleaningFrequencyData = useMemo(
@@ -55,7 +56,7 @@ const CleaningDetailsForm = () => {
         min={1}
         max={12}
       />
-      <Calendar label="Cleaning start date" />
+      <CalendarWithHours label="Cleaning start date" />
     </form>
   );
 };
