@@ -16,14 +16,13 @@ type CalendarWithLabelProps = {
 
 const CalendarWithHours = ({ label, ...props }: CalendarWithLabelProps) => {
   const [value, onChange] = useState<Value>(new Date());
-  console.log({ value });
 
   return (
     <div className="flex flex-col">
       <MediumTypography className="py-1">{label}</MediumTypography>
       <div className="flex">
         <Calendar onChange={onChange} value={value} {...props} />
-        <HourSelection className="px-16" />
+        <HourSelection className="px-16" disableSelection={!value} />
       </div>
     </div>
   );
