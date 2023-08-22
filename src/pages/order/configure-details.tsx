@@ -4,7 +4,10 @@ import { MultiStepFormIndicator } from '~/components/molecules';
 import { PageWrapper } from '~/components/template';
 
 import { configureDetailsIndicatorData } from './constants';
-import { SummarySection } from '~/components/organisms/layout';
+import {
+  ButtonNavigation,
+  SummarySection
+} from '~/components/organisms/layout';
 
 const mockSummaryData = new Map([
   ['Selected offer', 'Home cleaning'],
@@ -29,6 +32,12 @@ const ConfigureDetails = () => {
             <SummarySection data={mockSummaryData} totalCost={200} />
           </div>
         </div>
+        <ButtonNavigation
+          buttonData={[
+            { name: 'Return', navigateOnClickTo: '/' },
+            { name: 'Continue', navigateOnClickTo: '/order/contact-details' }
+          ]}
+        />
       </div>
     </PageWrapper>
   );

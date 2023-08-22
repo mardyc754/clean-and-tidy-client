@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-type NavigationButtonProps = {
+export type NavigationButtonProps = {
   name: string;
   navigateOnClickTo: string;
 };
