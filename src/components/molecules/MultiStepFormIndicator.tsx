@@ -1,11 +1,5 @@
+import type { StepIndicator } from '~/types/forms';
 import { FormStepIndicator } from '../atoms/layout';
-
-type StepIndicator = {
-  name: string;
-  rectangleColorClass: string;
-  outerTriangleColorClass?: string;
-  innerTriangleColorClass?: string;
-};
 
 type ThreeStepIndicatorProps = {
   stepIndicatorData: StepIndicator[];
