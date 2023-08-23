@@ -24,11 +24,11 @@ const ConfigureDetails = () => {
           stepIndicatorData={configureDetailsIndicatorData}
         />
         <div className="flex justify-between">
-          <div className="flex flex-col py-16">
+          <div className="flex w-3/5 flex-col py-16">
             <Heading1>Configure Details</Heading1>
             <CleaningDetailsForm />
           </div>
-          <div className="py-16">
+          <div className="w-1/3 py-16">
             <SummarySection data={mockSummaryData} totalCost={200} />
           </div>
         </div>

@@ -1,11 +1,18 @@
 type Heading2Props = {
   children: string;
+  className?: string;
   color?: string;
 };
 
-const Heading2 = ({ children, color = 'black' }: Heading2Props) => {
+const Heading2 = ({
+  children,
+  color = 'black',
+  className = ''
+}: Heading2Props) => {
   return (
-    <h2 className={`text-${color} font-emphasize text-6xl`}>{children}</h2>
+    <h2 className={`text-${color} font-emphasize text-6xl ${className}`}>
+      {children}
+    </h2>
   );
 };
 
