@@ -1,6 +1,7 @@
 import { OrderCleaningFormPage } from '~/components/template';
 
 import { contactDetailsIndicatorData } from './constants';
+import { ContactDetailsForm } from '~/components/organisms/forms';
 
 const ContactDetails = () => {
   return (
@@ -9,11 +10,11 @@ const ContactDetails = () => {
       heading="Contact Details"
       stepIndicatorData={contactDetailsIndicatorData}
       buttonData={[
-        { name: 'Return', navigateOnClickTo: '/order-configure-details' },
+        { name: 'Return', navigateOnClickTo: '/order/configure-details' },
         { name: 'Continue', navigateOnClickTo: '/order/summary' }
       ]}
     >
-      <div />
+      <ContactDetailsForm />
     </OrderCleaningFormPage>
   );
 };

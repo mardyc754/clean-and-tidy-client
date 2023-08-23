@@ -2,7 +2,7 @@ import { Textfield } from '~/components/molecules/form-fields';
 
 const ContactDetailsForm = () => {
   return (
-    <form className="w full grid grid-cols-2 gap-6">
+    <form className="w full grid grid-cols-2 gap-6 py-16">
       <Textfield label="First name" name="firstName" required />
       <Textfield label="Last name" name="lastName" required />
       <Textfield label="Email" type="email" name="email" required />

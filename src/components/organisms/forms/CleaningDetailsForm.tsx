@@ -1,10 +1,8 @@
 import { useState, useMemo } from 'react';
-import { Calendar } from '~/components/molecules/calendar';
 import {
   LabeledCheckbox,
   Textfield,
-  LabeledNumericInput,
-  HourSelection
+  LabeledNumericInput
 } from '~/components/molecules/form-fields';
 import { CalendarWithHours, RadioGroup } from '../form-fields';
 
@@ -32,7 +30,7 @@ const CleaningDetailsForm = () => {
   };
 
   return (
-    <form>
+    <form className="py-16">
       <Textfield
         name="areaSize"
         label="Area size"
