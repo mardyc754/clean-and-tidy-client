@@ -1,16 +1,22 @@
-import { MultiStepFormIndicator } from '~/components/molecules';
-import { PageWrapper } from '~/components/template';
+import { OrderCleaningFormPage } from '~/components/template';
+
 import { contactDetailsIndicatorData } from './constants';
+import { ContactDetailsForm } from '~/components/organisms/forms';
 
 const ContactDetails = () => {
   return (
-    <PageWrapper title="Configure order details">
-      <div className="flex p-16">
-        <MultiStepFormIndicator
-          stepIndicatorData={contactDetailsIndicatorData}
-        />
-      </div>
-    </PageWrapper>
+    <OrderCleaningFormPage
+      showSummary
+      title="Contact Details"
+      heading="Contact Details"
+      stepIndicatorData={contactDetailsIndicatorData}
+      buttonData={[
+        { name: 'Return', navigateOnClickTo: '/order/configure-details' },
+        { name: 'Continue', navigateOnClickTo: '/order/summary' }
+      ]}
+    >
+      <ContactDetailsForm />
+    </OrderCleaningFormPage>
   );
 };
 

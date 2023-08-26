@@ -5,11 +5,17 @@ import { Input, Label } from '~/components/atoms/forms';
 
 type TextfieldProps = {
   label: string;
+  wrapperProps?: string;
 } & SetRequired<InputHTMLAttributes<HTMLInputElement>, 'name'>;
 
-const Textfield = ({ name, label, ...props }: TextfieldProps) => {
+const Textfield = ({
+  name,
+  label,
+  wrapperProps = '',
+  ...props
+}: TextfieldProps) => {
   return (
-    <div className="flex flex-col">
+    <div className={`flex flex-col ${wrapperProps}`}>
       <Label htmlFor={name}>{label}</Label>
       <Input name={name} placeholder={label} {...props} />
     </div>
