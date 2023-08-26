@@ -6,6 +6,7 @@ import { configureDetailsIndicatorData } from './constants';
 const ConfigureDetails = () => {
   return (
     <OrderCleaningFormPage
+      showSummary
       title="Configure Order Details"
       heading="Configure Details"
       stepIndicatorData={configureDetailsIndicatorData}

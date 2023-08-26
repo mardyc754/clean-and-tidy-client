@@ -6,6 +6,7 @@ import { ContactDetailsForm } from '~/components/organisms/forms';
 const ContactDetails = () => {
   return (
     <OrderCleaningFormPage
+      showSummary
       title="Contact Details"
       heading="Contact Details"
       stepIndicatorData={contactDetailsIndicatorData}

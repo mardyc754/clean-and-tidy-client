@@ -23,6 +23,7 @@ type OrderCleaningFormPageProps = {
   stepIndicatorData: StepIndicator[];
   heading: string;
   buttonData: NavigationButtonProps[];
+  showSummary?: boolean;
 };
 
 const OrderCleaningFormPage = ({
@@ -30,20 +31,27 @@ const OrderCleaningFormPage = ({
   stepIndicatorData,
   heading,
   title,
-  buttonData
+  buttonData,
+  showSummary = false
 }: OrderCleaningFormPageProps) => {
   return (
     <PageWrapper title={title}>
       <div className="flex flex-col p-16">
         <MultiStepFormIndicator stepIndicatorData={stepIndicatorData} />
         <div className="flex justify-between">
-          <div className="flex w-3/5 flex-col py-16">
+          <div
+            className={`flex ${
+              showSummary ? 'w-3/5' : 'w-full'
+            } flex-col py-16`}
+          >
             <Heading1>{heading}</Heading1>
             {children}
           </div>
-          <div className="w-1/3 py-16">
-            <SummarySection data={mockSummaryData} totalCost={200} />
-          </div>
+          {showSummary && (
+            <div className="w-1/3 py-16">
+              <SummarySection data={mockSummaryData} totalCost={200} />
+            </div>
+          )}
         </div>
         <ButtonNavigation buttonData={buttonData} />
       </div>
