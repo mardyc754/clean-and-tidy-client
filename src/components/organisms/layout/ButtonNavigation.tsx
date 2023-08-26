@@ -8,12 +8,13 @@ type ButtonNavigationProps = {
 
 const ButtonNavigation = ({ buttonData }: ButtonNavigationProps) => {
   return (
-    <div className="flex justify-between">
+    <div className="m-0 flex w-full justify-between">
       {buttonData.map(({ name, navigateOnClickTo }) => (
         <NavigationButton
           key={`NavigationButton-${name}`}
           name={name}
           navigateOnClickTo={navigateOnClickTo}
+          className="w-72 flex-1 py-4"
         />
       ))}
     </div>

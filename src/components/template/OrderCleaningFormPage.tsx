@@ -9,6 +9,7 @@ import {
 import type { StepIndicator } from '~/types/forms';
 
 import type { NavigationButtonProps } from '../atoms/buttons/NavigationButton';
+import type { PageWrapperProps } from './PageWrapper';
 
 const mockSummaryData = new Map([
   ['Selected offer', 'Home cleaning'],
@@ -18,13 +19,11 @@ const mockSummaryData = new Map([
 ]);
 
 type OrderCleaningFormPageProps = {
-  title: string;
-  children: React.ReactNode;
   stepIndicatorData: StepIndicator[];
   heading: string;
   buttonData: NavigationButtonProps[];
   showSummary?: boolean;
-};
+} & PageWrapperProps;
 
 const OrderCleaningFormPage = ({
   children,
