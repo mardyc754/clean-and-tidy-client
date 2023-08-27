@@ -13,7 +13,7 @@ const OrderErrorPage = () => {
           name: 'Try Again',
           navigateOnClickTo: '/order/configure-details'
         },
-        { name: 'Your Orders', navigateOnClickTo: '/user/orders' },
+        { name: 'Your Orders', navigateOnClickTo: '/your-profile' },
         { name: 'Return to Home Page', navigateOnClickTo: '/' }
       ]}
     >
