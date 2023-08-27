@@ -5,7 +5,7 @@ type LabelProps = {
 
 const Label = ({ htmlFor, children }: LabelProps) => {
   return (
-    <label htmlFor={htmlFor} className="py-1">
+    <label htmlFor={htmlFor} className="py-1 capitalize">
       {children}
     </label>
   );

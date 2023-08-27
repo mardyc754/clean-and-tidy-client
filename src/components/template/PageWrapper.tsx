@@ -1,7 +1,7 @@
 import Head from 'next/head';
-import { Footer, Navbar } from '../organisms';
+import { Footer, Navbar } from '../organisms/layout';
 
-type PageWrapperProps = {
+export type PageWrapperProps = {
   title: string;
   children?: React.ReactNode;
 };

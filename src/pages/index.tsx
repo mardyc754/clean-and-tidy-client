@@ -1,5 +1,5 @@
+import { HeroSection } from '~/components/organisms/layout';
 import { PageWrapper } from '~/components/template';
-import { HeroSection } from '~/components/organisms';
 
 const Home = () => {
   return (

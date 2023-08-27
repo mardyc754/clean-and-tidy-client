@@ -1,9 +1,10 @@
 import Image from 'next/image';
-import { Heading1 } from '~/components/atoms/typography/headings';
-import LargeTypography from '~/components/atoms/typography/regular-text/LargeTypography';
-import { Dropdown } from '~/components/molecules';
-import { Button } from '../atoms/buttons';
 import HeroSectionImage from '~/assets/living_room.jpg';
+import LargeTypography from '~/components/atoms/typography/regular-text/LargeTypography';
+
+import { Button } from '~/components/atoms/buttons';
+import { Heading1 } from '~/components/atoms/typography/headings';
+import { Dropdown } from '~/components/molecules/form-fields';
 
 const HeroSection = () => {
   return (
