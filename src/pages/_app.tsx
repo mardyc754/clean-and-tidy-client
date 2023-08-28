@@ -2,9 +2,10 @@ import '@fortawesome/fontawesome-svg-core/styles.css';
 import { library, config } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 
-import { type Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
+import { type Session } from 'next-auth';
 import { type AppType } from 'next/app';
+
 import { api } from '~/utils/api';
 
 import '~/styles/globals.css';

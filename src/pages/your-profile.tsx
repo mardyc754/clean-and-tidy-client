@@ -5,6 +5,7 @@ import { BookingPreview } from '~/components/molecules/layout';
 import { PageWrapper } from '~/components/template';
 
 const exampleSingleReservationData = {
+  id: 1, // or UUID
   name: 'Home Cleaning',
   duration: 2,
   date: new Date(2023, 7, 17, 8)
