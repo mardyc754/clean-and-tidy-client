@@ -1,6 +1,7 @@
 import { Button } from '~/components/atoms/buttons';
 import { Heading1, Heading2 } from '~/components/atoms/typography/headings';
 import { Avatar } from '~/components/atoms/user';
+import { Dropdown } from '~/components/molecules/form-fields';
 import { BookingPreview } from '~/components/molecules/layout';
 import { PageWrapper } from '~/components/template';
 
@@ -10,6 +11,11 @@ const exampleSingleReservationData = {
   duration: 2,
   date: new Date(2023, 7, 17, 8)
 };
+
+const exampleOptions = [
+  { id: 1, name: 'Upcoming' },
+  { id: 2, name: 'Recent' }
+];
 
 const YourProfile = () => {
   return (
@@ -21,17 +27,20 @@ const YourProfile = () => {
           <Avatar size="large" />
           <div className="flex flex-col justify-evenly font-link">
             <p className="text-4xl">John Doe</p>
-            <Button
-              name="Edit profile"
-              onClick={() => {
-                /** */
-              }}
-            />
+            <Button name="Edit profile" />
           </div>
         </div>
-
-        <Heading2>Your Bookings</Heading2>
-        <div className="my-8">
+        <div className="flex items-baseline justify-between">
+          <Heading2>Your Bookings</Heading2>
+          <div className="flex items-center space-x-2">
+            <p>Show:</p>
+            <Dropdown options={exampleOptions} className="w-40" />
+          </div>
+        </div>
+        <div className="my-8 space-y-5">
+          <BookingPreview data={exampleSingleReservationData} />
+          <BookingPreview data={exampleSingleReservationData} />
+          <BookingPreview data={exampleSingleReservationData} />
           <BookingPreview data={exampleSingleReservationData} />
         </div>
       </div>
