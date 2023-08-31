@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { Button } from '~/components/atoms/buttons';
-import { DialogBase } from '~/components/organisms/dialogs';
+import { ReservationManagementDialog } from '~/components/organisms/dialogs';
 import type { SingleReservationData } from '~/types/user';
 import { extractHourFromDate, getDateAfter } from '~/utils/dateHandling';
 
@@ -36,16 +36,12 @@ const BookingPreview = ({ data }: BookingPreviewProps) => {
       */}
         </div>
       </div>
-      <DialogBase
+      <ReservationManagementDialog
+        data={data}
         title="Deactivate account"
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
-      >
-        <p>
-          Are you sure you want to deactivate your account? All of your data
-          will be permanently removed. This action cannot be undone.
-        </p>
-      </DialogBase>
+      />
     </>
   );
 };

@@ -12,17 +12,30 @@ type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 type CalendarWithLabelProps = {
   label: string;
+  direction?: 'column' | 'row';
 } & ReactCalendarProps;
 
-const CalendarWithHours = ({ label, ...props }: CalendarWithLabelProps) => {
+const CalendarWithHours = ({
+  label,
+  direction = 'row',
+  ...props
+}: CalendarWithLabelProps) => {
   const [value, onChange] = useState<Value>(new Date());
 
   return (
     <div className="flex flex-col">
       <MediumTypography className="py-1">{label}</MediumTypography>
-      <div className="flex">
+      <div
+        className={`flex ${
+          direction === 'column' ? 'flex-col items-center space-y-4' : ''
+        }`}
+      >
         <Calendar onChange={onChange} value={value} {...props} />
-        <HourSelection className="px-16" disableSelection={!value} />
+        <HourSelection
+          className="px-16"
+          direction={direction === 'column' ? 'row' : 'column'}
+          disableSelection={!value}
+        />
       </div>
     </div>
   );
