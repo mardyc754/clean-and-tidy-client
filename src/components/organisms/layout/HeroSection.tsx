@@ -36,7 +36,7 @@ const HeroSection = () => {
         </LargeTypography>
         <div className="flex w-full justify-between">
           <Dropdown options={options} />
-          <Button name="Calculate costs" />
+          <Button>Calculate costs</Button>
         </div>
       </div>
     </div>

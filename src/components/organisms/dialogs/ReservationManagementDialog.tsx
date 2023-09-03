@@ -31,9 +31,9 @@ const ReservationManagementDialog = ({
       onClose={onClose}
       buttonRenderer={() => (
         <>
-          <Button name="Manage single booking" />
+          <Button>Manage single booking</Button>
           {/* for periodic reservation only */}
-          <Button name="Manage whole reservation" />
+          <Button>Manage whole reservation</Button>
         </>
       )}
     >
