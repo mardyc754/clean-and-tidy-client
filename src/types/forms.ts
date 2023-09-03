@@ -1,4 +1,5 @@
 export type RadioFieldOption = {
+  id: string;
   name: string;
   details?: string;
 };

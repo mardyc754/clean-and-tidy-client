@@ -5,23 +5,12 @@ import {
   LabeledNumericInput
 } from '~/components/molecules/form-fields';
 import { CalendarWithHours, RadioGroup } from '../form-fields';
+import { frequencyValues } from '~/utils/constants';
 
 const CleaningDetailsForm = () => {
-  const cleaningFrequencyData = useMemo(
-    () => [
-      {
-        name: 'Once'
-      },
-      {
-        name: 'Once a week'
-      },
-      {
-        name: 'Every two week'
-      }
-    ],
-    []
-  );
+  const cleaningFrequencyData = useMemo(() => frequencyValues, []);
 
+  const [frequency, setFrequency] = useState('once');
   const [includeDetergents, setIncludeDetergents] = useState(false);
   const [hours, setHours] = useState(1);
 
@@ -36,7 +25,12 @@ const CleaningDetailsForm = () => {
         label="Area size"
         placeholder="Area size (in m2)"
       />
-      <RadioGroup label="Cleaning frequency" data={cleaningFrequencyData} />
+      <RadioGroup
+        label="Cleaning frequency"
+        data={cleaningFrequencyData}
+        value={frequency}
+        onChange={(value) => setFrequency(value)}
+      />
       <LabeledCheckbox
         className="py-4"
         label="Detergents"

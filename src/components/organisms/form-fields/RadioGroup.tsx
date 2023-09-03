@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { RadioGroup as HeadlessRadioGroup } from '@headlessui/react';
 
 import { RadioField } from '~/components/atoms/forms';
@@ -6,15 +5,15 @@ import type { RadioFieldOption } from '~/types/forms';
 
 type RadioGroupProps = {
   label: string;
+  value: string;
+  onChange: (value: string) => void;
   data: RadioFieldOption[];
 };
 
-const RadioGroup = ({ label, data }: RadioGroupProps) => {
-  const [selected, setSelected] = useState(data[0]);
-
+const RadioGroup = ({ label, data, value, onChange }: RadioGroupProps) => {
   return (
     <div className="py-4">
-      <HeadlessRadioGroup value={selected} onChange={setSelected}>
+      <HeadlessRadioGroup value={value} onChange={onChange}>
         <HeadlessRadioGroup.Label className="py-1">
           {label}
         </HeadlessRadioGroup.Label>
