@@ -30,7 +30,9 @@ const HeroSection = () => {
         }}
       />
       <div className="z-10 flex h-20 w-1/2 flex-1 flex-col justify-evenly p-16">
-        <Heading1 color="white">Professional cleaning service</Heading1>
+        <Heading1 color="white" textSize="text-7xl">
+          Professional cleaning service
+        </Heading1>
         <LargeTypography color="white">
           Order cleaning from us and enjoy cleanliness in your home and office
         </LargeTypography>

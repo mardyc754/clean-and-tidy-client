@@ -24,3 +24,6 @@ export type AddressData = {
   city: string;
   extraInfo?: string;
 };
+
+export type ChangeDataMode = 'once' | 'permanently';
+export type CleaningFrequencyKey = 'once' | 'onceAWeek' | 'everyTwoWeeks';
