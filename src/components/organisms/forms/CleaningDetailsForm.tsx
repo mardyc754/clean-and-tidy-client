@@ -5,7 +5,7 @@ import {
   LabeledNumericInput
 } from '~/components/molecules/form-fields';
 import { CalendarWithHours, RadioGroup } from '../form-fields';
-import { frequencyValues } from '~/utils/constants';
+import { frequencyValues } from './constants';
 
 const CleaningDetailsForm = () => {
   const cleaningFrequencyData = useMemo(() => frequencyValues, []);

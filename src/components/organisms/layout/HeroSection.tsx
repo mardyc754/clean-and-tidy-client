@@ -7,7 +7,7 @@ import { Heading1 } from '~/components/atoms/typography/headings';
 import { Dropdown } from '~/components/molecules/form-fields';
 
 const options = [
-  { id: 1, name: 'Normal cleaning' },
+  { id: 1, name: 'Home Cleaning' },
   { id: 2, name: 'Renovations' },
   { id: 3, name: 'Disinfection' },
   { id: 4, name: 'Furniture Cleaning' },

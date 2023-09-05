@@ -18,8 +18,8 @@ const RadioGroup = ({ label, data, value, onChange }: RadioGroupProps) => {
           {label}
         </HeadlessRadioGroup.Label>
         <div className="space-y-2 py-2">
-          {data.map((freq) => (
-            <RadioField key={freq.name} data={freq} />
+          {data.map((field) => (
+            <RadioField key={field.name} data={field} />
           ))}
         </div>
       </HeadlessRadioGroup>
