@@ -9,7 +9,7 @@ type LogoProps = {
 const Logo = ({ color = 'black' }: LogoProps) => {
   return (
     <p className={`${robotoBold.className} text-${color}`}>
-      <Link href="/">Clean and Tide</Link>
+      <Link href="/">Clean and Tidy</Link>
     </p>
   );
 };
