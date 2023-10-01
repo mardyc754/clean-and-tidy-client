@@ -30,7 +30,7 @@ const ContactDetailsForm = () => {
         wrapperProps="col-span-3 row-span-1"
         label="Phone number"
         type="tel"
-        name="phoneNumber"
+        name="phone"
         required
         className="w-full"
       />

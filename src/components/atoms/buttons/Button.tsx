@@ -1,13 +1,13 @@
-type ButtonProps = {
-  name: string;
-  onClick: VoidFunction;
-};
+import type { ButtonHTMLAttributes } from 'react';
 
-const Button = ({ name, onClick }: ButtonProps) => {
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement>;
+
+const Button = ({ name, onClick, className, ...props }: ButtonProps) => {
   return (
     <button
-      className={`rounded-full bg-cyan-300 px-10 py-2 font-emphasize text-base text-white shadow-md`}
+      className={`rounded-full bg-cyan-500 px-10 py-2 font-emphasize text-base text-white shadow-md ${className}`}
       onClick={onClick}
+      {...props}
     >
       {name}
     </button>

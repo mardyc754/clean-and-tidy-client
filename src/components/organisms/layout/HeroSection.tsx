@@ -6,6 +6,15 @@ import { Button } from '~/components/atoms/buttons';
 import { Heading1 } from '~/components/atoms/typography/headings';
 import { Dropdown } from '~/components/molecules/form-fields';
 
+const options = [
+  { id: 1, name: 'Normal cleaning' },
+  { id: 2, name: 'Renovations' },
+  { id: 3, name: 'Disinfection' },
+  { id: 4, name: 'Furniture Cleaning' },
+  { id: 5, name: 'Window Cleaning' },
+  { id: 6, name: 'Custom' }
+];
+
 const HeroSection = () => {
   return (
     <div className="position-relative bg-hero-pattern flex flex-1 flex-col bg-transparent p-0 shadow-md">
@@ -26,13 +35,8 @@ const HeroSection = () => {
           Order cleaning from us and enjoy cleanliness in your home and office
         </LargeTypography>
         <div className="flex w-full justify-between">
-          <Dropdown />
-          <Button
-            name="Calculate costs"
-            onClick={() => {
-              /** */
-            }}
-          />
+          <Dropdown options={options} />
+          <Button name="Calculate costs" />
         </div>
       </div>
     </div>

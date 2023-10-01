@@ -3,11 +3,13 @@ import { HourTile } from '~/components/atoms/forms';
 
 type HourSelectionProps = {
   className?: string;
+  direction?: 'row' | 'column';
   disableSelection: boolean;
 };
 
 const HourSelection = ({
   className = '',
+  direction = 'column',
   disableSelection
 }: HourSelectionProps) => {
   const [currentHour, setCurrentHour] = useState<string | null>(null);
@@ -33,7 +35,11 @@ const HourSelection = ({
   return (
     // it will be grid probably with gaps
     <div
-      className={`grid grid-flow-col grid-cols-2 grid-rows-6 gap-1 ${className}`}
+      className={`grid ${
+        direction === 'column'
+          ? 'grid-flow-col grid-cols-2 grid-rows-6'
+          : 'grid-cols-6 grid-rows-2'
+      } gap-1 ${className}`}
     >
       {hourAvailabilityData.map(({ hour, available }) => (
         <HourTile
