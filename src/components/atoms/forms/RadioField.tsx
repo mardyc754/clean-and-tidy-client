@@ -11,7 +11,7 @@ const RadioField = ({ data }: RadioFieldProps) => {
   return (
     <HeadlessRadioGroup.Option
       key={data.name}
-      value={data}
+      value={data.id}
       className={({ checked }) =>
         `
         ${checked ? 'bg-cyan-500 bg-opacity-75 text-white' : 'bg-white'}

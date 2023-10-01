@@ -27,7 +27,7 @@ const YourProfile = () => {
           <Avatar size="large" />
           <div className="flex flex-col justify-evenly font-link">
             <p className="text-4xl">John Doe</p>
-            <Button name="Edit profile" />
+            <Button>Edit profile</Button>
           </div>
         </div>
         <div className="flex items-baseline justify-between">

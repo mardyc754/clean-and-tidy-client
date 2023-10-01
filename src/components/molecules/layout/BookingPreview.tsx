@@ -1,18 +1,18 @@
 import { useState } from 'react';
 
 import { Button } from '~/components/atoms/buttons';
-import { ReservationManagementDialog } from '~/components/organisms/dialogs';
-import type { SingleReservationData } from '~/types/user';
 import { extractHourFromDate, getDateAfter } from '~/utils/dateHandling';
+import type { SingleReservationData } from '~/types/user';
+import { ReservationManagementDialog } from '~/components/organisms/dialogs';
 
 type BookingPreviewProps = {
   data: SingleReservationData;
 };
 
 const BookingPreview = ({ data }: BookingPreviewProps) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
-  const { name, duration, date } = data;
+  const { name, duration, date, id } = data;
 
   const startHour = extractHourFromDate(date);
   const endHour = extractHourFromDate(getDateAfter(date, duration, 'h'));
@@ -28,19 +28,13 @@ const BookingPreview = ({ data }: BookingPreviewProps) => {
         </div>
         <div className="flex justify-between pt-4">
           <p className="text-lg">{name}</p>
-          <Button name="Manage Booking" onClick={() => setIsOpen(true)} />
-          {/* <Button name="Edit single reservation" />
-        <Button name="Edit booking details" /> 
-        <Button name="Cancel single reservation" />
-        <Button name="Cancel whole reservation" />
-      */}
+          <Button onClick={() => setOpen(true)}>Manage reservation</Button>
         </div>
       </div>
       <ReservationManagementDialog
+        isOpen={open}
+        onClose={() => setOpen(false)}
         data={data}
-        title="Deactivate account"
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
       />
     </>
   );

@@ -7,7 +7,7 @@ import { Heading1 } from '~/components/atoms/typography/headings';
 import { Dropdown } from '~/components/molecules/form-fields';
 
 const options = [
-  { id: 1, name: 'Normal cleaning' },
+  { id: 1, name: 'Home Cleaning' },
   { id: 2, name: 'Renovations' },
   { id: 3, name: 'Disinfection' },
   { id: 4, name: 'Furniture Cleaning' },
@@ -30,13 +30,15 @@ const HeroSection = () => {
         }}
       />
       <div className="z-10 flex h-20 w-1/2 flex-1 flex-col justify-evenly p-16">
-        <Heading1 color="white">Professional cleaning service</Heading1>
+        <Heading1 color="white" textSize="text-7xl">
+          Professional cleaning service
+        </Heading1>
         <LargeTypography color="white">
           Order cleaning from us and enjoy cleanliness in your home and office
         </LargeTypography>
         <div className="flex w-full justify-between">
           <Dropdown options={options} />
-          <Button name="Calculate costs" />
+          <Button>Calculate costs</Button>
         </div>
       </div>
     </div>

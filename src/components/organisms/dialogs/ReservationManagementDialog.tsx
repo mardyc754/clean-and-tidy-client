@@ -1,11 +1,8 @@
 import type { SingleReservationData } from '~/types/user';
 import DialogBase from './DialogBase';
-import {
-  LabeledTypography,
-  SummaryTypography
-} from '~/components/atoms/typography/labeled-text';
+import { LabeledTypography } from '~/components/atoms/typography/labeled-text';
 import { extractHourFromDate, getDateAfter } from '~/utils/dateHandling';
-import { Button } from '~/components/atoms/buttons';
+import { Button, NavigationButton } from '~/components/atoms/buttons';
 import { CalendarWithHours } from '../form-fields';
 
 type ReservationManagementDialogProps = {
@@ -19,7 +16,7 @@ const ReservationManagementDialog = ({
   onClose,
   data
 }: ReservationManagementDialogProps) => {
-  const { name, duration, date } = data;
+  const { name, duration, date, id } = data;
 
   const startHour = extractHourFromDate(date);
   const endHour = extractHourFromDate(getDateAfter(date, duration, 'h'));
@@ -30,11 +27,14 @@ const ReservationManagementDialog = ({
       isOpen={isOpen}
       onClose={onClose}
       buttonRenderer={() => (
-        <>
-          <Button name="Manage single booking" />
+        <div className="flex items-center justify-between space-x-6">
+          <NavigationButton
+            navigateOnClickTo={`/user/reservations/${id}`}
+            name="Change reservation details"
+          />
           {/* for periodic reservation only */}
-          <Button name="Manage whole reservation" />
-        </>
+          <Button color="danger">Cancel reservation</Button>
+        </div>
       )}
     >
       <div className="grow-1 overflow-y-auto">
@@ -59,7 +59,7 @@ const ReservationManagementDialog = ({
           contentDistribution="stretch"
           value={`${duration} hours`}
         />
-        <div className="align-content-center">
+        {/* <div className="align-content-center">
           <p className="font-link text-2xl">Actions</p>
           <div className="py-6">
             <CalendarWithHours
@@ -67,7 +67,7 @@ const ReservationManagementDialog = ({
               direction="column"
             />
           </div>
-        </div>
+        </div> */}
       </div>
     </DialogBase>
   );
