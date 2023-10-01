@@ -6,7 +6,7 @@ const LoginForm = () => {
   return (
     <>
       <form className="grid grid-rows-3 items-center gap-y-4 self-stretch px-16 py-8">
-        <Textfield name="username" label="Username" />
+        <Textfield name="email" label="Email" type="email" />
         <Textfield name="password" label="Password" type="password" />
         <SubmitButton name="Login" />
       </form>
