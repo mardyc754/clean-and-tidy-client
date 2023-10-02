@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 export const registrationSuccessDataSchema = z.object({
+  id: z.number().int(),
   username: z.string().max(30),
   email: z.string().email(),
   message: z.string()

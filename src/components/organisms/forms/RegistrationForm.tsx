@@ -39,7 +39,7 @@ const RegistrationForm = () => {
         }}
         validationSchema={validationSchema}
         onSubmit={async (values, { setFieldError, setErrors }) => {
-          const { password, confirmPassword } = values;
+          const { username, email, password, confirmPassword } = values;
 
           if (password !== confirmPassword) {
             const doNotMatchMessage = 'Passwords do not match';
@@ -50,7 +50,7 @@ const RegistrationForm = () => {
             return;
           }
 
-          const result = await register(values);
+          const result = await register({ username, email, password });
 
           if (result && 'affectedField' in result) {
             setFieldError(result.affectedField!, result.message);

@@ -1,11 +1,8 @@
-import { AxiosError, type AxiosResponse, type AxiosRequestConfig } from 'axios';
-
-import { fetcher } from '~/lib/axios';
-
-import type {
-  RegistrationSuccessData,
-  RegistrationErrorData
+import {
+  registrationSuccessDataSchema,
+  registrationErrorDataSchema
 } from './schemas/auth';
+import { handleFetchingData } from './utils';
 
 type RegistrationData = {
   username: string;
@@ -13,33 +10,12 @@ type RegistrationData = {
   email: string;
 };
 
-export const register = async ({
-  username,
-  email,
-  password
-}: RegistrationData) => {
-  let data: RegistrationSuccessData | RegistrationErrorData = {
-    message: 'Connection error'
-  };
-
-  await fetcher
-    .post<
-      AxiosRequestConfig<RegistrationData>,
-      AxiosResponse<RegistrationSuccessData>
-    >('/auth/register', {
-      username,
-      email,
-      password
-    })
-    .then((res) => {
-      data = res.data;
-    })
-    .catch((err) => {
-      if (err instanceof AxiosError) {
-        data = err.response?.data as RegistrationErrorData;
-      } else {
-        data = { message: 'An unexpected error ocurred' };
-      }
-    });
-  return data;
+export const register = async (data: RegistrationData) => {
+  return await handleFetchingData({
+    path: '/auth/register',
+    method: 'post',
+    successSchema: registrationSuccessDataSchema,
+    errorSchema: registrationErrorDataSchema,
+    data
+  });
 };
