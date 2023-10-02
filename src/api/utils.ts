@@ -58,7 +58,7 @@ export async function handleFetchingData<
   await fetcher[method]<
     AxiosRequestConfig<InputData>,
     AxiosResponse<SuccessData>
-  >(path, data)
+  >(path, data, { withCredentials: true })
     .then((res) => {
       responseData = successSchema.parse(res.data);
     })

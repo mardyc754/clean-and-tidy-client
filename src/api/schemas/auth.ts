@@ -1,19 +1,24 @@
 import { z } from 'zod';
 
-export const registrationSuccessDataSchema = z.object({
+export const registrationSuccess = z.object({
   id: z.number().int(),
   username: z.string().max(30),
   email: z.string().email(),
-  message: z.string()
+  message: z.literal('Client created succesfully')
 });
 
-export type RegistrationSuccessData = z.infer<
-  typeof registrationSuccessDataSchema
->;
-
-export const registrationErrorDataSchema = z.object({
+export const registrationError = z.object({
   message: z.string(),
-  affectedField: z.string().optional()
+  affectedField: z.union([z.literal('username'), z.literal('email')]).optional()
 });
 
-export type RegistrationErrorData = z.infer<typeof registrationErrorDataSchema>;
+export const loginClientSuccess = z.object({
+  message: z.literal('Logged in successfully'),
+  isAuthenticated: z.literal(true),
+  role: z.literal('client')
+});
+
+export const loginClientError = z.object({
+  message: z.string(),
+  affectedField: z.union([z.literal('password'), z.literal('email')]).optional()
+});

@@ -1,6 +1,8 @@
 import {
-  registrationSuccessDataSchema,
-  registrationErrorDataSchema
+  registrationSuccess,
+  registrationError,
+  loginClientSuccess,
+  loginClientError
 } from './schemas/auth';
 import { handleFetchingData } from './utils';
 
@@ -10,12 +12,27 @@ type RegistrationData = {
   email: string;
 };
 
+type LoginData = {
+  email: string;
+  password: string;
+};
+
 export const register = async (data: RegistrationData) => {
   return await handleFetchingData({
     path: '/auth/register',
     method: 'post',
-    successSchema: registrationSuccessDataSchema,
-    errorSchema: registrationErrorDataSchema,
+    successSchema: registrationSuccess,
+    errorSchema: registrationError,
+    data
+  });
+};
+
+export const loginClient = async (data: LoginData) => {
+  return await handleFetchingData({
+    path: '/auth/login-client',
+    method: 'post',
+    successSchema: loginClientSuccess,
+    errorSchema: loginClientError,
     data
   });
 };
