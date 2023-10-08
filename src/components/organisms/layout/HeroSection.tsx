@@ -1,5 +1,7 @@
 import Image from 'next/image';
 import HeroSectionImage from '~/assets/living_room.jpg';
+import type { Service } from '~/api/schemas/services';
+
 import LargeTypography from '~/components/atoms/typography/regular-text/LargeTypography';
 
 import { Button } from '~/components/atoms/buttons';
@@ -15,7 +17,11 @@ const options = [
   { id: 6, name: 'Custom' }
 ];
 
-const HeroSection = () => {
+type HeroSectionProps = {
+  services: Service[];
+};
+
+const HeroSection = ({ services }: HeroSectionProps) => {
   return (
     <div className="position-relative bg-hero-pattern flex flex-1 flex-col bg-transparent p-0 shadow-md">
       <Image
@@ -37,7 +43,7 @@ const HeroSection = () => {
           Order cleaning from us and enjoy cleanliness in your home and office
         </LargeTypography>
         <div className="flex w-full justify-between">
-          <Dropdown options={options} />
+          <Dropdown options={services.map(({ id, name }) => ({ id, name }))} />
           <Button>Calculate costs</Button>
         </div>
       </div>
