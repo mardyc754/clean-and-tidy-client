@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 
-import { loginClient } from '~/api/auth';
+import { login } from '~/api/auth';
 
 import { Textfield } from '~/components/molecules/form-fields';
 import { SubmitButton } from '~/components/atoms/buttons';
@@ -30,7 +30,7 @@ const LoginForm = () => {
         onSubmit={async (values, { setFieldError }) => {
           const { email, password } = values;
 
-          const result = await loginClient({ email, password });
+          const result = await login({ email, password });
 
           if (result && 'affectedField' in result) {
             setFieldError(result.affectedField!, result.message);

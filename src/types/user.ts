@@ -5,3 +5,9 @@ export type SingleReservationData = {
   duration: number;
   date: Date;
 };
+
+export enum UserRole {
+  CLIENT = 'client',
+  EMPLOYEE = 'employee',
+  ADMIN = 'admin'
+}

@@ -4,23 +4,13 @@ import { AxiosError, type AxiosResponse, type AxiosRequestConfig } from 'axios';
 
 import { fetcher } from '~/lib/axios';
 
-function handleTypeErrors(err: unknown, typeErrorMessage: string) {
-  if (err instanceof ZodError) {
-    // eslint-disable-next-line no-console
-    console.error(err);
-    return { message: typeErrorMessage };
-  } else {
-    return { message: 'An unexpected error ocurred' };
-  }
-}
+type BackendResponseBasicData = Partial<Record<string, unknown>> & {
+  message: string;
+};
 
 type FetchingData<
-  SuccessData extends Partial<Record<string, unknown>> & {
-    message: string;
-  },
-  ErrorData extends Partial<Record<string, unknown>> & {
-    message: string;
-  },
+  SuccessData extends BackendResponseBasicData,
+  ErrorData extends BackendResponseBasicData,
   InputData = Record<string, unknown>
 > =
   | {
@@ -38,13 +28,19 @@ type FetchingData<
       data?: InputData;
     };
 
+function handleTypeErrors(err: unknown, typeErrorMessage: string) {
+  if (err instanceof ZodError) {
+    // eslint-disable-next-line no-console
+    console.error(err);
+    return { message: typeErrorMessage };
+  } else {
+    return { message: 'An unexpected error ocurred' };
+  }
+}
+
 export async function handleFetchingData<
-  SuccessData extends Partial<Record<string, unknown>> & {
-    message: string;
-  },
-  ErrorData extends Partial<Record<string, unknown>> & {
-    message: string;
-  },
+  SuccessData extends BackendResponseBasicData,
+  ErrorData extends BackendResponseBasicData,
   InputData = Record<string, unknown>
 >({
   path,
