@@ -5,10 +5,7 @@ const Input = ({
   ...props
 }: InputHTMLAttributes<HTMLInputElement>) => {
   return (
-    <input
-      {...props}
-      className={`rounded-lg px-8 py-4 outline-none ${className}`}
-    />
+    <input {...props} className={`rounded-lg p-4 outline-none ${className}`} />
   );
 };
 
