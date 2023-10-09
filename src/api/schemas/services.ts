@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const service = z.object({
+export const service = z.object({
   id: z.number().int(),
   name: z.string().max(100),
   isPrimary: z.boolean(),

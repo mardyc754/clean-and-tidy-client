@@ -3,3 +3,4 @@ export { default as RegistrationForm } from './RegistrationForm';
 export { default as CleaningDetailsForm } from './CleaningDetailsForm';
 export { default as ContactDetailsForm } from './ContactDetailsForm';
 export { default as ChangeCleaningDataForm } from './ChangeCleaningDataForm';
+export { default as SummaryForm } from './SummaryForm';

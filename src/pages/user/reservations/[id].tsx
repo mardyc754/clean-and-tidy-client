@@ -31,7 +31,7 @@ type StringifiedReservationData = Merge<
 >;
 
 // eslint-disable-next-line @typescript-eslint/require-await
-export const getStaticPaths: GetStaticPaths = async () => {
+export const getStaticPaths = async () => {
   return {
     paths: [
       {

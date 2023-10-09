@@ -1,5 +1,5 @@
 import { handleFetchingData } from './utils';
-import { primaryServices, services } from './schemas/services';
+import { primaryServices, services, service } from './schemas/services';
 import { basicError } from './schemas/common';
 import type { AllServicesQueryOptions } from './types';
 
@@ -12,6 +12,15 @@ export const getAllServices = async (options?: AllServicesQueryOptions) => {
     path: `/services${queryString}`,
     method: 'get',
     successSchema: primaryOnly ? primaryServices : services,
+    errorSchema: basicError
+  });
+};
+
+export const getServiceById = async (id: string) => {
+  return await handleFetchingData({
+    path: `/services/${id}`,
+    method: 'get',
+    successSchema: service,
     errorSchema: basicError
   });
 };

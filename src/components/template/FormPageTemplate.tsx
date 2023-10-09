@@ -21,7 +21,7 @@ const FormPageTemplate = ({
     <PageWrapper title={title}>
       <div className="flex flex-1">
         <div className="relative flex w-1/2 bg-blue-950">
-          <Image
+          {/* <Image
             alt="Living room"
             src={FormPageImage}
             style={{
@@ -31,7 +31,7 @@ const FormPageTemplate = ({
               position: 'absolute',
               filter: 'brightness(0.7)'
             }}
-          />
+          /> */}
         </div>
         <div className="flex w-1/2 flex-col items-center justify-center p-16">
           <div className="p-4">

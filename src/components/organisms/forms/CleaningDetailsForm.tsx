@@ -39,7 +39,7 @@ const CleaningDetailsForm = () => {
         checked={includeDetergents}
         onChangeChecked={onChangeIncludeDetergents}
       />
-      <LabeledNumericInput
+      {/* <LabeledNumericInput
         value={hours}
         setValue={setHours}
         label="Cleaning duration - hours (max 12)"
@@ -47,7 +47,7 @@ const CleaningDetailsForm = () => {
         className="py-4"
         min={1}
         max={12}
-      />
+      /> */}
       <CalendarWithHours label="Cleaning start date" />
     </form>
   );

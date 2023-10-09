@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import { Button } from '~/components/atoms/buttons';
 import { Heading1, Heading2 } from '~/components/atoms/typography/headings';
 import { Avatar } from '~/components/atoms/user';
@@ -18,6 +20,8 @@ const exampleOptions = [
 ];
 
 const YourProfile = () => {
+  const [selectedValue, setSelectedValue] = useState(exampleOptions[0]);
+
   return (
     <PageWrapper title="Your profile">
       <div className="p-16">
@@ -34,7 +38,12 @@ const YourProfile = () => {
           <Heading2>Your Bookings</Heading2>
           <div className="flex items-center space-x-2">
             <p>Show:</p>
-            <Dropdown options={exampleOptions} className="w-40" />
+            <Dropdown
+              value={selectedValue}
+              options={exampleOptions}
+              onChange={setSelectedValue}
+              className="w-40"
+            />
           </div>
         </div>
         <div className="my-8 space-y-5">

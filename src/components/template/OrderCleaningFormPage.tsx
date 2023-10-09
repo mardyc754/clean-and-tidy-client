@@ -23,6 +23,7 @@ type OrderCleaningFormPageProps = {
   heading: string;
   buttonData: NavigationButtonProps[];
   showSummary?: boolean;
+  serviceName: string;
 } & PageWrapperProps;
 
 const OrderCleaningFormPage = ({
@@ -31,8 +32,16 @@ const OrderCleaningFormPage = ({
   heading,
   title,
   buttonData,
-  showSummary = false
+  showSummary = false,
+  serviceName
 }: OrderCleaningFormPageProps) => {
+  const summaryData = new Map([
+    ['Selected service', `${serviceName}`],
+    ['Cleaning frequency', 'Once a week'],
+    ['Cleaning duration', '2 hours'],
+    ['First cleaning date', '17.08.2023 8:00']
+  ]);
+
   return (
     <PageWrapper title={title}>
       <div className="flex flex-col p-16">
@@ -48,11 +57,11 @@ const OrderCleaningFormPage = ({
           </div>
           {showSummary && (
             <div className="w-1/3 py-16">
-              <SummarySection data={mockSummaryData} totalCost={200} />
+              <SummarySection data={summaryData} totalCost={200} />
             </div>
           )}
         </div>
-        <ButtonNavigation buttonData={buttonData} />
+        {/* <ButtonNavigation buttonData={buttonData} /> */}
       </div>
     </PageWrapper>
   );
