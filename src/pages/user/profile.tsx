@@ -2,7 +2,6 @@ import { useState } from 'react';
 
 import { Button } from '~/components/atoms/buttons';
 import { Heading1, Heading2 } from '~/components/atoms/typography/headings';
-import { Avatar } from '~/components/atoms/user';
 import { Dropdown } from '~/components/molecules/form-fields';
 import { BookingPreview } from '~/components/molecules/layout';
 import { PageWrapper } from '~/components/template';

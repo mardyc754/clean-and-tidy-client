@@ -11,15 +11,14 @@ import {
   SummaryForm
 } from '~/components/organisms/forms';
 
-import { OrderCleaningFormPage } from '~/components/template';
-
-import { Button } from '~/components/atoms/buttons';
+import { OrderServiceFormPage } from '~/components/template';
 
 import {
   configureDetailsIndicatorData,
   contactDetailsIndicatorData,
   summaryIndicatorData
 } from './constants';
+import { StepButtons } from '~/components/organisms/form-fields';
 
 const orderServiceStepData = [
   {
@@ -51,7 +50,30 @@ const orderServiceStepData = [
 //   { date: string }
 // >;
 
-// eslint-disable-next-line @typescript-eslint/require-await
+export default function OrderService({
+  data
+}: InferGetStaticPropsType<typeof getStaticProps>) {
+  const [currentStep, setCurrentStep] = useState(0);
+
+  return (
+    <OrderServiceFormPage
+      serviceName={`${data?.name}`}
+      showSummary={currentStep < 2}
+      title="Configure Order Details"
+      heading={orderServiceStepData[currentStep]!.heading}
+      stepIndicatorData={orderServiceStepData[currentStep]!.stepIndidatorData}
+    >
+      {orderServiceStepData[currentStep]?.stepComponent}
+      <StepButtons
+        cancelHref="/"
+        currentStep={currentStep}
+        setCurrentStep={setCurrentStep}
+        maxStep={2}
+      />
+    </OrderServiceFormPage>
+  );
+}
+
 export const getStaticPaths = async () => {
   const data = await getAllServices({ primaryOnly: true });
   if ('hasError' in data) {
@@ -69,46 +91,19 @@ export const getStaticPaths = async () => {
 };
 
 export const getStaticProps = (async ({ params }) => {
-  const data = await getServiceById(params?.id as string);
+  if (!params) {
+    return { props: { data: null } };
+  }
+
+  const data = await getServiceById(params.id as string, {
+    includeSecondaryServices: true
+  });
+
+  console.log({ data });
+
   if ('hasError' in data) {
     return { props: { data: null } };
   }
 
   return { props: { data } };
 }) satisfies GetStaticProps<{ data: Service | null }>;
-
-export default function OrderService({
-  data
-}: InferGetStaticPropsType<typeof getStaticProps>) {
-  const [currentStep, setCurrentStep] = useState(0);
-
-  return (
-    <OrderCleaningFormPage
-      serviceName={`${data?.name}`}
-      showSummary
-      title="Configure Order Details"
-      heading={orderServiceStepData[currentStep]!.heading}
-      stepIndicatorData={orderServiceStepData[currentStep]!.stepIndidatorData}
-      buttonData={[
-        { name: 'Return', navigateOnClickTo: '/' },
-        { name: 'Continue', navigateOnClickTo: '/order/contact-details' }
-      ]}
-    >
-      {orderServiceStepData[currentStep]?.stepComponent}
-      <div className="m-0 flex w-full justify-between">
-        <Button
-          onClick={() => setCurrentStep((prev) => (prev > 0 ? prev - 1 : prev))}
-          className="w-72 flex-1 py-4"
-        >
-          Return
-        </Button>
-        <Button
-          onClick={() => setCurrentStep((prev) => (prev < 2 ? prev + 1 : prev))}
-          className="w-72 flex-1 py-4"
-        >
-          Continue
-        </Button>
-      </div>
-    </OrderCleaningFormPage>
-  );
-}

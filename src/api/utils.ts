@@ -10,7 +10,7 @@ type ResponseRecord = Partial<Record<string, unknown>> & {
   message?: string;
 };
 
-export type ErrorResponseData = BackendBasicErrorData & { hasError: true };
+export type ErrorResponseData = BackendBasicErrorData;
 
 type ResponseData = ResponseRecord | ResponseRecord[];
 
@@ -25,6 +25,7 @@ type FetchingData<
       successSchema: ZodSchema<SuccessData>;
       errorSchema: ZodSchema<Omit<ErrorData, 'hasError'>>;
       data?: undefined;
+      params?: Record<string, unknown>;
     }
   | {
       path: string;
@@ -32,6 +33,7 @@ type FetchingData<
       successSchema: ZodSchema<SuccessData>;
       errorSchema: ZodSchema<Omit<ErrorData, 'hasError'>>;
       data?: InputData;
+      params?: Record<string, unknown>;
     };
 
 function handleTypeErrors(err: unknown, typeErrorMessage: string) {
@@ -53,14 +55,22 @@ export async function handleFetchingData<
   method,
   successSchema,
   errorSchema,
-  data
+  data,
+  params
 }: FetchingData<SuccessData, ErrorData, InputData>) {
   let responseData = { message: 'Connection error' } as SuccessData | ErrorData;
 
-  await fetcher[method]<
-    AxiosRequestConfig<InputData>,
-    AxiosResponse<SuccessData>
-  >(path, data, { withCredentials: true })
+  // await fetcher[method]<
+  //   AxiosRequestConfig<InputData>,
+  //   AxiosResponse<SuccessData>
+  // >(path, data, { withCredentials: true })
+  await fetcher<AxiosRequestConfig<InputData>, AxiosResponse<SuccessData>>({
+    method,
+    url: path,
+    data,
+    withCredentials: true,
+    params
+  })
     .then((res) => {
       responseData = successSchema.parse(res.data);
     })

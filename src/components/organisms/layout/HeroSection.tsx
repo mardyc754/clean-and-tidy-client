@@ -32,7 +32,7 @@ const HeroSection = ({ services }: HeroSectionProps) => {
 
   return (
     <div className="position-relative bg-hero-pattern flex flex-1 flex-col bg-transparent p-0 shadow-md">
-      {/* <Image
+      <Image
         alt="Living room"
         src={HeroSectionImage}
         style={{
@@ -42,7 +42,7 @@ const HeroSection = ({ services }: HeroSectionProps) => {
           position: 'absolute',
           filter: 'brightness(0.7) contrast(0.8)'
         }}
-      /> */}
+      />
       <div className="z-10 flex h-20 w-1/2 flex-1 flex-col justify-evenly p-16">
         <Heading1 color="white" textSize="text-7xl">
           Professional cleaning service
@@ -56,13 +56,11 @@ const HeroSection = ({ services }: HeroSectionProps) => {
             value={selectedValue}
             onChange={setSelectedValue}
           />
-          {/* <Button>Calculate costs</Button> */}
           <NavigationButton
             navigateOnClickTo={`/order-service/${selectedValue?.id}`}
             // name="Calculate costs"
             name="Order service"
           />
-          {/* <Button>Order service</Button> */}
         </div>
       </div>
     </div>

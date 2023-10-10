@@ -1,8 +1,9 @@
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
+
+import type { BackendBasicErrorData } from '~/api/schemas/common';
 import type { Service } from '~/api/schemas/services';
 
 import { getAllServices } from '~/api/services';
-import type { ErrorResponseData } from '~/api/utils';
 
 import { HeroSection } from '~/components/organisms/layout';
 import { PageWrapper } from '~/components/template';
@@ -24,6 +25,6 @@ export const getServerSideProps = (async () => {
   }
 
   return { props: { data } };
-}) satisfies GetServerSideProps<{ data: Service[] | ErrorResponseData }>;
+}) satisfies GetServerSideProps<{ data: Service[] | BackendBasicErrorData }>;
 
 export default Home;

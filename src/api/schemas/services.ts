@@ -12,6 +12,7 @@ export const service = z.object({
     }),
     z.null()
   ])
+  // secondaryServices:
 });
 
 export const services = z.array(service);
