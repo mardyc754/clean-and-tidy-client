@@ -10,13 +10,8 @@ import type { StepIndicator } from '~/types/forms';
 
 // import type { NavigationButtonProps } from '../atoms/buttons/NavigationButton';
 import type { PageWrapperProps } from './PageWrapper';
-
-// const mockSummaryData = new Map([
-//   ['Selected offer', 'Home cleaning'],
-//   ['Cleaning frequency', 'Once a week'],
-//   ['Cleaning duration', '2 hours'],
-//   ['First cleaning date', '17.08.2023 8:00']
-// ]);
+import { useOrderServiceDataStore } from '~/stores';
+import { useShallow } from 'zustand/react/shallow';
 
 type OrderCleaningFormPageProps = {
   stepIndicatorData: StepIndicator[];
@@ -33,10 +28,20 @@ const OrderCleaningFormPage = ({
   showSummary = false,
   serviceName
 }: OrderCleaningFormPageProps) => {
+  const { cleaningFrequency, totalDuration, totalCost, startDate } =
+    useOrderServiceDataStore(
+      useShallow((state) => ({
+        cleaningFrequency: state.cleaningFrequency,
+        totalDuration: state.totalDuration,
+        totalCost: state.totalCost,
+        startDate: state.startDate
+      }))
+    );
+
   const summaryData = new Map([
     ['Selected service', `${serviceName}`],
     ['Cleaning frequency', 'Once a week'],
-    ['Cleaning duration', '2 hours'],
+    ['Cleaning duration', `${totalDuration} minutes`],
     ['First cleaning date', '17.08.2023 8:00']
   ]);
 
@@ -51,7 +56,7 @@ const OrderCleaningFormPage = ({
           </div>
           {showSummary && (
             <div className="min-w-[20rem] py-16">
-              <SummarySection data={summaryData} totalCost={200} />
+              <SummarySection data={summaryData} totalCost={totalCost} />
             </div>
           )}
         </div>

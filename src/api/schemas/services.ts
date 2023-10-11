@@ -7,7 +7,7 @@ export const basicService = z.object({
   unit: z.union([
     z.object({
       name: z.string().max(40),
-      price: z.string(),
+      price: z.string().transform((val) => parseFloat(val.replace(',', '.'))),
       duration: z.number().max(480)
     }),
     z.null()

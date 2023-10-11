@@ -1,18 +1,25 @@
+import React from 'react';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
+
 import { type ServiceWithUnit } from '~/api/schemas/services';
+
 import { Button } from '~/components/atoms/buttons';
 
 type ExtraDataFieldProps = {
   data: ServiceWithUnit;
   selected: boolean;
-  onClick: VoidFunction;
+  onChangeCostAndDuration: (cost: number, duration: number) => void;
 };
 
-const ExtraDataField = ({ data, selected, onClick }: ExtraDataFieldProps) => {
+const ExtraDataField = ({
+  data,
+  selected,
+  onChangeCostAndDuration
+}: ExtraDataFieldProps) => {
   const { name, unit } = data;
-  const { name: unitName, price } = unit;
+  const { name: unitName, price, duration } = unit;
+
   return (
     <div
       className={`flex items-center justify-between rounded-lg px-5 py-4 shadow-md focus:outline-none ${
@@ -24,12 +31,10 @@ const ExtraDataField = ({ data, selected, onClick }: ExtraDataFieldProps) => {
         <p className="text-sm">{`${price}/${unitName}`}</p>
       </div>
       <Button
-        // className="flex items-center px-3 py-3"
         className="flex items-center px-3 py-3"
         onClick={(e) => {
           e.preventDefault();
-          onClick();
-          /** */
+          onChangeCostAndDuration(price, duration);
         }}
       >
         <FontAwesomeIcon icon={faPlus} className="h-3 w-3" />

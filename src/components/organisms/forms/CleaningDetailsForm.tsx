@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 
 import type { Service, ServiceWithUnit } from '~/api/schemas/services';
 
@@ -9,21 +10,39 @@ import {
   RadioGroup
 } from '../form-fields';
 import { frequencyValues } from './constants';
+import { useOrderServiceDataStore } from '~/stores';
 
 type CleaningDetailsFormProps = {
   data: Service;
 };
 
 const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
+  const {
+    includeDetergents,
+    increaseTotalCost,
+    increaseTotalDuration,
+    changeCleaningFrequency,
+    changeStartDate,
+    changeIncludeDetergents,
+    increaseTotalCostAndDuration
+  } = useOrderServiceDataStore(
+    useShallow((state) => ({
+      increaseTotalCost: state.increaseTotalCost,
+      increaseTotalDuration: state.increaseTotalDuration,
+      changeCleaningFrequency: state.changeCleaningFrequency,
+      changeStartDate: state.changeStartDate,
+      changeIncludeDetergents: state.changeIncludeDetergents,
+      increaseTotalCostAndDuration: state.increaseTotalCostAndDuration,
+      includeDetergents: state.includeDetergents
+    }))
+  );
   const cleaningFrequencyData = useMemo(() => frequencyValues, []);
-  const secondaryServices = useMemo(() => data.secondaryServices, [data]);
+  const secondaryServicesWithUnit = useMemo(
+    () => data.secondaryServices?.filter((service) => !!service.unit) ?? [],
+    [data]
+  ) as ServiceWithUnit[];
 
   const [frequency, setFrequency] = useState('once');
-  const [includeDetergents, setIncludeDetergents] = useState(false);
-
-  const onChangeIncludeDetergents = () => {
-    setIncludeDetergents((prev) => !prev);
-  };
 
   return (
     <form className="py-16">
@@ -44,26 +63,16 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
         caption="Include detergents (+15zł)"
         name="detergents"
         checked={includeDetergents}
-        onChangeChecked={onChangeIncludeDetergents}
+        onChangeChecked={changeIncludeDetergents}
       />
-      {/* <LabeledNumericInput
-        value={hours}
-        setValue={setHours}
-        label="Cleaning duration - hours (max 12)"
-        name="hours"
-        className="py-4"
-        min={1}
-        max={12}
-      /> */}
       <CalendarWithHours label="Cleaning start date" />
-      <ExtraDataMultiSelect
-        className="py-4"
-        data={
-          (secondaryServices?.filter(
-            (service) => !!service.unit
-          ) as ServiceWithUnit[]) ?? []
-        }
-      />
+      {secondaryServicesWithUnit.length > 0 && (
+        <ExtraDataMultiSelect
+          onChange={increaseTotalCostAndDuration}
+          className="py-4"
+          data={secondaryServicesWithUnit}
+        />
+      )}
     </form>
   );
 };

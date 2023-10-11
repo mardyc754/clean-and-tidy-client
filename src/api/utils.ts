@@ -1,4 +1,4 @@
-import { ZodError, type ZodSchema } from 'zod';
+import { ZodError, type ZodType } from 'zod';
 
 import { AxiosError, type AxiosResponse, type AxiosRequestConfig } from 'axios';
 
@@ -22,16 +22,16 @@ type FetchingData<
   | {
       path: string;
       method: 'get' | 'delete';
-      successSchema: ZodSchema<SuccessData>;
-      errorSchema: ZodSchema<Omit<ErrorData, 'hasError'>>;
+      successSchema: ZodType<SuccessData>;
+      errorSchema: ZodType<Omit<ErrorData, 'hasError'>>;
       data?: undefined;
       params?: Record<string, unknown>;
     }
   | {
       path: string;
       method: 'post' | 'put';
-      successSchema: ZodSchema<SuccessData>;
-      errorSchema: ZodSchema<Omit<ErrorData, 'hasError'>>;
+      successSchema: ZodType<SuccessData>;
+      errorSchema: ZodType<Omit<ErrorData, 'hasError'>>;
       data?: InputData;
       params?: Record<string, unknown>;
     };
@@ -48,7 +48,7 @@ function handleTypeErrors(err: unknown, typeErrorMessage: string) {
 
 export async function handleFetchingData<
   SuccessData extends ResponseData,
-  ErrorData extends ErrorResponseData,
+  ErrorData extends ErrorResponseData = ErrorResponseData,
   InputData = Record<string, unknown>
 >({
   path,
@@ -106,8 +106,8 @@ export async function handlePostData<
   InputData = Record<string, unknown>
 >(
   path: string,
-  successSchema: ZodSchema<SuccessData>,
-  errorSchema: ZodSchema<ErrorData>,
+  successSchema: ZodType<SuccessData>,
+  errorSchema: ZodType<ErrorData>,
   data: InputData
 ) {
   let responseData = { message: 'Connection error' } as SuccessData | ErrorData;
@@ -144,8 +144,8 @@ export async function handleGetData<
   InputData = Record<string, unknown>
 >(
   path: string,
-  successSchema: ZodSchema<SuccessData>,
-  errorSchema: ZodSchema<ErrorData>
+  successSchema: ZodType<SuccessData>,
+  errorSchema: ZodType<ErrorData>
 ) {
   let responseData = { message: 'Connection error' } as SuccessData | ErrorData;
 

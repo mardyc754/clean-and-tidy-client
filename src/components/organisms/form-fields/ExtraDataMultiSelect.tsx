@@ -5,11 +5,13 @@ import { ExtraDataField } from '~/components/molecules/form-fields';
 type ExtraDataMultiSelectProps = {
   data: ServiceWithUnit[];
   className?: string;
+  onChange: (cost: number, duration: number) => void;
 };
 
 const ExtraDataMultiSelect = ({
   data,
-  className = ''
+  className = '',
+  onChange
 }: ExtraDataMultiSelectProps) => {
   return (
     <div className={`${className}`}>
@@ -17,9 +19,7 @@ const ExtraDataMultiSelect = ({
       <div className="flex flex-col space-y-4">
         {data.map((item) => (
           <ExtraDataField
-            onClick={() => {
-              /** */
-            }}
+            onChangeCostAndDuration={onChange}
             selected={false}
             key={`extra-data-multi-select-${item.id}`}
             data={item}
