@@ -1,6 +1,5 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { InferGetStaticPropsType, GetStaticProps } from 'next';
-// import type { Merge } from 'type-fest';
 
 import { getAllServices, getServiceById } from '~/api/services';
 import type { Service } from '~/api/schemas/services';
@@ -10,7 +9,7 @@ import {
   ContactDetailsForm,
   SummaryForm
 } from '~/components/organisms/forms';
-
+import { StepButtons } from '~/components/organisms/form-fields';
 import { OrderServiceFormPage } from '~/components/template';
 
 import {
@@ -18,52 +17,55 @@ import {
   contactDetailsIndicatorData,
   summaryIndicatorData
 } from './constants';
-import { StepButtons } from '~/components/organisms/form-fields';
 
-const orderServiceStepData = [
-  {
-    heading: 'Configure details',
-    stepIndidatorData: configureDetailsIndicatorData,
-    stepComponent: <CleaningDetailsForm />
-  },
-  {
-    heading: 'Contact details',
-    stepIndidatorData: contactDetailsIndicatorData,
-    stepComponent: <ContactDetailsForm />
-  },
-  {
-    heading: 'Summary',
-    stepIndidatorData: summaryIndicatorData,
-    stepComponent: <SummaryForm />
+function getCurrentStepComponent(index: number, data: Service | null) {
+  let componentData;
+
+  switch (index) {
+    case 1:
+      componentData = {
+        heading: 'Contact details',
+        stepIndidatorData: contactDetailsIndicatorData,
+        stepComponent: <ContactDetailsForm />
+      };
+      break;
+    case 2:
+      componentData = {
+        heading: 'Summary',
+        stepIndidatorData: summaryIndicatorData,
+        stepComponent: <SummaryForm />
+      };
+      break;
+    case 0:
+    default:
+      componentData = {
+        heading: 'Configure details',
+        stepIndidatorData: configureDetailsIndicatorData,
+        stepComponent: data ? <CleaningDetailsForm data={data} /> : <></>
+      };
   }
-];
 
-// const exampleSingleReservationData = {
-//   id: 1, // or UUID
-//   name: 'Home Cleaning',
-//   duration: 2,
-//   date: new Date(2023, 7, 17, 8)
-// };
-
-// type StringifiedReservationData = Merge<
-//   Omit<SingleReservationData, 'date'>,
-//   { date: string }
-// >;
+  return componentData;
+}
 
 export default function OrderService({
   data
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const [currentStep, setCurrentStep] = useState(0);
 
+  const currentStepData = useMemo(
+    () => getCurrentStepComponent(currentStep, data),
+    [currentStep, data]
+  );
   return (
     <OrderServiceFormPage
       serviceName={`${data?.name}`}
       showSummary={currentStep < 2}
       title="Configure Order Details"
-      heading={orderServiceStepData[currentStep]!.heading}
-      stepIndicatorData={orderServiceStepData[currentStep]!.stepIndidatorData}
+      heading={currentStepData.heading}
+      stepIndicatorData={currentStepData.stepIndidatorData}
     >
-      {orderServiceStepData[currentStep]?.stepComponent}
+      {currentStepData.stepComponent}
       <StepButtons
         cancelHref="/"
         currentStep={currentStep}
@@ -98,8 +100,6 @@ export const getStaticProps = (async ({ params }) => {
   const data = await getServiceById(params.id as string, {
     includeSecondaryServices: true
   });
-
-  console.log({ data });
 
   if ('hasError' in data) {
     return { props: { data: null } };

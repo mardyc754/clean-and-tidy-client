@@ -1,9 +1,9 @@
 import { z } from 'zod';
+import { type SetNonNullable } from 'type-fest';
 
-export const service = z.object({
+export const basicService = z.object({
   id: z.number().int(),
   name: z.string().max(100),
-  isPrimary: z.boolean(),
   unit: z.union([
     z.object({
       name: z.string().max(40),
@@ -12,12 +12,17 @@ export const service = z.object({
     }),
     z.null()
   ])
-  // secondaryServices:
 });
 
-export const services = z.array(service);
+export const service = basicService.merge(
+  z.object({
+    isPrimary: z.boolean(),
+    secondaryServices: z.array(basicService).optional(),
+    primaryServices: z.array(basicService).optional()
+  })
+);
 
-export type Service = z.infer<typeof service>;
+export const services = z.array(service);
 
 export const primaryService = service.merge(
   z.object({
@@ -27,12 +32,10 @@ export const primaryService = service.merge(
 
 export const primaryServices = z.array(primaryService);
 
+export type Service = z.infer<typeof service>;
+
+export type ServiceWithUnit = SetNonNullable<BasicServiceData, 'unit'>;
+
+export type BasicServiceData = z.infer<typeof basicService>;
+
 export type PrimaryService = z.infer<typeof primaryService>;
-
-// const secondaryService = service.merge(
-//   z.object({
-//     isPrimary: z.literal(false)
-//   })
-// );
-
-// export type SecondaryService = z.infer<typeof secondaryService>;
