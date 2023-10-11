@@ -1,4 +1,5 @@
 import { type Config } from 'tailwindcss';
+import headlessUIPlugin from '@headlessui/tailwindcss';
 
 export default {
   content: ['./src/**/*.{js,ts,jsx,tsx}'],
@@ -10,5 +11,5 @@ export default {
       }
     }
   },
-  plugins: []
+  plugins: [headlessUIPlugin({ prefix: 'ui' })]
 } satisfies Config;
