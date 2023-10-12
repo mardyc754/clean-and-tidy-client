@@ -1,5 +1,5 @@
 export type RadioFieldOption = {
-  id: string;
+  value: string;
   name: string;
   details?: string;
 };
@@ -26,4 +26,10 @@ export type AddressData = {
 };
 
 export type ChangeDataMode = 'once' | 'permanently';
-export type CleaningFrequencyKey = 'once' | 'onceAWeek' | 'everyTwoWeeks';
+
+export enum CleaningFrequency {
+  ONCE = 'ONCE',
+  ONCE_A_WEEK = 'ONCE_A_WEEK',
+  EVERY_TWO_WEEKS = 'EVERY_TWO_WEEKS',
+  ONCE_A_MONTH = 'ONCE_A_MONTH'
+}

@@ -79,7 +79,7 @@ export default function OrderService({
 export const getStaticPaths = async () => {
   const data = await getAllServices({ primaryOnly: true });
   if ('hasError' in data) {
-    return { paths: [] }; // temporary
+    return { paths: [], fallback: false }; // temporary
   }
 
   return {
@@ -98,7 +98,8 @@ export const getStaticProps = (async ({ params }) => {
   }
 
   const data = await getServiceById(params.id as string, {
-    includeSecondaryServices: true
+    includeSecondaryServices: true,
+    includeCleaningFrequencies: true
   });
 
   if ('hasError' in data) {

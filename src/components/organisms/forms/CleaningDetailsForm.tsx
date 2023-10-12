@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
 import type { Service, ServiceWithUnit } from '~/api/schemas/services';
@@ -9,8 +9,9 @@ import {
   ExtraDataMultiSelect,
   RadioGroup
 } from '../form-fields';
-import { frequencyValues } from './constants';
+
 import { useOrderServiceDataStore } from '~/stores';
+import { type CleaningFrequency } from '~/types/forms';
 
 type CleaningDetailsFormProps = {
   data: Service;
@@ -19,6 +20,7 @@ type CleaningDetailsFormProps = {
 const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
   const {
     includeDetergents,
+    cleaningFrequency,
     increaseTotalCost,
     increaseTotalDuration,
     changeCleaningFrequency,
@@ -29,20 +31,24 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
     useShallow((state) => ({
       increaseTotalCost: state.increaseTotalCost,
       increaseTotalDuration: state.increaseTotalDuration,
-      changeCleaningFrequency: state.changeCleaningFrequency,
+      changeCleaningFrequency: (value: string) =>
+        state.changeCleaningFrequency(value as CleaningFrequency),
       changeStartDate: state.changeStartDate,
       changeIncludeDetergents: state.changeIncludeDetergents,
       increaseTotalCostAndDuration: state.increaseTotalCostAndDuration,
-      includeDetergents: state.includeDetergents
+      includeDetergents: state.includeDetergents,
+      cleaningFrequency: state.cleaningFrequency
     }))
   );
-  const cleaningFrequencyData = useMemo(() => frequencyValues, []);
+  const cleaningFrequencyData = useMemo(
+    () => data?.cleaningFrequencies ?? [],
+    [data]
+  );
+
   const secondaryServicesWithUnit = useMemo(
     () => data.secondaryServices?.filter((service) => !!service.unit) ?? [],
     [data]
   ) as ServiceWithUnit[];
-
-  const [frequency, setFrequency] = useState('once');
 
   return (
     <form className="py-16">
@@ -51,12 +57,14 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
         label="Area size"
         placeholder="Area size (in m2)"
       />
-      <RadioGroup
-        label="Cleaning frequency"
-        data={cleaningFrequencyData}
-        value={frequency}
-        onChange={(value) => setFrequency(value)}
-      />
+      {cleaningFrequencyData.length > 1 && (
+        <RadioGroup
+          label="Cleaning frequency"
+          data={cleaningFrequencyData}
+          value={cleaningFrequency}
+          onChange={changeCleaningFrequency}
+        />
+      )}
       <LabeledCheckbox
         className="py-4"
         label="Detergents"

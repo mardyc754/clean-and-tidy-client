@@ -1,9 +1,5 @@
 import { useMemo, useState } from 'react';
-import type {
-  InferGetStaticPropsType,
-  GetStaticProps,
-  GetStaticPaths
-} from 'next';
+import type { InferGetStaticPropsType, GetStaticProps } from 'next';
 import type { Merge } from 'type-fest';
 
 import { Heading1 } from '~/components/atoms/typography/headings';
@@ -16,7 +12,7 @@ import { PageWrapper } from '~/components/template';
 import { extractHourFromDate, getDateAfter } from '~/utils/dateHandling';
 
 import type { SingleReservationData } from '~/types/user';
-import type { ChangeDataMode, CleaningFrequencyKey } from '~/types/forms';
+import { type ChangeDataMode, CleaningFrequency } from '~/types/forms';
 
 const exampleSingleReservationData = {
   id: 1, // or UUID
@@ -57,7 +53,9 @@ export default function Reservation({
   data
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const [changeDataMode, setChangeDataMode] = useState<ChangeDataMode>('once');
-  const [frequency, setFrequency] = useState<CleaningFrequencyKey>('onceAWeek');
+  const [frequency, setFrequency] = useState<CleaningFrequency>(
+    CleaningFrequency.ONCE_A_WEEK
+  );
   const cleaningFrequencyData = useMemo(() => frequencyValues.slice(1), []);
 
   const { name, duration, date: stringifiedDate } = data;
@@ -79,7 +77,9 @@ export default function Reservation({
         ['Duration', `${duration} ${duration === 1 ? 'hour' : 'hours'}`],
         [
           'Cleaning frequency',
-          `${cleaningFrequencyData.find((freq) => frequency === freq.id)?.name}`
+          `${
+            cleaningFrequencyData.find((freq) => frequency === freq.value)?.name
+          }`
         ]
       ]),
     [date, duration, name, frequency, changeDataMode, cleaningFrequencyData]
@@ -99,7 +99,7 @@ export default function Reservation({
               }}
               frequency={frequency}
               onChangeFrequency={(value) => {
-                setFrequency(value as CleaningFrequencyKey);
+                setFrequency(value as CleaningFrequency);
               }}
             />
           </div>

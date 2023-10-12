@@ -1,19 +1,19 @@
 import { create } from 'zustand';
 
-import type { CleaningFrequencyKey } from '~/types/forms';
+import { CleaningFrequency } from '~/types/forms';
 
 interface OrderServiceDataStoreState {
   numberOfUnits: number;
   unitName: string;
   totalCost: number;
-  cleaningFrequency: CleaningFrequencyKey;
+  cleaningFrequency: CleaningFrequency;
   totalDuration: number;
   startDate: Date | null;
   includeDetergents: boolean;
   increaseTotalCost: (cost: number) => void;
   increaseTotalDuration: (duration: number) => void;
   increaseTotalCostAndDuration: (cost: number, duration: number) => void;
-  changeCleaningFrequency: (frequency: CleaningFrequencyKey) => void;
+  changeCleaningFrequency: (frequency: CleaningFrequency) => void;
   changeStartDate: (date: Date) => void;
   changeIncludeDetergents: () => void;
 }
@@ -22,7 +22,7 @@ const useOrderServiceDataStore = create<OrderServiceDataStoreState>((set) => ({
   numberOfUnits: 0,
   unitName: '',
   totalCost: 0,
-  cleaningFrequency: 'once',
+  cleaningFrequency: CleaningFrequency.ONCE,
   totalDuration: 0,
   startDate: null,
   includeDetergents: false,
@@ -36,7 +36,7 @@ const useOrderServiceDataStore = create<OrderServiceDataStoreState>((set) => ({
       totalDuration: state.totalDuration + duration,
       totalCost: state.totalCost + cost
     })),
-  changeCleaningFrequency: (frequency: CleaningFrequencyKey) =>
+  changeCleaningFrequency: (frequency: CleaningFrequency) =>
     set({ cleaningFrequency: frequency }),
   changeStartDate: (date: Date) => set({ startDate: date }),
   changeIncludeDetergents: () =>

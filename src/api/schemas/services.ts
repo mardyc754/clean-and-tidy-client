@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { type SetNonNullable } from 'type-fest';
+import { CleaningFrequency } from '~/types/forms';
 
 export const basicService = z.object({
   id: z.number().int(),
@@ -16,6 +17,11 @@ export const basicService = z.object({
 
 export const service = basicService.merge(
   z.object({
+    cleaningFrequencies: z
+      .array(
+        z.object({ value: z.nativeEnum(CleaningFrequency), name: z.string() })
+      )
+      .optional(),
     isPrimary: z.boolean(),
     secondaryServices: z.array(basicService).optional(),
     primaryServices: z.array(basicService).optional()

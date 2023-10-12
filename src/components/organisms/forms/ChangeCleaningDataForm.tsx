@@ -6,14 +6,14 @@ import {
 import { LabeledNumericInput } from '~/components/molecules/form-fields';
 
 import type { SingleReservationData } from '~/types/user';
-import type { ChangeDataMode, CleaningFrequencyKey } from '~/types/forms';
+import type { ChangeDataMode, CleaningFrequency } from '~/types/forms';
 import { changeDataModeData, frequencyValues } from './constants';
 
 type ChangeCleaningDataFormProps = {
   data: SingleReservationData;
   changeDataMode: ChangeDataMode;
   onChangeDataMode: (value: string) => void;
-  frequency: CleaningFrequencyKey;
+  frequency: CleaningFrequency;
   onChangeFrequency: (value: string) => void;
 };
 

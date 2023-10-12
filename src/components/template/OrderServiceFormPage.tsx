@@ -1,17 +1,14 @@
+import { useShallow } from 'zustand/react/shallow';
+
 import { Heading1 } from '~/components/atoms/typography/headings';
 import { MultiStepFormIndicator } from '~/components/molecules';
 import { PageWrapper } from '~/components/template';
-import {
-  // ButtonNavigation,
-  SummarySection
-} from '~/components/organisms/layout';
+import { SummarySection } from '~/components/organisms/layout';
 
 import type { StepIndicator } from '~/types/forms';
 
-// import type { NavigationButtonProps } from '../atoms/buttons/NavigationButton';
 import type { PageWrapperProps } from './PageWrapper';
 import { useOrderServiceDataStore } from '~/stores';
-import { useShallow } from 'zustand/react/shallow';
 
 type OrderCleaningFormPageProps = {
   stepIndicatorData: StepIndicator[];
