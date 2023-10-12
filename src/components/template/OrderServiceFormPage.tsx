@@ -37,7 +37,7 @@ const OrderCleaningFormPage = ({
 
   const summaryData = new Map([
     ['Selected service', `${serviceName}`],
-    ['Cleaning frequency', 'Once a week'],
+    ['Cleaning frequency', `${cleaningFrequency?.name ?? '---'}`],
     ['Cleaning duration', `${totalDuration} minutes`],
     ['First cleaning date', '17.08.2023 8:00']
   ]);

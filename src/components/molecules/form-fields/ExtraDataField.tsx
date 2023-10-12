@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -28,7 +27,7 @@ const ExtraDataField = ({
     >
       <div className="flex flex-col">
         <p className="font-medium">{name}</p>
-        <p className="text-sm">{`${price}/${unitName}`}</p>
+        <p className="text-sm">{`${price} zł/${unitName}`}</p>
       </div>
       <Button
         className="flex items-center px-3 py-3"

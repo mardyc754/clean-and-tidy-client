@@ -11,7 +11,7 @@ const RadioField = ({ data }: RadioFieldProps) => {
   return (
     <HeadlessRadioGroup.Option
       key={data.name}
-      value={data.value}
+      value={data}
       className={`relative flex cursor-pointer rounded-lg
         px-5 py-4 shadow-md focus:outline-none
          ui-checked:bg-cyan-500 ui-checked:bg-opacity-75 

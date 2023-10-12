@@ -5,8 +5,8 @@ import type { RadioFieldOption } from '~/types/forms';
 
 type RadioGroupProps = {
   label: string;
-  value: string;
-  onChange: (value: string) => void;
+  value: RadioFieldOption | null;
+  onChange: (value: RadioFieldOption) => void;
   data: RadioFieldOption[];
 };
 

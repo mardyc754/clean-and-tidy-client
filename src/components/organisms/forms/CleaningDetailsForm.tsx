@@ -1,17 +1,22 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
 import type { Service, ServiceWithUnit } from '~/api/schemas/services';
 
-import { LabeledCheckbox, Textfield } from '~/components/molecules/form-fields';
+import { useOrderServiceDataStore } from '~/stores';
+
+import {
+  LabeledCheckbox,
+  LabeledNumericInput
+} from '~/components/molecules/form-fields';
+
+import type { RadioFieldOption } from '~/types/forms';
+
 import {
   CalendarWithHours,
   ExtraDataMultiSelect,
   RadioGroup
 } from '../form-fields';
-
-import { useOrderServiceDataStore } from '~/stores';
-import { type CleaningFrequency } from '~/types/forms';
 
 type CleaningDetailsFormProps = {
   data: Service;
@@ -21,6 +26,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
   const {
     includeDetergents,
     cleaningFrequency,
+    cleaningFrequencyData,
     increaseTotalCost,
     increaseTotalDuration,
     changeCleaningFrequency,
@@ -31,19 +37,19 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
     useShallow((state) => ({
       increaseTotalCost: state.increaseTotalCost,
       increaseTotalDuration: state.increaseTotalDuration,
-      changeCleaningFrequency: (value: string) =>
-        state.changeCleaningFrequency(value as CleaningFrequency),
+      // changeCleaningFrequency: (value: RadioFieldOption) =>
+      //   state.changeCleaningFrequency(value),
+      changeCleaningFrequency: state.changeCleaningFrequency,
       changeStartDate: state.changeStartDate,
       changeIncludeDetergents: state.changeIncludeDetergents,
       increaseTotalCostAndDuration: state.increaseTotalCostAndDuration,
       includeDetergents: state.includeDetergents,
-      cleaningFrequency: state.cleaningFrequency
+      cleaningFrequency: state.cleaningFrequency,
+      cleaningFrequencyData: state.cleaningFrequencyData
     }))
   );
-  const cleaningFrequencyData = useMemo(
-    () => data?.cleaningFrequencies ?? [],
-    [data]
-  );
+
+  const [value, setValue] = useState(0);
 
   const secondaryServicesWithUnit = useMemo(
     () => data.secondaryServices?.filter((service) => !!service.unit) ?? [],
@@ -52,17 +58,23 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
 
   return (
     <form className="py-16">
-      <Textfield
+      <LabeledNumericInput
+        value={value}
+        setValue={setValue}
+        min={0}
+        max={500}
         name="areaSize"
-        label="Area size"
-        placeholder="Area size (in m2)"
+        label="Area size (in m2)"
+        className="items-center py-4"
       />
       {cleaningFrequencyData.length > 1 && (
         <RadioGroup
           label="Cleaning frequency"
           data={cleaningFrequencyData}
           value={cleaningFrequency}
-          onChange={changeCleaningFrequency}
+          onChange={
+            changeCleaningFrequency as (value: RadioFieldOption) => void
+          }
         />
       )}
       <LabeledCheckbox

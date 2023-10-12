@@ -1,8 +1,10 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { InferGetStaticPropsType, GetStaticProps } from 'next';
 
 import { getAllServices, getServiceById } from '~/api/services';
 import type { Service } from '~/api/schemas/services';
+
+import { useOrderServiceDataStore } from '~/stores';
 
 import {
   CleaningDetailsForm,
@@ -53,13 +55,33 @@ export default function OrderService({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const [currentStep, setCurrentStep] = useState(0);
 
+  const cleaningFrequencyData = useMemo(
+    () => data?.cleaningFrequencies ?? [],
+    [data]
+  );
+
+  // const { setCleaningFrequencyData, changeCleaningFrequency } =
+  //   useOrderServiceDataStore(
+  //     useShallow((state) => ({
+  //       setCleaningFrequencyData: state.setCleaningFrequencyData,
+  //       changeCleaningFrequency: state.changeCleaningFrequency
+  //     }))
+  //   );
+  const setCleaningFrequencyData = useOrderServiceDataStore(
+    (state) => state.setCleaningFrequencyData
+  );
+
+  useEffect(() => {
+    setCleaningFrequencyData(cleaningFrequencyData);
+  }, [cleaningFrequencyData, setCleaningFrequencyData]);
+
   const currentStepData = useMemo(
     () => getCurrentStepComponent(currentStep, data),
     [currentStep, data]
   );
   return (
     <OrderServiceFormPage
-      serviceName={`${data?.name}`}
+      serviceName={`${data?.name ?? '---'}`}
       showSummary={currentStep < 2}
       title="Configure Order Details"
       heading={currentStepData.heading}

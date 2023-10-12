@@ -33,3 +33,8 @@ export enum CleaningFrequency {
   EVERY_TWO_WEEKS = 'EVERY_TWO_WEEKS',
   ONCE_A_MONTH = 'ONCE_A_MONTH'
 }
+
+export type CleaningFrequencyData = {
+  name: string;
+  value: CleaningFrequency;
+};

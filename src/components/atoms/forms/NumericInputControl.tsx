@@ -15,12 +15,15 @@ const NumericInputControl = ({
   const positionClass = position === 'left' ? 'left-0' : 'right-0';
 
   return (
-    <div
+    <button
       className={`absolute ${positionClass} top-0 flex h-full cursor-pointer items-center p-4`}
-      onClick={onClick}
+      onClick={(e) => {
+        e.preventDefault();
+        onClick();
+      }}
     >
       <FontAwesomeIcon icon={icon} />
-    </div>
+    </button>
   );
 };
 
