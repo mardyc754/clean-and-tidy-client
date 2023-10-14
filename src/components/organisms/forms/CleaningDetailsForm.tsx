@@ -1,7 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
-import type { Service, ServiceWithUnit } from '~/api/schemas/services';
+import { type Service, type ServiceWithUnit } from '~/api/schemas/services';
 
 import { useOrderServiceDataStore } from '~/stores';
 
@@ -23,33 +23,37 @@ type CleaningDetailsFormProps = {
 };
 
 const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
+  const { id, name, unit } = data;
+
   const {
     includeDetergents,
     cleaningFrequency,
     cleaningFrequencyData,
-    increaseTotalCost,
-    increaseTotalDuration,
+    orderedServices,
     changeCleaningFrequency,
-    changeStartDate,
     changeIncludeDetergents,
-    increaseTotalCostAndDuration
+    increaseTotalCostAndDuration,
+    orderService,
+    cancelOrderingService,
+    changeNumberOfUnits
   } = useOrderServiceDataStore(
     useShallow((state) => ({
       increaseTotalCost: state.increaseTotalCost,
       increaseTotalDuration: state.increaseTotalDuration,
-      // changeCleaningFrequency: (value: RadioFieldOption) =>
-      //   state.changeCleaningFrequency(value),
       changeCleaningFrequency: state.changeCleaningFrequency,
       changeStartDate: state.changeStartDate,
       changeIncludeDetergents: state.changeIncludeDetergents,
       increaseTotalCostAndDuration: state.increaseTotalCostAndDuration,
       includeDetergents: state.includeDetergents,
       cleaningFrequency: state.cleaningFrequency,
-      cleaningFrequencyData: state.cleaningFrequencyData
+      cleaningFrequencyData: state.cleaningFrequencyData,
+      getServiceById: state.getServiceById,
+      orderService: state.orderService,
+      cancelOrderingService: state.cancelOrderingService,
+      orderedServices: state.orderedServices,
+      changeNumberOfUnits: state.changeNumberOfUnits
     }))
   );
-
-  const [value, setValue] = useState(0);
 
   const secondaryServicesWithUnit = useMemo(
     () => data.secondaryServices?.filter((service) => !!service.unit) ?? [],
@@ -59,8 +63,15 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
   return (
     <form className="py-16">
       <LabeledNumericInput
-        value={value}
-        setValue={setValue}
+        value={
+          orderedServices.find((service) => service.id === id)?.numberOfUnits ??
+          0
+        }
+        onIncreaseValue={() => orderService({ id, name, unit }, true)}
+        onDecreaseValue={() => cancelOrderingService(id)}
+        onChange={(value) =>
+          changeNumberOfUnits(value, { id, name, unit }, true)
+        }
         min={0}
         max={500}
         name="areaSize"

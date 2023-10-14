@@ -9,14 +9,13 @@ const LabeledNumericInput = ({
   name,
   label,
   value,
-  setValue,
   className,
   ...props
 }: LabeledNumericInputProps) => {
   return (
     <div className={`flex flex-col ${className}`}>
       <Label htmlFor={name}>{label}</Label>
-      <NumericInput name={name} value={value} setValue={setValue} {...props} />
+      <NumericInput name={name} value={value} {...props} />
     </div>
   );
 };

@@ -1,10 +1,5 @@
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
-import type {
-  SetStateAction,
-  Dispatch,
-  InputHTMLAttributes,
-  ChangeEvent
-} from 'react';
+import type { InputHTMLAttributes, ChangeEvent } from 'react';
 import type { SetRequired } from 'type-fest';
 
 import Input from './Input';
@@ -12,17 +7,24 @@ import NumericInputControl from './NumericInputControl';
 
 export type NumericInputProps = {
   value: number;
-  setValue: Dispatch<SetStateAction<number>>;
+  onIncreaseValue: VoidFunction;
+  onDecreaseValue: VoidFunction;
+  onChange: (value: number) => void;
   max?: number;
   min?: number;
 } & SetRequired<
-  Omit<InputHTMLAttributes<HTMLInputElement>, 'value' | 'max' | 'min'>,
+  Omit<
+    InputHTMLAttributes<HTMLInputElement>,
+    'value' | 'max' | 'min' | 'onChange'
+  >,
   'name'
 >;
 
 const NumericInput = ({
   value,
-  setValue,
+  onIncreaseValue,
+  onDecreaseValue,
+  onChange,
   className,
   max = 9999,
   min = -9999,
@@ -32,13 +34,13 @@ const NumericInput = ({
     const newValue = parseInt(e.target.value);
 
     if (isNaN(newValue)) {
-      setValue(min);
+      onChange(min);
     } else if (newValue > max) {
-      setValue(max);
+      onChange(max);
     } else if (newValue < min) {
-      setValue(min);
+      onChange(min);
     } else {
-      setValue(newValue);
+      onChange(newValue);
     }
   };
 
@@ -47,7 +49,7 @@ const NumericInput = ({
       <NumericInputControl
         position="left"
         icon={faMinus}
-        onClick={() => setValue((prev) => (prev > min ? prev - 1 : min))}
+        onClick={onDecreaseValue}
       />
       <Input
         value={value}
@@ -58,7 +60,7 @@ const NumericInput = ({
       <NumericInputControl
         position="right"
         icon={faPlus}
-        onClick={() => setValue((prev) => (prev < max ? prev + 1 : max))}
+        onClick={onIncreaseValue}
       />
     </div>
   );
