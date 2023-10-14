@@ -7,7 +7,7 @@ import { useOrderServiceDataStore } from '~/stores';
 
 import {
   LabeledCheckbox,
-  LabeledNumericInput
+  OrderServiceNumericInput
 } from '~/components/molecules/form-fields';
 
 import type { RadioFieldOption } from '~/types/forms';
@@ -29,29 +29,17 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
     includeDetergents,
     cleaningFrequency,
     cleaningFrequencyData,
-    orderedServices,
     changeCleaningFrequency,
-    changeIncludeDetergents,
-    increaseTotalCostAndDuration,
-    orderService,
-    cancelOrderingService,
-    changeNumberOfUnits
+    changeIncludeDetergents
   } = useOrderServiceDataStore(
     useShallow((state) => ({
-      increaseTotalCost: state.increaseTotalCost,
-      increaseTotalDuration: state.increaseTotalDuration,
       changeCleaningFrequency: state.changeCleaningFrequency,
       changeStartDate: state.changeStartDate,
       changeIncludeDetergents: state.changeIncludeDetergents,
-      increaseTotalCostAndDuration: state.increaseTotalCostAndDuration,
       includeDetergents: state.includeDetergents,
       cleaningFrequency: state.cleaningFrequency,
       cleaningFrequencyData: state.cleaningFrequencyData,
-      getServiceById: state.getServiceById,
-      orderService: state.orderService,
-      cancelOrderingService: state.cancelOrderingService,
-      orderedServices: state.orderedServices,
-      changeNumberOfUnits: state.changeNumberOfUnits
+      orderedServices: state.orderedServices
     }))
   );
 
@@ -62,16 +50,22 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
 
   return (
     <form className="py-16">
-      <LabeledNumericInput
-        value={
-          orderedServices.find((service) => service.id === id)?.numberOfUnits ??
-          0
-        }
+      {/* <LabeledNumericInput
+        value={getServiceById(id)?.numberOfUnits ?? 0}
         onIncreaseValue={() => orderService({ id, name, unit }, true)}
         onDecreaseValue={() => cancelOrderingService(id)}
         onChange={(value) =>
           changeNumberOfUnits(value, { id, name, unit }, true)
         }
+        min={0}
+        max={500}
+        name="areaSize"
+        label="Area size (in m2)"
+        className="items-center py-4"
+      /> */}
+      <OrderServiceNumericInput
+        serviceData={{ id, name, unit }}
+        isMainServiceControl
         min={0}
         max={500}
         name="areaSize"
@@ -99,7 +93,6 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
       <CalendarWithHours label="Cleaning start date" />
       {secondaryServicesWithUnit.length > 0 && (
         <ExtraDataMultiSelect
-          onChange={increaseTotalCostAndDuration}
           className="py-4"
           data={secondaryServicesWithUnit}
         />

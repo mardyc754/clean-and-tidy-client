@@ -12,6 +12,7 @@ export type NumericInputProps = {
   onChange: (value: number) => void;
   max?: number;
   min?: number;
+  variant?: 'outlined' | 'contained-controls';
 } & SetRequired<
   Omit<
     InputHTMLAttributes<HTMLInputElement>,
@@ -25,9 +26,10 @@ const NumericInput = ({
   onIncreaseValue,
   onDecreaseValue,
   onChange,
-  className,
+  className = '',
   max = 9999,
   min = -9999,
+  variant = 'outlined',
   ...props
 }: NumericInputProps) => {
   const handleValueChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -45,20 +47,27 @@ const NumericInput = ({
   };
 
   return (
-    <div className={`relative w-fit ${className}`}>
+    <div
+      className={`flex rounded-lg${
+        variant === 'outlined' ? ' bg-white' : ' bg-transparent'
+      } ${className}`}
+    >
       <NumericInputControl
-        position="left"
+        variant={variant}
         icon={faMinus}
         onClick={onDecreaseValue}
       />
       <Input
         value={value}
-        className="text-center"
+        // className="text-center"
+        className={`text-center${
+          variant === 'outlined' ? ' w-[150px]' : ' w-[80px] p-1 text-sm'
+        }`}
         onChange={handleValueChange}
         {...props}
       />
       <NumericInputControl
-        position="right"
+        variant={variant}
         icon={faPlus}
         onClick={onIncreaseValue}
       />

@@ -17,6 +17,20 @@ const createOrFindOrderedService = (
   );
 };
 
+const calculateTotalCostAndDuration = (orderedServices: OrderedService[]) => {
+  return orderedServices.reduce(
+    (acc, service) => {
+      const price = service.unit?.price ?? 0;
+      const duration = service.unit?.duration ?? 0;
+      return {
+        totalCost: acc.totalCost + price * service.numberOfUnits,
+        totalDuration: acc.totalDuration + duration * service.numberOfUnits
+      };
+    },
+    { totalCost: 0, totalDuration: 0 }
+  );
+};
+
 type OrderedService = BasicServiceData & {
   isMainServiceInReservation: boolean;
   numberOfUnits: number;
@@ -50,6 +64,7 @@ interface OrderServiceDataStoreState {
   ) => void;
   getServiceById: (id: number) => OrderedService | undefined;
   removeService: (id: number) => OrderedService[];
+  getServiceNumberOfUnits: (id: number) => number;
 }
 
 const useOrderServiceDataStore = create<OrderServiceDataStoreState>(
@@ -94,8 +109,10 @@ const useOrderServiceDataStore = create<OrderServiceDataStoreState>(
         );
         newService.numberOfUnits += 1;
 
+        const newServices = [...state.removeService(service.id), newService];
         return {
-          orderedServices: [...state.removeService(service.id), newService]
+          orderedServices: newServices,
+          ...calculateTotalCostAndDuration(newServices)
         };
       }),
     cancelOrderingService: (id) =>
@@ -108,11 +125,14 @@ const useOrderServiceDataStore = create<OrderServiceDataStoreState>(
 
         oldService.numberOfUnits -= 1;
 
+        const newServices =
+          oldService.numberOfUnits > 0
+            ? [...state.orderedServices]
+            : state.removeService(id);
+
         return {
-          orderedServices:
-            oldService.numberOfUnits > 0
-              ? [...state.orderedServices]
-              : state.removeService(id)
+          orderedServices: newServices,
+          ...calculateTotalCostAndDuration(newServices)
         };
       }),
     getServiceById: (id) =>
@@ -135,12 +155,17 @@ const useOrderServiceDataStore = create<OrderServiceDataStoreState>(
           return { orderedServices: state.orderedServices };
         }
 
+        const newServices = [...state.removeService(service.id), newService];
+
         return {
-          orderedServices: [...state.removeService(service.id), newService]
+          orderedServices: newServices,
+          ...calculateTotalCostAndDuration(newServices)
         };
       }),
     removeService: (id) =>
-      get().orderedServices.filter((service) => id !== service.id)
+      get().orderedServices.filter((service) => id !== service.id),
+    getServiceNumberOfUnits: (id) =>
+      get().getServiceById(id)?.numberOfUnits ?? 0
   })
 );
 

@@ -1,7 +1,7 @@
 import type { NumericInputProps } from '~/components/atoms/forms/NumericInput';
 import { NumericInput, Label } from '~/components/atoms/forms';
 
-type LabeledNumericInputProps = {
+export type LabeledNumericInputProps = {
   label: string;
 } & NumericInputProps;
 
