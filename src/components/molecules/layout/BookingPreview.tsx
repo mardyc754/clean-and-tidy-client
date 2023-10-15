@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { Button } from '~/components/atoms/buttons';
-import { extractHourFromDate, getDateAfter } from '~/utils/dateUtils';
+import { extractHourStringFromDate, getDateAfter } from '~/utils/dateUtils';
 import type { SingleReservationData } from '~/types/user';
 import { ReservationManagementDialog } from '~/components/organisms/dialogs';
 
@@ -14,8 +14,8 @@ const BookingPreview = ({ data }: BookingPreviewProps) => {
 
   const { name, duration, date, id } = data;
 
-  const startHour = extractHourFromDate(date);
-  const endHour = extractHourFromDate(getDateAfter(date, duration, 'h'));
+  const startHour = extractHourStringFromDate(date);
+  const endHour = extractHourStringFromDate(getDateAfter(date, duration, 'h'));
 
   return (
     <>

@@ -2,8 +2,50 @@ import type { ManipulateType } from 'dayjs';
 
 import dayjs from '~/lib/dayjs';
 
+import type { NullableDate } from '~/types/forms';
+
+export function extractDateStringFromDate(date: NullableDate) {
+  return date ? dayjs(date).format('DD.MM.YYYY') : '--.--.----';
+}
+
+export function extractHourStringFromDate(date: NullableDate) {
+  return date ? dayjs(date).format('HH:mm') : '--:--';
+}
+
 export function extractHourFromDate(date: Date) {
-  return dayjs(date).format('HH:mm');
+  return dayjs(date).hour();
+}
+
+export function changeHourToDate(hour: number) {
+  return dayjs().hour(hour).minute(0).format('HH:mm');
+}
+
+export function dateWithHour(date: NullableDate, hour: number) {
+  return dayjs(date ?? undefined)
+    .hour(hour)
+    .minute(0)
+    .toDate();
+}
+
+export function create(date: Date, hour: number) {
+  return dayjs(date).hour(hour).minute(0).toDate();
+}
+
+export function displayDateWithHours(date: Date) {
+  return dayjs(date).format('DD.MM.YYYY HH:mm');
+}
+
+export function mergeDayDateAndHourDate(dayDate: Date, hourDate: Date) {
+  return dateWithHour(dayDate, extractHourFromDate(hourDate));
+}
+
+export function displayDayDateAndHourDate(
+  dayDate: Date | null,
+  hourDate: Date | null
+) {
+  return `${extractDateStringFromDate(dayDate)} ${extractHourStringFromDate(
+    hourDate
+  )}`;
 }
 
 export function getDateAfter(

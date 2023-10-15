@@ -9,7 +9,7 @@ import { frequencyValues } from '~/components/organisms/forms/constants';
 import { ChangeDataSummary } from '~/components/organisms/layout';
 import { PageWrapper } from '~/components/template';
 
-import { extractHourFromDate, getDateAfter } from '~/utils/dateUtils';
+import { extractHourStringFromDate, getDateAfter } from '~/utils/dateUtils';
 
 import type { SingleReservationData } from '~/types/user';
 import { type ChangeDataMode, CleaningFrequency } from '~/types/forms';
@@ -69,10 +69,10 @@ export default function Reservation({
           `${changeDataMode === 'once' ? 'Date' : 'Next cleaning date'}`,
           `${date.toLocaleDateString()}`
         ],
-        ['Start hour', `${extractHourFromDate(date)}`],
+        ['Start hour', `${extractHourStringFromDate(date)}`],
         [
           'End date',
-          `${extractHourFromDate(getDateAfter(date, duration, 'h'))}`
+          `${extractHourStringFromDate(getDateAfter(date, duration, 'h'))}`
         ],
         ['Duration', `${duration} ${duration === 1 ? 'hour' : 'hours'}`],
         [

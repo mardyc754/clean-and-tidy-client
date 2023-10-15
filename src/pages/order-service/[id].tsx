@@ -6,6 +6,8 @@ import type { Service } from '~/api/schemas/services';
 
 import { useOrderServiceDataStore } from '~/stores';
 
+import { EMPTY_DATA_PLACEHOLDER } from '~/utils/constants';
+
 import {
   CleaningDetailsForm,
   ContactDetailsForm,
@@ -81,7 +83,7 @@ export default function OrderService({
   );
   return (
     <OrderServiceFormPage
-      serviceName={`${data?.name ?? '---'}`}
+      serviceName={`${data?.name ?? EMPTY_DATA_PLACEHOLDER}`}
       showSummary={currentStep < 2}
       title="Configure Order Details"
       heading={currentStepData.heading}

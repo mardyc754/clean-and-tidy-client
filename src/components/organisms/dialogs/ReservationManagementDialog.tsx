@@ -1,7 +1,7 @@
 import type { SingleReservationData } from '~/types/user';
 import DialogBase from './DialogBase';
 import { LabeledTypography } from '~/components/atoms/typography/labeled-text';
-import { extractHourFromDate, getDateAfter } from '~/utils/dateUtils';
+import { extractHourStringFromDate, getDateAfter } from '~/utils/dateUtils';
 import { Button, NavigationButton } from '~/components/atoms/buttons';
 import { CalendarWithHours } from '../form-fields';
 
@@ -18,8 +18,8 @@ const ReservationManagementDialog = ({
 }: ReservationManagementDialogProps) => {
   const { name, duration, date, id } = data;
 
-  const startHour = extractHourFromDate(date);
-  const endHour = extractHourFromDate(getDateAfter(date, duration, 'h'));
+  const startHour = extractHourStringFromDate(date);
+  const endHour = extractHourStringFromDate(getDateAfter(date, duration, 'h'));
 
   return (
     <DialogBase

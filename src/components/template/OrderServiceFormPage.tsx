@@ -5,11 +5,16 @@ import { MultiStepFormIndicator } from '~/components/molecules';
 import { PageWrapper } from '~/components/template';
 import { SummarySection } from '~/components/organisms/layout';
 
-import type { StepIndicator } from '~/types/forms';
+import type { NullableDate, StepIndicator } from '~/types/forms';
 
 import type { PageWrapperProps } from './PageWrapper';
 import { useOrderServiceDataStore } from '~/stores';
-import { displayTimeInHours } from '~/utils/dateUtils';
+import {
+  displayDateWithHours,
+  displayDayDateAndHourDate,
+  displayTimeInHours
+} from '~/utils/dateUtils';
+import { EMPTY_DATA_PLACEHOLDER } from '~/utils/constants';
 
 type OrderCleaningFormPageProps = {
   stepIndicatorData: StepIndicator[];
@@ -26,21 +31,31 @@ const OrderCleaningFormPage = ({
   showSummary = false,
   serviceName
 }: OrderCleaningFormPageProps) => {
-  const { cleaningFrequency, totalDuration, totalCost, startDate } =
+  const { cleaningFrequency, totalDuration, totalCost, startDate, hourDate } =
     useOrderServiceDataStore(
       useShallow((state) => ({
         cleaningFrequency: state.cleaningFrequency,
         totalDuration: state.totalDuration,
         totalCost: state.totalCost,
-        startDate: state.startDate
+        startDate: state.startDate,
+        hourDate: state.hourDate
       }))
     );
 
   const summaryData = new Map([
     ['Selected service', `${serviceName}`],
-    ['Cleaning frequency', `${cleaningFrequency?.name ?? '---'}`],
+    [
+      'Cleaning frequency',
+      `${cleaningFrequency?.name ?? EMPTY_DATA_PLACEHOLDER}`
+    ],
     ['Cleaning duration', `${displayTimeInHours(totalDuration)}`],
-    ['First cleaning date', '17.08.2023 8:00']
+    [
+      'First cleaning date',
+      `${displayDayDateAndHourDate(
+        startDate as NullableDate,
+        hourDate as NullableDate
+      )}`
+    ]
   ]);
 
   return (

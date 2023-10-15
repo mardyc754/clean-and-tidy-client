@@ -1,7 +1,9 @@
 import { create } from 'zustand';
 import type { BasicServiceData } from '~/api/schemas/services';
 
-import type { CleaningFrequencyData } from '~/types/forms';
+import { DETERGENT_COST } from '~/utils/constants';
+
+import type { CleaningFrequencyData, ValidDate } from '~/types/forms';
 
 const createOrFindOrderedService = (
   service: BasicServiceData,
@@ -42,14 +44,16 @@ interface OrderServiceDataStoreState {
   cleaningFrequency: CleaningFrequencyData | null;
   cleaningFrequencyData: CleaningFrequencyData[];
   totalDuration: number;
-  startDate: Date | null;
+  startDate: ValidDate;
+  hourDate: ValidDate;
   includeDetergents: boolean;
   orderedServices: OrderedService[];
   increaseTotalCost: (cost: number) => void;
   increaseTotalDuration: (duration: number) => void;
   increaseTotalCostAndDuration: (cost: number, duration: number) => void;
   changeCleaningFrequency: (frequency: CleaningFrequencyData) => void;
-  changeStartDate: (date: Date) => void;
+  changeStartDate: (date: ValidDate) => void;
+  changeHourDate: (date: ValidDate) => void;
   changeIncludeDetergents: () => void;
   setCleaningFrequencyData: (data: CleaningFrequencyData[]) => void;
   orderService: (
@@ -76,6 +80,7 @@ const useOrderServiceDataStore = create<OrderServiceDataStoreState>(
     cleaningFrequencyData: [],
     totalDuration: 0,
     startDate: null,
+    hourDate: null,
     includeDetergents: false,
     orderedServices: [],
     // address: '',
@@ -90,9 +95,21 @@ const useOrderServiceDataStore = create<OrderServiceDataStoreState>(
       })),
     changeCleaningFrequency: (frequency) =>
       set({ cleaningFrequency: frequency }),
-    changeStartDate: (date) => set({ startDate: date }),
+    changeStartDate: (date) =>
+      set({
+        startDate: date,
+        // TODO: the logic for hour date should be improved -
+        // it should be changed to null only when the hour is not available in the selected day
+        hourDate: null
+      }),
+    changeHourDate: (date) => set({ hourDate: date }),
     changeIncludeDetergents: () =>
-      set((state) => ({ includeDetergents: !state.includeDetergents })),
+      set((state) => ({
+        includeDetergents: !state.includeDetergents,
+        totalCost: state.includeDetergents
+          ? state.totalCost - DETERGENT_COST
+          : state.totalCost + DETERGENT_COST
+      })),
     setCleaningFrequencyData: (data) => set({ cleaningFrequencyData: data }),
     orderService: (
       // maybe this should be divided into two functions?

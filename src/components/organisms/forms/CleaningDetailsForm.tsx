@@ -29,17 +29,24 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
     includeDetergents,
     cleaningFrequency,
     cleaningFrequencyData,
+    startDate,
+    hourDate,
     changeCleaningFrequency,
-    changeIncludeDetergents
+    changeIncludeDetergents,
+    changeStartDate,
+    changeHourDate
   } = useOrderServiceDataStore(
     useShallow((state) => ({
       changeCleaningFrequency: state.changeCleaningFrequency,
       changeStartDate: state.changeStartDate,
       changeIncludeDetergents: state.changeIncludeDetergents,
+      changeHourDate: state.changeHourDate,
       includeDetergents: state.includeDetergents,
       cleaningFrequency: state.cleaningFrequency,
       cleaningFrequencyData: state.cleaningFrequencyData,
-      orderedServices: state.orderedServices
+      orderedServices: state.orderedServices,
+      startDate: state.startDate,
+      hourDate: state.hourDate
     }))
   );
 
@@ -50,19 +57,6 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
 
   return (
     <form className="py-16">
-      {/* <LabeledNumericInput
-        value={getServiceById(id)?.numberOfUnits ?? 0}
-        onIncreaseValue={() => orderService({ id, name, unit }, true)}
-        onDecreaseValue={() => cancelOrderingService(id)}
-        onChange={(value) =>
-          changeNumberOfUnits(value, { id, name, unit }, true)
-        }
-        min={0}
-        max={500}
-        name="areaSize"
-        label="Area size (in m2)"
-        className="items-center py-4"
-      /> */}
       <OrderServiceNumericInput
         serviceData={{ id, name, unit }}
         isMainServiceControl
@@ -90,7 +84,13 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
         checked={includeDetergents}
         onChangeChecked={changeIncludeDetergents}
       />
-      <CalendarWithHours label="Cleaning start date" />
+      <CalendarWithHours
+        day={startDate}
+        hour={hourDate}
+        onChangeDate={changeStartDate}
+        onChangeHour={changeHourDate}
+        label="Cleaning start date"
+      />
       {secondaryServicesWithUnit.length > 0 && (
         <ExtraDataMultiSelect
           className="py-4"
