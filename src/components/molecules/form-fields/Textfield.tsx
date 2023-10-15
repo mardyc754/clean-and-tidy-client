@@ -19,7 +19,7 @@ const Textfield = ({
   return (
     <div className={`flex flex-col ${!errorLabel && 'pb-4'} ${wrapperProps}`}>
       <Label htmlFor={name}>{label}</Label>
-      <Input name={name} placeholder={label} {...props} />
+      <Input name={name} placeholder={label} {...props} className="p-4" />
       <ErrorLabel>{errorLabel ?? ''}</ErrorLabel>
     </div>
   );

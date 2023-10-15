@@ -9,6 +9,7 @@ import type { StepIndicator } from '~/types/forms';
 
 import type { PageWrapperProps } from './PageWrapper';
 import { useOrderServiceDataStore } from '~/stores';
+import { displayTimeInHours } from '~/utils/dateUtils';
 
 type OrderCleaningFormPageProps = {
   stepIndicatorData: StepIndicator[];
@@ -38,7 +39,7 @@ const OrderCleaningFormPage = ({
   const summaryData = new Map([
     ['Selected service', `${serviceName}`],
     ['Cleaning frequency', `${cleaningFrequency?.name ?? '---'}`],
-    ['Cleaning duration', `${totalDuration} minutes`],
+    ['Cleaning duration', `${displayTimeInHours(totalDuration)}`],
     ['First cleaning date', '17.08.2023 8:00']
   ]);
 

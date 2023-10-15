@@ -9,7 +9,7 @@ import { frequencyValues } from '~/components/organisms/forms/constants';
 import { ChangeDataSummary } from '~/components/organisms/layout';
 import { PageWrapper } from '~/components/template';
 
-import { extractHourFromDate, getDateAfter } from '~/utils/dateHandling';
+import { extractHourFromDate, getDateAfter } from '~/utils/dateUtils';
 
 import type { SingleReservationData } from '~/types/user';
 import { type ChangeDataMode, CleaningFrequency } from '~/types/forms';

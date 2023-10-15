@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { Button } from '~/components/atoms/buttons';
-import { extractHourFromDate, getDateAfter } from '~/utils/dateHandling';
+import { extractHourFromDate, getDateAfter } from '~/utils/dateUtils';
 import type { SingleReservationData } from '~/types/user';
 import { ReservationManagementDialog } from '~/components/organisms/dialogs';
 

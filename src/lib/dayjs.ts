@@ -15,6 +15,11 @@ import dayjs from 'dayjs';
 //    "years":2021
 // }
 import toObject from 'dayjs/plugin/toObject';
+// useful to convert units from minutes to hours, days to years, etc.
+import duration from 'dayjs/plugin/duration';
+// humanizes input given by duration - can be useful in generating
+// how long ago particular comment was added (e.g. 4 years ago, 5 minutes ago)
+import relativeTime from 'dayjs/plugin/relativeTime';
 
 // // plugin to enable custom formats.
 // // it can be used, for example, to extract hour from the date
@@ -37,11 +42,6 @@ import toObject from 'dayjs/plugin/toObject';
 // // to check the quarten
 // import quarterOfYear from 'dayjs/plugin/quarterOfYear';
 // // to measure the duration of the time
-// // useful to convert units from minutes to hours, days to years, etc.
-// import duration from 'dayjs/plugin/duration';
-// // humanizez input given by duration - can be useful in generating
-// // how long ago particular comment was added (e.g. 4 years ago, 5 minutes ago)
-// import relativeTime from 'dayjs/plugin/relativeTime';
 
 import 'dayjs/locale/pl'; // import locale
 
@@ -54,7 +54,7 @@ dayjs.extend(toObject);
 // dayjs.extend(quarterOfYear);
 // dayjs.extend(customParseFormat);
 
-// dayjs.extend(duration);
-// dayjs.extend(relativeTime);
+dayjs.extend(duration);
+dayjs.extend(relativeTime);
 
 export default dayjs;

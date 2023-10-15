@@ -1,7 +1,7 @@
 import type { SingleReservationData } from '~/types/user';
 import DialogBase from './DialogBase';
 import { LabeledTypography } from '~/components/atoms/typography/labeled-text';
-import { extractHourFromDate, getDateAfter } from '~/utils/dateHandling';
+import { extractHourFromDate, getDateAfter } from '~/utils/dateUtils';
 import { Button, NavigationButton } from '~/components/atoms/buttons';
 import { CalendarWithHours } from '../form-fields';
 

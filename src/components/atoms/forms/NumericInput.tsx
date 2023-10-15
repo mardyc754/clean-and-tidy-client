@@ -59,9 +59,8 @@ const NumericInput = ({
       />
       <Input
         value={value}
-        // className="text-center"
         className={`text-center${
-          variant === 'outlined' ? ' w-[150px]' : ' w-[80px] p-1 text-sm'
+          variant === 'outlined' ? ' w-[150px] p-4' : ' w-[80px] p-1'
         }`}
         onChange={handleValueChange}
         {...props}
