@@ -58,9 +58,11 @@ const HourTile = ({
 
   return (
     <div
+      role="radio"
       onClick={onClick}
       data-value={value}
       className={`flex items-center justify-center px-4 py-2 ${hourTileBackgroundStyle} ${cursorStyle}`}
+      aria-checked={selected}
     >
       <MediumTypography
         className={`font-emphasize ${

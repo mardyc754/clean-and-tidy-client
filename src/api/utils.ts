@@ -10,9 +10,9 @@ type ResponseRecord = Partial<Record<string, unknown>> & {
   message?: string;
 };
 
-export type ErrorResponseData = BackendBasicErrorData;
-
 type ResponseData = ResponseRecord | ResponseRecord[];
+
+export type ErrorResponseData = BackendBasicErrorData;
 
 type FetchingData<
   SuccessData extends ResponseData,
@@ -23,7 +23,7 @@ type FetchingData<
       path: string;
       method: 'get' | 'delete';
       successSchema: ZodType<SuccessData>;
-      errorSchema: ZodType<Omit<ErrorData, 'hasError'>>;
+      errorSchema: ZodType<ErrorData>;
       data?: undefined;
       params?: Record<string, unknown>;
     }
@@ -31,7 +31,7 @@ type FetchingData<
       path: string;
       method: 'post' | 'put';
       successSchema: ZodType<SuccessData>;
-      errorSchema: ZodType<Omit<ErrorData, 'hasError'>>;
+      errorSchema: ZodType<ErrorData>;
       data?: InputData;
       params?: Record<string, unknown>;
     };
@@ -48,7 +48,7 @@ function handleTypeErrors(err: unknown, typeErrorMessage: string) {
 
 export async function handleFetchingData<
   SuccessData extends ResponseData,
-  ErrorData extends ErrorResponseData = ErrorResponseData,
+  ErrorData extends ErrorResponseData,
   InputData = Record<string, unknown>
 >({
   path,
@@ -60,10 +60,6 @@ export async function handleFetchingData<
 }: FetchingData<SuccessData, ErrorData, InputData>) {
   let responseData = { message: 'Connection error' } as SuccessData | ErrorData;
 
-  // await fetcher[method]<
-  //   AxiosRequestConfig<InputData>,
-  //   AxiosResponse<SuccessData>
-  // >(path, data, { withCredentials: true })
   await fetcher<AxiosRequestConfig<InputData>, AxiosResponse<SuccessData>>({
     method,
     url: path,
@@ -91,78 +87,6 @@ export async function handleFetchingData<
         err,
         'Type error of received error data'
       ) as SuccessData | ErrorData;
-    });
-
-  return responseData;
-}
-
-export async function handlePostData<
-  SuccessData extends Partial<Record<string, unknown>> & {
-    message: string;
-  },
-  ErrorData extends Partial<Record<string, unknown>> & {
-    message: string;
-  },
-  InputData = Record<string, unknown>
->(
-  path: string,
-  successSchema: ZodType<SuccessData>,
-  errorSchema: ZodType<ErrorData>,
-  data: InputData
-) {
-  let responseData = { message: 'Connection error' } as SuccessData | ErrorData;
-
-  await fetcher
-    .post<AxiosRequestConfig<InputData>, AxiosResponse<SuccessData>>(path, data)
-    .then((res) => {
-      responseData = successSchema.parse(res.data);
-    })
-    .catch((err) => {
-      if (err instanceof AxiosError) {
-        responseData = {
-          ...errorSchema.parse(err.response?.data as ErrorData),
-          hasError: true
-        };
-        return;
-      }
-      handleTypeErrors(err, 'Type error of received data');
-    })
-    .catch((err) => {
-      handleTypeErrors(err, 'Type error of received error data');
-    });
-
-  return responseData;
-}
-
-export async function handleGetData<
-  SuccessData extends Partial<Record<string, unknown>> & {
-    message: string;
-  },
-  ErrorData extends Partial<Record<string, unknown>> & {
-    message: string;
-  },
-  InputData = Record<string, unknown>
->(
-  path: string,
-  successSchema: ZodType<SuccessData>,
-  errorSchema: ZodType<ErrorData>
-) {
-  let responseData = { message: 'Connection error' } as SuccessData | ErrorData;
-
-  await fetcher
-    .get<AxiosRequestConfig<InputData>, AxiosResponse<SuccessData>>(path)
-    .then((res) => {
-      responseData = successSchema.parse(res.data);
-    })
-    .catch((err) => {
-      if (err instanceof AxiosError) {
-        responseData = errorSchema.parse(err.response?.data as ErrorData);
-        return;
-      }
-      handleTypeErrors(err, 'Type error of received data');
-    })
-    .catch((err) => {
-      handleTypeErrors(err, 'Type error of received error data');
     });
 
   return responseData;
