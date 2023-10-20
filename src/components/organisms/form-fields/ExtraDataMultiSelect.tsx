@@ -27,8 +27,8 @@ const ExtraDataMultiSelect = ({
       <div className="flex flex-col space-y-4">
         {data.map((item) => (
           <ExtraDataField
-            onChangeNumberOfUnits={() => orderService(item, false)}
-            selected={getServiceNumberOfUnits(item.id) > 0}
+            // onChangeNumberOfUnits={() => orderService(item, false)}
+            // selected={getServiceNumberOfUnits(item.id) > 0}
             key={`extra-data-multi-select-${item.id}`}
             data={item}
           />

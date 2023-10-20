@@ -3,7 +3,7 @@ import {
   CalendarWithHours,
   RadioGroup
 } from '~/components/organisms/form-fields';
-import { LabeledNumericInput } from '~/components/molecules/form-fields';
+import { NumericInput } from '~/components/molecules/form-fields';
 
 import type { SingleReservationData } from '~/types/user';
 import type { ChangeDataMode, CleaningFrequency } from '~/types/forms';
@@ -42,7 +42,7 @@ const ChangeCleaningDataForm = ({
             : 'Change the next cleaning date'
         }`}
       />
-      <LabeledNumericInput
+      <NumericInput
         value={duration}
         setValue={() => {
           /** */

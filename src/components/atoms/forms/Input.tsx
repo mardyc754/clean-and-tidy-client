@@ -1,12 +1,18 @@
-import type { InputHTMLAttributes } from 'react';
+import { forwardRef, type InputHTMLAttributes } from 'react';
 
-const Input = ({
-  className = '',
-  ...props
-}: InputHTMLAttributes<HTMLInputElement>) => {
+const Input = forwardRef<
+  HTMLInputElement,
+  InputHTMLAttributes<HTMLInputElement>
+>(({ className = '', ...props }, ref) => {
   return (
-    <input {...props} className={`rounded-lg outline-none ${className}`} />
+    <input
+      {...props}
+      className={`rounded-lg outline-none ${className}`}
+      ref={ref}
+    />
   );
-};
+});
+
+Input.displayName = 'Input';
 
 export default Input;

@@ -1,25 +1,45 @@
+import { useState, useEffect } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { type ServiceWithUnit } from '~/api/schemas/services';
 
 import { Button } from '~/components/atoms/buttons';
-import { OrderServiceNumericInput } from '.';
 import { convertToSnakeCase } from '~/utils/stringUtils';
+import { NumericInput } from '~/components/atoms/forms';
 
 type ExtraDataFieldProps = {
   data: ServiceWithUnit;
-  selected: boolean;
-  onChangeNumberOfUnits: VoidFunction;
+  // onChangeNumberOfUnits: VoidFunction;
 };
 
-const ExtraDataField = ({
-  data,
-  selected,
-  onChangeNumberOfUnits
-}: ExtraDataFieldProps) => {
+const ExtraDataField = ({ data }: ExtraDataFieldProps) => {
   const { name, unit } = data;
   const { name: unitName, price } = unit;
+  const fieldName = convertToSnakeCase(name);
+  const [selected, setSelected] = useState(false);
+
+  // TODO handle types
+  const { watch, setValue, unregister } = useFormContext();
+  const watchNumberOfUnits = watch(fieldName);
+
+  // enable numeric field on button click
+  // or disable it when number of units becomes 0
+  useEffect(() => {
+    if (selected) {
+      setValue(fieldName, 1);
+    } else {
+      unregister(fieldName);
+    }
+  }, [fieldName, selected, setValue, unregister]);
+
+  // or disable it when number of units becomes 0
+  useEffect(() => {
+    if (watchNumberOfUnits === 0) {
+      setSelected(false);
+    }
+  }, [watchNumberOfUnits]);
 
   return (
     <div
@@ -33,11 +53,12 @@ const ExtraDataField = ({
         <p className="text-sm">{`${price} zł/${unitName}`}</p>
       </div>
       {selected ? (
-        <OrderServiceNumericInput
-          serviceData={data}
+        <NumericInput
+          initialValue={1}
+          // serviceData={data}
+          name={fieldName}
           min={0}
           max={50}
-          name={convertToSnakeCase(name)}
           variant="contained-controls"
         />
       ) : (
@@ -45,7 +66,7 @@ const ExtraDataField = ({
           className="flex items-center px-3 py-3"
           onClick={(e) => {
             e.preventDefault();
-            onChangeNumberOfUnits();
+            setSelected(true);
           }}
         >
           <FontAwesomeIcon icon={faPlus} className="h-3 w-3" />

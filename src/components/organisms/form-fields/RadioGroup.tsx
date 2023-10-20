@@ -1,19 +1,30 @@
+import { useEffect } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { RadioGroup as HeadlessRadioGroup } from '@headlessui/react';
 
 import { RadioField } from '~/components/atoms/forms';
-import type { RadioFieldOption } from '~/types/forms';
+import type { CleaningFrequency, RadioFieldOption } from '~/types/forms';
 
 type RadioGroupProps = {
+  name: string;
   label: string;
-  value: RadioFieldOption | null;
-  onChange: (value: RadioFieldOption) => void;
   data: RadioFieldOption[];
 };
 
-const RadioGroup = ({ label, data, value, onChange }: RadioGroupProps) => {
+const RadioGroup = ({ name, label, data }: RadioGroupProps) => {
+  const { register, setValue } = useFormContext();
+
+  useEffect(() => {
+    register(name);
+  }, [name, register]);
+
+  const onChange = (value: CleaningFrequency) => {
+    setValue(name, value);
+  };
+
   return (
     <div className="py-4">
-      <HeadlessRadioGroup value={value} onChange={onChange}>
+      <HeadlessRadioGroup onChange={onChange}>
         <HeadlessRadioGroup.Label className="py-1">
           {label}
         </HeadlessRadioGroup.Label>

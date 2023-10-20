@@ -1,10 +1,8 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { InferGetStaticPropsType, GetStaticProps } from 'next';
 
 import { getAllServices, getServiceById } from '~/api/services';
 import type { Service } from '~/api/schemas/services';
-
-import { useOrderServiceDataStore } from '~/stores';
 
 import { EMPTY_DATA_PLACEHOLDER } from '~/utils/constants';
 
@@ -56,26 +54,6 @@ export default function OrderService({
   data
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const [currentStep, setCurrentStep] = useState(0);
-
-  const cleaningFrequencyData = useMemo(
-    () => data?.cleaningFrequencies ?? [],
-    [data]
-  );
-
-  // const { setCleaningFrequencyData, changeCleaningFrequency } =
-  //   useOrderServiceDataStore(
-  //     useShallow((state) => ({
-  //       setCleaningFrequencyData: state.setCleaningFrequencyData,
-  //       changeCleaningFrequency: state.changeCleaningFrequency
-  //     }))
-  //   );
-  const setCleaningFrequencyData = useOrderServiceDataStore(
-    (state) => state.setCleaningFrequencyData
-  );
-
-  useEffect(() => {
-    setCleaningFrequencyData(cleaningFrequencyData);
-  }, [cleaningFrequencyData, setCleaningFrequencyData]);
 
   const currentStepData = useMemo(
     () => getCurrentStepComponent(currentStep, data),

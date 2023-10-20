@@ -8,8 +8,6 @@ import NumericInput, {
   type NumericInputProps
 } from '~/components/atoms/forms/NumericInput';
 
-import LabeledNumericInput from './LabeledNumericInput';
-
 type OrderServiceNumericInputProps = Omit<
   NumericInputProps,
   'onChange' | 'onIncreaseValue' | 'onDecreaseValue' | 'value'
@@ -40,18 +38,16 @@ const OrderServiceNumericInput = ({
     }))
   );
 
-  const Component = label ? LabeledNumericInput : NumericInput;
-
   return (
-    <Component
+    <NumericInput
       {...props}
       label={label ?? ''}
-      value={getServiceNumberOfUnits(serviceData.id)}
-      onChange={(value) =>
-        changeNumberOfUnits(value, serviceData, isMainServiceControl)
-      }
-      onIncreaseValue={() => orderService(serviceData, isMainServiceControl)}
-      onDecreaseValue={() => cancelOrderingService(serviceData.id)}
+      // value={getServiceNumberOfUnits(serviceData.id)}
+      // onChange={(value) =>
+      //   changeNumberOfUnits(value, serviceData, isMainServiceControl)
+      // }
+      // onIncreaseValue={() => orderService(serviceData, isMainServiceControl)}
+      // onDecreaseValue={() => cancelOrderingService(serviceData.id)}
     />
   );
 };

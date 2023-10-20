@@ -42,7 +42,6 @@ interface OrderServiceDataStoreState {
   unitName: string;
   totalCost: number;
   cleaningFrequency: CleaningFrequencyData | null;
-  cleaningFrequencyData: CleaningFrequencyData[];
   totalDuration: number;
   startDate: ValidDate;
   hourDate: ValidDate;
@@ -55,7 +54,6 @@ interface OrderServiceDataStoreState {
   changeStartDate: (date: ValidDate) => void;
   changeHourDate: (date: ValidDate) => void;
   changeIncludeDetergents: () => void;
-  setCleaningFrequencyData: (data: CleaningFrequencyData[]) => void;
   orderService: (
     service: BasicServiceData,
     isMainServiceInReservation?: boolean
@@ -77,7 +75,6 @@ const useOrderServiceDataStore = create<OrderServiceDataStoreState>(
     unitName: '',
     totalCost: 0,
     cleaningFrequency: null,
-    cleaningFrequencyData: [],
     totalDuration: 0,
     startDate: null,
     hourDate: null,
@@ -110,7 +107,6 @@ const useOrderServiceDataStore = create<OrderServiceDataStoreState>(
           ? state.totalCost - DETERGENT_COST
           : state.totalCost + DETERGENT_COST
       })),
-    setCleaningFrequencyData: (data) => set({ cleaningFrequencyData: data }),
     orderService: (
       // maybe this should be divided into two functions?
       // - one for already ordered services
