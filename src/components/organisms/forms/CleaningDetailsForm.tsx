@@ -17,8 +17,6 @@ type CleaningDetailsFormProps = {
 };
 
 const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
-  const { id, name, unit } = data;
-
   console.log(data);
   const methods = useForm();
 
@@ -63,6 +61,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
         />
         {secondaryServicesWithUnit.length > 0 && (
           <ExtraDataMultiSelect
+            name="extraServices"
             className="py-4"
             data={secondaryServicesWithUnit}
           />
