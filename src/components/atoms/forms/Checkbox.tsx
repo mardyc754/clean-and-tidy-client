@@ -1,18 +1,16 @@
-import { useState, useEffect, type InputHTMLAttributes } from 'react';
-import type { SetRequired } from 'type-fest';
+import { useFormContext } from 'react-hook-form';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
+
+import type { InputHTMLAttributes } from 'react';
+import type { SetRequired } from 'type-fest';
 
 import { Label } from '~/components/atoms/forms';
 
 type CheckboxProps = {
   label?: string;
   caption: string;
-  onChangeChecked: VoidFunction;
-} & SetRequired<
-  Omit<InputHTMLAttributes<HTMLInputElement>, 'type'>,
-  'checked' | 'name'
->;
+} & SetRequired<Omit<InputHTMLAttributes<HTMLInputElement>, 'type'>, 'name'>;
 
 type CheckboxWrapperProps = {
   name: string;
@@ -38,20 +36,14 @@ const CheckboxWrapper = ({
 
 const Checkbox = ({
   name,
-  checked,
   label,
   caption,
-  onChangeChecked,
   className = '',
   ...props
 }: CheckboxProps) => {
-  // const [isChecked, setIsChecked] = useState(false);
+  const { register, watch } = useFormContext();
 
-  // useEffect(() => {
-  //   if (onChange) {
-  //     onChange(checked);
-  //   }
-  // }, [isChecked]);
+  const checked = !!watch(name);
 
   const wrapperStyle = checked
     ? 'bg-cyan-500'
@@ -77,7 +69,7 @@ const Checkbox = ({
             type="checkbox"
             className="absolute top-0 h-6 w-6 cursor-pointer appearance-none rounded-lg"
             defaultChecked={checked}
-            onClick={onChangeChecked}
+            {...register(name)}
             {...props}
           />
         </div>

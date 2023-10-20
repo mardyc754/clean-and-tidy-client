@@ -1,3 +1,4 @@
+import { useFormContext } from 'react-hook-form';
 // import 'react-calendar/dist/Calendar.css'; // for testing purposes only
 import { type CalendarProps as ReactCalendarProps } from 'react-calendar';
 
@@ -5,26 +6,22 @@ import { MediumTypography } from '~/components/atoms/typography/regular-text';
 import { Calendar } from '~/components/molecules/calendar';
 import { HourSelection } from '~/components/molecules/form-fields';
 
-import { type ValidDate } from '~/types/forms';
-
 type CalendarWithLabelProps = {
+  calendarInputName: string;
+  hourInputName: string;
   label: string;
   direction?: 'column' | 'row';
-  day: ValidDate;
-  hour: ValidDate;
-  onChangeDate: (value: ValidDate) => void;
-  onChangeHour: (value: ValidDate) => void;
 } & Omit<ReactCalendarProps, 'onChange' | 'value'>;
 
 const CalendarWithHours = ({
   label,
   direction = 'row',
-  day,
-  hour,
-  onChangeDate,
-  onChangeHour,
+  calendarInputName,
+  hourInputName,
   ...props
 }: CalendarWithLabelProps) => {
+  const { watch } = useFormContext();
+
   return (
     <div className="flex flex-col">
       <MediumTypography className="py-1">{label}</MediumTypography>
@@ -33,13 +30,12 @@ const CalendarWithHours = ({
           direction === 'column' ? 'flex-col items-center space-y-4' : ''
         }`}
       >
-        <Calendar onChange={onChangeDate} value={day} {...props} />
+        <Calendar name={calendarInputName} {...props} />
         <HourSelection
-          currentHour={hour}
-          onChange={onChangeHour}
+          name={hourInputName}
           className="px-16"
           direction={direction === 'column' ? 'row' : 'column'}
-          disableSelection={!day}
+          disableSelection={!watch(calendarInputName)}
         />
       </div>
     </div>
