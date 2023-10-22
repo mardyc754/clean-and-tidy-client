@@ -1,7 +1,12 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
+import type { ValueOf } from 'type-fest';
 
-import type { OrderServiceInputData } from '~/api/schemas/reservation';
+import type {
+  Address,
+  OrderServiceClientData,
+  OrderServiceInputData
+} from '~/api/schemas/reservation';
 import { type BasicServiceData, type Service } from '~/api/schemas/services';
 import type {
   CleaningFrequencyData,
@@ -40,6 +45,16 @@ interface OrderServiceFormStoreState {
   onChangeCleaningFrequency: (
     cleaningFrequency: CleaningFrequency,
     availableFrequencies: CleaningFrequencyData[]
+  ) => void;
+  clientData: Partial<OrderServiceClientData>;
+  addressData: Partial<Address>;
+  onChangeClientData: (
+    fieldName: keyof OrderServiceClientData,
+    value: ValueOf<typeof fieldName>
+  ) => void;
+  onChangeAddressData: (
+    fieldName: keyof Address,
+    value: ValueOf<typeof fieldName>
   ) => void;
 }
 
@@ -88,6 +103,8 @@ export const useOrderServiceFormStore = create<OrderServiceFormStoreState>()(
       startDate: null,
       hourDate: null,
       includeDetergents: false,
+      clientData: {},
+      addressData: {},
       setData: (formData, serviceData) =>
         set((state) => {
           const { id, name, unit, cleaningFrequencies } = serviceData;
@@ -189,6 +206,16 @@ export const useOrderServiceFormStore = create<OrderServiceFormStoreState>()(
       },
       onChangeHourDate: (hourDate) => {
         set(() => ({ hourDate }));
+      },
+      onChangeClientData: (fieldName, value) => {
+        set(() => ({
+          clientData: { ...get().clientData, [fieldName]: value }
+        }));
+      },
+      onChangeAddressData: (fieldName, value) => {
+        set(() => ({
+          addressData: { ...get().addressData, [fieldName]: value }
+        }));
       }
     }),
     { name: 'orderServiceFormStore' }

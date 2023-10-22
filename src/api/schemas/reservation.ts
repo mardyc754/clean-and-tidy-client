@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import { CleaningFrequency } from '~/types/forms';
 
+import { clientDataSchema } from './client';
+
 export const address = z.object({
   street: z.string().max(40),
   houseNumber: z.string().max(6),
@@ -55,6 +57,17 @@ export const orderServiceInputDataSchema = orderServiceSubmitDataSchema.extend({
   startDate: z.date().nullable(),
   hourDate: z.date().nullable()
 });
+
+export const orderServiceClientDataSchema = clientDataSchema.pick({
+  firstName: true,
+  lastName: true,
+  email: true,
+  phone: true
+});
+
+export type OrderServiceClientData = z.infer<
+  typeof orderServiceClientDataSchema
+>;
 
 export type OrderServiceSubmitData = z.infer<
   typeof orderServiceSubmitDataSchema

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { cleaningDetailsResolver } from '~/api/resolvers/orderServiceForm';
@@ -13,17 +13,14 @@ import {
   RadioGroup
 } from '../form-fields';
 import { useOrderServiceFormStore } from '~/stores/orderServiceFormStore';
-import { CleaningFrequency } from '~/types/forms';
 
 interface CleaningDetailsFormProps {
   data: Service;
 }
 
 const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
-  console.log(data);
   const { id, name, unit } = data;
   const {
-    setData,
     onChangeIncludeDetergents,
     onChangeServiceNumberOfUnits,
     onChangeCleaningFrequency,
@@ -50,10 +47,6 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
     // resolver: cleaningDetailsResolver
   });
 
-  const currentValues = useWatch<OrderServiceInputData>({
-    control: methods.control
-  });
-
   const cleaningFrequencyData = useMemo(
     () => data?.cleaningFrequencies ?? [],
     [data]
@@ -64,7 +57,11 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
     [data]
   ) as ServiceWithUnit[];
 
-  console.log(currentValues);
+  // console.log(data);
+  // const currentValues = useWatch<OrderServiceInputData>({
+  //   control: methods.control
+  // });
+  // console.log(currentValues);
 
   return (
     <FormProvider {...methods}>

@@ -8,9 +8,8 @@ import { SummarySection } from '~/components/organisms/layout';
 import type { NullableDate, StepIndicator } from '~/types/forms';
 
 import type { PageWrapperProps } from './PageWrapper';
-import { useOrderServiceDataStore } from '~/stores';
+
 import {
-  displayDateWithHours,
   displayDayDateAndHourDate,
   displayTimeInHours
 } from '~/utils/dateUtils';
@@ -33,14 +32,16 @@ const OrderCleaningFormPage = ({
   serviceName
 }: OrderCleaningFormPageProps) => {
   const { totalCost, totalDuration, cleaningFrequency, startDate, hourDate } =
-    useOrderServiceFormStore((state) => ({
-      orderServiceFormData: state.orderServiceFormData,
-      totalCost: state.totalCost,
-      totalDuration: state.durationInMinutes,
-      cleaningFrequency: state.cleaningFrequencyDisplayData,
-      startDate: state.startDate,
-      hourDate: state.hourDate
-    }));
+    useOrderServiceFormStore(
+      useShallow((state) => ({
+        orderServiceFormData: state.orderServiceFormData,
+        totalCost: state.totalCost,
+        totalDuration: state.durationInMinutes,
+        cleaningFrequency: state.cleaningFrequencyDisplayData,
+        startDate: state.startDate,
+        hourDate: state.hourDate
+      }))
+    );
 
   const summaryData = new Map([
     ['Selected service', `${serviceName}`],
@@ -73,7 +74,6 @@ const OrderCleaningFormPage = ({
             </div>
           )}
         </div>
-        {/* <ButtonNavigation buttonData={buttonData} /> */}
       </div>
     </PageWrapper>
   );
