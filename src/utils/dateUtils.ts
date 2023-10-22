@@ -24,6 +24,7 @@ export function dateWithHour(date: NullableDate, hour: number) {
   return dayjs(date ?? undefined)
     .hour(hour)
     .minute(0)
+    .second(0)
     .toDate();
 }
 

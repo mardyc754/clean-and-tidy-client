@@ -15,6 +15,7 @@ import {
   displayTimeInHours
 } from '~/utils/dateUtils';
 import { EMPTY_DATA_PLACEHOLDER } from '~/utils/constants';
+import { useOrderServiceFormStore } from '~/stores/orderServiceFormStore';
 
 type OrderCleaningFormPageProps = {
   stepIndicatorData: StepIndicator[];
@@ -31,16 +32,15 @@ const OrderCleaningFormPage = ({
   showSummary = false,
   serviceName
 }: OrderCleaningFormPageProps) => {
-  const { cleaningFrequency, totalDuration, totalCost, startDate, hourDate } =
-    useOrderServiceDataStore(
-      useShallow((state) => ({
-        cleaningFrequency: state.cleaningFrequency,
-        totalDuration: state.totalDuration,
-        totalCost: state.totalCost,
-        startDate: state.startDate,
-        hourDate: state.hourDate
-      }))
-    );
+  const { totalCost, totalDuration, cleaningFrequency, startDate, hourDate } =
+    useOrderServiceFormStore((state) => ({
+      orderServiceFormData: state.orderServiceFormData,
+      totalCost: state.totalCost,
+      totalDuration: state.durationInMinutes,
+      cleaningFrequency: state.cleaningFrequencyDisplayData,
+      startDate: state.startDate,
+      hourDate: state.hourDate
+    }));
 
   const summaryData = new Map([
     ['Selected service', `${serviceName}`],

@@ -9,8 +9,8 @@ export const address = z.object({
 });
 
 export const contactDetails = z.object({
-  name: z.string().max(50),
-  surname: z.string().max(50),
+  firstName: z.string().max(50),
+  lastName: z.string().max(50),
   phone: z.string().max(15),
   email: z.string().email(),
   address
@@ -40,6 +40,27 @@ export const reservationFormData = z.object({
   orderedServices: z.array(orderedService),
   contactDetails
 });
+
+export const orderServiceSubmitDataSchema = z.object({
+  numberOfUnits: z.number().int().max(500).min(30),
+  cleaningFrequency: z.nativeEnum(CleaningFrequency),
+  startDate: z.date(),
+  hourDate: z.date(),
+  includeDetergents: z.boolean(),
+  extraServices: z.array(z.number().int()).optional()
+});
+
+export const orderServiceInputDataSchema = orderServiceSubmitDataSchema.extend({
+  cleaningFrequency: z.nativeEnum(CleaningFrequency).nullable(),
+  startDate: z.date().nullable(),
+  hourDate: z.date().nullable()
+});
+
+export type OrderServiceSubmitData = z.infer<
+  typeof orderServiceSubmitDataSchema
+>;
+
+export type OrderServiceInputData = z.infer<typeof orderServiceInputDataSchema>;
 
 export type Address = z.infer<typeof address>;
 

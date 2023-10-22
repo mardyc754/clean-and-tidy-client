@@ -47,8 +47,6 @@ interface OrderServiceDataStoreState {
   hourDate: ValidDate;
   includeDetergents: boolean;
   orderedServices: OrderedService[];
-  increaseTotalCost: (cost: number) => void;
-  increaseTotalDuration: (duration: number) => void;
   increaseTotalCostAndDuration: (cost: number, duration: number) => void;
   changeCleaningFrequency: (frequency: CleaningFrequencyData) => void;
   changeStartDate: (date: ValidDate) => void;
@@ -81,10 +79,6 @@ const useOrderServiceDataStore = create<OrderServiceDataStoreState>(
     includeDetergents: false,
     orderedServices: [],
     // address: '',
-    increaseTotalCost: (cost: number) =>
-      set((state) => ({ totalCost: state.totalCost + cost })),
-    increaseTotalDuration: (duration: number) =>
-      set((state) => ({ totalDuration: state.totalDuration + duration })),
     increaseTotalCostAndDuration: (cost: number, duration: number) =>
       set((state) => ({
         totalDuration: state.totalDuration + duration,

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -11,34 +11,38 @@ import { NumericInput } from '~/components/atoms/forms';
 type ExtraDataFieldProps = {
   data: ServiceWithUnit;
   name: string;
+  onChangeNumberOfUnits: (value: number) => void;
 };
 
-const ExtraDataField = ({ data, name }: ExtraDataFieldProps) => {
+const ExtraDataField = ({
+  data,
+  name,
+  onChangeNumberOfUnits
+}: ExtraDataFieldProps) => {
   const { name: serviceName, unit } = data;
   const { name: unitName, price } = unit;
 
   const [selected, setSelected] = useState(false);
 
-  // TODO handle types
-  const { watch, setValue, unregister } = useFormContext();
-  const watchNumberOfUnits = watch(name);
-
+  const { setValue, unregister } = useFormContext();
+  const currentNumberOfUnits = useWatch({ name }) as number;
   // enable numeric field on button click
   // or disable it when number of units becomes 0
   useEffect(() => {
     if (selected) {
       setValue(name, 1);
+      onChangeNumberOfUnits(1);
     } else {
       unregister(name);
     }
-  }, [name, selected, setValue, unregister]);
+  }, [selected]);
 
   // or disable it when number of units becomes 0
   useEffect(() => {
-    if (watchNumberOfUnits === 0) {
+    if (currentNumberOfUnits === 0) {
       setSelected(false);
     }
-  }, [watchNumberOfUnits]);
+  }, [currentNumberOfUnits]);
 
   return (
     <div
@@ -58,6 +62,7 @@ const ExtraDataField = ({ data, name }: ExtraDataFieldProps) => {
           min={0}
           max={50}
           variant="contained-controls"
+          onChange={onChangeNumberOfUnits}
         />
       ) : (
         <Button

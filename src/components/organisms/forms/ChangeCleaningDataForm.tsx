@@ -33,7 +33,7 @@ const ChangeCleaningDataForm = ({
         value={changeDataMode}
         onChange={onChangeDataMode}
         label="Change data"
-        data={changeDataModeData}
+        optionList={changeDataModeData}
       />
       <CalendarWithHours
         label={`${
@@ -56,7 +56,7 @@ const ChangeCleaningDataForm = ({
       {changeDataMode === 'permanently' && (
         <RadioGroup
           label="Cleaning frequency"
-          data={cleaningFrequencyData}
+          optionList={cleaningFrequencyData}
           value={frequency}
           onChange={onChangeFrequency}
         />

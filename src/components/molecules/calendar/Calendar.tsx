@@ -8,25 +8,27 @@ import { useFormContext } from 'react-hook-form';
 
 import type { ValidDate } from '~/types/forms';
 
-const Calendar = ({
-  name,
-  value,
-  ...props
-}: ReactCalendarProps & { name: string }) => {
+interface CalendarProps extends Omit<ReactCalendarProps, 'onChange'> {
+  name: string;
+  onChange?: (value: ValidDate) => void;
+}
+
+const Calendar = ({ name, value, onChange, ...props }: CalendarProps) => {
   const { register, setValue } = useFormContext();
 
   useEffect(() => {
     register(name);
   }, [name, register]);
 
-  const onChange = (value: ValidDate) => {
+  const handleChange = (value: ValidDate) => {
     setValue(name, value);
+    onChange?.(value);
   };
 
   return (
     // <div className="flex flex-col">
     <ReactCalendar
-      onChange={onChange}
+      onChange={handleChange}
       value={value}
       // temporary in order to quiet hydrate errors
       calendarType="iso8601"

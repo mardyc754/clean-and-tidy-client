@@ -1,22 +1,26 @@
 import { useEffect, useMemo } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import { HourTile } from '~/components/atoms/forms';
 
 import { dateWithHour, extractHourFromDate } from '~/utils/dateUtils';
+
+import type { ValidDate } from '~/types/forms';
 
 type HourSelectionProps = {
   name: string;
   className?: string;
   direction?: 'row' | 'column';
   disableSelection: boolean;
+  onChange?: (value: ValidDate) => void;
 };
 
 const HourSelection = ({
   name,
   className = '',
   direction = 'column',
-  disableSelection
+  disableSelection,
+  onChange
 }: HourSelectionProps) => {
   const hourAvailabilityData = useMemo(
     () => [
@@ -37,11 +41,13 @@ const HourSelection = ({
     []
   );
 
-  const { register, setValue, watch } = useFormContext();
+  const { register, setValue } = useFormContext();
 
   useEffect(() => {
     register(name);
-  }, [register, name]);
+  }, [name]);
+
+  const currentValue = useWatch({ name }) as Date;
 
   return (
     // it will be grid probably with gaps
@@ -58,10 +64,12 @@ const HourSelection = ({
           value={hour}
           available={available}
           disabled={disableSelection}
-          selected={hour === extractHourFromDate(watch(name))}
-          onSelect={(selectedHour) =>
-            setValue(name, dateWithHour(watch(name), selectedHour))
-          }
+          selected={hour === extractHourFromDate(currentValue)}
+          onSelect={(selectedHour) => {
+            const newValue = dateWithHour(currentValue, selectedHour);
+            setValue(name, newValue);
+            onChange?.(newValue);
+          }}
         />
       ))}
     </div>

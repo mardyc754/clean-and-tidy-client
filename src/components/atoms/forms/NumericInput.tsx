@@ -2,7 +2,7 @@ import React, { type InputHTMLAttributes, type ChangeEvent } from 'react';
 
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import type { SetRequired } from 'type-fest';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import Label from './Label';
 import Input from './Input';
@@ -14,7 +14,7 @@ export type NumericInputProps = {
   label?: string;
   wrapperClassName?: string;
   initialValue?: number;
-
+  onChange?: (value: number) => void;
   variant?: 'outlined' | 'contained-controls';
 } & SetRequired<
   Omit<
@@ -55,22 +55,25 @@ const NumericInput = ({
   label,
   wrapperClassName,
   initialValue = 0,
+  onChange,
   ...props
 }: NumericInputProps) => {
-  const { setValue, register, watch } = useFormContext();
+  const { setValue, register } = useFormContext();
+
+  const currentValue = useWatch({ name }) as number;
 
   const handleValueChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const newValue = parseInt(e.target.value);
+    let newValue = parseInt(e.target.value);
 
-    if (isNaN(newValue)) {
-      setValue(name, min);
+    if (isNaN(newValue) || newValue < min) {
+      // setValue(name, min);
+      newValue = min;
     } else if (newValue > max) {
-      setValue(name, max);
-    } else if (newValue < min) {
-      setValue(name, min);
-    } else {
-      setValue(name, newValue);
+      newValue = max;
     }
+
+    setValue(name, newValue);
+    onChange?.(newValue);
   };
 
   return (
@@ -83,7 +86,11 @@ const NumericInput = ({
         <NumericInputControl
           variant={variant}
           icon={faMinus}
-          onClick={() => setValue(name, watch(name) - 1)}
+          onClick={() => {
+            const newValue = currentValue - 1;
+            setValue(name, newValue);
+            onChange?.(newValue);
+          }}
         />
         <Input
           defaultValue={min}
@@ -103,7 +110,9 @@ const NumericInput = ({
           variant={variant}
           icon={faPlus}
           onClick={() => {
-            setValue(name, watch(name) + 1);
+            const newValue = currentValue + 1;
+            setValue(name, newValue);
+            onChange?.(newValue);
           }}
         />
       </div>

@@ -1,24 +1,58 @@
-import { FormProvider, useForm } from 'react-hook-form';
+import { useCallback, useEffect, useMemo } from 'react';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
-import { useMemo } from 'react';
-import { type Service, type ServiceWithUnit } from '~/api/schemas/services';
+import { cleaningDetailsResolver } from '~/api/resolvers/orderServiceForm';
+import type { Service, ServiceWithUnit } from '~/api/schemas/services';
+import type { OrderServiceInputData } from '~/api/schemas/reservation';
 
-import { Checkbox } from '~/components/atoms/forms';
+import { Checkbox, NumericInput } from '~/components/atoms/forms';
 
 import {
   CalendarWithHours,
   ExtraDataMultiSelect,
   RadioGroup
 } from '../form-fields';
-import { NumericInput } from '~/components/atoms/forms';
+import { useOrderServiceFormStore } from '~/stores/orderServiceFormStore';
+import { CleaningFrequency } from '~/types/forms';
 
-type CleaningDetailsFormProps = {
+interface CleaningDetailsFormProps {
   data: Service;
-};
+}
 
 const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
   console.log(data);
-  const methods = useForm();
+  const { id, name, unit } = data;
+  const {
+    setData,
+    onChangeIncludeDetergents,
+    onChangeServiceNumberOfUnits,
+    onChangeCleaningFrequency,
+    onChangeStartDate,
+    onChangeHourDate
+  } = useOrderServiceFormStore((state) => ({
+    setData: state.setData,
+    onChangeIncludeDetergents: state.onChangeIncludeDetergents,
+    onChangeServiceNumberOfUnits: state.onChangeServiceNumberOfUnits,
+    onChangeCleaningFrequency: state.onChangeCleaningFrequency,
+    onChangeStartDate: state.onChangeStartDate,
+    onChangeHourDate: state.onChangeHourDate
+  }));
+
+  const methods = useForm<OrderServiceInputData>({
+    defaultValues: {
+      numberOfUnits: 0,
+      cleaningFrequency: null,
+      includeDetergents: false,
+      startDate: null,
+      hourDate: null,
+      extraServices: []
+    }
+    // resolver: cleaningDetailsResolver
+  });
+
+  const currentValues = useWatch<OrderServiceInputData>({
+    control: methods.control
+  });
 
   const cleaningFrequencyData = useMemo(
     () => data?.cleaningFrequencies ?? [],
@@ -30,7 +64,8 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
     [data]
   ) as ServiceWithUnit[];
 
-  console.log(methods.watch());
+  console.log(currentValues);
+
   return (
     <FormProvider {...methods}>
       <form className="py-16">
@@ -40,12 +75,16 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
           name="numberOfUnits"
           label="Area size (in m2)"
           wrapperClassName="items-center py-4"
+          onChange={(value: number) =>
+            onChangeServiceNumberOfUnits(value, true, { id, name, unit })
+          }
         />
         {cleaningFrequencyData.length > 1 && (
           <RadioGroup
             name="cleaningFrequency"
             label="Cleaning frequency"
-            data={cleaningFrequencyData}
+            optionList={cleaningFrequencyData}
+            onChange={onChangeCleaningFrequency}
           />
         )}
         <Checkbox
@@ -53,17 +92,21 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
           className="py-4"
           label="Detergents"
           caption="Include detergents (+15zł)"
+          onChange={onChangeIncludeDetergents}
         />
         <CalendarWithHours
           calendarInputName="startDate"
           hourInputName="hourDate"
           label="Cleaning start date"
+          onChangeDate={onChangeStartDate}
+          onChangeHour={onChangeHourDate}
         />
         {secondaryServicesWithUnit.length > 0 && (
           <ExtraDataMultiSelect
             name="extraServices"
             className="py-4"
             data={secondaryServicesWithUnit}
+            onChangeNumberOfUnits={onChangeServiceNumberOfUnits}
           />
         )}
       </form>

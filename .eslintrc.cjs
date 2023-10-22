@@ -24,7 +24,8 @@ const config = {
       }
     ],
     '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-    'no-console': 'warn'
+    'no-console': 'warn',
+    'react-hooks/exhaustive-deps': 'off'
   }
 };
 
