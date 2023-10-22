@@ -35,7 +35,7 @@ function getCurrentStepComponent(index: number, data: Service | null) {
       componentData = {
         heading: 'Summary',
         stepIndidatorData: summaryIndicatorData,
-        stepComponent: <SummaryForm />
+        stepComponent: <SummaryForm serviceName={data?.name ?? ''} />
       };
       break;
     case 0:

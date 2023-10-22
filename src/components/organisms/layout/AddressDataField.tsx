@@ -1,19 +1,15 @@
-import type { AddressData } from '~/types/forms';
+import type {
+  Address,
+  OrderServiceClientData
+} from '~/api/schemas/reservation';
 
 type AddressDataFieldProps = {
-  data: AddressData;
+  data: Address & OrderServiceClientData;
 };
 
 const AddressDataField = ({ data }: AddressDataFieldProps) => {
-  const {
-    firstName,
-    lastName,
-    street,
-    houseNumber,
-    postcode,
-    city,
-    phoneNumber
-  } = data;
+  const { firstName, lastName, street, houseNumber, postCode, city, phone } =
+    data;
 
   return (
     <>
@@ -24,10 +20,10 @@ const AddressDataField = ({ data }: AddressDataFieldProps) => {
         {street} {houseNumber}
       </p>
       <p>
-        {postcode} {city}
+        {postCode} {city}
       </p>
       <br />
-      <p>Phone: {phoneNumber}</p>
+      <p>Phone: {phone}</p>
     </>
   );
 };

@@ -3,4 +3,3 @@ export { default as Dropdown } from './Dropdown';
 export { default as HourSelection } from './HourSelection';
 export { default as TextArea } from './TextArea';
 export { default as ExtraDataField } from './ExtraDataField';
-export { default as OrderServiceNumericInput } from './OrderServiceNumericInput';

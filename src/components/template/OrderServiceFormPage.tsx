@@ -1,20 +1,12 @@
-import { useShallow } from 'zustand/react/shallow';
-
 import { Heading1 } from '~/components/atoms/typography/headings';
 import { MultiStepFormIndicator } from '~/components/molecules';
 import { PageWrapper } from '~/components/template';
 import { SummarySection } from '~/components/organisms/layout';
 
-import type { NullableDate, StepIndicator } from '~/types/forms';
+import type { StepIndicator } from '~/types/forms';
 
 import type { PageWrapperProps } from './PageWrapper';
-
-import {
-  displayDayDateAndHourDate,
-  displayTimeInHours
-} from '~/utils/dateUtils';
-import { EMPTY_DATA_PLACEHOLDER } from '~/utils/constants';
-import { useOrderServiceFormStore } from '~/stores/orderServiceFormStore';
+import { useSummaryData } from '~/hooks/useSummaryData';
 
 type OrderCleaningFormPageProps = {
   stepIndicatorData: StepIndicator[];
@@ -31,33 +23,7 @@ const OrderCleaningFormPage = ({
   showSummary = false,
   serviceName
 }: OrderCleaningFormPageProps) => {
-  const { totalCost, totalDuration, cleaningFrequency, startDate, hourDate } =
-    useOrderServiceFormStore(
-      useShallow((state) => ({
-        orderServiceFormData: state.orderServiceFormData,
-        totalCost: state.totalCost,
-        totalDuration: state.durationInMinutes,
-        cleaningFrequency: state.cleaningFrequencyDisplayData,
-        startDate: state.startDate,
-        hourDate: state.hourDate
-      }))
-    );
-
-  const summaryData = new Map([
-    ['Selected service', `${serviceName}`],
-    [
-      'Cleaning frequency',
-      `${cleaningFrequency?.name ?? EMPTY_DATA_PLACEHOLDER}`
-    ],
-    ['Cleaning duration', `${displayTimeInHours(totalDuration)}`],
-    [
-      'First cleaning date',
-      `${displayDayDateAndHourDate(
-        startDate as NullableDate,
-        hourDate as NullableDate
-      )}`
-    ]
-  ]);
+  const { totalCost, summaryData } = useSummaryData(serviceName);
 
   return (
     <PageWrapper title={title}>

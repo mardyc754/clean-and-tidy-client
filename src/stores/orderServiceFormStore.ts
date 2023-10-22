@@ -46,8 +46,8 @@ interface OrderServiceFormStoreState {
     cleaningFrequency: CleaningFrequency,
     availableFrequencies: CleaningFrequencyData[]
   ) => void;
-  clientData: Partial<OrderServiceClientData>;
-  addressData: Partial<Address>;
+  clientData: OrderServiceClientData;
+  addressData: Address;
   onChangeClientData: (
     fieldName: keyof OrderServiceClientData,
     value: ValueOf<typeof fieldName>
@@ -103,8 +103,20 @@ export const useOrderServiceFormStore = create<OrderServiceFormStoreState>()(
       startDate: null,
       hourDate: null,
       includeDetergents: false,
-      clientData: {},
-      addressData: {},
+      clientData: {
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: ''
+      },
+      addressData: {
+        street: '',
+        houseNumber: '',
+        floor: '',
+        door: '',
+        postCode: '',
+        city: ''
+      },
       setData: (formData, serviceData) =>
         set((state) => {
           const { id, name, unit, cleaningFrequencies } = serviceData;
