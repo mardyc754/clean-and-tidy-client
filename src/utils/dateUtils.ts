@@ -66,3 +66,11 @@ export function displayTimeInHours(duration: number) {
     hours === 0 ? '' : `${hours} ${hours === 1 ? 'hour' : 'hours'} `
   }${minutes} ${minutes === 1 ? 'minute' : 'minutes'}`;
 }
+
+export function advanceDateByNMinutes(date: Date, minutes: number) {
+  return dayjs(date).add(minutes, 'm').toDate();
+}
+
+export function nextDay(date: Date) {
+  return dayjs(date).add(1, 'd').toDate();
+}

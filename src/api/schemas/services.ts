@@ -37,6 +37,12 @@ export const primaryService = service.merge(
   })
 );
 
+// TODO: divide into main service and extra service
+export const orderedServiceSchema = basicService.extend({
+  isMainServiceInReservation: z.boolean(),
+  numberOfUnits: z.number().int().max(500).min(1)
+});
+
 export const primaryServices = z.array(primaryService);
 
 export type Service = z.infer<typeof service>;
@@ -46,3 +52,5 @@ export type ServiceWithUnit = SetNonNullable<BasicServiceData, 'unit'>;
 export type BasicServiceData = z.infer<typeof basicService>;
 
 export type PrimaryService = z.infer<typeof primaryService>;
+
+export type OrderedService = z.infer<typeof orderedServiceSchema>;

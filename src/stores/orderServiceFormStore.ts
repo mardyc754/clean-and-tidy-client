@@ -7,19 +7,19 @@ import type {
   OrderServiceClientData,
   OrderServiceInputData
 } from '~/api/schemas/reservation';
-import { type BasicServiceData, type Service } from '~/api/schemas/services';
+import type {
+  BasicServiceData,
+  Service,
+  OrderedService
+} from '~/api/schemas/services';
+
+import { DETERGENT_COST } from '~/utils/constants';
+
 import type {
   CleaningFrequencyData,
   CleaningFrequency,
   ValidDate
 } from '~/types/forms';
-
-import { DETERGENT_COST } from '~/utils/constants';
-
-type OrderedService = BasicServiceData & {
-  isMainServiceInReservation: boolean;
-  numberOfUnits: number;
-};
 
 interface OrderServiceFormStoreState {
   totalCost: number;

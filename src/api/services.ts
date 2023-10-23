@@ -9,7 +9,7 @@ import {
 } from './schemas/services';
 import { basicError } from './schemas/common';
 
-import { handleFetchingData } from './utils';
+import { handleFetchingData } from './handleFetchingData';
 
 import type { AllServicesQueryOptions, ServiceQueryOptions } from './types';
 

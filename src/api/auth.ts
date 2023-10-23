@@ -4,7 +4,7 @@ import {
   loginSuccess as loginSuccess,
   loginError as loginError
 } from './schemas/auth';
-import { handleFetchingData } from './utils';
+import { handleFetchingData } from './handleFetchingData';
 
 type RegistrationData = {
   username: string;

@@ -7,6 +7,7 @@ import {
 import { useFormContext } from 'react-hook-form';
 
 import type { ValidDate } from '~/types/forms';
+import { nextDay } from '~/utils/dateUtils';
 
 interface CalendarProps extends Omit<ReactCalendarProps, 'onChange'> {
   name: string;
@@ -28,6 +29,8 @@ const Calendar = ({ name, value, onChange, ...props }: CalendarProps) => {
   return (
     // <div className="flex flex-col">
     <ReactCalendar
+      minDate={nextDay(new Date())}
+      // tileDisabled={({ date }) => date.getDay() === 0 || date.getDay() === 6}
       onChange={handleChange}
       value={value}
       // temporary in order to quiet hydrate errors
