@@ -1,7 +1,8 @@
+import clsx from 'clsx';
 import { useEffect, useMemo } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
-import { HourTile } from '~/components/atoms/forms';
+import { HourTile, ErrorLabel } from '~/components/atoms/forms';
 
 import { dateWithHour, extractHourFromDate } from '~/utils/dateUtils';
 
@@ -12,6 +13,7 @@ type HourSelectionProps = {
   className?: string;
   direction?: 'row' | 'column';
   disableSelection: boolean;
+  errorLabel?: string;
   onChange?: (value: ValidDate) => void;
 };
 
@@ -20,6 +22,7 @@ const HourSelection = ({
   className = '',
   direction = 'column',
   disableSelection,
+  errorLabel,
   onChange
 }: HourSelectionProps) => {
   const hourAvailabilityData = useMemo(
@@ -50,28 +53,33 @@ const HourSelection = ({
   const currentValue = useWatch({ name }) as Date;
 
   return (
-    // it will be grid probably with gaps
-    <div
-      className={`grid ${
-        direction === 'column'
-          ? 'grid-flow-col grid-cols-2 grid-rows-6'
-          : 'grid-cols-6 grid-rows-2'
-      } gap-1 ${className}`}
-    >
-      {hourAvailabilityData.map(({ hour, available }) => (
-        <HourTile
-          key={`HourTile-${hour}`}
-          value={hour}
-          available={available}
-          disabled={disableSelection}
-          selected={hour === extractHourFromDate(currentValue)}
-          onSelect={(selectedHour) => {
-            const newValue = dateWithHour(currentValue, selectedHour);
-            setValue(name, newValue);
-            onChange?.(newValue);
-          }}
-        />
-      ))}
+    <div className={clsx(!errorLabel && 'mb-4', className)}>
+      {/* // it will be grid probably with gaps */}
+      <div
+        className={clsx(
+          'grid',
+          direction === 'column'
+            ? 'grid-flow-col grid-cols-2 grid-rows-6'
+            : 'grid-cols-6 grid-rows-2',
+          'gap-1'
+        )}
+      >
+        {hourAvailabilityData.map(({ hour, available }) => (
+          <HourTile
+            key={`HourTile-${hour}`}
+            value={hour}
+            available={available}
+            disabled={disableSelection}
+            selected={hour === extractHourFromDate(currentValue)}
+            onSelect={(selectedHour) => {
+              const newValue = dateWithHour(currentValue, selectedHour);
+              setValue(name, newValue);
+              onChange?.(newValue);
+            }}
+          />
+        ))}
+      </div>
+      <ErrorLabel>{errorLabel ?? ''}</ErrorLabel>
     </div>
   );
 };

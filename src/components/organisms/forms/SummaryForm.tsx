@@ -1,13 +1,22 @@
 import { useSummaryData } from '~/hooks/useSummaryData';
 
+import { useOrderServiceFormStore } from '~/stores/orderServiceFormStore';
+
 import { AddressDataField, SummaryView } from '~/components/organisms/layout';
 import { Heading2 } from '~/components/atoms/typography/headings';
+
+import { StepButtons } from '../form-fields';
 
 interface SummaryFormProps {
   serviceName: string;
 }
 
 const SummaryForm = ({ serviceName }: SummaryFormProps) => {
+  const { decreaseStep, currentStep } = useOrderServiceFormStore((state) => ({
+    decreaseStep: state.decreaseStep,
+    currentStep: state.currentStep
+  }));
+
   const { summaryData, totalCost, contactDetails } =
     useSummaryData(serviceName);
 
@@ -27,6 +36,7 @@ const SummaryForm = ({ serviceName }: SummaryFormProps) => {
           <AddressDataField data={contactDetails} />
         </div>
       </div>
+      <StepButtons currentStep={currentStep} onDecreaseStep={decreaseStep} />
     </div>
   );
 };

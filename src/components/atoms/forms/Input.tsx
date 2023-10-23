@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { forwardRef, type InputHTMLAttributes } from 'react';
 
 const Input = forwardRef<
@@ -7,7 +8,7 @@ const Input = forwardRef<
   return (
     <input
       {...props}
-      className={`rounded-lg outline-none ${className}`}
+      className={clsx('rounded-lg outline-none', className)}
       ref={ref}
     />
   );

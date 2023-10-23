@@ -12,12 +12,11 @@ export const address = z.object({
   city: z.string().max(40)
 });
 
-export const contactDetails = z.object({
+export const contactDetails = address.extend({
   firstName: z.string().max(50),
   lastName: z.string().max(50),
   phone: z.string().max(15),
-  email: z.string().email(),
-  address
+  email: z.string().email()
 });
 
 export const orderedService = z.object({
@@ -43,28 +42,6 @@ export const reservationFormData = z.object({
   includeDetergents: z.boolean(),
   orderedServices: z.array(orderedService),
   contactDetails
-});
-
-export const orderServiceSubmitDataSchema = z.object({
-  numberOfUnits: z.number().int().max(500).min(30),
-  cleaningFrequency: z.nativeEnum(CleaningFrequency),
-  startDate: z.date(),
-  hourDate: z.date(),
-  includeDetergents: z.boolean(),
-  extraServices: z.array(z.number().int()).optional()
-});
-
-export const orderServiceInputDataSchema = orderServiceSubmitDataSchema.extend({
-  cleaningFrequency: z.nativeEnum(CleaningFrequency).nullable(),
-  startDate: z.date().nullable(),
-  hourDate: z.date().nullable()
-});
-
-export const orderServiceClientDataSchema = clientDataSchema.pick({
-  firstName: true,
-  lastName: true,
-  email: true,
-  phone: true
 });
 
 export const reservationCreationDataSchema = z.object({
@@ -93,6 +70,41 @@ export const recurringReservationCreationSchema = z.object({
       (arr) =>
         arr.filter((service) => service.isMainServiceInReservation).length === 1
     )
+});
+
+export const orderServiceSubmitDataSchema = z.object({
+  numberOfUnits: z
+    .number()
+    .int()
+    .max(500, { message: 'Must be less than 500' })
+    .min(30, { message: 'Must be atleast 30' }),
+  cleaningFrequency: z.nativeEnum(CleaningFrequency, {
+    required_error: 'Cleaning frequency is required',
+    invalid_type_error: 'Cleaning frequency is required'
+  }),
+  startDate: z.date({
+    required_error: 'Select a date',
+    invalid_type_error: 'Select a date'
+  }),
+  hourDate: z.date({
+    required_error: 'Select an hour',
+    invalid_type_error: 'Select an hour'
+  }),
+  includeDetergents: z.boolean(),
+  extraServices: z.array(z.number().int()).optional()
+});
+
+export const orderServiceInputDataSchema = orderServiceSubmitDataSchema.extend({
+  cleaningFrequency: z.nativeEnum(CleaningFrequency).nullable(),
+  startDate: z.date().nullable(),
+  hourDate: z.date().nullable()
+});
+
+export const orderServiceClientDataSchema = clientDataSchema.pick({
+  firstName: true,
+  lastName: true,
+  email: true,
+  phone: true
 });
 
 export type OrderServiceClientData = z.infer<

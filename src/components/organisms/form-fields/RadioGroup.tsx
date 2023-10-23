@@ -1,14 +1,16 @@
+import clsx from 'clsx';
 import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { RadioGroup as HeadlessRadioGroup } from '@headlessui/react';
 
-import { RadioField } from '~/components/atoms/forms';
+import { ErrorLabel, RadioField } from '~/components/atoms/forms';
 import type { RadioFieldOption } from '~/types/forms';
 
 type RadioGroupProps<T extends RadioFieldOption> = {
   name: string;
   label: string;
   optionList: T[];
+  errorLabel?: string;
   onChange?: (value: T['value'], availableOptions: T[]) => void;
 };
 
@@ -16,6 +18,7 @@ const RadioGroup = <T extends RadioFieldOption>({
   name,
   label,
   optionList,
+  errorLabel,
   onChange
 }: RadioGroupProps<T>) => {
   const { register, setValue } = useFormContext();
@@ -30,7 +33,7 @@ const RadioGroup = <T extends RadioFieldOption>({
   };
 
   return (
-    <div className="py-4">
+    <div className={clsx('py-4', !errorLabel && 'mb-4')}>
       <HeadlessRadioGroup onChange={handleChange}>
         <HeadlessRadioGroup.Label className="py-1">
           {label}
@@ -41,6 +44,7 @@ const RadioGroup = <T extends RadioFieldOption>({
           ))}
         </div>
       </HeadlessRadioGroup>
+      <ErrorLabel>{errorLabel ?? ''}</ErrorLabel>
     </div>
   );
 };

@@ -1,16 +1,25 @@
 import { useMemo } from 'react';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import {
+  FormProvider,
+  SubmitHandler,
+  useForm,
+  useWatch
+} from 'react-hook-form';
 
 import { cleaningDetailsResolver } from '~/api/resolvers/orderServiceForm';
 import type { Service, ServiceWithUnit } from '~/api/schemas/services';
-import type { OrderServiceInputData } from '~/api/schemas/reservation';
+import type {
+  OrderServiceInputData,
+  OrderServiceSubmitData
+} from '~/api/schemas/reservation';
 
 import { Checkbox, NumericInput } from '~/components/atoms/forms';
 
 import {
   CalendarWithHours,
   ExtraDataMultiSelect,
-  RadioGroup
+  RadioGroup,
+  StepButtons
 } from '../form-fields';
 import { useOrderServiceFormStore } from '~/stores/orderServiceFormStore';
 
@@ -25,14 +34,20 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
     onChangeServiceNumberOfUnits,
     onChangeCleaningFrequency,
     onChangeStartDate,
-    onChangeHourDate
+    onChangeHourDate,
+    currentStep,
+    increaseStep,
+    decreaseStep
   } = useOrderServiceFormStore((state) => ({
     setData: state.setData,
     onChangeIncludeDetergents: state.onChangeIncludeDetergents,
     onChangeServiceNumberOfUnits: state.onChangeServiceNumberOfUnits,
     onChangeCleaningFrequency: state.onChangeCleaningFrequency,
     onChangeStartDate: state.onChangeStartDate,
-    onChangeHourDate: state.onChangeHourDate
+    onChangeHourDate: state.onChangeHourDate,
+    currentStep: state.currentStep,
+    increaseStep: state.increaseStep,
+    decreaseStep: state.decreaseStep
   }));
 
   const methods = useForm<OrderServiceInputData>({
@@ -43,9 +58,14 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
       startDate: null,
       hourDate: null,
       extraServices: []
-    }
-    // resolver: cleaningDetailsResolver
+    },
+    resolver: cleaningDetailsResolver
   });
+
+  const {
+    handleSubmit,
+    formState: { errors }
+  } = methods;
 
   const cleaningFrequencyData = useMemo(
     () => data?.cleaningFrequencies ?? [],
@@ -65,13 +85,18 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
 
   return (
     <FormProvider {...methods}>
-      <form className="py-16">
+      <form
+        className="py-16"
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        onSubmit={handleSubmit(increaseStep)}
+      >
         <NumericInput
           min={0}
           max={500}
           name="numberOfUnits"
           label="Area size (in m2)"
           wrapperClassName="items-center py-4"
+          errorLabel={errors.numberOfUnits?.message}
           onChange={(value: number) =>
             onChangeServiceNumberOfUnits(value, true, { id, name, unit })
           }
@@ -82,6 +107,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
             label="Cleaning frequency"
             optionList={cleaningFrequencyData}
             onChange={onChangeCleaningFrequency}
+            errorLabel={errors.cleaningFrequency?.message}
           />
         )}
         <Checkbox
@@ -97,6 +123,8 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
           label="Cleaning start date"
           onChangeDate={onChangeStartDate}
           onChangeHour={onChangeHourDate}
+          dateErrorLabel={errors.startDate?.message}
+          hourErrorLabel={errors.hourDate?.message}
         />
         {secondaryServicesWithUnit.length > 0 && (
           <ExtraDataMultiSelect
@@ -106,6 +134,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
             onChangeNumberOfUnits={onChangeServiceNumberOfUnits}
           />
         )}
+        <StepButtons currentStep={currentStep} onDecreaseStep={decreaseStep} />
       </form>
     </FormProvider>
   );

@@ -19,6 +19,7 @@ import {
   contactDetailsIndicatorData,
   summaryIndicatorData
 } from './constants';
+import { useOrderServiceFormStore } from '~/stores/orderServiceFormStore';
 
 function getCurrentStepComponent(index: number, data: Service | null) {
   let componentData;
@@ -53,12 +54,17 @@ function getCurrentStepComponent(index: number, data: Service | null) {
 export default function OrderService({
   data
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const [currentStep, setCurrentStep] = useState(0);
+  // const [currentStep, setCurrentStep] = useState(0);
+
+  const { currentStep } = useOrderServiceFormStore((state) => ({
+    currentStep: state.currentStep
+  }));
 
   const currentStepData = useMemo(
     () => getCurrentStepComponent(currentStep, data),
     [currentStep, data]
   );
+
   return (
     <OrderServiceFormPage
       serviceName={`${data?.name ?? EMPTY_DATA_PLACEHOLDER}`}
@@ -68,12 +74,12 @@ export default function OrderService({
       stepIndicatorData={currentStepData.stepIndidatorData}
     >
       {currentStepData.stepComponent}
-      <StepButtons
+      {/* <StepButtons
         cancelHref="/"
         currentStep={currentStep}
         setCurrentStep={setCurrentStep}
         maxStep={2}
-      />
+      /> */}
     </OrderServiceFormPage>
   );
 }

@@ -1,7 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { orderServiceSubmitDataSchema } from '../schemas/reservation';
+import {
+  contactDetails,
+  orderServiceSubmitDataSchema
+} from '../schemas/reservation';
 
 export const cleaningDetailsResolver = zodResolver(
   orderServiceSubmitDataSchema
 );
+
+export const contactDetailsResolver = zodResolver(contactDetails);

@@ -1,12 +1,14 @@
 import React, { type InputHTMLAttributes, type ChangeEvent } from 'react';
 
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
-import type { SetRequired } from 'type-fest';
 import { useFormContext, useWatch } from 'react-hook-form';
+import type { SetRequired } from 'type-fest';
 
 import Label from './Label';
 import Input from './Input';
 import NumericInputControl from './NumericInputControl';
+import clsx from 'clsx';
+import ErrorLabel from './ErrorLabel';
 
 export type NumericInputProps = {
   max?: number;
@@ -14,6 +16,7 @@ export type NumericInputProps = {
   label?: string;
   wrapperClassName?: string;
   initialValue?: number;
+  errorLabel?: string;
   onChange?: (value: number) => void;
   variant?: 'outlined' | 'contained-controls';
 } & SetRequired<
@@ -24,28 +27,6 @@ export type NumericInputProps = {
   'name'
 >;
 
-type LabelWrapperProps = {
-  name: string;
-  label?: string;
-  className?: string;
-  children: React.ReactNode;
-};
-
-const LabelWrapper = ({
-  name,
-  label,
-  children,
-  className = ''
-}: LabelWrapperProps) =>
-  label ? (
-    <div className={`flex flex-col ${className}`}>
-      <Label htmlFor={name}>{label}</Label>
-      {children}
-    </div>
-  ) : (
-    <>{children}</>
-  );
-
 const NumericInput = ({
   className = '',
   max = 9999,
@@ -54,6 +35,7 @@ const NumericInput = ({
   name,
   label,
   wrapperClassName,
+  errorLabel,
   initialValue = 0,
   onChange,
   ...props
@@ -66,7 +48,6 @@ const NumericInput = ({
     let newValue = parseInt(e.target.value);
 
     if (isNaN(newValue) || newValue < min) {
-      // setValue(name, min);
       newValue = min;
     } else if (newValue > max) {
       newValue = max;
@@ -77,11 +58,20 @@ const NumericInput = ({
   };
 
   return (
-    <LabelWrapper name={name} label={label} className={wrapperClassName}>
+    <div
+      className={clsx(
+        wrapperClassName,
+        'w-fit',
+        variant === 'outlined' && !errorLabel && 'mb-4'
+      )}
+    >
+      {label && <Label htmlFor={name}>{label}</Label>}
       <div
-        className={`flex rounded-lg${
-          variant === 'outlined' ? ' bg-white' : ' bg-transparent'
-        } ${className}`}
+        className={clsx(
+          'flex rounded-lg',
+          variant === 'outlined' ? ' bg-white' : ' bg-transparent',
+          className
+        )}
       >
         <NumericInputControl
           variant={variant}
@@ -100,9 +90,10 @@ const NumericInput = ({
             max,
             value: initialValue
           })}
-          className={`text-center${
+          className={clsx(
+            'text-center',
             variant === 'outlined' ? ' w-[150px] p-4' : ' w-[80px] p-1'
-          }`}
+          )}
           onChange={handleValueChange}
           {...props}
         />
@@ -116,7 +107,8 @@ const NumericInput = ({
           }}
         />
       </div>
-    </LabelWrapper>
+      {variant === 'outlined' && <ErrorLabel>{errorLabel}</ErrorLabel>}
+    </div>
   );
 };
 

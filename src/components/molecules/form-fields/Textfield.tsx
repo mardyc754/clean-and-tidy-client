@@ -1,5 +1,6 @@
-import type { InputHTMLAttributes } from 'react';
+import clsx from 'clsx';
 import { useFormContext } from 'react-hook-form';
+import type { InputHTMLAttributes } from 'react';
 import type { SetRequired } from 'type-fest';
 
 import { ErrorLabel, Input, Label } from '~/components/atoms/forms';
@@ -24,7 +25,7 @@ const Textfield = ({
 }: TextfieldProps) => {
   const { register, setValue } = useFormContext();
   return (
-    <div className={`flex flex-col ${!errorLabel && 'pb-4'} ${wrapperProps}`}>
+    <div className={clsx('flex flex-col', !errorLabel && 'pb-4', wrapperProps)}>
       <Label htmlFor={name}>{label}</Label>
       <Input
         placeholder={label}

@@ -22,6 +22,7 @@ import type {
 } from '~/types/forms';
 
 interface OrderServiceFormStoreState {
+  currentStep: number;
   totalCost: number;
   durationInMinutes: number;
   includeDetergents: boolean;
@@ -56,6 +57,8 @@ interface OrderServiceFormStoreState {
     fieldName: keyof Address,
     value: ValueOf<typeof fieldName>
   ) => void;
+  increaseStep: () => void;
+  decreaseStep: () => void;
 }
 
 const createOrUpdateOrderedService = (
@@ -95,6 +98,7 @@ const calculateTotalCostAndDuration = (orderedServices: OrderedService[]) => {
 export const useOrderServiceFormStore = create<OrderServiceFormStoreState>()(
   devtools(
     (set, get) => ({
+      currentStep: 0,
       totalCost: 0,
       durationInMinutes: 0,
       orderedServices: [],
@@ -117,6 +121,10 @@ export const useOrderServiceFormStore = create<OrderServiceFormStoreState>()(
         postCode: '',
         city: ''
       },
+      increaseStep: () =>
+        set((state) => ({ currentStep: state.currentStep + 1 })),
+      decreaseStep: () =>
+        set((state) => ({ currentStep: state.currentStep - 1 })),
       setData: (formData, serviceData) =>
         set((state) => {
           const { id, name, unit, cleaningFrequencies } = serviceData;

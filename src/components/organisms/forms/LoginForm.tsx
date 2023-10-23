@@ -34,7 +34,8 @@ const LoginForm = () => {
       <FormProvider {...methods}>
         <form
           className="grid grid-rows-3 items-center gap-y-4 self-stretch px-16 py-8"
-          onSubmit={void handleSubmit(onSubmit)}
+          // eslint-disable-next-line @typescript-eslint/no-misused-promises
+          onSubmit={handleSubmit(onSubmit)}
         >
           <Textfield
             name="email"

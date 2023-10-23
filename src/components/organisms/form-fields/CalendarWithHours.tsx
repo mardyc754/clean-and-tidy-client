@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 // import 'react-calendar/dist/Calendar.css'; // for testing purposes only
 import { type CalendarProps as ReactCalendarProps } from 'react-calendar';
@@ -7,7 +9,6 @@ import { Calendar } from '~/components/molecules/calendar';
 import { HourSelection } from '~/components/molecules/form-fields';
 
 import type { ValidDate } from '~/types/forms';
-import { useEffect } from 'react';
 
 type CalendarWithLabelProps = {
   calendarInputName: string;
@@ -16,6 +17,8 @@ type CalendarWithLabelProps = {
   direction?: 'column' | 'row';
   onChangeHour?: (value: ValidDate) => void;
   onChangeDate?: (value: ValidDate) => void;
+  dateErrorLabel?: string;
+  hourErrorLabel?: string;
 } & Omit<ReactCalendarProps, 'onChange' | 'value'>;
 
 const CalendarWithHours = ({
@@ -25,6 +28,8 @@ const CalendarWithHours = ({
   hourInputName,
   onChangeDate,
   onChangeHour,
+  dateErrorLabel,
+  hourErrorLabel,
   ...props
 }: CalendarWithLabelProps) => {
   const { setValue, watch } = useFormContext();
@@ -40,17 +45,24 @@ const CalendarWithHours = ({
     <div className="flex flex-col">
       <MediumTypography className="py-1">{label}</MediumTypography>
       <div
-        className={`flex ${
-          direction === 'column' ? 'flex-col items-center space-y-4' : ''
-        }`}
+        className={clsx(
+          'flex',
+          direction === 'column' && 'flex-col items-center space-y-4'
+        )}
       >
-        <Calendar name={calendarInputName} onChange={onChangeDate} {...props} />
+        <Calendar
+          name={calendarInputName}
+          onChange={onChangeDate}
+          errorLabel={dateErrorLabel}
+          {...props}
+        />
         <HourSelection
           name={hourInputName}
           className="px-16"
           direction={direction === 'column' ? 'row' : 'column'}
           disableSelection={!currentDate}
           onChange={onChangeHour}
+          errorLabel={hourErrorLabel}
         />
       </div>
     </div>
