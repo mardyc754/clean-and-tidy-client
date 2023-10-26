@@ -1,7 +1,7 @@
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { contactDetailsResolver } from '~/api/resolvers/orderServiceForm';
-import type { ContactDetails } from '~/api/schemas/reservation';
+import type { ContactDetailsFormData } from '~/api/schemas/reservation';
 
 import { useOrderServiceFormStore } from '~/stores/orderServiceFormStore';
 
@@ -10,7 +10,9 @@ import { Textfield, TextArea } from '~/components/molecules/form-fields';
 import { StepButtons } from '../form-fields';
 
 const ContactDetailsForm = () => {
-  const methods = useForm<ContactDetails>({ resolver: contactDetailsResolver });
+  const methods = useForm<ContactDetailsFormData>({
+    resolver: contactDetailsResolver
+  });
 
   const {
     handleSubmit,

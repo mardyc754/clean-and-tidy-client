@@ -12,12 +12,14 @@ export const address = z.object({
   city: z.string().max(40)
 });
 
-export const contactDetails = address.extend({
+export const contactDetails = z.object({
   firstName: z.string().max(50),
   lastName: z.string().max(50),
   phone: z.string().max(15),
   email: z.string().email()
 });
+
+export const contactDetailsForm = address.merge(contactDetails);
 
 export const orderedService = z.object({
   id: z.number().int(),
@@ -56,14 +58,8 @@ export const recurringReservationCreationSchema = z.object({
   frequency: z.nativeEnum(CleaningFrequency),
   clientId: z.number().int(), // it can be an client email as well
   reservationData: reservationCreationDataSchema,
-  address: z
-    .object({
-      street: z.string().max(40),
-      houseNumber: z.string().max(6),
-      postCode: z.string().length(6),
-      city: z.string().max(40)
-    })
-    .or(z.number().int()),
+  address: address.or(z.number().int()),
+  contactDetails: contactDetailsForm,
   services: z
     .array(orderedServiceSchema)
     .refine(
@@ -120,6 +116,8 @@ export type OrderServiceInputData = z.infer<typeof orderServiceInputDataSchema>;
 export type Address = z.infer<typeof address>;
 
 export type ContactDetails = z.infer<typeof contactDetails>;
+
+export type ContactDetailsFormData = z.infer<typeof contactDetailsForm>;
 
 export type ReservationFormData = z.infer<typeof reservationFormData>;
 

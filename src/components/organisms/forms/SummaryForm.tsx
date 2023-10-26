@@ -21,7 +21,7 @@ const SummaryForm = ({ serviceName }: SummaryFormProps) => {
     useSummaryData(serviceName);
 
   return (
-    <div className="pt-16">
+    <form className="pt-16" onSubmit={(e) => e.preventDefault()}>
       <SummaryView
         data={summaryData}
         totalCost={totalCost}
@@ -37,7 +37,7 @@ const SummaryForm = ({ serviceName }: SummaryFormProps) => {
         </div>
       </div>
       <StepButtons currentStep={currentStep} onDecreaseStep={decreaseStep} />
-    </div>
+    </form>
   );
 };
 
