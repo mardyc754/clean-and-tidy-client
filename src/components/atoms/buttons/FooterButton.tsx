@@ -2,7 +2,7 @@ import { robotoBold } from '~/settings/fontSetting';
 
 type FooterButtonProps = {
   name: string;
-  onClick: VoidFunction;
+  onClick?: VoidFunction;
 };
 
 const FooterButton = ({ name, onClick }: FooterButtonProps) => {

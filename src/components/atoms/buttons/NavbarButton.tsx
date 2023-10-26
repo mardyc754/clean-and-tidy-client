@@ -1,15 +1,18 @@
+import Link from 'next/link';
+
 import { robotoBold } from '~/settings/fontSetting';
 
 type NavbarButtonProps = {
   name: string;
-  onClick: VoidFunction;
+  // onClick: VoidFunction;
+  navigateOnClickTo?: string;
 };
 
-const NavbarButton = ({ name, onClick }: NavbarButtonProps) => {
+const NavbarButton = ({ name, navigateOnClickTo = '' }: NavbarButtonProps) => {
   return (
-    <button className={`${robotoBold.className}`} onClick={onClick}>
-      {name}
-    </button>
+    <Link href={navigateOnClickTo}>
+      <button className={`${robotoBold.className}`}>{name}</button>
+    </Link>
   );
 };
 

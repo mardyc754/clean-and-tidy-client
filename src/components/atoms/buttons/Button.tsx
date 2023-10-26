@@ -1,7 +1,10 @@
 import type { ButtonHTMLAttributes } from 'react';
 
+import { OptionalLink } from '../links';
+
 type ButtonProps = {
   color?: 'default' | 'danger';
+  href?: string;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 const Button = ({
@@ -9,6 +12,7 @@ const Button = ({
   children,
   onClick,
   className,
+  href,
   ...props
 }: ButtonProps) => {
   const colorMap = new Map([
@@ -17,15 +21,17 @@ const Button = ({
   ]);
 
   return (
-    <button
-      className={`rounded-full ${colorMap.get(
-        color
-      )} px-10 py-2 font-emphasize text-base text-white shadow-md ${className}`}
-      onClick={onClick}
-      {...props}
-    >
-      {children}
-    </button>
+    <OptionalLink href={href}>
+      <button
+        className={`rounded-full ${colorMap.get(
+          color
+        )} px-10 py-2 font-emphasize text-base text-white shadow-md ${className}`}
+        onClick={onClick}
+        {...props}
+      >
+        {children}
+      </button>
+    </OptionalLink>
   );
 };
 

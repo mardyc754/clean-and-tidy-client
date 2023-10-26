@@ -1,18 +1,25 @@
 import { useState, useMemo } from 'react';
+
+import type { Service, ServiceWithUnit } from '~/api/schemas/services';
+
+import { LabeledCheckbox, Textfield } from '~/components/molecules/form-fields';
 import {
-  LabeledCheckbox,
-  Textfield,
-  LabeledNumericInput
-} from '~/components/molecules/form-fields';
-import { CalendarWithHours, RadioGroup } from '../form-fields';
+  CalendarWithHours,
+  ExtraDataMultiSelect,
+  RadioGroup
+} from '../form-fields';
 import { frequencyValues } from './constants';
 
-const CleaningDetailsForm = () => {
+type CleaningDetailsFormProps = {
+  data: Service;
+};
+
+const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
   const cleaningFrequencyData = useMemo(() => frequencyValues, []);
+  const secondaryServices = useMemo(() => data.secondaryServices, [data]);
 
   const [frequency, setFrequency] = useState('once');
   const [includeDetergents, setIncludeDetergents] = useState(false);
-  const [hours, setHours] = useState(1);
 
   const onChangeIncludeDetergents = () => {
     setIncludeDetergents((prev) => !prev);
@@ -34,12 +41,12 @@ const CleaningDetailsForm = () => {
       <LabeledCheckbox
         className="py-4"
         label="Detergents"
-        caption="Include detergents (+25zł)"
+        caption="Include detergents (+15zł)"
         name="detergents"
         checked={includeDetergents}
         onChangeChecked={onChangeIncludeDetergents}
       />
-      <LabeledNumericInput
+      {/* <LabeledNumericInput
         value={hours}
         setValue={setHours}
         label="Cleaning duration - hours (max 12)"
@@ -47,8 +54,16 @@ const CleaningDetailsForm = () => {
         className="py-4"
         min={1}
         max={12}
-      />
+      /> */}
       <CalendarWithHours label="Cleaning start date" />
+      <ExtraDataMultiSelect
+        className="py-4"
+        data={
+          (secondaryServices?.filter(
+            (service) => !!service.unit
+          ) as ServiceWithUnit[]) ?? []
+        }
+      />
     </form>
   );
 };

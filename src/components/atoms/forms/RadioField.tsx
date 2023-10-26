@@ -12,11 +12,10 @@ const RadioField = ({ data }: RadioFieldProps) => {
     <HeadlessRadioGroup.Option
       key={data.name}
       value={data.id}
-      className={({ checked }) =>
-        `
-        ${checked ? 'bg-cyan-500 bg-opacity-75 text-white' : 'bg-white'}
-          relative flex cursor-pointer rounded-lg px-5 py-4 shadow-md focus:outline-none`
-      }
+      className={`relative flex cursor-pointer rounded-lg
+        px-5 py-4 shadow-md focus:outline-none
+         ui-checked:bg-cyan-500 ui-checked:bg-opacity-75 
+         ui-checked:text-white ui-not-checked:bg-white`}
     >
       {({ checked }) => (
         <>
@@ -25,17 +24,13 @@ const RadioField = ({ data }: RadioFieldProps) => {
               <div className="text-sm">
                 <HeadlessRadioGroup.Label
                   as="p"
-                  className={`font-medium  ${
-                    checked ? 'text-white' : 'text-slate-900'
-                  }`}
+                  className={`font-medium ui-checked:text-white ui-not-checked:text-slate-900`}
                 >
                   {data.name}
                 </HeadlessRadioGroup.Label>
                 <HeadlessRadioGroup.Description
                   as="span"
-                  className={`inline ${
-                    checked ? 'text-cyan-100' : 'text-slate-500'
-                  }`}
+                  className={`inline ui-checked:text-cyan-100 ui-not-checked:text-slate-500`}
                 >
                   {data.details && <span>{data.details}</span>}
                 </HeadlessRadioGroup.Description>

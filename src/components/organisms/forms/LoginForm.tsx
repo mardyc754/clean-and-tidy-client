@@ -33,7 +33,7 @@ const LoginForm = () => {
           const result = await login({ email, password });
 
           if (result && 'affectedField' in result) {
-            setFieldError(result.affectedField!, result.message);
+            setFieldError(result.affectedField, result.message);
             return;
           }
 
