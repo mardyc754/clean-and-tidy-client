@@ -1,5 +1,5 @@
 import { Button } from '~/components/atoms/buttons';
-import { extractHourFromDate, getDateAfter } from '~/utils/dateHandling';
+import { extractHourStringFromDate, getDateAfter } from '~/utils/dateUtils';
 import type { SingleReservationData } from '~/types/user';
 
 type ReservationManagementPreviewProps = {
@@ -11,8 +11,8 @@ const ReservationManagementPreview = ({
 }: ReservationManagementPreviewProps) => {
   const { name, duration, date, id } = data;
 
-  const startHour = extractHourFromDate(date);
-  const endHour = extractHourFromDate(getDateAfter(date, duration, 'h'));
+  const startHour = extractHourStringFromDate(date);
+  const endHour = extractHourStringFromDate(getDateAfter(date, duration, 'h'));
 
   return (
     <div className="flex flex-col rounded-xl border-2 border-slate-400 p-4">

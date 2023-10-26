@@ -1,11 +1,12 @@
+import { changeHourToDate } from '~/utils/dateUtils';
 import { MediumTypography } from '../typography/regular-text';
 
 type HourTileProps = {
-  value: string;
+  value: number;
   selected?: boolean;
   available?: boolean;
   disabled?: boolean;
-  onSelect: VoidFunction;
+  onSelect: (value: number) => void;
 };
 
 const getHourTileStyle = (
@@ -46,25 +47,29 @@ const HourTile = ({
   const cursorStyle =
     !disabled && available ? 'cursor-pointer' : 'cursor-default';
 
-  const onClick = () => {
+  const onClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
     if (disabled || !available) {
       return;
     }
 
-    onSelect();
+    onSelect(parseInt(e.currentTarget.getAttribute('data-value')!));
   };
 
   return (
     <div
+      role="radio"
       onClick={onClick}
-      className={`flex place-content-center  px-4 py-2 ${hourTileBackgroundStyle} ${cursorStyle}`}
+      data-value={value}
+      className={`flex items-center justify-center px-4 py-2 ${hourTileBackgroundStyle} ${cursorStyle}`}
+      aria-checked={selected}
     >
       <MediumTypography
         className={`font-emphasize ${
           selected && !disabled ? 'text-slate-100' : 'text-black'
         }`}
       >
-        {value}
+        {changeHourToDate(value)}
       </MediumTypography>
     </div>
   );

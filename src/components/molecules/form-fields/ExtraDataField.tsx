@@ -1,39 +1,80 @@
+import { useState, useEffect } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
+
 import { type ServiceWithUnit } from '~/api/schemas/services';
+
 import { Button } from '~/components/atoms/buttons';
+import { NumericInput } from '~/components/atoms/forms';
 
 type ExtraDataFieldProps = {
   data: ServiceWithUnit;
-  selected: boolean;
-  onClick: VoidFunction;
+  name: string;
+  onChangeNumberOfUnits: (value: number) => void;
 };
 
-const ExtraDataField = ({ data, selected, onClick }: ExtraDataFieldProps) => {
-  const { name, unit } = data;
+const ExtraDataField = ({
+  data,
+  name,
+  onChangeNumberOfUnits
+}: ExtraDataFieldProps) => {
+  const { name: serviceName, unit } = data;
   const { name: unitName, price } = unit;
+
+  const [selected, setSelected] = useState(false);
+
+  const { setValue, unregister } = useFormContext();
+  const currentNumberOfUnits = useWatch({ name }) as number;
+  // enable numeric field on button click
+  // or disable it when number of units becomes 0
+  useEffect(() => {
+    if (selected) {
+      setValue(name, 1);
+      onChangeNumberOfUnits(1);
+    } else {
+      unregister(name);
+    }
+  }, [selected]);
+
+  // or disable it when number of units becomes 0
+  useEffect(() => {
+    if (currentNumberOfUnits === 0) {
+      setSelected(false);
+    }
+  }, [currentNumberOfUnits]);
+
   return (
     <div
-      className={`flex items-center justify-between rounded-lg px-5 py-4 shadow-md focus:outline-none ${
-        selected ? 'bg-cyan-500' : 'bg-white'
-      }`}
+      className={`flex items-center justify-between rounded-lg bg-white px-5 py-4 shadow-md focus:outline-none`}
     >
-      <div className="flex flex-col">
-        <p className="font-medium">{name}</p>
-        <p className="text-sm">{`${price}/${unitName}`}</p>
-      </div>
-      <Button
-        // className="flex items-center px-3 py-3"
-        className="flex items-center px-3 py-3"
-        onClick={(e) => {
-          e.preventDefault();
-          onClick();
-          /** */
-        }}
+      <div
+        className={`flex flex-col 
+        `}
       >
-        <FontAwesomeIcon icon={faPlus} className="h-3 w-3" />
-      </Button>
+        <p className="font-medium">{serviceName}</p>
+        <p className="text-sm">{`${price} zł/${unitName}`}</p>
+      </div>
+      {selected ? (
+        <NumericInput
+          initialValue={1}
+          name={name}
+          min={0}
+          max={50}
+          variant="contained-controls"
+          onChange={onChangeNumberOfUnits}
+        />
+      ) : (
+        <Button
+          className="flex items-center px-3 py-3"
+          onClick={(e) => {
+            e.preventDefault();
+            setSelected(true);
+          }}
+        >
+          <FontAwesomeIcon icon={faPlus} className="h-3 w-3" />
+        </Button>
+      )}
     </div>
   );
 };

@@ -1,34 +1,29 @@
+import { useSummaryData } from '~/hooks/useSummaryData';
+
+import { useOrderServiceFormStore } from '~/stores/orderServiceFormStore';
+
 import { AddressDataField, SummaryView } from '~/components/organisms/layout';
 import { Heading2 } from '~/components/atoms/typography/headings';
 
-import type { AddressData } from '~/types/forms';
+import { StepButtons } from '../form-fields';
 
-const SummaryForm = () => {
-  const data = new Map([
-    ['Selected offer', 'Home cleaning'],
-    ['Cleaning frequency', 'Once a week'],
-    ['Cleaning duration', '2 hours'],
-    ['First cleaning date', '17.08.2023 8:00']
-  ]);
+interface SummaryFormProps {
+  serviceName: string;
+}
 
-  const addressData: AddressData = {
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john@example.com',
-    phoneNumber: '123-456-7890',
-    street: '123 Main Street',
-    houseNumber: 'Apt 4B',
-    postcode: '12345',
-    city: 'Cityville',
-    extraInfo: 'Additional information goes here'
-  };
+const SummaryForm = ({ serviceName }: SummaryFormProps) => {
+  const { decreaseStep, currentStep } = useOrderServiceFormStore((state) => ({
+    decreaseStep: state.decreaseStep,
+    currentStep: state.currentStep
+  }));
 
-  const totalCost = 200;
+  const { summaryData, totalCost, contactDetails } =
+    useSummaryData(serviceName);
 
   return (
     <div className="pt-16">
       <SummaryView
-        data={data}
+        data={summaryData}
         totalCost={totalCost}
         labelClasses="text-lg"
         valueClasses="text-2xl"
@@ -38,9 +33,10 @@ const SummaryForm = () => {
       <div className="py-16">
         <Heading2>Address data</Heading2>
         <div className="pt-8">
-          <AddressDataField data={addressData} />
+          <AddressDataField data={contactDetails} />
         </div>
       </div>
+      <StepButtons currentStep={currentStep} onDecreaseStep={decreaseStep} />
     </div>
   );
 };

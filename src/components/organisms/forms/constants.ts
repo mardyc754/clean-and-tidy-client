@@ -1,22 +1,31 @@
+import { CleaningFrequency } from '~/types/forms';
+
 export const changeDataModeData = [
   {
     name: 'Once',
-    id: 'once'
+    value: 'once'
   },
-  { name: 'Permanently', id: 'permanently' }
+  {
+    name: 'Permanently',
+    value: 'permanently'
+  }
 ];
 
 export const frequencyValues = [
   {
-    id: 'once',
-    name: 'Once'
+    name: 'Once',
+    value: CleaningFrequency.ONCE
   },
   {
-    id: 'onceAWeek',
-    name: 'Once a week'
+    name: 'Once a week',
+    value: CleaningFrequency.ONCE_A_WEEK
   },
   {
-    id: 'everyTwoWeeks',
-    name: 'Every two week'
+    name: 'Every two weeks',
+    value: CleaningFrequency.EVERY_TWO_WEEKS
+  },
+  {
+    name: 'Once a month',
+    value: CleaningFrequency.ONCE_A_MONTH
   }
 ];

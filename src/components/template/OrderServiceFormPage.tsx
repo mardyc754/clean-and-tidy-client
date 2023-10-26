@@ -1,22 +1,12 @@
 import { Heading1 } from '~/components/atoms/typography/headings';
 import { MultiStepFormIndicator } from '~/components/molecules';
 import { PageWrapper } from '~/components/template';
-import {
-  // ButtonNavigation,
-  SummarySection
-} from '~/components/organisms/layout';
+import { SummarySection } from '~/components/organisms/layout';
 
 import type { StepIndicator } from '~/types/forms';
 
-// import type { NavigationButtonProps } from '../atoms/buttons/NavigationButton';
 import type { PageWrapperProps } from './PageWrapper';
-
-// const mockSummaryData = new Map([
-//   ['Selected offer', 'Home cleaning'],
-//   ['Cleaning frequency', 'Once a week'],
-//   ['Cleaning duration', '2 hours'],
-//   ['First cleaning date', '17.08.2023 8:00']
-// ]);
+import { useSummaryData } from '~/hooks/useSummaryData';
 
 type OrderCleaningFormPageProps = {
   stepIndicatorData: StepIndicator[];
@@ -33,12 +23,7 @@ const OrderCleaningFormPage = ({
   showSummary = false,
   serviceName
 }: OrderCleaningFormPageProps) => {
-  const summaryData = new Map([
-    ['Selected service', `${serviceName}`],
-    ['Cleaning frequency', 'Once a week'],
-    ['Cleaning duration', '2 hours'],
-    ['First cleaning date', '17.08.2023 8:00']
-  ]);
+  const { totalCost, summaryData } = useSummaryData(serviceName);
 
   return (
     <PageWrapper title={title}>
@@ -51,11 +36,10 @@ const OrderCleaningFormPage = ({
           </div>
           {showSummary && (
             <div className="min-w-[20rem] py-16">
-              <SummarySection data={summaryData} totalCost={200} />
+              <SummarySection data={summaryData} totalCost={totalCost} />
             </div>
           )}
         </div>
-        {/* <ButtonNavigation buttonData={buttonData} /> */}
       </div>
     </PageWrapper>
   );

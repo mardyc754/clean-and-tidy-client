@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+import { useFormContext } from 'react-hook-form';
 import type { InputHTMLAttributes } from 'react';
 import type { SetRequired } from 'type-fest';
 
@@ -7,19 +9,35 @@ type TextfieldProps = {
   label: string;
   wrapperProps?: string;
   errorLabel?: string;
-} & SetRequired<InputHTMLAttributes<HTMLInputElement>, 'name'>;
+  onChange?: (value: string) => void;
+} & SetRequired<
+  Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange'>,
+  'name'
+>;
 
 const Textfield = ({
   name,
   label,
   wrapperProps = '',
   errorLabel,
+  onChange,
   ...props
 }: TextfieldProps) => {
+  const { register, setValue } = useFormContext();
   return (
-    <div className={`flex flex-col ${!errorLabel && 'pb-4'} ${wrapperProps}`}>
+    <div className={clsx('flex flex-col', !errorLabel && 'pb-4', wrapperProps)}>
       <Label htmlFor={name}>{label}</Label>
-      <Input name={name} placeholder={label} {...props} />
+      <Input
+        placeholder={label}
+        {...register(name)}
+        onChange={(e) => {
+          const newValue = e.target.value;
+          setValue(name, newValue);
+          onChange?.(newValue);
+        }}
+        {...props}
+        className="p-4"
+      />
       <ErrorLabel>{errorLabel ?? ''}</ErrorLabel>
     </div>
   );

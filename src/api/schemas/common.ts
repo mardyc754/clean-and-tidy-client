@@ -5,4 +5,6 @@ export const basicError = z.object({
   hasError: z.literal(true)
 });
 
+export const ISOString = z.string().datetime();
+
 export type BackendBasicErrorData = z.infer<typeof basicError>;

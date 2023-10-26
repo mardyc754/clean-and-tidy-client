@@ -1,16 +1,27 @@
-import { handleFetchingData } from './utils';
-import { primaryServices, services, service } from './schemas/services';
+import type { ZodType } from 'zod';
+
+import {
+  primaryServices,
+  services,
+  service,
+  type PrimaryService,
+  type Service
+} from './schemas/services';
 import { basicError } from './schemas/common';
+
+import { handleFetchingData } from './handleFetchingData';
+
 import type { AllServicesQueryOptions, ServiceQueryOptions } from './types';
 
-// /services?primaryOnly=true
 export const getAllServices = async (options?: AllServicesQueryOptions) => {
   const primaryOnly = options?.primaryOnly ?? false;
 
   return await handleFetchingData({
     path: `/services`,
     method: 'get',
-    successSchema: primaryOnly ? primaryServices : services,
+    successSchema: primaryOnly
+      ? (primaryServices as ZodType<PrimaryService[]>)
+      : (services as ZodType<Service[]>),
     errorSchema: basicError,
     params: options
   });
@@ -23,7 +34,7 @@ export const getServiceById = async (
   return await handleFetchingData({
     path: `/services/${id}`,
     method: 'get',
-    successSchema: service,
+    successSchema: service as ZodType<Service>,
     errorSchema: basicError,
     params: options
   });
