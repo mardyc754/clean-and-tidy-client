@@ -74,3 +74,7 @@ export function advanceDateByNMinutes(date: Date, minutes: number) {
 export function nextDay(date: Date) {
   return dayjs(date).add(1, 'd').toDate();
 }
+
+export function advanceByMinutes(date: Date, minutes: number) {
+  return dayjs(date).add(minutes, 'm').toDate();
+}

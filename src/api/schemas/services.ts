@@ -39,7 +39,7 @@ export const primaryService = service.merge(
 
 // TODO: divide into main service and extra service
 export const orderedServiceSchema = basicService.extend({
-  isMainServiceInReservation: z.boolean(),
+  isMainServiceForReservation: z.boolean(),
   numberOfUnits: z.number().int().max(500).min(1)
 });
 

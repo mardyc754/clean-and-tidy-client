@@ -20,6 +20,7 @@ import type {
   CleaningFrequency,
   ValidDate
 } from '~/types/forms';
+import { advanceByMinutes } from '~/utils/dateUtils';
 
 interface OrderServiceFormStoreState {
   currentStep: number;
@@ -47,6 +48,7 @@ interface OrderServiceFormStoreState {
     cleaningFrequency: CleaningFrequency,
     availableFrequencies: CleaningFrequencyData[]
   ) => void;
+  endDate: () => ValidDate;
   clientData: OrderServiceClientData;
   addressData: Address;
   onChangeClientData: (
@@ -64,7 +66,7 @@ interface OrderServiceFormStoreState {
 const createOrUpdateOrderedService = (
   service: BasicServiceData,
   orderedServices: OrderedService[],
-  isMainServiceInReservation: boolean,
+  isMainServiceForReservation: boolean,
   numberOfUnits: number
 ) => {
   const orderedService = orderedServices.find(({ id }) => id === service.id);
@@ -76,7 +78,7 @@ const createOrUpdateOrderedService = (
   return {
     ...service,
     numberOfUnits,
-    isMainServiceInReservation
+    isMainServiceForReservation
   };
 };
 
@@ -116,8 +118,8 @@ export const useOrderServiceFormStore = create<OrderServiceFormStoreState>()(
       addressData: {
         street: '',
         houseNumber: '',
-        floor: '',
-        door: '',
+        // floor: '',
+        // door: '',
         postCode: '',
         city: ''
       },
@@ -213,6 +215,13 @@ export const useOrderServiceFormStore = create<OrderServiceFormStoreState>()(
         get().getServiceById(id)?.numberOfUnits ?? 0,
       getServiceById: (id) =>
         get().orderedServices.find((service) => id === service.id),
+      endDate: () => {
+        const startDate = get().startDate;
+
+        return startDate
+          ? advanceByMinutes(startDate as Date, get().durationInMinutes)
+          : null;
+      },
       onChangeCleaningFrequency: (cleaningFrequency, availableFrequencies) => {
         set(() => ({
           cleaningFrequencyDisplayData:

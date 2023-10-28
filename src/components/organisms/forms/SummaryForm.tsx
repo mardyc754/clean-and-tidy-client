@@ -1,3 +1,8 @@
+import { omit } from 'lodash';
+import { useShallow } from 'zustand/react/shallow';
+
+import { createRecurringReservation } from '~/api/reservation';
+
 import { useSummaryData } from '~/hooks/useSummaryData';
 
 import { useOrderServiceFormStore } from '~/stores/orderServiceFormStore';
@@ -12,16 +17,59 @@ interface SummaryFormProps {
 }
 
 const SummaryForm = ({ serviceName }: SummaryFormProps) => {
-  const { decreaseStep, currentStep } = useOrderServiceFormStore((state) => ({
-    decreaseStep: state.decreaseStep,
-    currentStep: state.currentStep
-  }));
+  const {
+    decreaseStep,
+    currentStep,
+    // recurring reservation creation data
+    frequency,
+    startDate,
+    endDate,
+    includeDetergents,
+    address,
+    clientData,
+    services
+  } = useOrderServiceFormStore(
+    useShallow((state) => ({
+      decreaseStep: state.decreaseStep,
+      currentStep: state.currentStep,
+      // recurring reservation creation data
+      frequency: state.cleaningFrequencyDisplayData?.value,
+      startDate: state.startDate,
+      endDate: state.endDate,
+      includeDetergents: state.includeDetergents,
+      address: state.addressData,
+      clientData: state.clientData,
+      services: state.orderedServices
+    }))
+  );
 
   const { summaryData, totalCost, contactDetails } =
     useSummaryData(serviceName);
 
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const recurringReservation = await createRecurringReservation({
+      frequency: frequency!,
+      reservationData: {
+        startDate: (startDate as Date).toISOString(),
+        endDate: (endDate() as Date).toISOString(),
+        cost: totalCost,
+        includeDetergents,
+        employeeIds: [2] // TODO: get employee ids from backend
+      },
+      clientId: 1, // TODO: get client id from the auth provider
+      address,
+      contactDetails: clientData,
+      services: services.map((service) => ({
+        serviceId: service.id,
+        ...omit(service, ['name', 'unit', 'id'])
+      }))
+    });
+  };
+
   return (
-    <form className="pt-16" onSubmit={(e) => e.preventDefault()}>
+    <form className="pt-16" onSubmit={onSubmit}>
       <SummaryView
         data={summaryData}
         totalCost={totalCost}

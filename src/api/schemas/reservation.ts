@@ -5,6 +5,13 @@ import { clientDataSchema } from './client';
 import { ISOString } from './common';
 import { orderedServiceSchema } from './services';
 
+enum RecurringReservationStatus {
+  TO_BE_CONFIRMED = 'TO_BE_CONFIRMED',
+  CLOSED = 'CLOSED',
+  TO_BE_CANCELLED = 'TO_BE_CANCELLED',
+  CANCELLED = 'CANCELLED'
+}
+
 export const address = z.object({
   street: z.string().max(40),
   houseNumber: z.string().max(6),
@@ -29,7 +36,7 @@ export const orderedService = z.object({
     price: z.string().transform((val) => parseFloat(val.replace(',', '.'))),
     duration: z.number().max(480)
   }),
-  isMainServiceInReservation: z.boolean(),
+  isMainServiceForReservation: z.boolean(),
   numberOfUnits: z.number().int().max(500).min(30)
 });
 
@@ -58,13 +65,27 @@ export const recurringReservationCreationSchema = z.object({
   frequency: z.nativeEnum(CleaningFrequency),
   clientId: z.number().int(), // it can be an client email as well
   reservationData: reservationCreationDataSchema,
+  // endDate: z.string().datetime(),
   address: address.or(z.number().int()),
-  contactDetails: contactDetailsForm,
+  contactDetails: contactDetails,
   services: z
-    .array(orderedServiceSchema)
+    .array(
+      orderedServiceSchema
+        .pick({
+          id: true,
+          numberOfUnits: true,
+          isMainServiceForReservation: true
+        })
+        .transform((val) => ({
+          serviceId: val.id,
+          numberOfUnits: val.numberOfUnits,
+          isMainServiceForReservation: val.isMainServiceForReservation
+        }))
+    )
     .refine(
       (arr) =>
-        arr.filter((service) => service.isMainServiceInReservation).length === 1
+        arr.filter((service) => service.isMainServiceForReservation).length ===
+        1
     )
 });
 
@@ -103,6 +124,19 @@ export const orderServiceClientDataSchema = clientDataSchema.pick({
   phone: true
 });
 
+export const recurringReservationSchema = z.object({
+  id: z.number().int(),
+  name: z.string().max(100),
+  frequency: z.nativeEnum(CleaningFrequency),
+  endDate: ISOString,
+  weekDay: z.number().int().min(0).max(6),
+  status: z.nativeEnum(RecurringReservationStatus),
+  clientId: z.number().int(),
+  addressId: z.number().int(),
+  bookerFirstName: z.string().max(50),
+  bookerLastName: z.string().max(50)
+});
+
 export type OrderServiceClientData = z.infer<
   typeof orderServiceClientDataSchema
 >;
@@ -124,3 +158,5 @@ export type ReservationFormData = z.infer<typeof reservationFormData>;
 export type RecurringReservationCreationData = z.infer<
   typeof recurringReservationCreationSchema
 >;
+
+export type RecurringReservation = z.infer<typeof recurringReservationSchema>;
