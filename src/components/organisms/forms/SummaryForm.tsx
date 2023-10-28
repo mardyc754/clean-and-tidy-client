@@ -22,7 +22,7 @@ const SummaryForm = ({ serviceName }: SummaryFormProps) => {
     currentStep,
     // recurring reservation creation data
     frequency,
-    startDate,
+    fullStartDate,
     endDate,
     includeDetergents,
     address,
@@ -34,7 +34,7 @@ const SummaryForm = ({ serviceName }: SummaryFormProps) => {
       currentStep: state.currentStep,
       // recurring reservation creation data
       frequency: state.cleaningFrequencyDisplayData?.value,
-      startDate: state.startDate,
+      fullStartDate: state.fullStartDate,
       endDate: state.endDate,
       includeDetergents: state.includeDetergents,
       address: state.addressData,
@@ -52,7 +52,7 @@ const SummaryForm = ({ serviceName }: SummaryFormProps) => {
     const recurringReservation = await createRecurringReservation({
       frequency: frequency!,
       reservationData: {
-        startDate: (startDate as Date).toISOString(),
+        startDate: (fullStartDate() as Date).toISOString(),
         endDate: (endDate() as Date).toISOString(),
         cost: totalCost,
         includeDetergents,

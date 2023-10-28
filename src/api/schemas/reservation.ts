@@ -108,7 +108,7 @@ export const orderServiceSubmitDataSchema = z.object({
     invalid_type_error: 'Select an hour'
   }),
   includeDetergents: z.boolean(),
-  extraServices: z.array(z.number().int()).optional()
+  extraServices: z.array(z.number().int().or(z.undefined())).optional()
 });
 
 export const orderServiceInputDataSchema = orderServiceSubmitDataSchema.extend({

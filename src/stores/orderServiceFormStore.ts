@@ -20,7 +20,7 @@ import type {
   CleaningFrequency,
   ValidDate
 } from '~/types/forms';
-import { advanceByMinutes } from '~/utils/dateUtils';
+import { advanceByMinutes, mergeDayDateAndHourDate } from '~/utils/dateUtils';
 
 interface OrderServiceFormStoreState {
   currentStep: number;
@@ -40,6 +40,7 @@ interface OrderServiceFormStoreState {
   onChangeIncludeDetergents: (includeDetergents: boolean) => void;
   onChangeStartDate: (startDate: ValidDate) => void;
   onChangeHourDate: (hourDate: ValidDate) => void;
+  fullStartDate: () => ValidDate;
   setData: (formData: OrderServiceInputData, serviceData: Service) => void;
   getServiceById: (id: BasicServiceData['id']) => OrderedService | undefined;
   getServiceNumberOfUnits: (id: BasicServiceData['id']) => number;
@@ -216,11 +217,32 @@ export const useOrderServiceFormStore = create<OrderServiceFormStoreState>()(
       getServiceById: (id) =>
         get().orderedServices.find((service) => id === service.id),
       endDate: () => {
-        const startDate = get().startDate;
+        const fullStartDate = get().fullStartDate();
 
-        return startDate
-          ? advanceByMinutes(startDate as Date, get().durationInMinutes)
+        return fullStartDate
+          ? advanceByMinutes(fullStartDate as Date, get().durationInMinutes)
           : null;
+      },
+      fullStartDate: () => {
+        const startDate = get().startDate;
+        const hourDate = get().hourDate;
+
+        if (!startDate && !hourDate) {
+          return null;
+        }
+
+        if (!startDate) {
+          return hourDate;
+        }
+
+        if (!hourDate) {
+          return startDate;
+        }
+
+        return mergeDayDateAndHourDate(
+          get().startDate as Date,
+          get().hourDate as Date
+        );
       },
       onChangeCleaningFrequency: (cleaningFrequency, availableFrequencies) => {
         set(() => ({
