@@ -47,6 +47,8 @@ const SummaryForm = ({ serviceName }: SummaryFormProps) => {
   const { summaryData, totalCost, contactDetails } =
     useSummaryData(serviceName);
 
+  const router = useRouter();
+
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -67,9 +69,28 @@ const SummaryForm = ({ serviceName }: SummaryFormProps) => {
         ...omit(service, ['name', 'unit', 'id'])
       }))
     });
-  };
 
-  const router = useRouter();
+    if (!recurringReservation || 'hasError' in recurringReservation) {
+      await router.push(
+        {
+          pathname: '/order-service/error',
+          query: { message: recurringReservation?.message }
+        },
+        '/order-service/error'
+      );
+    } else {
+      await router.push(
+        {
+          pathname: '/order-service/success',
+          query: {
+            reservationName: recurringReservation.name,
+            email: clientData.email
+          }
+        },
+        '/order-service/success'
+      );
+    }
+  };
 
   const onDecreaseStep = async () => {
     await router.push({
@@ -95,7 +116,7 @@ const SummaryForm = ({ serviceName }: SummaryFormProps) => {
         </div>
       </div>
       {/* <StepButtons currentStep={currentStep} onDecreaseStep={decreaseStep} /> */}
-      <StepButtons currentStep={currentStep} onDecreaseStep={onDecreaseStep} />
+      <StepButtons currentStep={3} onDecreaseStep={onDecreaseStep} />
     </form>
   );
 };

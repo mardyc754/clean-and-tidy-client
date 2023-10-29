@@ -7,10 +7,13 @@ import { PageWrapper } from '~/components/template';
 
 import type { NavigationButtonProps } from '~/components/atoms/buttons/NavigationButton';
 import type { PageWrapperProps } from './PageWrapper';
+import clsx from 'clsx';
 
 type ResultPageTemplateProps = {
   heading: string;
   icon: IconDefinition;
+  variant: 'success' | 'error';
+  caption?: string;
   buttonData: NavigationButtonProps[];
 } & PageWrapperProps;
 
@@ -19,19 +22,29 @@ const ResultPageWrapper = ({
   heading,
   icon,
   buttonData,
+  variant,
+  caption,
   children
 }: ResultPageTemplateProps) => {
   return (
     <PageWrapper title={title}>
       <div className="p-16">
         <div className="flex items-center justify-center">
-          <Heading1>{heading}</Heading1>
+          <FontAwesomeIcon
+            icon={icon}
+            className={clsx(
+              'text-9xl',
+              variant === 'success' ? 'text-green-500' : 'text-red-500'
+            )}
+          />
         </div>
         <div className="flex flex-col items-center py-8">
-          <FontAwesomeIcon icon={icon} className="text-[15rem] text-cyan-500" />
+          <Heading1>{heading}</Heading1>
+          {caption && <p className="text-center">{caption}</p>}
+
           <div className="flex flex-col p-8 text-xl">{children}</div>
         </div>
-        <ButtonNavigation buttonData={buttonData} />
+        {/* <ButtonNavigation buttonData={buttonData} /> */}
       </div>
     </PageWrapper>
   );

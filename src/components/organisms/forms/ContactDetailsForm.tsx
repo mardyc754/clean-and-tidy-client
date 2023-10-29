@@ -1,4 +1,4 @@
-import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
+import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form';
 
 import { contactDetailsResolver } from '~/api/resolvers/orderServiceForm';
 import type { ContactDetailsFormData } from '~/api/schemas/reservation';

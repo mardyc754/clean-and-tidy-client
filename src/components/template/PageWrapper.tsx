@@ -15,9 +15,7 @@ const PageWrapper = ({ title, children }: PageWrapperProps) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Navbar />
-      <main className="flex min-h-screen flex-col bg-slate-300">
-        {children}
-      </main>
+      <main className="flex min-h-screen flex-col bg-sky-100">{children}</main>
       <Footer />
     </>
   );

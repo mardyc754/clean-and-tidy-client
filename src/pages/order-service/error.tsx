@@ -1,4 +1,4 @@
-import { faMeh } from '@fortawesome/free-regular-svg-icons';
+import { faCircleXmark } from '@fortawesome/free-regular-svg-icons';
 
 import { ResultPageWrapper } from '~/components/template';
 
@@ -7,7 +7,8 @@ const OrderErrorPage = () => {
     <ResultPageWrapper
       title="Something went wrong"
       heading="Something went wrong..."
-      icon={faMeh}
+      variant="error"
+      icon={faCircleXmark}
       buttonData={[
         {
           name: 'Try Again',
