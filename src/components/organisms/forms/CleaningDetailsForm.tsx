@@ -22,6 +22,7 @@ import {
   StepButtons
 } from '../form-fields';
 import { useOrderServiceFormStore } from '~/stores/orderServiceFormStore';
+import { useRouter } from 'next/router';
 
 interface CleaningDetailsFormProps {
   data: Service;
@@ -77,19 +78,28 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
     [data]
   ) as ServiceWithUnit[];
 
+  const router = useRouter();
   // console.log(data);
   // const currentValues = useWatch<OrderServiceInputData>({
   //   control: methods.control
   // });
   // console.log(currentValues);
 
+  const onSubmit: SubmitHandler<OrderServiceInputData> = async () => {
+    await router.push({
+      pathname: router.pathname,
+      query: { ...router.query, currentStep: 2 }
+    });
+  };
+
+  const onDecreaseStep = async () => {
+    await router.push('/');
+  };
+
   return (
     <FormProvider {...methods}>
-      <form
-        className="py-16"
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        onSubmit={handleSubmit(increaseStep)}
-      >
+      {/* <form className="py-16" onSubmit={handleSubmit(increaseStep)}> */}
+      <form className="py-16" onSubmit={handleSubmit(onSubmit)}>
         <NumericInput
           min={0}
           max={500}
@@ -134,7 +144,11 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
             onChangeNumberOfUnits={onChangeServiceNumberOfUnits}
           />
         )}
-        <StepButtons currentStep={currentStep} onDecreaseStep={decreaseStep} />
+        {/* <StepButtons currentStep={currentStep} onDecreaseStep={decreaseStep} /> */}
+        <StepButtons
+          currentStep={currentStep}
+          onDecreaseStep={onDecreaseStep}
+        />
       </form>
     </FormProvider>
   );

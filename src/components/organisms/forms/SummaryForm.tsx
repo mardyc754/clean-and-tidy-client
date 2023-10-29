@@ -11,6 +11,7 @@ import { AddressDataField, SummaryView } from '~/components/organisms/layout';
 import { Heading2 } from '~/components/atoms/typography/headings';
 
 import { StepButtons } from '../form-fields';
+import { useRouter } from 'next/router';
 
 interface SummaryFormProps {
   serviceName: string;
@@ -68,6 +69,15 @@ const SummaryForm = ({ serviceName }: SummaryFormProps) => {
     });
   };
 
+  const router = useRouter();
+
+  const onDecreaseStep = async () => {
+    await router.push({
+      pathname: router.pathname,
+      query: { ...router.query, currentStep: 2 }
+    });
+  };
+
   return (
     <form className="pt-16" onSubmit={onSubmit}>
       <SummaryView
@@ -84,7 +94,8 @@ const SummaryForm = ({ serviceName }: SummaryFormProps) => {
           <AddressDataField data={contactDetails} />
         </div>
       </div>
-      <StepButtons currentStep={currentStep} onDecreaseStep={decreaseStep} />
+      {/* <StepButtons currentStep={currentStep} onDecreaseStep={decreaseStep} /> */}
+      <StepButtons currentStep={currentStep} onDecreaseStep={onDecreaseStep} />
     </form>
   );
 };

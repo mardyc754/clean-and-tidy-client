@@ -1,4 +1,4 @@
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 
 import { contactDetailsResolver } from '~/api/resolvers/orderServiceForm';
 import type { ContactDetailsFormData } from '~/api/schemas/reservation';
@@ -8,6 +8,7 @@ import { useOrderServiceFormStore } from '~/stores/orderServiceFormStore';
 import { Textfield, TextArea } from '~/components/molecules/form-fields';
 
 import { StepButtons } from '../form-fields';
+import { useRouter } from 'next/router';
 
 const ContactDetailsForm = () => {
   const methods = useForm<ContactDetailsFormData>({
@@ -34,13 +35,25 @@ const ContactDetailsForm = () => {
   }));
 
   // console.log(methods.watch());
+  const router = useRouter();
+
+  const onDecreaseStep = async () => {
+    await router.push({
+      pathname: router.pathname,
+      query: { ...router.query, currentStep: 1 }
+    });
+  };
+  const onSubmit: SubmitHandler<ContactDetailsFormData> = async () => {
+    await router.push({
+      pathname: router.pathname,
+      query: { ...router.query, currentStep: 3 }
+    });
+  };
 
   return (
     <FormProvider {...methods}>
-      <form
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        onSubmit={handleSubmit(increaseStep)}
-      >
+      {/* <form onSubmit={handleSubmit(increaseStep)}> */}
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-cols-6 grid-rows-6 gap-10 py-16">
           <Textfield
             wrapperProps="col-span-3 row-span-1"
@@ -143,7 +156,11 @@ const ContactDetailsForm = () => {
             name="extraInfo"
           />
         </div>
-        <StepButtons currentStep={currentStep} onDecreaseStep={decreaseStep} />
+        {/* <StepButtons currentStep={currentStep} onDecreaseStep={decreaseStep} /> */}
+        <StepButtons
+          currentStep={currentStep}
+          onDecreaseStep={onDecreaseStep}
+        />
       </form>
     </FormProvider>
   );
