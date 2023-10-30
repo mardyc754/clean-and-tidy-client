@@ -3,8 +3,7 @@ import { ZodError, type ZodType } from 'zod';
 import { AxiosError, type AxiosResponse, type AxiosRequestConfig } from 'axios';
 
 import { fetcher } from '~/lib/axios';
-
-import type { BackendBasicErrorData } from './schemas/common';
+import type { BackendBasicErrorData } from '~/schemas/api/common';
 
 type ResponseRecord = Partial<Record<string, unknown>> & {
   message?: string;

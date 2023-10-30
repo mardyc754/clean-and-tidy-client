@@ -1,8 +1,7 @@
 import { FormProvider, useForm, type SubmitHandler } from 'react-hook-form';
 
 import { login } from '~/api/auth';
-import { loginDataResolver } from '~/api/resolvers/auth';
-import type { LoginData } from '~/api/schemas/auth';
+import { loginDataResolver, type LoginData } from '~/schemas/forms/auth';
 
 import { Textfield } from '~/components/molecules/form-fields';
 import { SubmitButton } from '~/components/atoms/buttons';

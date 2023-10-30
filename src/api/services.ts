@@ -6,11 +6,10 @@ import {
   service,
   type PrimaryService,
   type Service
-} from './schemas/services';
-import { basicError } from './schemas/common';
+} from '~/schemas/api/services';
+import { basicError } from '~/schemas/api/common';
 
 import { handleFetchingData } from './handleFetchingData';
-
 import type { AllServicesQueryOptions, ServiceQueryOptions } from './types';
 
 export const getAllServices = async (options?: AllServicesQueryOptions) => {

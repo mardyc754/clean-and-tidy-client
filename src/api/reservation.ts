@@ -1,14 +1,14 @@
 import type { ZodType } from 'zod';
-import { basicError } from './schemas/common';
-
-import { handleFetchingData } from './handleFetchingData';
 
 import {
   recurringReservationSchema,
-  type RecurringReservationCreationData,
   recurringReservationWithReservationsSchema,
   type RecurringReservationWithReservations
-} from './schemas/reservation';
+} from '~/schemas/api/reservation';
+import { basicError } from '~/schemas/api/common';
+import type { RecurringReservationCreationData } from '~/schemas/forms/orderService';
+
+import { handleFetchingData } from './handleFetchingData';
 import type { RecurringReservationQueryOptions } from './types';
 
 export const createRecurringReservation = async (

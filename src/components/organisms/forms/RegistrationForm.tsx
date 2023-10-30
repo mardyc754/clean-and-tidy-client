@@ -4,10 +4,13 @@ import { register } from '~/api/auth';
 
 import { Textfield } from '~/components/molecules/form-fields';
 
-import type { RegistrationData } from '~/api/schemas/auth';
+import {
+  registrationDataResolver,
+  type RegistrationData
+} from '~/schemas/forms/auth';
+
 import { SubmitButton } from '~/components/atoms/buttons';
 import { RegularLink } from '~/components/atoms/links';
-import { registrationDataResolver } from '~/api/resolvers/auth';
 
 const RegistrationForm = () => {
   const methods = useForm<RegistrationData>({

@@ -4,14 +4,14 @@ import type { ValueOf } from 'type-fest';
 
 import type {
   Address,
-  OrderServiceClientData,
+  ContactDetails,
   OrderServiceInputData
-} from '~/api/schemas/reservation';
+} from '~/schemas/forms/orderService';
 import type {
   BasicServiceData,
   Service,
   OrderedService
-} from '~/api/schemas/services';
+} from '~/schemas/api/services';
 
 import { DETERGENT_COST } from '~/utils/constants';
 
@@ -50,10 +50,10 @@ interface OrderServiceFormStoreState {
     availableFrequencies: CleaningFrequencyData[]
   ) => void;
   endDate: () => ValidDate;
-  clientData: OrderServiceClientData;
+  clientData: ContactDetails;
   addressData: Address;
   onChangeClientData: (
-    fieldName: keyof OrderServiceClientData,
+    fieldName: keyof ContactDetails,
     value: ValueOf<typeof fieldName>
   ) => void;
   onChangeAddressData: (

@@ -1,17 +1,16 @@
 import { useMemo } from 'react';
 import {
   FormProvider,
-  SubmitHandler,
+  type SubmitHandler,
   useForm,
   useWatch
 } from 'react-hook-form';
 
-import { cleaningDetailsResolver } from '~/api/resolvers/orderServiceForm';
-import type { Service, ServiceWithUnit } from '~/api/schemas/services';
-import type {
-  OrderServiceInputData,
-  OrderServiceSubmitData
-} from '~/api/schemas/reservation';
+import type { Service, ServiceWithUnit } from '~/schemas/api/services';
+import {
+  type OrderServiceInputData,
+  cleaningDetailsResolver
+} from '~/schemas/forms/orderService';
 
 import { Checkbox, NumericInput } from '~/components/atoms/forms';
 

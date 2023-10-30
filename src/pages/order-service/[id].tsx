@@ -9,7 +9,7 @@ import {
 } from '~/settings/orderServicePageConstants';
 
 import { getAllServices, getServiceById } from '~/api/services';
-import type { Service } from '~/api/schemas/services';
+import type { Service } from '~/schemas/api/services';
 
 import { EMPTY_DATA_PLACEHOLDER } from '~/utils/constants';
 

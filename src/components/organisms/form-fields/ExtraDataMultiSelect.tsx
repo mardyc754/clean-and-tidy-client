@@ -1,7 +1,7 @@
 import {
   type ServiceWithUnit,
   type BasicServiceData
-} from '~/api/schemas/services';
+} from '~/schemas/api/services';
 
 import { ExtraDataField } from '~/components/molecules/form-fields';
 
