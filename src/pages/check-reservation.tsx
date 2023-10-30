@@ -5,6 +5,7 @@ import { getRecurringReservationByName } from '~/api/reservation';
 import { Button } from '~/components/atoms/buttons';
 import { Heading1 } from '~/components/atoms/typography/headings';
 import { Textfield } from '~/components/molecules/form-fields';
+import { ReservationDetails } from '~/components/organisms/data-display';
 
 import { PageWrapper } from '~/components/template';
 import type { RecurringReservationWithReservations } from '~/schemas/api/reservation';
@@ -24,7 +25,7 @@ const CheckReservation = () => {
     const data = await getRecurringReservationByName(reservationName);
 
     if ('hasError' in data) {
-      toast.error(data.message);
+      toast.error(data.message, { position: 'bottom-center' });
       return;
     }
 
@@ -55,6 +56,9 @@ const CheckReservation = () => {
             </form>
           </FormProvider>
         </div>
+        {recurringReservationData && (
+          <ReservationDetails data={recurringReservationData} />
+        )}
       </div>
     </PageWrapper>
   );
