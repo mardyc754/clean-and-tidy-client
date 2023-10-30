@@ -1,12 +1,20 @@
-import { z } from 'zod';
+import { ZodType, z } from 'zod';
 import { CleaningFrequency } from '~/types/forms';
 
 import { clientDataSchema } from './client';
-import { ISOString } from './common';
+import { ISOString, decimalToFloat } from './common';
 import { orderedServiceSchema } from './services';
 
 enum RecurringReservationStatus {
   TO_BE_CONFIRMED = 'TO_BE_CONFIRMED',
+  CLOSED = 'CLOSED',
+  TO_BE_CANCELLED = 'TO_BE_CANCELLED',
+  CANCELLED = 'CANCELLED'
+}
+
+enum ReservationStatus {
+  TO_BE_CONFIRMED = 'TO_BE_CONFIRMED',
+  ACTIVE = 'ACTIVE',
   CLOSED = 'CLOSED',
   TO_BE_CANCELLED = 'TO_BE_CANCELLED',
   CANCELLED = 'CANCELLED'
@@ -33,7 +41,7 @@ export const orderedService = z.object({
   name: z.string().max(100),
   unit: z.object({
     name: z.string().max(40),
-    price: z.string().transform((val) => parseFloat(val.replace(',', '.'))),
+    price: decimalToFloat,
     duration: z.number().max(480)
   }),
   isMainServiceForReservation: z.boolean(),
@@ -124,6 +132,18 @@ export const orderServiceClientDataSchema = clientDataSchema.pick({
   phone: true
 });
 
+export const reservationSchema = z.object({
+  id: z.number().int(),
+  name: z.string().max(100),
+  startDate: ISOString,
+  endDate: ISOString,
+  includeDetergents: z.boolean(),
+  cost: decimalToFloat,
+  status: z.nativeEnum(ReservationStatus),
+  employees: z.array(z.number().int()),
+  recurringReservationId: z.number().int()
+});
+
 export const recurringReservationSchema = z.object({
   id: z.number().int(),
   name: z.string().max(100),
@@ -136,6 +156,11 @@ export const recurringReservationSchema = z.object({
   bookerFirstName: z.string().max(50),
   bookerLastName: z.string().max(50)
 });
+
+export const recurringReservationWithReservationsSchema =
+  recurringReservationSchema.extend({
+    reservations: z.array(reservationSchema).optional()
+  });
 
 export type OrderServiceClientData = z.infer<
   typeof orderServiceClientDataSchema
@@ -160,3 +185,9 @@ export type RecurringReservationCreationData = z.infer<
 >;
 
 export type RecurringReservation = z.infer<typeof recurringReservationSchema>;
+
+export type RecurringReservationWithReservations = z.infer<
+  typeof recurringReservationWithReservationsSchema
+>;
+
+export type Reservation = z.infer<typeof reservationSchema>;

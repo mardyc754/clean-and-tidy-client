@@ -1,5 +1,6 @@
 // import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 import { FormProvider, useForm, type SubmitHandler } from 'react-hook-form';
+import { getRecurringReservationByName } from '~/api/reservation';
 import { Button } from '~/components/atoms/buttons';
 import { Heading1 } from '~/components/atoms/typography/headings';
 import { Textfield } from '~/components/molecules/form-fields';
@@ -10,9 +11,17 @@ type CheckReservationData = { reservationName: string };
 
 const CheckReservation = () => {
   const methods = useForm<CheckReservationData>();
-  const onSubmit: SubmitHandler<CheckReservationData> = (data, e) => {
+  const onSubmit: SubmitHandler<CheckReservationData> = async (
+    { reservationName },
+    e
+  ) => {
     e?.preventDefault();
+    const recurringReservationData = await getRecurringReservationByName(
+      reservationName
+      // { includeReservations: true }
+    );
     // TODO: fetch the reservation data here
+    console.log(recurringReservationData);
   };
 
   return (
