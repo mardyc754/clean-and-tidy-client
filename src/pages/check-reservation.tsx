@@ -1,27 +1,34 @@
-// import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
+import { useState } from 'react';
 import { FormProvider, useForm, type SubmitHandler } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { getRecurringReservationByName } from '~/api/reservation';
 import { Button } from '~/components/atoms/buttons';
 import { Heading1 } from '~/components/atoms/typography/headings';
 import { Textfield } from '~/components/molecules/form-fields';
 
 import { PageWrapper } from '~/components/template';
+import type { RecurringReservationWithReservations } from '~/schemas/api/reservation';
 
 type CheckReservationData = { reservationName: string };
 
 const CheckReservation = () => {
+  const [recurringReservationData, setRecurringReservationData] =
+    useState<RecurringReservationWithReservations | null>(null);
+
   const methods = useForm<CheckReservationData>();
   const onSubmit: SubmitHandler<CheckReservationData> = async (
     { reservationName },
     e
   ) => {
     e?.preventDefault();
-    const recurringReservationData = await getRecurringReservationByName(
-      reservationName
-      // { includeReservations: true }
-    );
-    // TODO: fetch the reservation data here
-    console.log(recurringReservationData);
+    const data = await getRecurringReservationByName(reservationName);
+
+    if ('hasError' in data) {
+      toast.error(data.message);
+      return;
+    }
+
+    setRecurringReservationData(data);
   };
 
   return (
