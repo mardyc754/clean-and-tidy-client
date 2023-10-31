@@ -1,3 +1,5 @@
+import type { CleaningFrequency } from './enums';
+
 export type RadioFieldOption = {
   value: string;
   name: string;
@@ -26,13 +28,6 @@ export type AddressData = {
 };
 
 export type ChangeDataMode = 'once' | 'permanently';
-
-export enum CleaningFrequency {
-  ONCE = 'ONCE',
-  ONCE_A_WEEK = 'ONCE_A_WEEK',
-  EVERY_TWO_WEEKS = 'EVERY_TWO_WEEKS',
-  ONCE_A_MONTH = 'ONCE_A_MONTH'
-}
 
 export type CleaningFrequencyData = {
   name: string;

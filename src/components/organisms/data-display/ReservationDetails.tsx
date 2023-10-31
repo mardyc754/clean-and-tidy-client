@@ -1,17 +1,28 @@
 import type { RecurringReservationWithReservations } from '~/schemas/api/reservation';
 import { LabeledTypographyList } from '../layout';
+import { Heading2 } from '~/components/atoms/typography/headings';
 
 interface ReservationDetailsProps {
   data: RecurringReservationWithReservations;
 }
 
 const ReservationDetails = ({ data }: ReservationDetailsProps) => {
-  const reservationDetailsData = new Map();
+  const reservationDetailsData = new Map([
+    ['Name', data.name],
+    // ['Start date', data.startDate],
+    ['End date', data.endDate],
+    ['Frequency', data.frequency],
+    ['Number of visits', `${data.reservations?.length}`],
+    ['Status', data.status]
+  ]);
   return (
-    <LabeledTypographyList
-      name="ReservationDetails"
-      data={reservationDetailsData}
-    />
+    <>
+      <Heading2>Reservation details</Heading2>
+      <LabeledTypographyList
+        name="ReservationDetails"
+        data={reservationDetailsData}
+      />
+    </>
   );
 };
 

@@ -1,17 +1,18 @@
 import { useMemo } from 'react';
 import type { InferGetStaticPropsType, GetStaticProps } from 'next';
-import { NextRouter, useRouter, withRouter } from 'next/router';
+import { type NextRouter, withRouter } from 'next/router';
 
 import {
   configureDetailsIndicatorData,
   contactDetailsIndicatorData,
   summaryIndicatorData
-} from '~/settings/orderServicePageConstants';
+} from '~/constants/orderServiceForm';
 
 import { getAllServices, getServiceById } from '~/api/services';
+
 import type { Service } from '~/schemas/api/services';
 
-import { EMPTY_DATA_PLACEHOLDER } from '~/utils/constants';
+import { EMPTY_DATA_PLACEHOLDER } from '~/constants/primitives';
 
 import {
   CleaningDetailsForm,
@@ -19,8 +20,6 @@ import {
   SummaryForm
 } from '~/components/organisms/forms';
 import { OrderServiceFormPage } from '~/components/template';
-
-import { useOrderServiceFormStore } from '~/stores/orderServiceFormStore';
 
 function getCurrentStepComponent(index: number, data: Service | null) {
   let componentData;

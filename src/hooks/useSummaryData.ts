@@ -6,7 +6,7 @@ import {
   displayDayDateAndHourDate,
   displayTimeInHours
 } from '~/utils/dateUtils';
-import { EMPTY_DATA_PLACEHOLDER } from '~/utils/constants';
+import { EMPTY_DATA_PLACEHOLDER } from '~/constants/primitives';
 
 import type { NullableDate } from '~/types/forms';
 

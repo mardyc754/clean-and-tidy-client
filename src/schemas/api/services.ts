@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { type SetNonNullable } from 'type-fest';
 
-import { CleaningFrequency } from '~/types/forms';
+import { CleaningFrequency } from '~/types/enums';
 
 export const basicService = z.object({
   id: z.number().int(),

@@ -1,4 +1,4 @@
-import { CleaningFrequency } from '~/types/forms';
+import { CleaningFrequency } from '~/types/enums';
 
 export const changeDataModeData = [
   {

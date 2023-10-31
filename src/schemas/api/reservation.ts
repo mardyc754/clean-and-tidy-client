@@ -1,22 +1,11 @@
 import { z } from 'zod';
-import { CleaningFrequency } from '~/types/forms';
+import {
+  CleaningFrequency,
+  RecurringReservationStatus,
+  ReservationStatus
+} from '~/types/enums';
 
 import { ISOString, decimalToFloat } from './common';
-
-enum RecurringReservationStatus {
-  TO_BE_CONFIRMED = 'TO_BE_CONFIRMED',
-  CLOSED = 'CLOSED',
-  TO_BE_CANCELLED = 'TO_BE_CANCELLED',
-  CANCELLED = 'CANCELLED'
-}
-
-enum ReservationStatus {
-  TO_BE_CONFIRMED = 'TO_BE_CONFIRMED',
-  ACTIVE = 'ACTIVE',
-  CLOSED = 'CLOSED',
-  TO_BE_CANCELLED = 'TO_BE_CANCELLED',
-  CANCELLED = 'CANCELLED'
-}
 
 export const reservationSchema = z.object({
   id: z.number().int(),

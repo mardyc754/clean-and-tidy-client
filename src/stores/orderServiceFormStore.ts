@@ -13,13 +13,10 @@ import type {
   OrderedService
 } from '~/schemas/api/services';
 
-import { DETERGENT_COST } from '~/utils/constants';
+import { DETERGENT_COST } from '~/constants/primitives';
 
-import type {
-  CleaningFrequencyData,
-  CleaningFrequency,
-  ValidDate
-} from '~/types/forms';
+import type { CleaningFrequency } from '~/types/enums';
+import type { CleaningFrequencyData, ValidDate } from '~/types/forms';
 import { advanceByMinutes, mergeDayDateAndHourDate } from '~/utils/dateUtils';
 
 interface OrderServiceFormStoreState {

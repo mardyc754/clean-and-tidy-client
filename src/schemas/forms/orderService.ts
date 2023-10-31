@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { basicService } from '~/schemas/api/services';
 import { ISOString } from '~/schemas/api/common';
 
-import { CleaningFrequency } from '~/types/forms';
+import { CleaningFrequency } from '~/types/enums';
 
 // CLEANING DETAILS PAGE
 export const orderServiceSubmitDataSchema = z.object({

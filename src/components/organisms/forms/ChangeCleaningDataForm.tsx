@@ -6,8 +6,12 @@ import {
 import { NumericInput } from '~/components/atoms/forms';
 
 import type { SingleReservationData } from '~/types/user';
-import type { ChangeDataMode, CleaningFrequency } from '~/types/forms';
-import { changeDataModeData, frequencyValues } from './constants';
+import type { ChangeDataMode } from '~/types/forms';
+import type { CleaningFrequency } from '~/types/enums';
+import {
+  changeDataModeData,
+  frequencyValues
+} from '../../../constants/mappings';
 import { FormProvider, useForm } from 'react-hook-form';
 
 type ChangeCleaningDataFormProps = {
