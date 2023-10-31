@@ -1,9 +1,5 @@
 import { z } from 'zod';
-import {
-  CleaningFrequency,
-  RecurringReservationStatus,
-  ReservationStatus
-} from '~/types/enums';
+import { CleaningFrequency, ReservationStatus } from '~/types/enums';
 
 import { ISOString, decimalToFloat } from './common';
 
@@ -25,7 +21,7 @@ export const recurringReservationSchema = z.object({
   frequency: z.nativeEnum(CleaningFrequency),
   endDate: ISOString,
   weekDay: z.number().int().min(0).max(6),
-  status: z.nativeEnum(RecurringReservationStatus),
+  status: z.nativeEnum(ReservationStatus),
   clientId: z.number().int(),
   addressId: z.number().int(),
   bookerFirstName: z.string().max(50),
