@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import { FormProvider, useForm, type SubmitHandler } from 'react-hook-form';
 
 import { register } from '~/api/auth';
@@ -40,7 +41,7 @@ const RegistrationForm = () => {
       return;
     }
 
-    alert(result.message);
+    toast(result.message);
   };
 
   return (
@@ -48,7 +49,7 @@ const RegistrationForm = () => {
       <FormProvider {...methods}>
         <form
           className="grid grid-rows-5 items-center gap-y-4 self-stretch px-16 py-8"
-          onSubmit={void handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(onSubmit)}
         >
           <Textfield
             name="username"

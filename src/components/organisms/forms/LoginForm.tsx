@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import { FormProvider, useForm, type SubmitHandler } from 'react-hook-form';
 
 import { login } from '~/api/auth';
@@ -26,7 +27,7 @@ const LoginForm = () => {
       return;
     }
 
-    alert(result.message);
+    toast(result.message);
   };
   return (
     <>
