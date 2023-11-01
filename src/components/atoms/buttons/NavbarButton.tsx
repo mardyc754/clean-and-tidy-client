@@ -5,12 +5,12 @@ import { robotoBold } from '~/settings/fontSetting';
 type NavbarButtonProps = {
   name: string;
   // onClick: VoidFunction;
-  navigateOnClickTo?: string;
+  href?: string;
 };
 
-const NavbarButton = ({ name, navigateOnClickTo = '' }: NavbarButtonProps) => {
+const NavbarButton = ({ name, href = '' }: NavbarButtonProps) => {
   return (
-    <Link href={navigateOnClickTo}>
+    <Link href={href}>
       <button className={`${robotoBold.className}`}>{name}</button>
     </Link>
   );

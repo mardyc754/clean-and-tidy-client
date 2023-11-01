@@ -4,22 +4,20 @@ import type { ValueOf } from 'type-fest';
 
 import type {
   Address,
-  OrderServiceClientData,
+  ContactDetails,
   OrderServiceInputData
-} from '~/api/schemas/reservation';
+} from '~/schemas/forms/orderService';
 import type {
   BasicServiceData,
   Service,
   OrderedService
-} from '~/api/schemas/services';
+} from '~/schemas/api/services';
 
-import { DETERGENT_COST } from '~/utils/constants';
+import { DETERGENT_COST } from '~/constants/primitives';
 
-import type {
-  CleaningFrequencyData,
-  CleaningFrequency,
-  ValidDate
-} from '~/types/forms';
+import type { CleaningFrequency } from '~/types/enums';
+import type { CleaningFrequencyData, ValidDate } from '~/types/forms';
+import { advanceByMinutes, mergeDayDateAndHourDate } from '~/utils/dateUtils';
 
 interface OrderServiceFormStoreState {
   currentStep: number;
@@ -39,6 +37,7 @@ interface OrderServiceFormStoreState {
   onChangeIncludeDetergents: (includeDetergents: boolean) => void;
   onChangeStartDate: (startDate: ValidDate) => void;
   onChangeHourDate: (hourDate: ValidDate) => void;
+  fullStartDate: () => ValidDate;
   setData: (formData: OrderServiceInputData, serviceData: Service) => void;
   getServiceById: (id: BasicServiceData['id']) => OrderedService | undefined;
   getServiceNumberOfUnits: (id: BasicServiceData['id']) => number;
@@ -47,10 +46,11 @@ interface OrderServiceFormStoreState {
     cleaningFrequency: CleaningFrequency,
     availableFrequencies: CleaningFrequencyData[]
   ) => void;
-  clientData: OrderServiceClientData;
+  endDate: () => ValidDate;
+  clientData: ContactDetails;
   addressData: Address;
   onChangeClientData: (
-    fieldName: keyof OrderServiceClientData,
+    fieldName: keyof ContactDetails,
     value: ValueOf<typeof fieldName>
   ) => void;
   onChangeAddressData: (
@@ -64,7 +64,7 @@ interface OrderServiceFormStoreState {
 const createOrUpdateOrderedService = (
   service: BasicServiceData,
   orderedServices: OrderedService[],
-  isMainServiceInReservation: boolean,
+  isMainServiceForReservation: boolean,
   numberOfUnits: number
 ) => {
   const orderedService = orderedServices.find(({ id }) => id === service.id);
@@ -76,7 +76,7 @@ const createOrUpdateOrderedService = (
   return {
     ...service,
     numberOfUnits,
-    isMainServiceInReservation
+    isMainServiceForReservation
   };
 };
 
@@ -116,8 +116,8 @@ export const useOrderServiceFormStore = create<OrderServiceFormStoreState>()(
       addressData: {
         street: '',
         houseNumber: '',
-        floor: '',
-        door: '',
+        // floor: '',
+        // door: '',
         postCode: '',
         city: ''
       },
@@ -213,6 +213,34 @@ export const useOrderServiceFormStore = create<OrderServiceFormStoreState>()(
         get().getServiceById(id)?.numberOfUnits ?? 0,
       getServiceById: (id) =>
         get().orderedServices.find((service) => id === service.id),
+      endDate: () => {
+        const fullStartDate = get().fullStartDate();
+
+        return fullStartDate
+          ? advanceByMinutes(fullStartDate as Date, get().durationInMinutes)
+          : null;
+      },
+      fullStartDate: () => {
+        const startDate = get().startDate;
+        const hourDate = get().hourDate;
+
+        if (!startDate && !hourDate) {
+          return null;
+        }
+
+        if (!startDate) {
+          return hourDate;
+        }
+
+        if (!hourDate) {
+          return startDate;
+        }
+
+        return mergeDayDateAndHourDate(
+          get().startDate as Date,
+          get().hourDate as Date
+        );
+      },
       onChangeCleaningFrequency: (cleaningFrequency, availableFrequencies) => {
         set(() => ({
           cleaningFrequencyDisplayData:

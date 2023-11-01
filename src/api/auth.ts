@@ -3,7 +3,7 @@ import {
   registrationError,
   loginSuccess as loginSuccess,
   loginError as loginError
-} from './schemas/auth';
+} from '~/schemas/api/auth';
 import { handleFetchingData } from './handleFetchingData';
 
 type RegistrationData = {

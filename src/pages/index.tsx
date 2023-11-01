@@ -1,7 +1,7 @@
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 
-import type { BackendBasicErrorData } from '~/api/schemas/common';
-import type { Service } from '~/api/schemas/services';
+import type { BackendBasicErrorData } from '~/schemas/api/common';
+import type { Service } from '~/schemas/api/services';
 
 import { getAllServices } from '~/api/services';
 

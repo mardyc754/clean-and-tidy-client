@@ -1,13 +1,17 @@
+import toast from 'react-hot-toast';
 import { FormProvider, useForm, type SubmitHandler } from 'react-hook-form';
 
 import { register } from '~/api/auth';
 
 import { Textfield } from '~/components/molecules/form-fields';
 
-import type { RegistrationData } from '~/api/schemas/auth';
+import {
+  registrationDataResolver,
+  type RegistrationData
+} from '~/schemas/forms/auth';
+
 import { SubmitButton } from '~/components/atoms/buttons';
 import { RegularLink } from '~/components/atoms/links';
-import { registrationDataResolver } from '~/api/resolvers/auth';
 
 const RegistrationForm = () => {
   const methods = useForm<RegistrationData>({
@@ -37,7 +41,7 @@ const RegistrationForm = () => {
       return;
     }
 
-    alert(result.message);
+    toast(result.message);
   };
 
   return (
@@ -45,7 +49,7 @@ const RegistrationForm = () => {
       <FormProvider {...methods}>
         <form
           className="grid grid-rows-5 items-center gap-y-4 self-stretch px-16 py-8"
-          onSubmit={void handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(onSubmit)}
         >
           <Textfield
             name="username"

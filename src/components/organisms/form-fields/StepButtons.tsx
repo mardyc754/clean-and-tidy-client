@@ -15,7 +15,10 @@ const StepButtons = ({
     <div className="m-0 flex w-full justify-between">
       <Button
         href={currentStep === 0 ? cancelHref : undefined}
-        onClick={onDecreaseStep}
+        onClick={(e) => {
+          e.preventDefault();
+          onDecreaseStep();
+        }}
         className="w-72 py-4"
       >
         Return

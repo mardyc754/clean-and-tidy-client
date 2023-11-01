@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { type SetNonNullable } from 'type-fest';
 
-import { CleaningFrequency } from '~/types/forms';
+import { CleaningFrequency } from '~/types/enums';
 
 export const basicService = z.object({
   id: z.number().int(),
@@ -39,8 +39,16 @@ export const primaryService = service.merge(
 
 // TODO: divide into main service and extra service
 export const orderedServiceSchema = basicService.extend({
-  isMainServiceInReservation: z.boolean(),
+  isMainServiceForReservation: z.boolean(),
   numberOfUnits: z.number().int().max(500).min(1)
+});
+
+export const serviceForReservation = z.object({
+  isMainServiceForReservation: z.boolean(),
+  numberOfUnits: z.number().int().max(500).min(1),
+  recurringReservationId: z.number().int(),
+  serviceId: z.number().int(),
+  service: service.pick({ id: true, name: true })
 });
 
 export const primaryServices = z.array(primaryService);
@@ -54,3 +62,5 @@ export type BasicServiceData = z.infer<typeof basicService>;
 export type PrimaryService = z.infer<typeof primaryService>;
 
 export type OrderedService = z.infer<typeof orderedServiceSchema>;
+
+export type ServiceForReservation = z.infer<typeof serviceForReservation>;

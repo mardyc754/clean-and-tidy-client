@@ -1,22 +1,13 @@
 import Image from 'next/image';
 import HeroSectionImage from '~/assets/living_room.jpg';
-import type { Service } from '~/api/schemas/services';
+import type { Service } from '~/schemas/api/services';
 
 import LargeTypography from '~/components/atoms/typography/regular-text/LargeTypography';
 
-import { Button, NavigationButton } from '~/components/atoms/buttons';
+import { Button } from '~/components/atoms/buttons';
 import { Heading1 } from '~/components/atoms/typography/headings';
 import { Dropdown } from '~/components/molecules/form-fields';
 import { useMemo, useState } from 'react';
-
-// const options = [
-//   { id: 1, name: 'Home Cleaning' },
-//   { id: 2, name: 'Renovations' },
-//   { id: 3, name: 'Disinfection' },
-//   { id: 4, name: 'Furniture Cleaning' },
-//   { id: 5, name: 'Window Cleaning' },
-//   { id: 6, name: 'Custom' }
-// ];
 
 type HeroSectionProps = {
   services: Service[];
@@ -56,11 +47,9 @@ const HeroSection = ({ services }: HeroSectionProps) => {
             value={selectedValue}
             onChange={setSelectedValue}
           />
-          <NavigationButton
-            navigateOnClickTo={`/order-service/${selectedValue?.id}`}
-            // name="Calculate costs"
-            name="Order service"
-          />
+          <Button href={`/order-service/${selectedValue?.id}`}>
+            Order service
+          </Button>
         </div>
       </div>
     </div>

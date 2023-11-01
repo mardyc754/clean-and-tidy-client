@@ -3,7 +3,7 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { type ServiceWithUnit } from '~/api/schemas/services';
+import { type ServiceWithUnit } from '~/schemas/api/services';
 
 import { Button } from '~/components/atoms/buttons';
 import { NumericInput } from '~/components/atoms/forms';

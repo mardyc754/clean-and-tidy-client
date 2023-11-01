@@ -2,17 +2,19 @@ import { useMemo, useState } from 'react';
 import type { InferGetStaticPropsType, GetStaticProps } from 'next';
 import type { Merge } from 'type-fest';
 
+import { frequencyValues } from '~/constants/mappings';
+
 import { Heading1 } from '~/components/atoms/typography/headings';
 import { Button, NavigationButton } from '~/components/atoms/buttons';
 import { ChangeCleaningDataForm } from '~/components/organisms/forms';
-import { frequencyValues } from '~/components/organisms/forms/constants';
 import { ChangeDataSummary } from '~/components/organisms/layout';
 import { PageWrapper } from '~/components/template';
 
 import { extractHourStringFromDate, getDateAfter } from '~/utils/dateUtils';
 
+import { CleaningFrequency } from '~/types/enums';
 import type { SingleReservationData } from '~/types/user';
-import { type ChangeDataMode, CleaningFrequency } from '~/types/forms';
+import type { ChangeDataMode } from '~/types/forms';
 
 const exampleSingleReservationData = {
   id: 1, // or UUID

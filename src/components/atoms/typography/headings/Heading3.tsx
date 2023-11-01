@@ -3,7 +3,7 @@ type Heading3Props = {
 };
 
 const Heading3 = ({ children }: Heading3Props) => {
-  return <h3 className="text-3xl">{children}</h3>;
+  return <h3 className="font-emphasize text-3xl">{children}</h3>;
 };
 
 export default Heading3;

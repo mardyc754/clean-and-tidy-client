@@ -1,7 +1,8 @@
 import '@fortawesome/fontawesome-svg-core/styles.css';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { library, config } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
-
+import { Toaster } from 'react-hot-toast';
 import { SessionProvider } from 'next-auth/react';
 import { type Session } from 'next-auth';
 import { type AppType } from 'next/app';
@@ -19,6 +20,28 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <SessionProvider session={session}>
       <Component {...pageProps} />
+      <Toaster
+        toastOptions={
+          {
+            // success: {
+            //   style: {
+            //     background: 'green',
+            //     color: 'white'
+            //   }
+            // },
+            // error: {
+            //   style: {
+            //     background: 'red',
+            //     color: 'white'
+            //   },
+            //   iconTheme: {
+            //     primary: 'white',
+            //     secondary: 'red'
+            //   }
+            // }
+          }
+        }
+      />
     </SessionProvider>
   );
 };

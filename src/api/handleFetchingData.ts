@@ -3,8 +3,7 @@ import { ZodError, type ZodType } from 'zod';
 import { AxiosError, type AxiosResponse, type AxiosRequestConfig } from 'axios';
 
 import { fetcher } from '~/lib/axios';
-
-import type { BackendBasicErrorData } from './schemas/common';
+import type { BackendBasicErrorData } from '~/schemas/api/common';
 
 type ResponseRecord = Partial<Record<string, unknown>> & {
   message?: string;
@@ -58,7 +57,9 @@ export async function handleFetchingData<
   data,
   params
 }: FetchingData<SuccessData, ErrorData, InputData>) {
-  let responseData = { message: 'Connection error' } as SuccessData | ErrorData;
+  let responseData = { message: 'Connection error', hasError: true } as
+    | SuccessData
+    | (ErrorData & { hasError: true });
 
   await fetcher<AxiosRequestConfig<InputData>, AxiosResponse<SuccessData>>({
     method,
@@ -75,18 +76,18 @@ export async function handleFetchingData<
         responseData = {
           ...errorSchema.parse(err.response?.data),
           hasError: true
-        } as ErrorData;
+        } as ErrorData & { hasError: true };
         return;
       }
       responseData = handleTypeErrors(err, 'Type error of received data') as
         | SuccessData
-        | ErrorData;
+        | (ErrorData & { hasError: true });
     })
     .catch((err) => {
       responseData = handleTypeErrors(
         err,
         'Type error of received error data'
-      ) as SuccessData | ErrorData;
+      ) as SuccessData | (ErrorData & { hasError: true });
     });
 
   return responseData;

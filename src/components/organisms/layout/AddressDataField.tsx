@@ -1,10 +1,7 @@
-import type {
-  Address,
-  OrderServiceClientData
-} from '~/api/schemas/reservation';
+import type { Address, ContactDetails } from '~/schemas/forms/orderService';
 
 type AddressDataFieldProps = {
-  data: Address & OrderServiceClientData;
+  data: Address & ContactDetails;
 };
 
 const AddressDataField = ({ data }: AddressDataFieldProps) => {

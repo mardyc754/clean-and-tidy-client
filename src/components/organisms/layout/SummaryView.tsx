@@ -1,8 +1,6 @@
 import type { SummaryData } from '~/types/forms';
-import {
-  LabeledTypography,
-  SummaryTypography
-} from '~/components/atoms/typography/labeled-text';
+import { SummaryTypography } from '~/components/atoms/typography/labeled-text';
+import LabeledTypographyList from './LabeledTypographyList';
 
 type SummarySectionProps = {
   data: SummaryData;
@@ -23,16 +21,13 @@ const SummaryView = ({
 }: SummarySectionProps) => {
   return (
     <div className="flex flex-col">
-      {Array.from(data).map(([key, value]) => (
-        <LabeledTypography
-          label={key}
-          value={value}
-          contentDistribution={contentDistribution}
-          labelClasses={labelClasses}
-          valueClasses={valueClasses}
-          key={`SummarySection-${key}`}
-        />
-      ))}
+      <LabeledTypographyList
+        data={data}
+        contentDistribution={contentDistribution}
+        labelClasses={labelClasses}
+        valueClasses={valueClasses}
+        name="SummarySection"
+      />
       <SummaryTypography
         size={summaryTypographySize}
         label="Total costs"

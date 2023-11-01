@@ -1,45 +1,45 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import type { InferGetStaticPropsType, GetStaticProps } from 'next';
+import { type NextRouter, withRouter } from 'next/router';
+
+import {
+  configureDetailsIndicatorData,
+  contactDetailsIndicatorData,
+  summaryIndicatorData
+} from '~/constants/orderServiceForm';
 
 import { getAllServices, getServiceById } from '~/api/services';
-import type { Service } from '~/api/schemas/services';
 
-import { EMPTY_DATA_PLACEHOLDER } from '~/utils/constants';
+import type { Service } from '~/schemas/api/services';
+
+import { EMPTY_DATA_PLACEHOLDER } from '~/constants/primitives';
 
 import {
   CleaningDetailsForm,
   ContactDetailsForm,
   SummaryForm
 } from '~/components/organisms/forms';
-import { StepButtons } from '~/components/organisms/form-fields';
 import { OrderServiceFormPage } from '~/components/template';
-
-import {
-  configureDetailsIndicatorData,
-  contactDetailsIndicatorData,
-  summaryIndicatorData
-} from './constants';
-import { useOrderServiceFormStore } from '~/stores/orderServiceFormStore';
 
 function getCurrentStepComponent(index: number, data: Service | null) {
   let componentData;
 
   switch (index) {
-    case 1:
+    case 2:
       componentData = {
         heading: 'Contact details',
         stepIndidatorData: contactDetailsIndicatorData,
         stepComponent: <ContactDetailsForm />
       };
       break;
-    case 2:
+    case 3:
       componentData = {
         heading: 'Summary',
         stepIndidatorData: summaryIndicatorData,
         stepComponent: <SummaryForm serviceName={data?.name ?? ''} />
       };
       break;
-    case 0:
+    case 1:
     default:
       componentData = {
         heading: 'Configure details',
@@ -51,14 +51,26 @@ function getCurrentStepComponent(index: number, data: Service | null) {
   return componentData;
 }
 
-export default function OrderService({
-  data
-}: InferGetStaticPropsType<typeof getStaticProps>) {
-  // const [currentStep, setCurrentStep] = useState(0);
+function OrderService({
+  data,
+  router
+}: InferGetStaticPropsType<typeof getStaticProps> & { router: NextRouter }) {
+  // const { currentStep } = useOrderServiceFormStore((state) => ({
+  //   currentStep: state.currentStep
+  // }));
 
-  const { currentStep } = useOrderServiceFormStore((state) => ({
-    currentStep: state.currentStep
-  }));
+  // const router = useRouter();
+  // const query = router.query;
+
+  const currentStep = useMemo(() => {
+    const step = router.query.currentStep;
+    if (typeof step === 'string') {
+      return parseInt(step);
+    }
+
+    return 0;
+  }, [router.query.currentStep]);
+  // console.log(query);
 
   const currentStepData = useMemo(
     () => getCurrentStepComponent(currentStep, data),
@@ -68,7 +80,7 @@ export default function OrderService({
   return (
     <OrderServiceFormPage
       serviceName={`${data?.name ?? EMPTY_DATA_PLACEHOLDER}`}
-      showSummary={currentStep < 2}
+      showSummary={currentStep < 3}
       title="Configure Order Details"
       heading={currentStepData.heading}
       stepIndicatorData={currentStepData.stepIndidatorData}
@@ -96,13 +108,15 @@ export const getStaticPaths = async () => {
         id: `${id}`
       }
     })),
-    fallback: false
+    fallback: true
   };
 };
 
 export const getStaticProps = (async ({ params }) => {
   if (!params) {
-    return { props: { data: null } };
+    return {
+      notFound: true
+    };
   }
 
   const data = await getServiceById(params.id as string, {
@@ -111,8 +125,12 @@ export const getStaticProps = (async ({ params }) => {
   });
 
   if ('hasError' in data) {
-    return { props: { data: null } };
+    return {
+      notFound: true
+    };
   }
 
   return { props: { data } };
 }) satisfies GetStaticProps<{ data: Service | null }>;
+
+export default withRouter(OrderService);
