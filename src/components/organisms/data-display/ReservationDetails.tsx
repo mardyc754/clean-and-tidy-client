@@ -3,11 +3,7 @@ import { useMemo } from 'react';
 
 import type { RecurringReservation } from '~/schemas/api/reservation';
 
-import {
-  displayDateWithHours,
-  displayDatesAsTimespan,
-  extractDateStringFromDate
-} from '~/utils/dateUtils';
+import { displayDateWithHours } from '~/utils/dateUtils';
 import { convertToSnakeCase } from '~/utils/stringUtils';
 
 import { Heading2, Heading3 } from '~/components/atoms/typography/headings';
@@ -16,7 +12,7 @@ import {
   reservationStatusMap
 } from '~/constants/mappings';
 import { LabeledTypography } from '~/components/atoms/typography/labeled-text';
-import { Disclosure } from '~/components/molecules/layout';
+import { ReservationDisclosure } from '~/components/organisms/disclosures';
 
 interface ReservationDetailsProps {
   data: RecurringReservation;
@@ -90,62 +86,16 @@ const ReservationDetails = ({ data }: ReservationDetailsProps) => {
         {/* end of details */}
       </div>
       <Heading3>Visits</Heading3>
-      {/* single reservation data */}
       <div className="flex flex-col gap-8 py-8">
         {reservations.map((reservation, i) => {
-          const status = reservationStatusMap.get(reservation.status);
-
-          const reservationData = new Map([
-            ['Status', reservation.status],
-            [
-              'Detergents included',
-              reservation.includeDetergents ? 'Yes' : 'No'
-            ],
-            ['Cost', `${reservation.cost} zł`],
-            ['Status', status?.label ?? '']
-          ]);
-
           return (
-            <Disclosure
-              key={`SingleReservationData=${i}`}
-              titleComponent={
-                <div className="flex flex-1 flex-col py-2 md:flex-row md:items-center md:justify-between">
-                  <>
-                    <p className="font-emphasize text-2xl">
-                      {extractDateStringFromDate(reservation.startDate)}
-                    </p>
-                    <p className="font-emphasize text-2xl">
-                      {displayDatesAsTimespan(
-                        reservation.startDate,
-                        reservation.endDate
-                      )}
-                    </p>
-                  </>
-                </div>
-              }
-            >
-              <div className="flex-1">
-                {Array.from(reservationData).map(([key, value]) => (
-                  <LabeledTypography
-                    label={key}
-                    value={value}
-                    contentDistribution="stretch"
-                    labelClasses="text-xl"
-                    valueClasses={clsx(
-                      'text-2xl',
-                      key === 'Status' ? status?.style : ''
-                    )}
-                    key={`SingleReservationData-${convertToSnakeCase(
-                      key
-                    )}-${i}`}
-                  />
-                ))}
-              </div>
-            </Disclosure>
+            <ReservationDisclosure
+              data={reservation}
+              key={`ReservationDisclosure-${i}`}
+            />
           );
         })}
       </div>
-      {/* end of single reservation data */}
     </>
   );
 };

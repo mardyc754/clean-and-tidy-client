@@ -1,6 +1,6 @@
 import { Disclosure as HDisclosure, Transition } from '@headlessui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
 interface DisclosurePropss {
   titleComponent: React.ReactNode;
@@ -17,7 +17,7 @@ const Disclosure = ({ titleComponent, children }: DisclosurePropss) => {
       >
         {titleComponent}
         <FontAwesomeIcon
-          icon={faChevronUp}
+          icon={faChevronDown}
           className="h-5 w-5 transform text-cyan-500 hover:cursor-pointer ui-open:rotate-180"
         />
       </HDisclosure.Button>
