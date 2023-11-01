@@ -30,7 +30,7 @@ export const recurringReservationSchema = z.object({
   endDate: ISOString,
   weekDay: z.number().int().min(0).max(6),
   status: z.nativeEnum(ReservationStatus),
-  clientId: z.number().int(),
+  bookerEmail: z.string().email(),
   addressId: z.number().int(),
   bookerFirstName: z.string().max(50),
   bookerLastName: z.string().max(50),

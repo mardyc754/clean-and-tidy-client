@@ -1,8 +1,11 @@
+import { useRouter } from 'next/router';
 import { faCircleXmark } from '@fortawesome/free-regular-svg-icons';
 
 import { ResultPageWrapper } from '~/components/template';
 
 const OrderErrorPage = () => {
+  const router = useRouter();
+
   return (
     <ResultPageWrapper
       title="Something went wrong"
@@ -20,10 +23,8 @@ const OrderErrorPage = () => {
     >
       <p>Error when adding a new order service:</p>
       <p>
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab est iure
-        voluptas. Sequi eum, distinctio dicta cupiditate consequatur fugiat
-        dignissimos, sint totam exercitationem voluptatibus quidem est in
-        debitis odit earum?
+        <span className="font-emphasize">Error message:</span>{' '}
+        {router.query.message}
       </p>
     </ResultPageWrapper>
   );

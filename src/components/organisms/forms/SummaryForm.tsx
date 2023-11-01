@@ -61,7 +61,7 @@ const SummaryForm = ({ serviceName }: SummaryFormProps) => {
         includeDetergents,
         employeeIds: [2] // TODO: get employee ids from backend
       },
-      clientId: 1, // TODO: get client id from the auth provider
+      bookerEmail: clientData.email,
       address,
       contactDetails: clientData,
       services: services.map((service) => ({

@@ -86,7 +86,7 @@ export const orderedServiceSchema = basicService.extend({
 
 export const recurringReservationCreationSchema = z.object({
   frequency: z.nativeEnum(CleaningFrequency),
-  clientId: z.number().int(), // it can be an client email as well
+  bookerEmail: z.string().email(),
   reservationData: reservationCreationDataSchema,
   // endDate: z.string().datetime(),
   address: address.or(z.number().int()),
