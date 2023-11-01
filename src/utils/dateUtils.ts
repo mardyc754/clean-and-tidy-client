@@ -2,17 +2,17 @@ import type { ManipulateType } from 'dayjs';
 
 import dayjs from '~/lib/dayjs';
 
-import type { NullableDate } from '~/types/forms';
+type ValidDayjsDate = dayjs.Dayjs | Date | string | number | null | undefined;
 
-export function extractDateStringFromDate(date: NullableDate) {
+export function extractDateStringFromDate(date: ValidDayjsDate) {
   return date ? dayjs(date).format('DD.MM.YYYY') : '--.--.----';
 }
 
-export function extractHourStringFromDate(date: NullableDate) {
+export function extractHourStringFromDate(date: ValidDayjsDate) {
   return date ? dayjs(date).format('HH:mm') : '--:--';
 }
 
-export function extractHourFromDate(date: Date) {
+export function extractHourFromDate(date: ValidDayjsDate) {
   return dayjs(date).hour();
 }
 
@@ -20,7 +20,7 @@ export function changeHourToDate(hour: number) {
   return dayjs().hour(hour).minute(0).format('HH:mm');
 }
 
-export function dateWithHour(date: NullableDate, hour: number) {
+export function dateWithHour(date: ValidDayjsDate, hour: number) {
   return dayjs(date ?? undefined)
     .hour(hour)
     .minute(0)
@@ -28,21 +28,24 @@ export function dateWithHour(date: NullableDate, hour: number) {
     .toDate();
 }
 
-export function create(date: Date, hour: number) {
+export function create(date: ValidDayjsDate, hour: number) {
   return dayjs(date).hour(hour).minute(0).toDate();
 }
 
-export function displayDateWithHours(date: Date) {
+export function displayDateWithHours(date: ValidDayjsDate) {
   return dayjs(date).format('DD.MM.YYYY HH:mm');
 }
 
-export function mergeDayDateAndHourDate(dayDate: Date, hourDate: Date) {
+export function mergeDayDateAndHourDate(
+  dayDate: ValidDayjsDate,
+  hourDate: ValidDayjsDate
+) {
   return dateWithHour(dayDate, extractHourFromDate(hourDate));
 }
 
 export function displayDayDateAndHourDate(
-  dayDate: Date | null,
-  hourDate: Date | null
+  dayDate: ValidDayjsDate,
+  hourDate: ValidDayjsDate
 ) {
   return `${extractDateStringFromDate(dayDate)} ${extractHourStringFromDate(
     hourDate
@@ -50,7 +53,7 @@ export function displayDayDateAndHourDate(
 }
 
 export function getDateAfter(
-  date: Date,
+  date: ValidDayjsDate,
   duration: number,
   unit?: ManipulateType
 ) {
@@ -67,14 +70,23 @@ export function displayTimeInHours(duration: number) {
   }${minutes} ${minutes === 1 ? 'minute' : 'minutes'}`;
 }
 
-export function advanceDateByNMinutes(date: Date, minutes: number) {
+export function advanceDateByNMinutes(date: ValidDayjsDate, minutes: number) {
   return dayjs(date).add(minutes, 'm').toDate();
 }
 
-export function nextDay(date: Date) {
+export function nextDay(date: ValidDayjsDate) {
   return dayjs(date).add(1, 'd').toDate();
 }
 
-export function advanceByMinutes(date: Date, minutes: number) {
+export function advanceByMinutes(date: ValidDayjsDate, minutes: number) {
   return dayjs(date).add(minutes, 'm').toDate();
+}
+
+export function displayDatesAsTimespan(
+  startDate: ValidDayjsDate,
+  endDate: ValidDayjsDate
+) {
+  return `${extractHourStringFromDate(startDate)} - ${extractHourStringFromDate(
+    endDate
+  )}`;
 }

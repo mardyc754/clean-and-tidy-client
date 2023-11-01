@@ -10,6 +10,8 @@ export type ServiceQueryOptions = RequireAtLeastOne<{
   includeCleaningFrequencies: boolean;
 }>;
 
-export type RecurringReservationQueryOptions = {
+export type RecurringReservationQueryOptions = RequireAtLeastOne<{
   includeReservations: boolean;
-};
+  includeServices: boolean;
+  includeAddress: boolean;
+}>;

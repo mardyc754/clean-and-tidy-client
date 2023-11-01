@@ -38,9 +38,15 @@ export const frequencyToDescriptionMap = new Map([
 ]);
 
 export const reservationStatusMap = new Map([
-  [ReservationStatus.TO_BE_CONFIRMED, 'To be confirmed'],
-  [ReservationStatus.ACTIVE, 'Active'],
-  [ReservationStatus.CLOSED, 'Closed'],
-  [ReservationStatus.TO_BE_CANCELLED, 'To be cancelled'],
-  [ReservationStatus.CANCELLED, 'Cancelled']
+  [
+    ReservationStatus.TO_BE_CONFIRMED,
+    { label: 'To be confirmed', style: 'text-yellow-500' }
+  ],
+  [ReservationStatus.ACTIVE, { label: 'Active', style: 'text-green-500' }],
+  [ReservationStatus.CLOSED, { label: 'Closed', style: '' }],
+  [
+    ReservationStatus.TO_BE_CANCELLED,
+    { label: 'To be cancelled', style: 'text-orange-500' }
+  ],
+  [ReservationStatus.CANCELLED, { label: 'Cancelled', style: 'text-stone-500' }]
 ]);

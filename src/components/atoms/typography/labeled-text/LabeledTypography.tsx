@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 type LabeledTypographyProps = {
   label: string;
   value: string;
@@ -14,13 +16,18 @@ const LabeledTypography = ({
   valueClasses = 'text-base'
 }: LabeledTypographyProps) => {
   const wrapperClasses = new Map<typeof contentDistribution, string>([
-    ['horizontal', 'items-center gap-2'],
-    ['vertical', 'flex-col'],
-    ['stretch', 'items-center justify-between']
+    ['horizontal', 'md:items-center md:gap-2 md:flex-row'],
+    ['vertical', ''],
+    ['stretch', 'md:items-center md:justify-between md:flex-row']
   ]);
   return (
     <div
-      className={`flex ${wrapperClasses.get(contentDistribution) ?? ''} py-2`}
+      className={clsx(
+        'flex',
+        'flex-col',
+        wrapperClasses.get(contentDistribution) ?? '',
+        'py-2'
+      )}
     >
       <p className={labelClasses}>{label}</p>
       <p className={`font-emphasize ${valueClasses}`}>{value}</p>

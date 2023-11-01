@@ -43,6 +43,14 @@ export const orderedServiceSchema = basicService.extend({
   numberOfUnits: z.number().int().max(500).min(1)
 });
 
+export const serviceForReservation = z.object({
+  isMainServiceForReservation: z.boolean(),
+  numberOfUnits: z.number().int().max(500).min(1),
+  recurringReservationId: z.number().int(),
+  serviceId: z.number().int(),
+  service: service.pick({ id: true, name: true })
+});
+
 export const primaryServices = z.array(primaryService);
 
 export type Service = z.infer<typeof service>;
@@ -54,3 +62,5 @@ export type BasicServiceData = z.infer<typeof basicService>;
 export type PrimaryService = z.infer<typeof primaryService>;
 
 export type OrderedService = z.infer<typeof orderedServiceSchema>;
+
+export type ServiceForReservation = z.infer<typeof serviceForReservation>;

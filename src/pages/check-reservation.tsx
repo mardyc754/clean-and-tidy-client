@@ -1,20 +1,22 @@
 import { useState } from 'react';
 import { FormProvider, useForm, type SubmitHandler } from 'react-hook-form';
 import toast from 'react-hot-toast';
+
 import { getRecurringReservationByName } from '~/api/reservation';
+
+import type { RecurringReservation } from '~/schemas/api/reservation';
+
 import { Button } from '~/components/atoms/buttons';
 import { Heading1 } from '~/components/atoms/typography/headings';
 import { Textfield } from '~/components/molecules/form-fields';
 import { ReservationDetails } from '~/components/organisms/data-display';
-
 import { PageWrapper } from '~/components/template';
-import type { RecurringReservationWithReservations } from '~/schemas/api/reservation';
 
 type CheckReservationData = { reservationName: string };
 
 const CheckReservation = () => {
   const [recurringReservationData, setRecurringReservationData] =
-    useState<RecurringReservationWithReservations | null>(null);
+    useState<RecurringReservation | null>(null);
 
   const methods = useForm<CheckReservationData>();
   const onSubmit: SubmitHandler<CheckReservationData> = async (
@@ -22,7 +24,11 @@ const CheckReservation = () => {
     e
   ) => {
     e?.preventDefault();
-    const data = await getRecurringReservationByName(reservationName);
+    const data = await getRecurringReservationByName(reservationName, {
+      includeReservations: true,
+      includeServices: true,
+      includeAddress: true
+    });
 
     if ('hasError' in data) {
       toast.error(data.message, { position: 'bottom-center' });

@@ -1,7 +1,12 @@
 import { z } from 'zod';
+
 import { CleaningFrequency, ReservationStatus } from '~/types/enums';
 
+import { address } from '../forms/orderService';
+
 import { ISOString, decimalToFloat } from './common';
+import { employeeSchema } from './employee';
+import { serviceForReservation } from './services';
 
 export const reservationSchema = z.object({
   id: z.number().int(),
@@ -11,8 +16,11 @@ export const reservationSchema = z.object({
   includeDetergents: z.boolean(),
   cost: decimalToFloat,
   status: z.nativeEnum(ReservationStatus),
-  employees: z.array(z.number().int()),
   recurringReservationId: z.number().int()
+});
+
+export const reservationWithEmployeesSchema = reservationSchema.extend({
+  employees: z.array(employeeSchema)
 });
 
 export const recurringReservationSchema = z.object({
@@ -25,18 +33,16 @@ export const recurringReservationSchema = z.object({
   clientId: z.number().int(),
   addressId: z.number().int(),
   bookerFirstName: z.string().max(50),
-  bookerLastName: z.string().max(50)
+  bookerLastName: z.string().max(50),
+  reservations: z.array(reservationSchema).optional(),
+  services: z.array(serviceForReservation).optional(),
+  address: address.optional()
 });
-
-export const recurringReservationWithReservationsSchema =
-  recurringReservationSchema.extend({
-    reservations: z.array(reservationSchema).optional()
-  });
 
 export type RecurringReservation = z.infer<typeof recurringReservationSchema>;
 
-export type RecurringReservationWithReservations = z.infer<
-  typeof recurringReservationWithReservationsSchema
->;
-
 export type Reservation = z.infer<typeof reservationSchema>;
+
+export type ReservationWithEmployees = z.infer<
+  typeof reservationWithEmployeesSchema
+>;

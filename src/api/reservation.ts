@@ -2,9 +2,9 @@ import type { ZodType } from 'zod';
 
 import {
   recurringReservationSchema,
-  recurringReservationWithReservationsSchema,
-  type RecurringReservationWithReservations
+  type RecurringReservation
 } from '~/schemas/api/reservation';
+
 import { basicError } from '~/schemas/api/common';
 import type { RecurringReservationCreationData } from '~/schemas/forms/orderService';
 
@@ -17,7 +17,7 @@ export const createRecurringReservation = async (
   return await handleFetchingData({
     path: '/recurring-reservations',
     method: 'post',
-    successSchema: recurringReservationSchema,
+    successSchema: recurringReservationSchema as ZodType<RecurringReservation>,
     errorSchema: basicError,
     data
   });
@@ -30,8 +30,7 @@ export const getRecurringReservationByName = async (
   return await handleFetchingData({
     path: `/recurring-reservations/${name}`,
     method: 'get',
-    successSchema:
-      recurringReservationWithReservationsSchema as ZodType<RecurringReservationWithReservations>,
+    successSchema: recurringReservationSchema as ZodType<RecurringReservation>,
     errorSchema: basicError,
     params: options
   });
