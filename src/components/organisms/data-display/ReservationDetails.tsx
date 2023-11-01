@@ -3,7 +3,11 @@ import { useMemo } from 'react';
 
 import type { RecurringReservation } from '~/schemas/api/reservation';
 
-import { displayDateWithHours } from '~/utils/dateUtils';
+import {
+  convertISOStringToDate,
+  daysBetween,
+  displayDateWithHours
+} from '~/utils/dateUtils';
 import { convertToSnakeCase } from '~/utils/stringUtils';
 
 import { Heading2, Heading3 } from '~/components/atoms/typography/headings';
@@ -13,6 +17,8 @@ import {
 } from '~/constants/mappings';
 import { LabeledTypography } from '~/components/atoms/typography/labeled-text';
 import { ReservationDisclosure } from '~/components/organisms/disclosures';
+import { Scheduler } from '~/components/organisms/scheduler';
+import { getEventsFromReservations } from '~/utils/scheduler';
 
 interface ReservationDetailsProps {
   data: RecurringReservation;

@@ -1,4 +1,5 @@
 import '@fortawesome/fontawesome-svg-core/styles.css';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { library, config } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { Toaster } from 'react-hot-toast';

@@ -90,3 +90,14 @@ export function displayDatesAsTimespan(
     endDate
   )}`;
 }
+
+export function convertISOStringToDate(date: string) {
+  return dayjs(date).toDate();
+}
+
+export function daysBetween(
+  startDate: ValidDayjsDate,
+  endDate: ValidDayjsDate
+) {
+  return Math.abs(dayjs(endDate).diff(startDate, 'day'));
+}

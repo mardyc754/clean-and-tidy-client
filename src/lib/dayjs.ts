@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-
+import { dayjsLocalizer } from 'react-big-calendar';
 // most important dayjs plugins
 // most of them are likely to be removed
 
@@ -20,6 +20,7 @@ import duration from 'dayjs/plugin/duration';
 // humanizes input given by duration - can be useful in generating
 // how long ago particular comment was added (e.g. 4 years ago, 5 minutes ago)
 import relativeTime from 'dayjs/plugin/relativeTime';
+import updateLocale from 'dayjs/plugin/updateLocale';
 
 // // plugin to enable custom formats.
 // // it can be used, for example, to extract hour from the date
@@ -42,8 +43,10 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 // // to check the quarten
 // import quarterOfYear from 'dayjs/plugin/quarterOfYear';
 // // to measure the duration of the time
+// for optional timezones
+// import timezone from 'dayjs/plugin/timezone'
 
-import 'dayjs/locale/pl'; // import locale
+// import 'dayjs/locale/pl'; // import locale
 
 dayjs.extend(toObject);
 // dayjs.extend(isLeapYear);
@@ -53,8 +56,44 @@ dayjs.extend(toObject);
 // dayjs.extend(weekOfYear);
 // dayjs.extend(quarterOfYear);
 // dayjs.extend(customParseFormat);
+// dayjs.extend(timezone);
 
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
+
+dayjs.extend(updateLocale);
+
+// Note that the dayjsLocalizer extends Day.js with the following plugins:
+// - IsBetween
+// - IsSameOrAfter
+// - IsSameOrBefore
+// - LocaleData
+// - LocalizedFormat
+// - MinMax
+// - UTC
+export const localizer = dayjsLocalizer(dayjs);
+
+// dayjs.locale('pl');
+
+// for update locale options see:
+// https://day.js.org/docs/en/customization/customization
+dayjs.updateLocale('en', {
+  weekStart: 1,
+  formats: {
+    // abbreviated format options allowing localization
+    LTS: 'HH:mm:ss',
+    LT: 'HH:mm',
+    // L: 'MM/DD/YYYY',
+    L: 'DD.MM.YYYY',
+    LL: 'MMMM D, YYYY',
+    LLL: 'MMMM D, YYYY HH:mm',
+    LLLL: 'dddd, MMMM D, YYYY HH:mm',
+    // lowercase/short, optional formats for localization
+    l: 'D/M/YYYY',
+    ll: 'D MMM, YYYY',
+    lll: 'D MMM, YYYY HH:mm',
+    llll: 'ddd, MMM D, YYYY HH:mm'
+  }
+});
 
 export default dayjs;
