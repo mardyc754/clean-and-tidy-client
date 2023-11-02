@@ -1,7 +1,7 @@
 import { omit } from 'lodash';
 import { useShallow } from 'zustand/react/shallow';
 
-import { createRecurringReservation } from '~/api/reservation';
+import { createReservation } from '~/api/reservation';
 
 import { useSummaryData } from '~/hooks/useSummaryData';
 
@@ -52,9 +52,9 @@ const SummaryForm = ({ serviceName }: SummaryFormProps) => {
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const recurringReservation = await createRecurringReservation({
+    const reservation = await createReservation({
       frequency: frequency!,
-      reservationData: {
+      visitData: {
         startDate: (fullStartDate() as Date).toISOString(),
         endDate: (endDate() as Date).toISOString(),
         cost: totalCost,
@@ -70,11 +70,11 @@ const SummaryForm = ({ serviceName }: SummaryFormProps) => {
       }))
     });
 
-    if (!recurringReservation || 'hasError' in recurringReservation) {
+    if (!reservation || 'hasError' in reservation) {
       await router.push(
         {
           pathname: '/order-service/error',
-          query: { message: recurringReservation?.message }
+          query: { message: reservation?.message }
         },
         '/order-service/error'
       );
@@ -83,7 +83,7 @@ const SummaryForm = ({ serviceName }: SummaryFormProps) => {
         {
           pathname: '/order-service/success',
           query: {
-            reservationName: recurringReservation.name,
+            reservationName: reservation.name,
             email: clientData.email
           }
         },

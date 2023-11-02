@@ -2,11 +2,11 @@ import { useState } from 'react';
 
 import { Button } from '~/components/atoms/buttons';
 import { extractHourStringFromDate, getDateAfter } from '~/utils/dateUtils';
-import type { SingleReservationData } from '~/types/user';
+import type { SingleVisitData } from '~/types/user';
 import { ReservationManagementDialog } from '~/components/organisms/dialogs';
 
 type BookingPreviewProps = {
-  data: SingleReservationData;
+  data: SingleVisitData;
 };
 
 const BookingPreview = ({ data }: BookingPreviewProps) => {

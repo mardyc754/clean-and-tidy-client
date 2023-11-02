@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { FormProvider, useForm, type SubmitHandler } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
-import { getRecurringReservationByName } from '~/api/reservation';
+import { getReservationByName } from '~/api/reservation';
 
-import type { RecurringReservation } from '~/schemas/api/reservation';
+import type { Reservation } from '~/schemas/api/reservation';
 
 import { Button } from '~/components/atoms/buttons';
 import { Heading1 } from '~/components/atoms/typography/headings';
@@ -15,8 +15,9 @@ import { PageWrapper } from '~/components/template';
 type CheckReservationData = { reservationName: string };
 
 const CheckReservation = () => {
-  const [recurringReservationData, setRecurringReservationData] =
-    useState<RecurringReservation | null>(null);
+  const [reservationData, setReservationData] = useState<Reservation | null>(
+    null
+  );
 
   const methods = useForm<CheckReservationData>();
   const onSubmit: SubmitHandler<CheckReservationData> = async (
@@ -24,8 +25,8 @@ const CheckReservation = () => {
     e
   ) => {
     e?.preventDefault();
-    const data = await getRecurringReservationByName(reservationName, {
-      includeReservations: true,
+    const data = await getReservationByName(reservationName, {
+      includeVisits: true,
       includeServices: true,
       includeAddress: true
     });
@@ -35,7 +36,7 @@ const CheckReservation = () => {
       return;
     }
 
-    setRecurringReservationData(data);
+    setReservationData(data);
   };
 
   return (
@@ -62,9 +63,7 @@ const CheckReservation = () => {
             </form>
           </FormProvider>
         </div>
-        {recurringReservationData && (
-          <ReservationDetails data={recurringReservationData} />
-        )}
+        {reservationData && <ReservationDetails data={reservationData} />}
       </div>
     </PageWrapper>
   );

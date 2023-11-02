@@ -5,7 +5,7 @@ import {
 } from '~/components/organisms/form-fields';
 import { NumericInput } from '~/components/atoms/forms';
 
-import type { SingleReservationData } from '~/types/user';
+import type { SingleVisitData } from '~/types/user';
 import type { ChangeDataMode } from '~/types/forms';
 import type { CleaningFrequency } from '~/types/enums';
 import {
@@ -15,7 +15,7 @@ import {
 import { FormProvider, useForm } from 'react-hook-form';
 
 type ChangeCleaningDataFormProps = {
-  data: SingleReservationData;
+  data: SingleVisitData;
   changeDataMode: ChangeDataMode;
   onChangeDataMode: (value: string) => void;
   frequency: CleaningFrequency;

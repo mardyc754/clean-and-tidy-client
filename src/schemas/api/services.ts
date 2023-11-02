@@ -46,7 +46,7 @@ export const orderedServiceSchema = basicService.extend({
 export const serviceForReservation = z.object({
   isMainServiceForReservation: z.boolean(),
   numberOfUnits: z.number().int().max(500).min(1),
-  recurringReservationId: z.number().int(),
+  reservationId: z.number().int(),
   serviceId: z.number().int(),
   service: service.pick({ id: true, name: true })
 });

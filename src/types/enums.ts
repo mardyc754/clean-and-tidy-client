@@ -5,7 +5,7 @@ export enum CleaningFrequency {
   ONCE_A_MONTH = 'ONCE_A_MONTH'
 }
 
-export enum ReservationStatus {
+export enum Status {
   TO_BE_CONFIRMED = 'TO_BE_CONFIRMED',
   ACTIVE = 'ACTIVE',
   CLOSED = 'CLOSED',

@@ -13,7 +13,7 @@ import { PageWrapper } from '~/components/template';
 import { extractHourStringFromDate, getDateAfter } from '~/utils/dateUtils';
 
 import { CleaningFrequency } from '~/types/enums';
-import type { SingleReservationData } from '~/types/user';
+import type { SingleVisitData } from '~/types/user';
 import type { ChangeDataMode } from '~/types/forms';
 
 const exampleSingleReservationData = {
@@ -24,7 +24,7 @@ const exampleSingleReservationData = {
 };
 
 type StringifiedReservationData = Merge<
-  Omit<SingleReservationData, 'date'>,
+  Omit<SingleVisitData, 'date'>,
   { date: string }
 >;
 
