@@ -71,7 +71,7 @@ export type ContactDetailsFormData = z.infer<typeof contactDetailsForm>;
 export const contactDetailsResolver = zodResolver(contactDetailsForm);
 
 // SUMMARY PAGE
-export const reservationCreationDataSchema = z.object({
+export const visitCreationDataSchema = z.object({
   endDate: ISOString,
   startDate: ISOString,
   includeDetergents: z.boolean(),
@@ -84,10 +84,10 @@ export const orderedServiceSchema = basicService.extend({
   numberOfUnits: z.number().int().max(500).min(1)
 });
 
-export const recurringReservationCreationSchema = z.object({
+export const reservationCreationSchema = z.object({
   frequency: z.nativeEnum(CleaningFrequency),
   bookerEmail: z.string().email(),
-  reservationData: reservationCreationDataSchema,
+  visitData: visitCreationDataSchema,
   // endDate: z.string().datetime(),
   address: address.or(z.number().int()),
   contactDetails: contactDetails,
@@ -112,6 +112,4 @@ export const recurringReservationCreationSchema = z.object({
     )
 });
 
-export type RecurringReservationCreationData = z.infer<
-  typeof recurringReservationCreationSchema
->;
+export type ReservationCreationData = z.infer<typeof reservationCreationSchema>;

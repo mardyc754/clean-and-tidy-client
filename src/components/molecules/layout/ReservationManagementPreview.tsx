@@ -1,9 +1,9 @@
 import { Button } from '~/components/atoms/buttons';
 import { extractHourStringFromDate, getDateAfter } from '~/utils/dateUtils';
-import type { SingleReservationData } from '~/types/user';
+import type { SingleVisitData } from '~/types/user';
 
 type ReservationManagementPreviewProps = {
-  data: SingleReservationData;
+  data: SingleVisitData;
 };
 
 const ReservationManagementPreview = ({

@@ -1,14 +1,13 @@
-import type { SingleReservationData } from '~/types/user';
+import type { SingleVisitData } from '~/types/user';
 import DialogBase from './DialogBase';
 import { LabeledTypography } from '~/components/atoms/typography/labeled-text';
 import { extractHourStringFromDate, getDateAfter } from '~/utils/dateUtils';
 import { Button, NavigationButton } from '~/components/atoms/buttons';
-import { CalendarWithHours } from '../form-fields';
 
 type ReservationManagementDialogProps = {
   isOpen: boolean;
   onClose: VoidFunction;
-  data: SingleReservationData;
+  data: SingleVisitData;
 };
 
 const ReservationManagementDialog = ({

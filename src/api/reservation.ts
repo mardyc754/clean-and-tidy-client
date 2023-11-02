@@ -1,36 +1,31 @@
 import type { ZodType } from 'zod';
 
-import {
-  recurringReservationSchema,
-  type RecurringReservation
-} from '~/schemas/api/reservation';
+import { reservationSchema, type Reservation } from '~/schemas/api/reservation';
 
 import { basicError } from '~/schemas/api/common';
-import type { RecurringReservationCreationData } from '~/schemas/forms/orderService';
+import type { ReservationCreationData } from '~/schemas/forms/orderService';
 
 import { handleFetchingData } from './handleFetchingData';
-import type { RecurringReservationQueryOptions } from './types';
+import type { ReservationQueryOptions } from './types';
 
-export const createRecurringReservation = async (
-  data: RecurringReservationCreationData
-) => {
+export const createReservation = async (data: ReservationCreationData) => {
   return await handleFetchingData({
-    path: '/recurring-reservations',
+    path: '/reservations',
     method: 'post',
-    successSchema: recurringReservationSchema as ZodType<RecurringReservation>,
+    successSchema: reservationSchema as ZodType<Reservation>,
     errorSchema: basicError,
     data
   });
 };
 
-export const getRecurringReservationByName = async (
+export const getReservationByName = async (
   name: string,
-  options?: RecurringReservationQueryOptions
+  options?: ReservationQueryOptions
 ) => {
   return await handleFetchingData({
-    path: `/recurring-reservations/${name}`,
+    path: `/reservations/${name}`,
     method: 'get',
-    successSchema: recurringReservationSchema as ZodType<RecurringReservation>,
+    successSchema: reservationSchema as ZodType<Reservation>,
     errorSchema: basicError,
     params: options
   });

@@ -1,4 +1,4 @@
-import { CleaningFrequency, ReservationStatus } from '~/types/enums';
+import { CleaningFrequency, Status } from '~/types/enums';
 
 export const changeDataModeData = [
   {
@@ -39,14 +39,14 @@ export const frequencyToDescriptionMap = new Map([
 
 export const reservationStatusMap = new Map([
   [
-    ReservationStatus.TO_BE_CONFIRMED,
+    Status.TO_BE_CONFIRMED,
     { label: 'To be confirmed', style: 'text-yellow-500' }
   ],
-  [ReservationStatus.ACTIVE, { label: 'Active', style: 'text-green-500' }],
-  [ReservationStatus.CLOSED, { label: 'Closed', style: '' }],
+  [Status.ACTIVE, { label: 'Active', style: 'text-green-500' }],
+  [Status.CLOSED, { label: 'Closed', style: '' }],
   [
-    ReservationStatus.TO_BE_CANCELLED,
+    Status.TO_BE_CANCELLED,
     { label: 'To be cancelled', style: 'text-orange-500' }
   ],
-  [ReservationStatus.CANCELLED, { label: 'Cancelled', style: 'text-stone-500' }]
+  [Status.CANCELLED, { label: 'Cancelled', style: 'text-stone-500' }]
 ]);

@@ -1,13 +1,9 @@
 import clsx from 'clsx';
 import { useMemo } from 'react';
 
-import type { RecurringReservation } from '~/schemas/api/reservation';
+import type { Reservation } from '~/schemas/api/reservation';
 
-import {
-  convertISOStringToDate,
-  daysBetween,
-  displayDateWithHours
-} from '~/utils/dateUtils';
+import { displayDateWithHours } from '~/utils/dateUtils';
 import { convertToSnakeCase } from '~/utils/stringUtils';
 
 import { Heading2, Heading3 } from '~/components/atoms/typography/headings';
@@ -16,12 +12,10 @@ import {
   reservationStatusMap
 } from '~/constants/mappings';
 import { LabeledTypography } from '~/components/atoms/typography/labeled-text';
-import { ReservationDisclosure } from '~/components/organisms/disclosures';
-import { Scheduler } from '~/components/organisms/scheduler';
-import { getEventsFromReservations } from '~/utils/scheduler';
+import { VisitDisclosure } from '~/components/organisms/disclosures';
 
 interface ReservationDetailsProps {
-  data: RecurringReservation;
+  data: Reservation;
 }
 
 const ReservationDetails = ({ data }: ReservationDetailsProps) => {
@@ -34,10 +28,7 @@ const ReservationDetails = ({ data }: ReservationDetailsProps) => {
     ['End date', displayDateWithHours(data.endDate)]
   ]);
 
-  const reservations = useMemo(
-    () => data.reservations ?? [],
-    [data.reservations]
-  );
+  const reservations = useMemo(() => data.visits ?? [], [data.visits]);
 
   const services = useMemo(() => data.services ?? [], [data.services]);
 
@@ -95,7 +86,7 @@ const ReservationDetails = ({ data }: ReservationDetailsProps) => {
       <div className="flex flex-col gap-8 py-8">
         {reservations.map((reservation, i) => {
           return (
-            <ReservationDisclosure
+            <VisitDisclosure
               data={reservation}
               key={`ReservationDisclosure-${i}`}
             />

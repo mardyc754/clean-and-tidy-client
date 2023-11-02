@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import type { Reservation } from '~/schemas/api/reservation';
+import type { Visit } from '~/schemas/api/reservation';
 
 import {
   displayDatesAsTimespan,
@@ -14,10 +14,10 @@ import { LabeledTypography } from '~/components/atoms/typography/labeled-text';
 import { Disclosure } from '~/components/organisms/disclosures';
 
 interface ReservationDisclosureProps {
-  data: Reservation;
+  data: Visit;
 }
 
-const ReservationDisclosure = ({ data }: ReservationDisclosureProps) => {
+const VisitDisclosure = ({ data }: ReservationDisclosureProps) => {
   const status = reservationStatusMap.get(data.status);
 
   const reservationData = new Map([
@@ -59,4 +59,4 @@ const ReservationDisclosure = ({ data }: ReservationDisclosureProps) => {
   );
 };
 
-export default ReservationDisclosure;
+export default VisitDisclosure;
