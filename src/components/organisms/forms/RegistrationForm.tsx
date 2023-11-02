@@ -13,7 +13,13 @@ import {
 import { SubmitButton } from '~/components/atoms/buttons';
 import { RegularLink } from '~/components/atoms/links';
 
-const RegistrationForm = () => {
+interface RegistrationFormProps {
+  redirectOnSuccessHandler?: () => Promise<void>;
+}
+
+const RegistrationForm = ({
+  redirectOnSuccessHandler
+}: RegistrationFormProps) => {
   const methods = useForm<RegistrationData>({
     resolver: registrationDataResolver
   });
@@ -42,6 +48,10 @@ const RegistrationForm = () => {
     }
 
     toast(result.message);
+
+    if (!('hasError' in result)) {
+      await redirectOnSuccessHandler?.();
+    }
   };
 
   return (

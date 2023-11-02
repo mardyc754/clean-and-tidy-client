@@ -8,7 +8,11 @@ import { Textfield } from '~/components/molecules/form-fields';
 import { SubmitButton } from '~/components/atoms/buttons';
 import { RegularLink } from '~/components/atoms/links';
 
-const LoginForm = () => {
+interface LoginFormProps {
+  redirectOnSuccessHandler?: () => Promise<void> | VoidFunction;
+}
+
+const LoginForm = ({ redirectOnSuccessHandler }: LoginFormProps) => {
   const methods = useForm<LoginData>({ resolver: loginDataResolver });
 
   const {
@@ -28,6 +32,10 @@ const LoginForm = () => {
     }
 
     toast(result.message);
+
+    if (!('hasError' in result)) {
+      await redirectOnSuccessHandler?.();
+    }
   };
   return (
     <>
