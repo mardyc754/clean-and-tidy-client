@@ -2,17 +2,23 @@ import toast from 'react-hot-toast';
 import { FormProvider, useForm, type SubmitHandler } from 'react-hook-form';
 
 import { login } from '~/api/auth';
+
 import { loginDataResolver, type LoginData } from '~/schemas/forms/auth';
+import type { LoginSuccessData } from '~/schemas/api/auth';
 
 import { Textfield } from '~/components/molecules/form-fields';
 import { SubmitButton } from '~/components/atoms/buttons';
 import { RegularLink } from '~/components/atoms/links';
+import { pick } from 'lodash';
+import { useCurrentUserStore } from '~/stores/currentUserStore';
 
 interface LoginFormProps {
   redirectOnSuccessHandler?: () => Promise<void> | VoidFunction;
 }
 
 const LoginForm = ({ redirectOnSuccessHandler }: LoginFormProps) => {
+  const setUserData = useCurrentUserStore((state) => state.setUserData);
+
   const methods = useForm<LoginData>({ resolver: loginDataResolver });
 
   const {
@@ -21,22 +27,29 @@ const LoginForm = ({ redirectOnSuccessHandler }: LoginFormProps) => {
     setError
   } = methods;
 
-  const onSubmit: SubmitHandler<LoginData> = async (values) => {
+  const onSubmit: SubmitHandler<LoginData> = async (values, e) => {
+    e?.preventDefault();
+
     const { email, password } = values;
 
     const result = await login({ email, password });
 
-    if (result && 'affectedField' in result) {
-      setError(result.affectedField!, { message: result.message });
+    if (result && 'hasError' in result) {
+      if (result.affectedField) {
+        setError(result.affectedField, { message: result.message });
+        return;
+      }
+
+      toast.error(result.message);
       return;
     }
 
-    toast(result.message);
+    toast.success(result.message);
 
-    if (!('hasError' in result)) {
-      await redirectOnSuccessHandler?.();
-    }
+    setUserData(pick(result as LoginSuccessData, ['userId', 'email', 'role']));
+    await redirectOnSuccessHandler?.();
   };
+
   return (
     <>
       <FormProvider {...methods}>

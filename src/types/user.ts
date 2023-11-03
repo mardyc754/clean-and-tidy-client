@@ -5,9 +5,3 @@ export type SingleVisitData = {
   duration: number;
   date: Date;
 };
-
-export enum UserRole {
-  CLIENT = 'client',
-  EMPLOYEE = 'employee',
-  ADMIN = 'admin'
-}

@@ -30,7 +30,9 @@ const RegistrationForm = ({
     setError
   } = methods;
 
-  const onSubmit: SubmitHandler<RegistrationData> = async (values) => {
+  const onSubmit: SubmitHandler<RegistrationData> = async (values, e) => {
+    e?.preventDefault();
+
     const { username, email, password, confirmPassword } = values;
 
     if (password !== confirmPassword) {
@@ -47,11 +49,8 @@ const RegistrationForm = ({
       return;
     }
 
-    toast(result.message);
-
-    if (!('hasError' in result)) {
-      await redirectOnSuccessHandler?.();
-    }
+    toast.success(result.message);
+    await redirectOnSuccessHandler?.();
   };
 
   return (

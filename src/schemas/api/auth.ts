@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
-import { UserRole } from '~/types/user';
+import { UserRole } from '~/types/enums';
+
 import { basicError } from './common';
 
 export const registrationSuccess = z.object({
@@ -21,7 +22,9 @@ export const registrationError = basicError.merge(
 export const loginSuccess = z.object({
   message: z.literal('Logged in successfully'),
   isAuthenticated: z.literal(true),
-  role: z.nativeEnum(UserRole)
+  role: z.nativeEnum(UserRole),
+  email: z.string().email(),
+  userId: z.number().int()
 });
 
 export const loginError = basicError.merge(
@@ -31,3 +34,5 @@ export const loginError = basicError.merge(
       .optional()
   })
 );
+
+export type LoginSuccessData = z.infer<typeof loginSuccess>;
