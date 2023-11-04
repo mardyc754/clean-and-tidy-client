@@ -1,12 +1,13 @@
 import { z } from 'zod';
 
-export const clientDataSchema = z.object({
-  id: z.number().int(),
-  firstName: z.string().max(50),
-  lastName: z.string().max(50),
-  email: z.string().email(),
-  password: z.string().min(8).max(32),
-  phone: z.string().max(15)
-});
+export const clientSchema = z
+  .object({
+    id: z.number().int(),
+    firstName: z.string().max(50),
+    lastName: z.string().max(50),
+    email: z.string().email(),
+    phone: z.string().max(15)
+  })
+  .strict();
 
-export type ClientData = z.infer<typeof clientDataSchema>;
+export type Client = z.infer<typeof clientSchema>;

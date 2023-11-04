@@ -92,3 +92,9 @@ export async function handleFetchingData<
 
   return responseData;
 }
+
+export function hasError<Q extends ResponseData, W extends ErrorResponseData>(
+  data: Awaited<ReturnType<typeof handleFetchingData<Q, W>>>
+): data is Awaited<W & { hasError: true }> {
+  return !Array.isArray(data) && !!data.hasError;
+}

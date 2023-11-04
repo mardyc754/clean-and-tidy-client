@@ -3,6 +3,8 @@ import { z } from 'zod';
 import { UserRole } from '~/types/enums';
 
 import { basicError } from './common';
+import { clientSchema } from './client';
+import { employeeSchema } from './employee';
 
 export const registrationSuccess = z.object({
   id: z.number().int(),
@@ -35,4 +37,20 @@ export const loginError = basicError.merge(
   })
 );
 
+export const clientUserSchema = clientSchema.extend({
+  role: z.literal(UserRole.CLIENT)
+});
+
+export const employeeUserSchema = employeeSchema.extend({
+  role: z.union([z.literal(UserRole.EMPLOYEE), z.literal(UserRole.ADMIN)])
+});
+
+export const userSchema = z.union([clientUserSchema, employeeUserSchema]);
+
 export type LoginSuccessData = z.infer<typeof loginSuccess>;
+
+export type User = z.infer<typeof userSchema>;
+
+export type ClientUser = z.infer<typeof clientUserSchema>;
+
+export type EmployeeUser = z.infer<typeof employeeUserSchema>;

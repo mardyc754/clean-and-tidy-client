@@ -2,8 +2,11 @@ import {
   registrationSuccess,
   registrationError,
   loginSuccess as loginSuccess,
-  loginError as loginError
+  loginError as loginError,
+  userSchema
 } from '~/schemas/api/auth';
+import { basicError } from '~/schemas/api/common';
+
 import { handleFetchingData } from './handleFetchingData';
 
 type RegistrationData = {
@@ -34,5 +37,14 @@ export const login = async (data: LoginData) => {
     successSchema: loginSuccess,
     errorSchema: loginError,
     data
+  });
+};
+
+export const getCurrentUser = async () => {
+  return await handleFetchingData({
+    path: '/auth/user',
+    method: 'get',
+    successSchema: userSchema,
+    errorSchema: basicError
   });
 };
