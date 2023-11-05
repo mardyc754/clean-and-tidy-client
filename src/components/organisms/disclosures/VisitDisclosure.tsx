@@ -23,7 +23,7 @@ const VisitDisclosure = ({ data }: ReservationDisclosureProps) => {
   const reservationData = new Map([
     ['Status', data.status],
     ['Detergents included', data.includeDetergents ? 'Yes' : 'No'],
-    ['Cost', `${data.cost} zł`],
+    ['Cost', `${data.cost.toFixed(2)} zł`],
     ['Status', status?.label ?? '']
   ]);
 

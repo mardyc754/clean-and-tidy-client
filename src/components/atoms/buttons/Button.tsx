@@ -22,7 +22,7 @@ const Button = ({
   ]);
 
   return (
-    <OptionalLink href={href} className={className ?? ''}>
+    <OptionalLink href={href}>
       <button
         className={clsx(
           'rounded-full',

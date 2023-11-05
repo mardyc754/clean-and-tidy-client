@@ -1,22 +1,28 @@
 import { FormProvider } from 'react-hook-form';
 
+import useReservationFinder from '~/hooks/reservation/useReservationFinder';
+
 import { Button } from '~/components/atoms/buttons';
 import { Heading1 } from '~/components/atoms/typography/headings';
 import { Textfield } from '~/components/molecules/form-fields';
 import { ReservationDetails } from '~/components/organisms/data-display';
 import { PageWrapper } from '~/components/template';
-import useReservationFinder from '~/hooks/reservation/useReservation';
-import { Spinner } from '~/components/atoms/spinners';
+import {
+  IconIndicator,
+  Spinner
+} from '~/components/molecules/status-indicators';
 
 const CheckReservation = () => {
-  const { data, isLoading, methods, onSubmit } = useReservationFinder(
-    'reservationName',
-    {
+  const { data, error, status, methods, onSubmit, isLoading } =
+    useReservationFinder('reservationName', {
       includeVisits: true,
       includeServices: true,
       includeAddress: true
-    }
-  );
+    });
+
+  const {
+    formState: { errors }
+  } = methods;
 
   return (
     <PageWrapper title="Check Reservation">
@@ -24,7 +30,7 @@ const CheckReservation = () => {
         <Heading1>Check reservation</Heading1>
         <div className="flex flex-col items-center py-8">
           <p className="my-4 font-emphasize text-2xl">
-            {"Enter a reservation's name to check its status"}
+            {"Enter a reservation's name to check its details"}
           </p>
           <FormProvider {...methods}>
             <form
@@ -35,6 +41,7 @@ const CheckReservation = () => {
                 name="reservationName"
                 label="Reservation name"
                 wrapperProps="flex-1 md:max-w-[40vw]"
+                errorLabel={errors.reservationName?.message}
               />
               <Button type="submit" className="self-center">
                 Find reservation
@@ -42,8 +49,16 @@ const CheckReservation = () => {
             </form>
           </FormProvider>
         </div>
-        {data && <ReservationDetails data={data} />}
-        {isLoading && <Spinner caption="Loading reservation data..." />}
+        {status === 'success' && data && <ReservationDetails data={data} />}
+        {status === 'pending' && isLoading && (
+          <Spinner caption="Loading reservation data..." />
+        )}
+        {status === 'error' && (
+          <IconIndicator
+            variant="error"
+            caption={error?.message ?? 'Reservation with given name not found'}
+          />
+        )}
       </div>
     </PageWrapper>
   );

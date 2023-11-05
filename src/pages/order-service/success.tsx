@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { faCircleCheck } from '@fortawesome/free-regular-svg-icons';
+
 import { ResultPageWrapper } from '~/components/template';
 import { Button } from '~/components/atoms/buttons';
 
@@ -13,7 +13,6 @@ const Success = () => {
       title="Order Created Successfully"
       heading="Success"
       variant="success"
-      icon={faCircleCheck}
       caption="The reservation was created successfully"
       buttonData={[
         {

@@ -21,7 +21,7 @@ interface ReservationDetailsProps {
 const ReservationDetails = ({ data }: ReservationDetailsProps) => {
   const statusData = reservationStatusMap.get(data.status);
   const reservationDetailsData = new Map([
-    // ['Name', data.name],
+    ['Name', data.name],
     ['Booker', `${data.bookerFirstName} ${data.bookerLastName}`],
     ['Frequency', `${frequencyToDescriptionMap.get(data.frequency)}`],
     ['Status', `${statusData?.label}`],

@@ -15,6 +15,7 @@ import { AddressDataField, SummaryView } from '~/components/organisms/layout';
 import { Heading2 } from '~/components/atoms/typography/headings';
 
 import { StepButtons } from '../form-fields';
+import toast from 'react-hot-toast';
 
 interface SummaryFormProps {
   serviceName: string;
@@ -56,13 +57,13 @@ const SummaryForm = ({ serviceName }: SummaryFormProps) => {
 
   const mutation = useMutation({
     mutationFn: createReservation,
-    onSuccess: async (reservation) => {
+    onSuccess: async (data) => {
       await queryClient.invalidateQueries({ queryKey: reservation.all });
       await router.push(
         {
           pathname: '/order-service/success',
           query: {
-            reservationName: reservation.name,
+            reservationName: data.name,
             email: clientData.email
           }
         },
@@ -79,6 +80,10 @@ const SummaryForm = ({ serviceName }: SummaryFormProps) => {
       );
     }
   });
+
+  if (mutation.isPending) {
+    toast.loading('Creating reservation...');
+  }
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

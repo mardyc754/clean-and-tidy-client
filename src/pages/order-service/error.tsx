@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router';
-import { faCircleXmark } from '@fortawesome/free-regular-svg-icons';
 
 import { ResultPageWrapper } from '~/components/template';
 
@@ -11,7 +10,6 @@ const OrderErrorPage = () => {
       title="Something went wrong"
       heading="Something went wrong..."
       variant="error"
-      icon={faCircleXmark}
       buttonData={[
         {
           name: 'Try Again',

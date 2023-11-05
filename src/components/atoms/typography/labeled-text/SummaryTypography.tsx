@@ -19,9 +19,7 @@ const SummaryTypography = ({
 
   return (
     <div className={`border-t-4 ${sizeClass?.wrapperClasses}`}>
-      <p
-        className={`flex items-center justify-between text-2xl ${sizeClass?.textClasses}`}
-      >
+      <p className={`flex flex-col text-2xl ${sizeClass?.textClasses}`}>
         {label}
         <span className={`font-emphasize text-cyan-500`}>{value}</span>
       </p>
