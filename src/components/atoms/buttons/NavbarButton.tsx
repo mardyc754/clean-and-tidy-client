@@ -1,17 +1,19 @@
 import Link from 'next/link';
+import clsx from 'clsx';
 
 import { robotoBold } from '~/settings/fontSetting';
 
 type NavbarButtonProps = {
-  name: string;
-  // onClick: VoidFunction;
+  children: React.ReactNode;
   href?: string;
 };
 
-const NavbarButton = ({ name, href = '' }: NavbarButtonProps) => {
+const NavbarButton = ({ href = '', children }: NavbarButtonProps) => {
   return (
     <Link href={href}>
-      <button className={`${robotoBold.className}`}>{name}</button>
+      <button className={clsx(robotoBold.className, 'py-2 text-base')}>
+        {children}
+      </button>
     </Link>
   );
 };

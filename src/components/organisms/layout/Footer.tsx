@@ -1,5 +1,4 @@
 import { FooterButtons } from '~/components/molecules';
-import { FooterButton } from '~/components/atoms/buttons';
 
 import { SmallTypography } from '~/components/atoms/typography/regular-text';
 import { Logo } from '~/components/atoms/logo';
@@ -11,17 +10,6 @@ const Footer = () => {
         <Logo color="white" />
       </div>
       <FooterButtons />
-      {/* <div className="flex w-full justify-evenly p-10">
-        <div className="flex flex-col items-start">
-          <FooterButton name="For home" />
-          <FooterButton name="For office" />
-          <FooterButton name="Registration" />
-        </div>
-        <div className="flex flex-col items-start">
-          <FooterButton name="For office" />
-          <FooterButton name="Registration" />
-        </div>
-      </div> */}
       <div className="border-t-2 border-white px-16 py-4">
         <SmallTypography>&copy; 2023 All rights reserved</SmallTypography>
       </div>

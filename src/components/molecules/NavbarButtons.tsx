@@ -3,11 +3,9 @@ import { NavbarButton, Button } from '../atoms/buttons';
 const NavbarButtons = () => {
   return (
     <div className="flex w-full items-center justify-evenly">
-      {/* <NavbarButton name="For home" />
-      <NavbarButton name="For office" /> */}
-      <NavbarButton name="Order service" href="/order-service" />
-      <NavbarButton name="Check reservation" href="/check-reservation" />
-      <NavbarButton name="Registration" href="/register" />
+      <NavbarButton href="/order-service">Order service</NavbarButton>
+      <NavbarButton href="/check-reservation">Check reservation</NavbarButton>
+      <NavbarButton href="/register">Registration</NavbarButton>
       <Button name="Login" href="/login">
         Login
       </Button>
