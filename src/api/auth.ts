@@ -5,22 +5,15 @@ import {
   loginError as loginError,
   userSchema
 } from '~/schemas/api/auth';
+
+import type { LoginData, RegistrationData } from '~/schemas/forms/auth';
 import { basicError } from '~/schemas/api/common';
 
 import { handleFetchingData } from './handleFetchingData';
 
-type RegistrationData = {
-  username: string;
-  password: string;
-  email: string;
-};
-
-type LoginData = {
-  email: string;
-  password: string;
-};
-
-export const register = async (data: RegistrationData) => {
+export const register = async (
+  data: Omit<RegistrationData, 'confirmPassword'>
+) => {
   return await handleFetchingData({
     path: '/auth/register',
     method: 'post',

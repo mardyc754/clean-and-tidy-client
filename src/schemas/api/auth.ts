@@ -45,9 +45,19 @@ export const employeeUserSchema = employeeSchema.extend({
   role: z.union([z.literal(UserRole.EMPLOYEE), z.literal(UserRole.ADMIN)])
 });
 
-export const userSchema = z.union([clientUserSchema, employeeUserSchema]);
+export const userSchema = z.union([
+  clientUserSchema,
+  employeeUserSchema,
+  z.object({})
+]);
+
+export type RegistrationSuccessData = z.infer<typeof registrationSuccess>;
+
+export type RegistrationErrorData = z.infer<typeof registrationError>;
 
 export type LoginSuccessData = z.infer<typeof loginSuccess>;
+
+export type LoginErrorData = z.infer<typeof loginError>;
 
 export type User = z.infer<typeof userSchema>;
 

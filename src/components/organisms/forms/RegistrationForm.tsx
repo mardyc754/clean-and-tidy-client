@@ -1,17 +1,9 @@
-import toast from 'react-hot-toast';
-import { FormProvider, useForm, type SubmitHandler } from 'react-hook-form';
-
-import { register } from '~/api/auth';
+import { FormProvider } from 'react-hook-form';
 
 import { Textfield } from '~/components/molecules/form-fields';
-
-import {
-  registrationDataResolver,
-  type RegistrationData
-} from '~/schemas/forms/auth';
-
 import { SubmitButton } from '~/components/atoms/buttons';
 import { RegularLink } from '~/components/atoms/links';
+import { useRegister } from '~/hooks/auth/useRegister';
 
 interface RegistrationFormProps {
   redirectOnSuccessHandler?: () => Promise<void>;
@@ -20,45 +12,18 @@ interface RegistrationFormProps {
 const RegistrationForm = ({
   redirectOnSuccessHandler
 }: RegistrationFormProps) => {
-  const methods = useForm<RegistrationData>({
-    resolver: registrationDataResolver
-  });
+  const { onSubmit, methods } = useRegister({ redirectOnSuccessHandler });
 
   const {
-    formState: { errors, isSubmitting },
-    handleSubmit,
-    setError
+    formState: { errors, isSubmitting }
   } = methods;
-
-  const onSubmit: SubmitHandler<RegistrationData> = async (values, e) => {
-    e?.preventDefault();
-
-    const { username, email, password, confirmPassword } = values;
-
-    if (password !== confirmPassword) {
-      const doNotMatchMessage = 'Passwords do not match';
-      setError('password', { message: doNotMatchMessage });
-      setError('confirmPassword', { message: doNotMatchMessage });
-      return;
-    }
-
-    const result = await register({ username, email, password });
-
-    if (result && 'affectedField' in result) {
-      setError(result.affectedField!, { message: result.message });
-      return;
-    }
-
-    toast.success(result.message);
-    await redirectOnSuccessHandler?.();
-  };
 
   return (
     <>
       <FormProvider {...methods}>
         <form
           className="grid grid-rows-5 items-center gap-y-4 self-stretch px-16 py-8"
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={onSubmit}
         >
           <Textfield
             name="username"
