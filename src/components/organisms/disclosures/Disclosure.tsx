@@ -10,7 +10,6 @@ interface DisclosurePropss {
 const Disclosure = ({ titleComponent, children }: DisclosurePropss) => {
   return (
     <HDisclosure as="div">
-      {/* <HDisclosure.Button className="flex w-full justify-between rounded-lg bg-purple-100 px-4 py-2 text-left text-sm font-medium text-purple-900 hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500/75"> */}
       <HDisclosure.Button
         as="div"
         className="flex items-center justify-between gap-4 bg-white px-6 py-4 shadow-md focus:outline-none ui-open:rounded-t-lg ui-open:border-b-2 ui-open:border-b-slate-200 ui-not-open:rounded-lg"

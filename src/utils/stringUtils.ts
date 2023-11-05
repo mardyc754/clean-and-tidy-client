@@ -1,4 +1,4 @@
-export function convertToSnakeCase(str: string) {
+export function convertToCamelCase(str: string) {
   return str
     .toLowerCase()
     .split(' ')
