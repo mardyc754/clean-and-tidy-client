@@ -1,3 +1,5 @@
+import type { ReservationQueryOptions } from '~/api/types';
+
 // example query key factory
 //
 // const todoKeys = {
@@ -9,3 +11,12 @@
 // };
 
 export const user = ['user'];
+
+export const reservation = {
+  all: ['reservations'] as const,
+  lists: () => [...reservation.all, 'list'] as const,
+  list: (filters: string) => [...reservation.lists(), { filters }] as const,
+  details: () => [...reservation.all, 'detail'] as const,
+  detail: (name: string, options?: ReservationQueryOptions) =>
+    [...reservation.details(), name, options] as const
+};

@@ -1,43 +1,22 @@
-import { useState } from 'react';
-import { FormProvider, useForm, type SubmitHandler } from 'react-hook-form';
-import toast from 'react-hot-toast';
-
-import { getReservationByName } from '~/api/reservation';
-
-import type { Reservation } from '~/schemas/api/reservation';
+import { FormProvider } from 'react-hook-form';
 
 import { Button } from '~/components/atoms/buttons';
 import { Heading1 } from '~/components/atoms/typography/headings';
 import { Textfield } from '~/components/molecules/form-fields';
 import { ReservationDetails } from '~/components/organisms/data-display';
 import { PageWrapper } from '~/components/template';
-
-type CheckReservationData = { reservationName: string };
+import useReservationFinder from '~/hooks/reservation/useReservation';
+import { Spinner } from '~/components/atoms/spinners';
 
 const CheckReservation = () => {
-  const [reservationData, setReservationData] = useState<Reservation | null>(
-    null
-  );
-
-  const methods = useForm<CheckReservationData>();
-  const onSubmit: SubmitHandler<CheckReservationData> = async (
-    { reservationName },
-    e
-  ) => {
-    e?.preventDefault();
-    const data = await getReservationByName(reservationName, {
+  const { data, isLoading, methods, onSubmit } = useReservationFinder(
+    'reservationName',
+    {
       includeVisits: true,
       includeServices: true,
       includeAddress: true
-    });
-
-    if ('hasError' in data) {
-      toast.error(data.message, { position: 'bottom-center' });
-      return;
     }
-
-    setReservationData(data);
-  };
+  );
 
   return (
     <PageWrapper title="Check Reservation">
@@ -50,7 +29,7 @@ const CheckReservation = () => {
           <FormProvider {...methods}>
             <form
               className="flex w-full flex-col py-4 md:flex-row md:justify-center md:space-x-5"
-              onSubmit={methods.handleSubmit(onSubmit)}
+              onSubmit={onSubmit}
             >
               <Textfield
                 name="reservationName"
@@ -63,19 +42,11 @@ const CheckReservation = () => {
             </form>
           </FormProvider>
         </div>
-        {reservationData && <ReservationDetails data={reservationData} />}
+        {data && <ReservationDetails data={data} />}
+        {isLoading && <Spinner caption="Loading reservation data..." />}
       </div>
     </PageWrapper>
   );
 };
-
-// export const getServerSideProps = (async () => {
-//   const data = await getAllServices({ primaryOnly: true });
-//   if ('hasError' in data) {
-//     return { props: { data: [] } }; // temporary
-//   }
-
-//   return { props: { data } };
-// }) satisfies GetServerSideProps<{ data: Service[] | BackendBasicErrorData }>;
 
 export default CheckReservation;

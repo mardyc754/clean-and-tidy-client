@@ -1,23 +1,28 @@
+import { useRouter } from 'next/router';
 import { omit } from 'lodash';
 import { useShallow } from 'zustand/react/shallow';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+import { reservation } from '~/constants/queryKeys';
 
 import { createReservation } from '~/api/reservation';
 
-import { useSummaryData } from '~/hooks/useSummaryData';
-
 import { useOrderServiceFormStore } from '~/stores/orderServiceFormStore';
+
+import { useSummaryData } from '~/hooks/useSummaryData';
 
 import { AddressDataField, SummaryView } from '~/components/organisms/layout';
 import { Heading2 } from '~/components/atoms/typography/headings';
 
 import { StepButtons } from '../form-fields';
-import { useRouter } from 'next/router';
 
 interface SummaryFormProps {
   serviceName: string;
 }
 
 const SummaryForm = ({ serviceName }: SummaryFormProps) => {
+  const queryClient = useQueryClient();
+
   const {
     decreaseStep,
     currentStep,
@@ -49,10 +54,36 @@ const SummaryForm = ({ serviceName }: SummaryFormProps) => {
 
   const router = useRouter();
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const mutation = useMutation({
+    mutationFn: createReservation,
+    onSuccess: async (reservation) => {
+      await queryClient.invalidateQueries({ queryKey: reservation.all });
+      await router.push(
+        {
+          pathname: '/order-service/success',
+          query: {
+            reservationName: reservation.name,
+            email: clientData.email
+          }
+        },
+        '/order-service/success'
+      );
+    },
+    onError: async (error) => {
+      await router.push(
+        {
+          pathname: '/order-service/error',
+          query: { message: error.message }
+        },
+        '/order-service/error'
+      );
+    }
+  });
+
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const reservation = await createReservation({
+    mutation.mutate({
       frequency: frequency!,
       visitData: {
         startDate: (fullStartDate() as Date).toISOString(),
@@ -69,27 +100,6 @@ const SummaryForm = ({ serviceName }: SummaryFormProps) => {
         ...omit(service, ['name', 'unit', 'id'])
       }))
     });
-
-    if (!reservation || 'hasError' in reservation) {
-      await router.push(
-        {
-          pathname: '/order-service/error',
-          query: { message: reservation?.message }
-        },
-        '/order-service/error'
-      );
-    } else {
-      await router.push(
-        {
-          pathname: '/order-service/success',
-          query: {
-            reservationName: reservation.name,
-            email: clientData.email
-          }
-        },
-        '/order-service/success'
-      );
-    }
   };
 
   const onDecreaseStep = async () => {

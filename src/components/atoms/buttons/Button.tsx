@@ -1,6 +1,7 @@
 import type { ButtonHTMLAttributes } from 'react';
 
 import { OptionalLink } from '../links';
+import clsx from 'clsx';
 
 type ButtonProps = {
   color?: 'default' | 'danger';
@@ -21,11 +22,14 @@ const Button = ({
   ]);
 
   return (
-    <OptionalLink href={href}>
+    <OptionalLink href={href} className={className ?? ''}>
       <button
-        className={`rounded-full ${colorMap.get(
-          color
-        )} px-10 py-2 font-emphasize text-base text-white shadow-md ${className}`}
+        className={clsx(
+          'rounded-full',
+          colorMap.get(color),
+          'px-10 py-2 font-emphasize text-base text-white shadow-md',
+          className
+        )}
         onClick={onClick}
         {...props}
       >

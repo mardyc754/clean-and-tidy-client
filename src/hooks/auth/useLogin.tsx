@@ -32,13 +32,13 @@ export const useLogin = ({ redirectOnSuccessHandler }: useLoginProps) => {
       toast.success(data.message);
       await redirectOnSuccessHandler?.();
     },
-    onError: (result) => {
-      if (result.data.affectedField) {
-        setError(result.data.affectedField, { message: result.message });
+    onError: (error) => {
+      if (error.data.affectedField) {
+        setError(error.data.affectedField, { message: error.message });
         return;
       }
 
-      toast.error(result.message);
+      toast.error(error.message);
     }
   });
 

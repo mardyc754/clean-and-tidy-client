@@ -2,9 +2,10 @@ import clsx from 'clsx';
 
 interface SpinnerProps {
   size?: 'small' | 'medium' | 'large';
+  caption?: string;
 }
 
-const Spinner = ({ size = 'medium' }: SpinnerProps) => {
+const Spinner = ({ size = 'medium', caption }: SpinnerProps) => {
   const sizeClasses = {
     small: 'h-12 w-12 border-4',
     medium: 'h-24 w-24 border-8',
@@ -12,12 +13,15 @@ const Spinner = ({ size = 'medium' }: SpinnerProps) => {
   };
 
   return (
-    <div
-      className={clsx(
-        sizeClasses[size],
-        'animate-spin rounded-full border-solid border-cyan-500 border-t-transparent'
-      )}
-    ></div>
+    <div className={clsx('flex flex-col items-center', caption && 'space-y-4')}>
+      <div
+        className={clsx(
+          sizeClasses[size],
+          'animate-spin rounded-full border-solid border-cyan-500 border-t-transparent'
+        )}
+      />
+      {caption && <p>{caption}</p>}
+    </div>
   );
 };
 

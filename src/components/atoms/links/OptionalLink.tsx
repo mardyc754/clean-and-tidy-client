@@ -1,7 +1,10 @@
 import React from 'react';
 import Link, { type LinkProps } from 'next/link';
 
-type OptionalLinkProps = Partial<LinkProps> & { children?: React.ReactNode };
+type OptionalLinkProps = Partial<LinkProps> & {
+  children?: React.ReactNode;
+  className: string;
+};
 
 const OptionalLink = ({ href, children, ...props }: OptionalLinkProps) => {
   return href ? (
