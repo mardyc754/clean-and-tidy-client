@@ -1,9 +1,11 @@
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
+import type { DehydratedState } from '@tanstack/react-query';
 
-import type { BackendBasicErrorData } from '~/schemas/api/common';
 import type { Service } from '~/schemas/api/services';
 
 import { getAllServices } from '~/api/services';
+
+import { prefetchUserData } from '~/server/prefetchUserData';
 
 import { HeroSection } from '~/components/organisms/layout';
 import { PageWrapper } from '~/components/template';
@@ -18,13 +20,30 @@ const Home = ({
   );
 };
 
-export const getServerSideProps = (async () => {
-  const data = await getAllServices({ primaryOnly: true });
-  if ('hasError' in data) {
-    return { props: { data: [] } }; // temporary
+export const getServerSideProps = (async (ctx) => {
+  const currentUserData = await prefetchUserData(ctx);
+
+  let data: Service[] = [];
+  try {
+    data = await getAllServices({ primaryOnly: true });
+  } catch (error) {
+    return {
+      props: {
+        ...currentUserData,
+        data: []
+      }
+    }; // temporary
   }
 
-  return { props: { data } };
-}) satisfies GetServerSideProps<{ data: Service[] | BackendBasicErrorData }>;
+  return {
+    props: {
+      ...currentUserData,
+      data
+    }
+  };
+}) satisfies GetServerSideProps<{
+  data: Service[];
+  dehydratedState: DehydratedState;
+}>;
 
 export default Home;

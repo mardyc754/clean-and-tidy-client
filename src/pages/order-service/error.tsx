@@ -1,5 +1,7 @@
 import { useRouter } from 'next/router';
 
+import { getServerSideUserData } from '~/server/prefetchUserData';
+
 import { ResultPageWrapper } from '~/components/template';
 
 const OrderErrorPage = () => {
@@ -27,5 +29,7 @@ const OrderErrorPage = () => {
     </ResultPageWrapper>
   );
 };
+
+export const getServerSideProps = getServerSideUserData;
 
 export default OrderErrorPage;

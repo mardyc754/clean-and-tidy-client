@@ -1,6 +1,13 @@
 import { useMemo } from 'react';
-import type { InferGetStaticPropsType, GetStaticProps } from 'next';
+import type {
+  InferGetStaticPropsType,
+  GetStaticProps,
+  GetServerSideProps,
+  InferGetServerSidePropsType
+} from 'next';
 import { type NextRouter, withRouter } from 'next/router';
+
+import { getCookie, getCookies } from 'cookies-next';
 
 import {
   configureDetailsIndicatorData,
@@ -9,6 +16,7 @@ import {
 } from '~/constants/orderServiceForm';
 
 import { getAllServices, getServiceById } from '~/api/services';
+import { getServerSideUserData } from '~/server/prefetchUserData';
 
 import type { Service } from '~/schemas/api/services';
 
@@ -20,6 +28,7 @@ import {
   SummaryForm
 } from '~/components/organisms/forms';
 import { OrderServiceFormPage } from '~/components/template';
+import { prefetchUserData } from '~/server/prefetchUserData';
 
 function getCurrentStepComponent(index: number, data: Service | null) {
   let componentData;
@@ -55,6 +64,10 @@ function OrderService({
   data,
   router
 }: InferGetStaticPropsType<typeof getStaticProps> & { router: NextRouter }) {
+  // InferGetServerSidePropsType<typeof getServerSideProps> & {
+  // router: NextRouter;
+  // }) {
+
   // const { currentStep } = useOrderServiceFormStore((state) => ({
   //   currentStep: state.currentStep
   // }));
@@ -130,7 +143,38 @@ export const getStaticProps = (async ({ params }) => {
     };
   }
 
-  return { props: { data } };
+  return {
+    props: {
+      data
+    }
+  };
 }) satisfies GetStaticProps<{ data: Service | null }>;
+
+// export const getServerSideProps = (async (ctx) => {
+//   const { params } = ctx;
+//   if (!params) {
+//     return {
+//       notFound: true
+//     };
+//   }
+
+//   const data = await getServiceById(params.id as string, {
+//     includeSecondaryServices: true,
+//     includeCleaningFrequencies: true
+//   });
+
+//   if ('hasError' in data) {
+//     return {
+//       notFound: true
+//     };
+//   }
+
+//   return {
+//     props: {
+//       data,
+//       ...(await prefetchUserData(ctx))
+//     }
+//   };
+// }) satisfies GetServerSideProps<{ data: Service | null }>;
 
 export default withRouter(OrderService);

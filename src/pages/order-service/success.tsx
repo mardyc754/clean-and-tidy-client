@@ -1,5 +1,7 @@
 import { useRouter } from 'next/router';
 
+import { getServerSideUserData } from '~/server/prefetchUserData';
+
 import { ResultPageWrapper } from '~/components/template';
 import { Button } from '~/components/atoms/buttons';
 
@@ -50,5 +52,7 @@ const Success = () => {
     </ResultPageWrapper>
   );
 };
+
+export const getServerSideProps = getServerSideUserData;
 
 export default Success;

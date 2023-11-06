@@ -3,9 +3,10 @@ import clsx from 'clsx';
 interface SpinnerProps {
   size?: 'small' | 'medium' | 'large';
   caption?: string;
+  className?: string;
 }
 
-const Spinner = ({ size = 'medium', caption }: SpinnerProps) => {
+const Spinner = ({ size = 'medium', caption, className }: SpinnerProps) => {
   const sizeClasses = {
     small: 'h-12 w-12 border-4',
     medium: 'h-24 w-24 border-8',
@@ -13,7 +14,13 @@ const Spinner = ({ size = 'medium', caption }: SpinnerProps) => {
   };
 
   return (
-    <div className={clsx('flex flex-col items-center', caption && 'space-y-4')}>
+    <div
+      className={clsx(
+        'flex flex-col items-center',
+        caption && 'space-y-4',
+        className
+      )}
+    >
       <div
         className={clsx(
           sizeClasses[size],

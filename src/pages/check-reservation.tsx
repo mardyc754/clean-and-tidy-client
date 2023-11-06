@@ -11,6 +11,7 @@ import {
   IconIndicator,
   Spinner
 } from '~/components/molecules/status-indicators';
+import { getServerSideUserData } from '~/server/prefetchUserData';
 
 const CheckReservation = () => {
   const { data, error, status, methods, onSubmit, isLoading } =
@@ -63,5 +64,7 @@ const CheckReservation = () => {
     </PageWrapper>
   );
 };
+
+export const getServerSideProps = getServerSideUserData;
 
 export default CheckReservation;

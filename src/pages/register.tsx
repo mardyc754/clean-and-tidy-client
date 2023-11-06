@@ -1,5 +1,7 @@
 import { useRouter } from 'next/router';
 
+import { getServerSideUserData } from '~/server/prefetchUserData';
+
 import { FormPageTemplate } from '~/components/template';
 import { RegistrationForm } from '~/components/organisms/forms';
 
@@ -16,5 +18,7 @@ const Register = () => {
     </FormPageTemplate>
   );
 };
+
+export const getServerSideProps = getServerSideUserData;
 
 export default Register;
