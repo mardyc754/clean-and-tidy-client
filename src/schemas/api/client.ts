@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { reservationSchema } from './reservation';
 
 export const clientSchema = z
   .object({
@@ -6,9 +7,17 @@ export const clientSchema = z
     firstName: z.string().max(50).or(z.null()),
     lastName: z.string().max(50).or(z.null()),
     email: z.string().email(),
-    username: z.string().max(30),
+    username: z.string().max(30).or(z.null()),
     phone: z.string().max(15).or(z.null())
   })
   .strict();
 
+export const clientWithReservationsSchema = clientSchema.extend({
+  reservations: z.array(reservationSchema)
+});
+
 export type Client = z.infer<typeof clientSchema>;
+
+export type ClientWithReservations = z.infer<
+  typeof clientWithReservationsSchema
+>;

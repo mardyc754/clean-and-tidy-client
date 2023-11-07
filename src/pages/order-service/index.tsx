@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 import type { DehydratedState } from '@tanstack/react-query';
 
@@ -9,7 +10,6 @@ import type { Service } from '~/schemas/api/services';
 
 import { Heading1 } from '~/components/atoms/typography/headings';
 import { PageWrapper } from '~/components/template';
-import Link from 'next/link';
 
 const OrderServiceHome = ({
   data
