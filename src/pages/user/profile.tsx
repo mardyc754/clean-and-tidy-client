@@ -26,9 +26,9 @@ const YourProfile = () => {
       <div className="p-16">
         <Heading1>Your profile</Heading1>
 
-        <div className="my-8 flex gap-16 rounded-xl border-2 border-slate-400 p-8">
+        <div className="my-8 flex items-center justify-between gap-16 rounded-xl bg-white p-12 shadow-md">
           {/* <Avatar size="large" /> */}
-          <div className="flex flex-col justify-evenly font-link">
+          <div className="flex justify-evenly gap-8 font-link">
             <p className="text-4xl">John Doe</p>
             <Button>Edit profile</Button>
           </div>
