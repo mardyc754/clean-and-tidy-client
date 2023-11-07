@@ -11,9 +11,11 @@ import { NavbarButton, Button } from '~/components/atoms/buttons';
 import { getUserLabel } from '~/utils/userUtils';
 
 import { ButtonWithDropdown } from './buttons';
+import { useLogout } from '~/hooks/auth/useLogout';
 
 const NavbarButtons = () => {
   const { currentUser } = useAuth();
+  const { logout } = useLogout();
 
   return (
     <div className="flex w-full items-center justify-evenly">
@@ -33,7 +35,7 @@ const NavbarButtons = () => {
               icon: faCircleUser
             },
             {
-              label: <span>Log out</span>,
+              label: <span onClick={logout}>Log out</span>,
               icon: faRightFromBracket
             }
           ]}

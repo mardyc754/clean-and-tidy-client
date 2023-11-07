@@ -37,6 +37,11 @@ export const loginError = basicError.merge(
   })
 );
 
+export const logoutSuccess = z.object({
+  message: z.literal('Logged out successfully'),
+  isAuthenticated: z.literal(false)
+});
+
 export const clientUserSchema = clientSchema.extend({
   role: z.literal(UserRole.CLIENT)
 });
@@ -58,6 +63,8 @@ export type RegistrationErrorData = z.infer<typeof registrationError>;
 export type LoginSuccessData = z.infer<typeof loginSuccess>;
 
 export type LoginErrorData = z.infer<typeof loginError>;
+
+export type LogoutSuccessData = z.infer<typeof logoutSuccess>;
 
 export type User = z.infer<typeof userSchema>;
 

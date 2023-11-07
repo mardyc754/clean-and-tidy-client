@@ -32,7 +32,6 @@ const exampleOptions = [
 const YourProfile = ({
   data
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  console.log(data);
   const [selectedValue, setSelectedValue] = useState(exampleOptions[0]);
 
   const reservationEvents = useMemo(() => {

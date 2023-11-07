@@ -3,7 +3,8 @@ import {
   registrationError,
   loginSuccess as loginSuccess,
   loginError as loginError,
-  userSchema
+  userSchema,
+  logoutSuccess
 } from '~/schemas/api/auth';
 
 import type { LoginData, RegistrationData } from '~/schemas/forms/auth';
@@ -38,6 +39,15 @@ export const getCurrentUser = async () => {
     path: '/auth/user',
     method: 'get',
     successSchema: userSchema,
+    errorSchema: basicError
+  });
+};
+
+export const logout = async () => {
+  return await handleFetchingData({
+    path: '/auth/logout',
+    method: 'post',
+    successSchema: logoutSuccess,
     errorSchema: basicError
   });
 };
