@@ -1,43 +1,29 @@
-import { useState } from 'react';
-import { FormProvider, useForm, type SubmitHandler } from 'react-hook-form';
-import toast from 'react-hot-toast';
+import { FormProvider } from 'react-hook-form';
 
-import { getReservationByName } from '~/api/reservation';
-
-import type { Reservation } from '~/schemas/api/reservation';
+import useReservationFinder from '~/hooks/reservation/useReservationFinder';
 
 import { Button } from '~/components/atoms/buttons';
 import { Heading1 } from '~/components/atoms/typography/headings';
 import { Textfield } from '~/components/molecules/form-fields';
 import { ReservationDetails } from '~/components/organisms/data-display';
 import { PageWrapper } from '~/components/template';
-
-type CheckReservationData = { reservationName: string };
+import {
+  IconIndicator,
+  Spinner
+} from '~/components/molecules/status-indicators';
+import { getServerSideUserData } from '~/server/prefetchUserData';
 
 const CheckReservation = () => {
-  const [reservationData, setReservationData] = useState<Reservation | null>(
-    null
-  );
-
-  const methods = useForm<CheckReservationData>();
-  const onSubmit: SubmitHandler<CheckReservationData> = async (
-    { reservationName },
-    e
-  ) => {
-    e?.preventDefault();
-    const data = await getReservationByName(reservationName, {
+  const { data, error, status, methods, onSubmit, isLoading } =
+    useReservationFinder('reservationName', {
       includeVisits: true,
       includeServices: true,
       includeAddress: true
     });
 
-    if ('hasError' in data) {
-      toast.error(data.message, { position: 'bottom-center' });
-      return;
-    }
-
-    setReservationData(data);
-  };
+  const {
+    formState: { errors }
+  } = methods;
 
   return (
     <PageWrapper title="Check Reservation">
@@ -45,17 +31,18 @@ const CheckReservation = () => {
         <Heading1>Check reservation</Heading1>
         <div className="flex flex-col items-center py-8">
           <p className="my-4 font-emphasize text-2xl">
-            {"Enter a reservation's name to check its status"}
+            {"Enter a reservation's name to check its details"}
           </p>
           <FormProvider {...methods}>
             <form
               className="flex w-full flex-col py-4 md:flex-row md:justify-center md:space-x-5"
-              onSubmit={methods.handleSubmit(onSubmit)}
+              onSubmit={onSubmit}
             >
               <Textfield
                 name="reservationName"
                 label="Reservation name"
                 wrapperProps="flex-1 md:max-w-[40vw]"
+                errorLabel={errors.reservationName?.message}
               />
               <Button type="submit" className="self-center">
                 Find reservation
@@ -63,19 +50,21 @@ const CheckReservation = () => {
             </form>
           </FormProvider>
         </div>
-        {reservationData && <ReservationDetails data={reservationData} />}
+        {status === 'success' && data && <ReservationDetails data={data} />}
+        {status === 'pending' && isLoading && (
+          <Spinner caption="Loading reservation data..." />
+        )}
+        {status === 'error' && (
+          <IconIndicator
+            variant="error"
+            caption={error?.message ?? 'Reservation with given name not found'}
+          />
+        )}
       </div>
     </PageWrapper>
   );
 };
 
-// export const getServerSideProps = (async () => {
-//   const data = await getAllServices({ primaryOnly: true });
-//   if ('hasError' in data) {
-//     return { props: { data: [] } }; // temporary
-//   }
-
-//   return { props: { data } };
-// }) satisfies GetServerSideProps<{ data: Service[] | BackendBasicErrorData }>;
+export const getServerSideProps = getServerSideUserData;
 
 export default CheckReservation;

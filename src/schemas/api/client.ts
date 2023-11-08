@@ -1,12 +1,23 @@
 import { z } from 'zod';
+import { reservationSchema } from './reservation';
 
-export const clientDataSchema = z.object({
-  id: z.number().int(),
-  firstName: z.string().max(50),
-  lastName: z.string().max(50),
-  email: z.string().email(),
-  password: z.string().min(8).max(32),
-  phone: z.string().max(15)
+export const clientSchema = z
+  .object({
+    id: z.number().int(),
+    firstName: z.string().max(50).or(z.null()),
+    lastName: z.string().max(50).or(z.null()),
+    email: z.string().email(),
+    username: z.string().max(30).or(z.null()),
+    phone: z.string().max(15).or(z.null())
+  })
+  .strict();
+
+export const clientWithReservationsSchema = clientSchema.extend({
+  reservations: z.array(reservationSchema)
 });
 
-export type ClientData = z.infer<typeof clientDataSchema>;
+export type Client = z.infer<typeof clientSchema>;
+
+export type ClientWithReservations = z.infer<
+  typeof clientWithReservationsSchema
+>;

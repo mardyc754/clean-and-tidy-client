@@ -1,41 +1,28 @@
-import toast from 'react-hot-toast';
-import { FormProvider, useForm, type SubmitHandler } from 'react-hook-form';
+import { FormProvider } from 'react-hook-form';
 
-import { login } from '~/api/auth';
-import { loginDataResolver, type LoginData } from '~/schemas/forms/auth';
+import { useLogin } from '~/hooks/auth/useLogin';
 
 import { Textfield } from '~/components/molecules/form-fields';
 import { SubmitButton } from '~/components/atoms/buttons';
 import { RegularLink } from '~/components/atoms/links';
 
-const LoginForm = () => {
-  const methods = useForm<LoginData>({ resolver: loginDataResolver });
+interface LoginFormProps {
+  redirectOnSuccessHandler?: () => Promise<void> | VoidFunction;
+}
+
+const LoginForm = ({ redirectOnSuccessHandler }: LoginFormProps) => {
+  const { methods, onSubmit } = useLogin({ redirectOnSuccessHandler });
 
   const {
-    formState: { errors, isSubmitting },
-    handleSubmit,
-    setError
+    formState: { errors, isSubmitting }
   } = methods;
 
-  const onSubmit: SubmitHandler<LoginData> = async (values) => {
-    const { email, password } = values;
-
-    const result = await login({ email, password });
-
-    if (result && 'affectedField' in result) {
-      setError(result.affectedField!, { message: result.message });
-      return;
-    }
-
-    toast(result.message);
-  };
   return (
     <>
       <FormProvider {...methods}>
         <form
           className="grid grid-rows-3 items-center gap-y-4 self-stretch px-16 py-8"
-          // eslint-disable-next-line @typescript-eslint/no-misused-promises
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={onSubmit}
         >
           <Textfield
             name="email"

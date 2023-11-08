@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { Fragment, type Dispatch, type SetStateAction } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -18,11 +19,8 @@ const Dropdown = ({
   onChange,
   className = ''
 }: DropdownProps) => {
-  // const [value, setvalue] = useState(options[0]);
-
   return (
     <div className={`w-60 ${className}`}>
-      {/* <Listbox value={value} onChange={setvalue}> */}
       <Listbox value={value} onChange={onChange}>
         <div className="relative mt-1">
           <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
@@ -45,19 +43,19 @@ const Dropdown = ({
               {options.map((option, personIdx) => (
                 <Listbox.Option
                   key={personIdx}
-                  className={({ active }) =>
-                    `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                      active ? 'bg-cyan-100 text-cyan-900' : 'text-gray-900'
-                    }`
-                  }
+                  className={clsx(
+                    'relative cursor-default select-none py-2 pl-10 pr-4',
+                    'ui-active:bg-cyan-100 ui-active:text-cyan-900',
+                    'text-gray-900'
+                  )}
                   value={option}
                 >
                   {({ selected }) => (
                     <>
                       <span
-                        className={`block truncate ${
-                          selected ? 'font-medium' : 'font-normal'
-                        }`}
+                        className={
+                          'block truncate font-normal ui-selected:font-medium'
+                        }
                       >
                         {option.name}
                       </span>

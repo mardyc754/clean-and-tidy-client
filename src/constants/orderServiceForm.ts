@@ -6,7 +6,7 @@ export const configureDetailsIndicatorData = [
   {
     name: 'Contact details',
     rectangleColorClass: 'bg-slate-200',
-    innerTriangleColorClass: 'border-l-cyan-300'
+    innerTriangleColorClass: 'border-l-cyan-500'
   },
   {
     name: 'Summary',
@@ -29,7 +29,7 @@ export const contactDetailsIndicatorData = [
   {
     name: 'Summary',
     rectangleColorClass: 'bg-slate-200',
-    innerTriangleColorClass: 'border-l-cyan-300',
+    innerTriangleColorClass: 'border-l-cyan-500',
     outerTriangleColorClass: 'border-l-slate-200'
   }
 ];
@@ -48,6 +48,6 @@ export const summaryIndicatorData = [
     name: 'Summary',
     rectangleColorClass: 'bg-cyan-500',
     innerTriangleColorClass: 'border-l-cyan-200',
-    outerTriangleColorClass: 'border-l-cyan-300'
+    outerTriangleColorClass: 'border-l-cyan-500'
   }
 ];

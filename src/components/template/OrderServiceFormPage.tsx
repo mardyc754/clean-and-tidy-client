@@ -29,13 +29,13 @@ const OrderCleaningFormPage = ({
     <PageWrapper title={title}>
       <div className="flex flex-col p-16">
         <MultiStepFormIndicator stepIndicatorData={stepIndicatorData} />
-        <div className="flex justify-evenly">
+        <div className="flex flex-col justify-evenly lg:flex-row">
           <div className={`flex flex-col py-16 ${!showSummary ? 'w-3/5' : ''}`}>
             <Heading1>{heading}</Heading1>
             {children}
           </div>
           {showSummary && (
-            <div className="min-w-[20rem] py-16">
+            <div className="min-w-[24rem] py-16">
               <SummarySection data={summaryData} totalCost={totalCost} />
             </div>
           )}

@@ -6,7 +6,7 @@ import {
   displayDatesAsTimespan,
   extractDateStringFromDate
 } from '~/utils/dateUtils';
-import { convertToSnakeCase } from '~/utils/stringUtils';
+import { convertToCamelCase } from '~/utils/stringUtils';
 
 import { reservationStatusMap } from '~/constants/mappings';
 
@@ -23,7 +23,7 @@ const VisitDisclosure = ({ data }: ReservationDisclosureProps) => {
   const reservationData = new Map([
     ['Status', data.status],
     ['Detergents included', data.includeDetergents ? 'Yes' : 'No'],
-    ['Cost', `${data.cost} zł`],
+    ['Cost', `${data.cost.toFixed(2)} zł`],
     ['Status', status?.label ?? '']
   ]);
 
@@ -51,7 +51,7 @@ const VisitDisclosure = ({ data }: ReservationDisclosureProps) => {
               'text-2xl',
               key === 'Status' ? status?.style : ''
             )}
-            key={`SingleReservationData-${convertToSnakeCase(key)}-${index}`}
+            key={`SingleReservationData-${convertToCamelCase(key)}-${index}`}
           />
         ))}
       </div>

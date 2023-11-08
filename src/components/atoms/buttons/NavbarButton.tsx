@@ -1,17 +1,14 @@
 import Link from 'next/link';
 
-import { robotoBold } from '~/settings/fontSetting';
-
 type NavbarButtonProps = {
-  name: string;
-  // onClick: VoidFunction;
+  children: React.ReactNode;
   href?: string;
 };
 
-const NavbarButton = ({ name, href = '' }: NavbarButtonProps) => {
+const NavbarButton = ({ href = '', children }: NavbarButtonProps) => {
   return (
     <Link href={href}>
-      <button className={`${robotoBold.className}`}>{name}</button>
+      <button className={'py-2 font-link text-base'}>{children}</button>
     </Link>
   );
 };

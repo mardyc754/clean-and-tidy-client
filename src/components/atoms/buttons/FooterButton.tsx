@@ -7,7 +7,10 @@ type FooterButtonProps = {
 
 const FooterButton = ({ name, onClick }: FooterButtonProps) => {
   return (
-    <button className={`${robotoBold.className} text-white`} onClick={onClick}>
+    <button
+      className={`${robotoBold.className} text-base text-white`}
+      onClick={onClick}
+    >
       {name}
     </button>
   );

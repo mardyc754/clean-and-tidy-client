@@ -4,6 +4,7 @@ import { AxiosError, type AxiosResponse, type AxiosRequestConfig } from 'axios';
 
 import { fetcher } from '~/lib/axios';
 import type { BackendBasicErrorData } from '~/schemas/api/common';
+import { ResponseError } from './errors/ResponseError';
 
 type ResponseRecord = Partial<Record<string, unknown>> & {
   message?: string;
@@ -41,7 +42,7 @@ function handleTypeErrors(err: unknown, typeErrorMessage: string) {
     console.error(err);
     return { message: typeErrorMessage, hasError: true };
   } else {
-    return { message: 'An unexpected error ocurred', hasError: true };
+    throw err;
   }
 }
 
@@ -60,8 +61,11 @@ export async function handleFetchingData<
   let responseData = { message: 'Connection error', hasError: true } as
     | SuccessData
     | (ErrorData & { hasError: true });
-
-  await fetcher<AxiosRequestConfig<InputData>, AxiosResponse<SuccessData>>({
+  // return Promise.resolve(responseData);
+  return await fetcher<
+    AxiosRequestConfig<InputData>,
+    AxiosResponse<SuccessData>
+  >({
     method,
     url: path,
     data,
@@ -70,6 +74,7 @@ export async function handleFetchingData<
   })
     .then((res) => {
       responseData = successSchema.parse(res.data);
+      return responseData;
     })
     .catch((err) => {
       if (err instanceof AxiosError) {
@@ -77,18 +82,31 @@ export async function handleFetchingData<
           ...errorSchema.parse(err.response?.data),
           hasError: true
         } as ErrorData & { hasError: true };
-        return;
+        throw new ResponseError(responseData.message!, responseData);
       }
+
       responseData = handleTypeErrors(err, 'Type error of received data') as
         | SuccessData
         | (ErrorData & { hasError: true });
+
+      throw new ResponseError(
+        (responseData as ErrorData & { hasError: true }).message,
+        responseData
+      );
     })
     .catch((err) => {
       responseData = handleTypeErrors(
         err,
         'Type error of received error data'
       ) as SuccessData | (ErrorData & { hasError: true });
+      throw new ResponseError('test', responseData);
     });
+}
 
-  return responseData;
+export function hasError<ErrorData extends ErrorResponseData>(
+  data: Record<string, unknown> | null | undefined
+): data is ErrorData & { hasError: true } {
+  return (
+    !!data && !Array.isArray(data) && 'hasError' in data && !!data.hasError
+  );
 }

@@ -1,11 +1,11 @@
-import { FooterButton } from '../atoms/buttons';
+import { NavbarButton } from '~/components/atoms/buttons';
 
 const FooterButtons = () => {
   return (
     <div className="flex w-full justify-evenly p-10">
-      <FooterButton name="For home" />
-      <FooterButton name="For office" />
-      <FooterButton name="Registration" />
+      <NavbarButton href="/order-service">Order service</NavbarButton>
+      <NavbarButton href="/check-reservation">Check reservation</NavbarButton>
+      <NavbarButton href="/register">Registration</NavbarButton>
     </div>
   );
 };

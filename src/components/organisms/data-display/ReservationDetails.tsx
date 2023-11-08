@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import type { Reservation } from '~/schemas/api/reservation';
 
 import { displayDateWithHours } from '~/utils/dateUtils';
-import { convertToSnakeCase } from '~/utils/stringUtils';
+import { convertToCamelCase } from '~/utils/stringUtils';
 
 import { Heading2, Heading3 } from '~/components/atoms/typography/headings';
 import {
@@ -21,7 +21,7 @@ interface ReservationDetailsProps {
 const ReservationDetails = ({ data }: ReservationDetailsProps) => {
   const statusData = reservationStatusMap.get(data.status);
   const reservationDetailsData = new Map([
-    // ['Name', data.name],
+    ['Name', data.name],
     ['Booker', `${data.bookerFirstName} ${data.bookerLastName}`],
     ['Frequency', `${frequencyToDescriptionMap.get(data.frequency)}`],
     ['Status', `${statusData?.label}`],
@@ -55,7 +55,7 @@ const ReservationDetails = ({ data }: ReservationDetailsProps) => {
                 ? 'text-xl font-emphasize'
                 : 'text-lg font-sans'
             )}
-            key={`OrderedServices-${convertToSnakeCase(
+            key={`OrderedServices-${convertToCamelCase(
               serviceData.service.name
             )}-${i}`}
           />
@@ -76,7 +76,7 @@ const ReservationDetails = ({ data }: ReservationDetailsProps) => {
                 'text-2xl',
                 key === 'Status' ? statusData?.style : ''
               )}
-              key={`ReservationDetails-${convertToSnakeCase(key)}`}
+              key={`ReservationDetails-${convertToCamelCase(key)}`}
             />
           ))}
         </div>

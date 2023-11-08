@@ -12,7 +12,7 @@ const StepButtons = ({
   onDecreaseStep
 }: StepButtonsProps) => {
   return (
-    <div className="m-0 flex w-full justify-between">
+    <div className="m-0 flex justify-between">
       <Button
         href={currentStep === 0 ? cancelHref : undefined}
         onClick={(e) => {

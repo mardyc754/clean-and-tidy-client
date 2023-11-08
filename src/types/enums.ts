@@ -12,3 +12,9 @@ export enum Status {
   TO_BE_CANCELLED = 'TO_BE_CANCELLED',
   CANCELLED = 'CANCELLED'
 }
+
+export enum UserRole {
+  CLIENT = 'client',
+  EMPLOYEE = 'employee',
+  ADMIN = 'admin'
+}
