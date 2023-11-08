@@ -16,6 +16,7 @@ import { Heading2 } from '~/components/atoms/typography/headings';
 
 import { StepButtons } from '../form-fields';
 import toast from 'react-hot-toast';
+import { useEffect } from 'react';
 
 interface SummaryFormProps {
   serviceName: string;
@@ -69,6 +70,7 @@ const SummaryForm = ({ serviceName }: SummaryFormProps) => {
         },
         '/order-service/success'
       );
+      toast.dismiss();
     },
     onError: async (error) => {
       await router.push(
@@ -78,12 +80,15 @@ const SummaryForm = ({ serviceName }: SummaryFormProps) => {
         },
         '/order-service/error'
       );
+      toast.dismiss();
     }
   });
 
-  if (mutation.isPending) {
-    toast.loading('Creating reservation...');
-  }
+  useEffect(() => {
+    if (mutation.status === 'pending') {
+      toast.loading('Creating reservation...');
+    }
+  }, [mutation.status]);
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

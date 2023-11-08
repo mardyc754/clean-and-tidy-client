@@ -1,6 +1,7 @@
 import toast from 'react-hot-toast';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
+import type { FormEvent } from 'react';
 
 import { register } from '~/api/auth';
 import type { ResponseError } from '~/api/errors/ResponseError';
@@ -37,9 +38,8 @@ export const useRegister = ({ redirectOnSuccessHandler }: useRegisterProps) => {
     Omit<RegistrationData, 'confirmPassword'>
   >({
     mutationFn: register,
-    onSuccess: async (data) => {
+    onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: user });
-      toast.success(data.message);
       await redirectOnSuccessHandler?.();
     },
     onError: (result) => {
@@ -47,25 +47,31 @@ export const useRegister = ({ redirectOnSuccessHandler }: useRegisterProps) => {
         setError(result.data.affectedField, { message: result.message });
         return;
       }
-
-      toast.error(result.message);
     }
   });
 
-  const onSubmit = handleSubmit((values, e) => {
-    e?.preventDefault();
+  const onSubmit = (event: FormEvent<HTMLFormElement>) =>
+    toast.promise(
+      handleSubmit((values, e) => {
+        e?.preventDefault();
 
-    const { password, confirmPassword } = values;
+        const { password, confirmPassword } = values;
 
-    if (password !== confirmPassword) {
-      const doNotMatchMessage = 'Passwords do not match';
-      setError('password', { message: doNotMatchMessage });
-      setError('confirmPassword', { message: doNotMatchMessage });
-      return;
-    }
+        if (password !== confirmPassword) {
+          const doNotMatchMessage = 'Passwords do not match';
+          setError('password', { message: doNotMatchMessage });
+          setError('confirmPassword', { message: doNotMatchMessage });
+          return;
+        }
 
-    mutation.mutate(omit(values, ['confirmPassword']));
-  });
+        mutation.mutate(omit(values, ['confirmPassword']));
+      })(event),
+      {
+        loading: 'Loading...',
+        success: 'Registration successfull',
+        error: 'Registration failed'
+      }
+    );
 
   return { onSubmit, methods };
 };

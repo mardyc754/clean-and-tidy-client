@@ -1,6 +1,7 @@
 import toast from 'react-hot-toast';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import type { FormEvent } from 'react';
 
 import { user } from '~/constants/queryKeys';
 
@@ -27,9 +28,8 @@ export const useLogin = ({ redirectOnSuccessHandler }: useLoginProps) => {
     LoginData
   >({
     mutationFn: login,
-    onSuccess: async (data) => {
+    onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: user });
-      toast.success(data.message);
       await redirectOnSuccessHandler?.();
     },
     onError: (error) => {
@@ -37,16 +37,22 @@ export const useLogin = ({ redirectOnSuccessHandler }: useLoginProps) => {
         setError(error.data.affectedField, { message: error.message });
         return;
       }
-
-      toast.error(error.message);
     }
   });
 
-  const onSubmit = handleSubmit((values, e) => {
-    e?.preventDefault();
+  const onSubmit = (event: FormEvent<HTMLFormElement>) =>
+    toast.promise(
+      handleSubmit((values, e) => {
+        e?.preventDefault();
 
-    mutation.mutate(values);
-  });
+        mutation.mutate(values);
+      })(event),
+      {
+        loading: 'Loading...',
+        success: 'Login success',
+        error: 'Login failed'
+      }
+    );
 
   return { onSubmit, methods };
 };

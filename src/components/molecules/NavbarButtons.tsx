@@ -5,13 +5,13 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import { useAuth } from '~/hooks/auth/useAuth';
+import { useLogout } from '~/hooks/auth/useLogout';
 
 import { NavbarButton, Button } from '~/components/atoms/buttons';
 
 import { getUserLabel } from '~/utils/userUtils';
 
 import { ButtonWithDropdown } from './buttons';
-import { useLogout } from '~/hooks/auth/useLogout';
 
 const NavbarButtons = () => {
   const { currentUser } = useAuth();

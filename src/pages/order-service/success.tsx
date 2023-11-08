@@ -13,9 +13,8 @@ const Success = () => {
   return (
     <ResultPageWrapper
       title="Order Created Successfully"
-      heading="Success"
+      heading="Reservation created successfully"
       variant="success"
-      caption="The reservation was created successfully"
       buttonData={[
         {
           name: 'Order another service',

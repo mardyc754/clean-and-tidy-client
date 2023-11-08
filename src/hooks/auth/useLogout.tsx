@@ -20,22 +20,19 @@ export const useLogout = () => {
     ResponseError<BackendBasicErrorData>
   >({
     mutationFn: logout,
-    onSuccess: async (data) => {
+    onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: user });
-      toast.success(data.message);
 
       await router.push('/');
-    },
-    onError: (error) => {
-      toast.error(error.message);
     }
   });
 
-  if (mutation.isPending) {
-    toast.loading('Logging out...');
-  }
-
-  const logoutFn = () => mutation.mutate();
+  const logoutFn = () =>
+    toast.promise(mutation.mutateAsync(), {
+      loading: 'Logging out...',
+      success: 'Logout success',
+      error: 'Logout failed'
+    });
 
   return { logout: logoutFn };
 };
