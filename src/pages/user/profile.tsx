@@ -1,54 +1,44 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 import type { DehydratedState } from '@tanstack/react-query';
-import { prefetchUserData } from '~/server/prefetchUserData';
+
+import { fetchUserData } from '~/server/prefetchUserData';
+
+import { getAllReservations } from '~/api/reservation';
+
+import type { User } from '~/schemas/api/auth';
+import type { Reservation } from '~/schemas/api/reservation';
 
 import { Button } from '~/components/atoms/buttons';
 import { Heading1, Heading2 } from '~/components/atoms/typography/headings';
-import { Dropdown } from '~/components/molecules/form-fields';
-import { BookingPreview } from '~/components/molecules/layout';
 import { PageWrapper } from '~/components/template';
-import { getClientReservations } from '~/api/client';
-import { ClientWithReservations } from '~/schemas/api/client';
 import { Scheduler } from '~/components/organisms/scheduler';
+
 import {
   getEventsFromReservation,
   getMaxEndDateFromReservations
 } from '~/utils/scheduler';
 import { daysBetween } from '~/utils/dateUtils';
 
-const exampleSingleReservationData = {
-  id: 1, // or UUID
-  name: 'Home Cleaning',
-  duration: 2,
-  date: new Date(2023, 7, 17, 8)
-};
-
-const exampleOptions = [
-  { id: 1, name: 'Upcoming' },
-  { id: 2, name: 'Recent' }
-];
-
-const YourProfile = ({
-  data
+const Profile = ({
+  reservationList
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const [selectedValue, setSelectedValue] = useState(exampleOptions[0]);
-
   const reservationEvents = useMemo(() => {
-    if (!data) return [];
+    if (!reservationList) return [];
 
-    return data.reservations.flatMap((reservation) => {
+    return reservationList.flatMap((reservation) => {
       return getEventsFromReservation(reservation);
     });
-  }, []);
+  }, [reservationList]);
 
   const reservationsTimespan = useMemo(() => {
-    if (!data) return;
+    if (!reservationList) return;
+
     return daysBetween(
-      getMaxEndDateFromReservations(data.reservations),
+      getMaxEndDateFromReservations(reservationList),
       new Date()
     );
-  }, []);
+  }, [reservationList]);
 
   return (
     <PageWrapper title="Your profile">
@@ -93,29 +83,44 @@ const YourProfile = ({
 };
 
 export const getServerSideProps = (async (ctx) => {
-  const currentUserData = await prefetchUserData(ctx);
+  const initialData = await fetchUserData(ctx);
 
-  let data: ClientWithReservations | null = null;
+  if (!initialData.userData || !('email' in initialData.userData)) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false
+      }
+    };
+  }
+
+  const userEmail =
+    'email' in initialData.userData ? initialData.userData.email : undefined;
+
+  let reservationList: Reservation[] = [];
   try {
-    data = await getClientReservations(3);
+    if (userEmail) {
+      reservationList = await getAllReservations({ bookerEmail: userEmail });
+    }
   } catch (error) {
     return {
       props: {
-        ...currentUserData,
-        data: null
+        ...initialData,
+        reservationList
       }
     };
   }
 
   return {
     props: {
-      ...currentUserData,
-      data
+      ...initialData,
+      reservationList
     }
   };
 }) satisfies GetServerSideProps<{
-  data: ClientWithReservations | null;
+  reservationList: Reservation[] | undefined;
   dehydratedState: DehydratedState;
+  userData: User | undefined;
 }>;
 
-export default YourProfile;
+export default Profile;

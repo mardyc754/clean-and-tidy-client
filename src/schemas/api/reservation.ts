@@ -39,6 +39,8 @@ export const reservationSchema = z.object({
   address: address.optional()
 });
 
+export const reservationListSchema = z.array(reservationSchema);
+
 export type Reservation = z.infer<typeof reservationSchema>;
 
 export type Visit = z.infer<typeof visitSchema>;

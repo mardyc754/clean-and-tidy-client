@@ -78,6 +78,37 @@ export const prefetchUserData = async (context: GetServerSidePropsContext) => {
   };
 };
 
+export const fetchUserData = async (context: GetServerSidePropsContext) => {
+  const queryClient = new QueryClient();
+
+  const req = context.req;
+
+  let userData: User | undefined;
+  try {
+    userData = await queryClient.fetchQuery({
+      // eslint-disable-next-line @tanstack/query/exhaustive-deps
+      queryKey: user,
+      queryFn: async () => {
+        const res = await fetcher.get<AxiosResponse<User>>('auth/user', {
+          withCredentials: true,
+          headers: {
+            Cookie: req.headers.cookie
+          }
+        });
+
+        return res.data;
+      }
+    });
+  } catch (error) {
+    console.error(error);
+  }
+
+  return {
+    dehydratedState: dehydrate(queryClient),
+    userData
+  };
+};
+
 export const getServerSideUserData = async (
   context: GetServerSidePropsContext
 ) => {

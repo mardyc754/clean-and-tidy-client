@@ -14,4 +14,5 @@ export type ReservationQueryOptions = RequireAtLeastOne<{
   includeVisits: boolean;
   includeServices: boolean;
   includeAddress: boolean;
+  bookerEmail: string;
 }>;

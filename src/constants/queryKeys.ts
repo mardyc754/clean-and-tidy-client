@@ -15,6 +15,7 @@ export const user = ['user'];
 export const reservation = {
   all: ['reservations'] as const,
   find: () => [...reservation.all, 'find'] as const,
+  client: (email: string) => [...reservation.find(), { email }] as const,
   lists: () => [...reservation.all, 'list'] as const,
   list: (filters: string) => [...reservation.lists(), { filters }] as const,
   details: () => [...reservation.all, 'detail'] as const,
