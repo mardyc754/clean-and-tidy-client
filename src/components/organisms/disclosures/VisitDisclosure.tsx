@@ -21,10 +21,9 @@ const VisitDisclosure = ({ data }: ReservationDisclosureProps) => {
   const status = reservationStatusMap.get(data.status);
 
   const reservationData = new Map([
-    ['Status', data.status],
+    ['Status', status?.label ?? ''],
     ['Detergents included', data.includeDetergents ? 'Yes' : 'No'],
-    ['Cost', `${data.cost.toFixed(2)} zł`],
-    ['Status', status?.label ?? '']
+    ['Cost', `${data.cost.toFixed(2)} zł`]
   ]);
 
   return (
@@ -41,19 +40,38 @@ const VisitDisclosure = ({ data }: ReservationDisclosureProps) => {
       }
     >
       <div className="flex-1">
-        {Array.from(reservationData).map(([key, value], index) => (
-          <LabeledTypography
-            label={key}
-            value={value}
-            contentDistribution="stretch"
-            labelClasses="text-xl"
-            valueClasses={clsx(
-              'text-2xl',
-              key === 'Status' ? status?.style : ''
-            )}
-            key={`SingleReservationData-${convertToCamelCase(key)}-${index}`}
-          />
-        ))}
+        <div className="border-b-2 border-b-slate-200 pb-4">
+          {Array.from(reservationData).map(([key, value], index) => (
+            <LabeledTypography
+              label={key}
+              value={value}
+              contentDistribution="stretch"
+              labelClasses="text-xl"
+              valueClasses={clsx(
+                'text-2xl',
+                key === 'Status' ? status?.style : ''
+              )}
+              key={`SingleReservationData-${convertToCamelCase(key)}-${index}`}
+            />
+          ))}
+        </div>
+        <div className="flex flex-col space-y-4 py-4">
+          <p className="text-xl font-semibold">Assigned employees</p>
+          <ul className="list-inside list-disc">
+            {data.employees?.map((employee, index) => (
+              <li
+                className="text-lg"
+                key={`SingleReservationEmployee-${convertToCamelCase(
+                  employee.firstName
+                )}-${index}`}
+              >
+                {/* {`${employee.firstName} ${employee.lastName} (${employee.email})`} */}
+                <span className="font-semibold">{`${employee.firstName} ${employee.lastName}`}</span>
+                {` (${employee.email})`}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </Disclosure>
   );

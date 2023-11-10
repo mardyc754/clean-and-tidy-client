@@ -19,8 +19,8 @@ const OrderServiceHome = ({
       <div className="p-16">
         <Heading1>Select service</Heading1>
 
-        {/* <div className="grid grid-cols-3 gap-x-8"> */}
-        <div>
+        <div className="grid gap-x-8 sm:grid-cols-2 md:grid-cols-3">
+          {/* <div> */}
           {data.map((service) => (
             <Link
               href={`/order-service/${service.id}`}

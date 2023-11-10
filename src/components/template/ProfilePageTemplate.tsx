@@ -19,9 +19,11 @@ type ProfilePageTemplateProps = {
   visits: ReturnType<typeof getEventsFromReservation>;
   userData: AuthenticatedUser;
   isLoadingEvents?: boolean;
+  children?: React.ReactNode;
 };
 
 const ProfilePageTemplate = ({
+  children,
   visits,
   userData,
   isLoadingEvents = false
@@ -43,8 +45,9 @@ const ProfilePageTemplate = ({
             <Button>Edit profile</Button>
           </div>
         </div>
+        {children}
         <div className="flex flex-col items-baseline py-8">
-          <Heading2>Your Reservations</Heading2>
+          <Heading2>Reservation calendar</Heading2>
           <div className="flex w-full items-center justify-center py-8">
             {!isLoadingEvents ? (
               <Scheduler

@@ -28,7 +28,7 @@ const ReservationDetails = ({ data }: ReservationDetailsProps) => {
     ['End date', displayDateWithHours(data.endDate)]
   ]);
 
-  const reservations = useMemo(() => data.visits ?? [], [data.visits]);
+  const visits = useMemo(() => data.visits ?? [], [data.visits]);
 
   const services = useMemo(() => data.services ?? [], [data.services]);
 
@@ -84,12 +84,9 @@ const ReservationDetails = ({ data }: ReservationDetailsProps) => {
       </div>
       <Heading3>Visits</Heading3>
       <div className="flex flex-col gap-8 py-8">
-        {reservations.map((reservation, i) => {
+        {visits.map((visit, i) => {
           return (
-            <VisitDisclosure
-              data={reservation}
-              key={`ReservationDisclosure-${i}`}
-            />
+            <VisitDisclosure data={visit} key={`ReservationDisclosure-${i}`} />
           );
         })}
       </div>

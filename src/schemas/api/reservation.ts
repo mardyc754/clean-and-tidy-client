@@ -16,7 +16,8 @@ export const visitSchema = z.object({
   includeDetergents: z.boolean(),
   cost: decimalToFloat,
   status: z.nativeEnum(Status),
-  reservationId: z.number().int()
+  reservationId: z.number().int(),
+  employees: z.array(employeeSchema).optional()
 });
 
 export const visitListSchema = z.array(visitSchema);

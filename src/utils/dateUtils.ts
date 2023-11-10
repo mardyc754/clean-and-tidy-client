@@ -1,6 +1,8 @@
 import type { ManipulateType } from 'dayjs';
+import { frequencyToPrefixMap } from '~/constants/mappings';
 
 import dayjs from '~/lib/dayjs';
+import { CleaningFrequency } from '~/types/enums';
 
 type ValidDayjsDate = dayjs.Dayjs | Date | string | number | null | undefined;
 
@@ -100,4 +102,26 @@ export function daysBetween(
   endDate: ValidDayjsDate
 ) {
   return Math.abs(dayjs(endDate).diff(startDate, 'day'));
+}
+
+export function getWeekDayName(date: ValidDayjsDate) {
+  return dayjs(date).format('dddd');
+}
+
+export function getWeekDayNameWithFrequency(
+  date: ValidDayjsDate,
+  frequency: CleaningFrequency
+) {
+  const prefix = frequencyToPrefixMap.get(frequency);
+
+  return `${prefix}${getWeekDayName(date)}`;
+}
+
+export function getWeekDayNameWithFrequencyAndDate(
+  date: ValidDayjsDate,
+  frequency: CleaningFrequency
+) {
+  const prefix = frequencyToPrefixMap.get(frequency);
+
+  return `${prefix}${getWeekDayName(date)}, ${extractDateStringFromDate(date)}`;
 }

@@ -37,6 +37,13 @@ export const frequencyToDescriptionMap = new Map([
   [CleaningFrequency.ONCE_A_MONTH, 'Once a month']
 ]);
 
+export const frequencyToPrefixMap = new Map([
+  [CleaningFrequency.ONCE, ''],
+  [CleaningFrequency.ONCE_A_WEEK, 'Every '],
+  [CleaningFrequency.EVERY_TWO_WEEKS, 'Every second '],
+  [CleaningFrequency.ONCE_A_MONTH, 'Once a month on ']
+]);
+
 export const reservationStatusMap = new Map([
   [
     Status.TO_BE_CONFIRMED,

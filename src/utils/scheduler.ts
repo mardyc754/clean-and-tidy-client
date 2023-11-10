@@ -2,8 +2,9 @@ import type { Reservation, Visit } from '~/schemas/api/reservation';
 
 import { convertISOStringToDate } from './dateUtils';
 import { service } from '~/schemas/api/services';
+import { omit } from 'lodash';
 
-const makeReservationTitle = (reservation: Reservation) => {
+export const makeReservationTitle = (reservation: Reservation) => {
   const services = reservation.services ?? [];
 
   // const prioritizedServices = services.toSorted(
@@ -29,10 +30,11 @@ export const getEventsFromReservation = (reservation: Reservation) => {
 
   const title = makeReservationTitle(reservation);
 
-  return visits.map((reservation) => ({
+  return visits.map((visit) => ({
     title: title,
-    start: convertISOStringToDate(reservation.startDate),
-    end: convertISOStringToDate(reservation.endDate)
+    start: convertISOStringToDate(visit.startDate),
+    end: convertISOStringToDate(visit.endDate),
+    resource: omit(visit, ['startDate', 'endDate', 'name'])
   }));
 };
 
@@ -40,7 +42,8 @@ export const getEventsFromVisits = (visits: Visit[]) => {
   return visits.map((visit) => ({
     title: visit.name,
     start: convertISOStringToDate(visit.startDate),
-    end: convertISOStringToDate(visit.endDate)
+    end: convertISOStringToDate(visit.endDate),
+    resource: omit(visit, ['startDate', 'endDate', 'name'])
   }));
 };
 

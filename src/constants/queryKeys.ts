@@ -27,7 +27,7 @@ export const visit = {
   all: ['visits'] as const,
   find: () => [...visit.all, 'find'] as const,
   lists: () => [...visit.all, 'list'] as const,
-  client: (email: string) => [...visit.find(), 'client', { email }] as const,
+  client: (id: number) => [...visit.find(), 'client', { id }] as const,
   employee: (id: number) => [...visit.find(), 'employee', id] as const,
   list: (filters: string) => [...visit.lists(), { filters }] as const,
   details: () => [...visit.all, 'detail'] as const,
