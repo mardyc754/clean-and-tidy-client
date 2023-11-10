@@ -46,6 +46,14 @@ export const clientUserSchema = clientSchema.extend({
   role: z.literal(UserRole.CLIENT)
 });
 
+export const regularEmployeeUserSchema = clientSchema.extend({
+  role: z.literal(UserRole.EMPLOYEE)
+});
+
+export const adminUserSchema = clientSchema.extend({
+  role: z.literal(UserRole.ADMIN)
+});
+
 export const employeeUserSchema = employeeSchema.extend({
   role: z.union([z.literal(UserRole.EMPLOYEE), z.literal(UserRole.ADMIN)])
 });
@@ -71,3 +79,9 @@ export type User = z.infer<typeof userSchema>;
 export type ClientUser = z.infer<typeof clientUserSchema>;
 
 export type EmployeeUser = z.infer<typeof employeeUserSchema>;
+
+export type RegularEmployeeUser = z.infer<typeof regularEmployeeUserSchema>;
+
+export type AdminUser = z.infer<typeof adminUserSchema>;
+
+export type AuthenticatedUser = ClientUser | EmployeeUser;

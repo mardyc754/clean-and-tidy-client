@@ -19,6 +19,8 @@ export const visitSchema = z.object({
   reservationId: z.number().int()
 });
 
+export const visitListSchema = z.array(visitSchema);
+
 export const visitWithEmployeesSchema = visitSchema.extend({
   employees: z.array(employeeSchema)
 });

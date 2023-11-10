@@ -1,21 +1,13 @@
-import Link from 'next/link';
-import {
-  faCircleUser,
-  faRightFromBracket
-} from '@fortawesome/free-solid-svg-icons';
-
 import { useAuth } from '~/hooks/auth/useAuth';
-import { useLogout } from '~/hooks/auth/useLogout';
 
 import { NavbarButton, Button } from '~/components/atoms/buttons';
 
-import { getUserLabel } from '~/utils/userUtils';
-
-import { ButtonWithDropdown } from './buttons';
+import { UserOptionsButton } from './buttons';
 
 const NavbarButtons = () => {
-  const { currentUser } = useAuth();
-  const { logout } = useLogout();
+  const { currentUser, isPending } = useAuth();
+
+  if (isPending) return null;
 
   return (
     <div className="flex w-full items-center justify-evenly">
@@ -27,19 +19,7 @@ const NavbarButtons = () => {
           Login
         </Button>
       ) : (
-        <ButtonWithDropdown
-          label={getUserLabel(currentUser)}
-          dropdownItemsData={[
-            {
-              label: <Link href="/user/profile">Your profile</Link>,
-              icon: faCircleUser
-            },
-            {
-              label: <span onClick={logout}>Log out</span>,
-              icon: faRightFromBracket
-            }
-          ]}
-        />
+        <UserOptionsButton userData={currentUser} />
       )}
     </div>
   );

@@ -36,12 +36,30 @@ export const getEventsFromReservation = (reservation: Reservation) => {
   }));
 };
 
+export const getEventsFromVisits = (visits: Visit[]) => {
+  return visits.map((visit) => ({
+    title: visit.name,
+    start: convertISOStringToDate(visit.startDate),
+    end: convertISOStringToDate(visit.endDate)
+  }));
+};
+
 export const getMaxEndDateFromReservations = (reservations: Reservation[]) => {
   const visits = reservations.flatMap((reservation) => reservation.visits);
 
   const dates = visits.map((visit) => visit?.endDate);
 
   const maxDate = Math.max(...dates.map((date) => new Date(date!).getTime()));
+
+  return new Date(maxDate);
+};
+
+export const getMaxEndDateFromReservationVisits = (
+  visits: ReturnType<typeof getEventsFromReservation>
+) => {
+  const endDates = visits.map((visit) => visit?.end);
+
+  const maxDate = Math.max(...endDates.map((date) => new Date(date).getTime()));
 
   return new Date(maxDate);
 };
