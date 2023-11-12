@@ -3,7 +3,7 @@ import { FormProvider } from 'react-hook-form';
 import useReservationFinder from '~/hooks/reservation/useReservationFinder';
 
 import { Button } from '~/components/atoms/buttons';
-import { Heading1 } from '~/components/atoms/typography/headings';
+import { Heading1, Heading2 } from '~/components/atoms/typography/headings';
 import { Textfield } from '~/components/molecules/form-fields';
 import { ReservationDetails } from '~/components/organisms/data-display';
 import { PageWrapper } from '~/components/template';
@@ -50,7 +50,12 @@ const CheckReservation = () => {
             </form>
           </FormProvider>
         </div>
-        {status === 'success' && data && <ReservationDetails data={data} />}
+        {status === 'success' && data && (
+          <>
+            <Heading2>Reservation details</Heading2>
+            <ReservationDetails data={data} />
+          </>
+        )}
         {status === 'pending' && isLoading && (
           <Spinner caption="Loading reservation data..." />
         )}

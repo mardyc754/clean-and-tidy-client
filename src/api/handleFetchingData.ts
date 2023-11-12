@@ -99,7 +99,7 @@ export async function handleFetchingData<
         err,
         'Type error of received error data'
       ) as SuccessData | (ErrorData & { hasError: true });
-      throw new ResponseError('test', responseData);
+      throw new ResponseError('Unexpected error occured', responseData);
     });
 }
 

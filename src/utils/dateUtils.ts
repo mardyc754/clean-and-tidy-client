@@ -1,5 +1,8 @@
 import type { ManipulateType } from 'dayjs';
-import { frequencyToPrefixMap } from '~/constants/mappings';
+import {
+  frequencyToDescriptionMap,
+  frequencyToPrefixMap
+} from '~/constants/mappings';
 
 import dayjs from '~/lib/dayjs';
 import { CleaningFrequency } from '~/types/enums';
@@ -121,7 +124,6 @@ export function getWeekDayNameWithFrequencyAndDate(
   date: ValidDayjsDate,
   frequency: CleaningFrequency
 ) {
-  const prefix = frequencyToPrefixMap.get(frequency);
-
-  return `${prefix}${getWeekDayName(date)}, ${extractDateStringFromDate(date)}`;
+  const frequencyDescription = frequencyToDescriptionMap.get(frequency);
+  return `${frequencyDescription}, from ${displayDateWithHours(date)}`;
 }

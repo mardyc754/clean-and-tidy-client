@@ -12,12 +12,12 @@ import { visit } from '~/constants/queryKeys';
 
 import { ProfilePageTemplate } from '~/components/template';
 import { Heading2 } from '~/components/atoms/typography/headings';
+import { ReservationField } from '~/components/organisms/button-fields';
 
 import { getEventsFromReservation } from '~/utils/scheduler';
 import { isClientUser } from '~/utils/userUtils';
-import { ReservationField } from '~/components/organisms/button-fields';
 
-export default function EmployeeProfile({
+export default function ClientProfile({
   userData
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { data: reservationList, isLoading } = useQuery({
@@ -41,7 +41,7 @@ export default function EmployeeProfile({
     >
       <div className="flex flex-col items-baseline py-8">
         <Heading2>Your reservations</Heading2>
-        <div className="flex flex-col space-y-4 pt-8">
+        <div className="flex w-full flex-col space-y-4 pt-8">
           {reservationList?.map((reservation) => (
             <ReservationField
               data={reservation}

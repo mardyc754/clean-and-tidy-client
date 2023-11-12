@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { useMemo } from 'react';
 
 import type { Visit } from '~/schemas/api/reservation';
 
@@ -6,25 +6,21 @@ import {
   displayDatesAsTimespan,
   extractDateStringFromDate
 } from '~/utils/dateUtils';
-import { convertToCamelCase } from '~/utils/stringUtils';
 
-import { reservationStatusMap } from '~/constants/mappings';
-
-import { LabeledTypography } from '~/components/atoms/typography/labeled-text';
 import { Disclosure } from '~/components/organisms/disclosures';
+import { EmployeeList, VisitDetailsList } from '../lists';
+import { VisitActions } from '../button-fields';
 
 interface ReservationDisclosureProps {
   data: Visit;
+  manageable?: boolean;
 }
 
-const VisitDisclosure = ({ data }: ReservationDisclosureProps) => {
-  const status = reservationStatusMap.get(data.status);
-
-  const reservationData = new Map([
-    ['Status', status?.label ?? ''],
-    ['Detergents included', data.includeDetergents ? 'Yes' : 'No'],
-    ['Cost', `${data.cost.toFixed(2)} zł`]
-  ]);
+const VisitDisclosure = ({
+  data,
+  manageable = false
+}: ReservationDisclosureProps) => {
+  const employees = useMemo(() => data.employees ?? [], [data.employees]);
 
   return (
     <Disclosure
@@ -40,38 +36,11 @@ const VisitDisclosure = ({ data }: ReservationDisclosureProps) => {
       }
     >
       <div className="flex-1">
-        <div className="border-b-2 border-b-slate-200 pb-4">
-          {Array.from(reservationData).map(([key, value], index) => (
-            <LabeledTypography
-              label={key}
-              value={value}
-              contentDistribution="stretch"
-              labelClasses="text-xl"
-              valueClasses={clsx(
-                'text-2xl',
-                key === 'Status' ? status?.style : ''
-              )}
-              key={`SingleReservationData-${convertToCamelCase(key)}-${index}`}
-            />
-          ))}
+        <div className="pb-4">
+          <VisitDetailsList data={data} />
         </div>
-        <div className="flex flex-col space-y-4 py-4">
-          <p className="text-xl font-semibold">Assigned employees</p>
-          <ul className="list-inside list-disc">
-            {data.employees?.map((employee, index) => (
-              <li
-                className="text-lg"
-                key={`SingleReservationEmployee-${convertToCamelCase(
-                  employee.firstName
-                )}-${index}`}
-              >
-                {/* {`${employee.firstName} ${employee.lastName} (${employee.email})`} */}
-                <span className="font-semibold">{`${employee.firstName} ${employee.lastName}`}</span>
-                {` (${employee.email})`}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <EmployeeList data={employees} />
+        {manageable && <VisitActions />}
       </div>
     </Disclosure>
   );
