@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 
 import { Button } from '~/components/atoms/buttons';
 import { Heading1, Heading2 } from '~/components/atoms/typography/headings';
+import { Spinner } from '~/components/molecules/status-indicators';
 import { Scheduler } from '~/components/organisms/scheduler';
 import { PageWrapper } from '~/components/template';
 
@@ -13,7 +14,6 @@ import {
   type getEventsFromReservation,
   getMaxEndDateFromReservationVisits
 } from '~/utils/scheduler';
-import { Spinner } from '../molecules/status-indicators';
 
 type ProfilePageTemplateProps = {
   visits: ReturnType<typeof getEventsFromReservation>;
@@ -47,7 +47,7 @@ const ProfilePageTemplate = ({
         </div>
         {children}
         <div className="flex flex-col items-baseline py-8">
-          <Heading2>Reservation calendar</Heading2>
+          <Heading2>Visit calendar</Heading2>
           <div className="flex w-full items-center justify-center py-8">
             {!isLoadingEvents ? (
               <Scheduler

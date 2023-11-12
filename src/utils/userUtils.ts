@@ -15,6 +15,10 @@ export function getUserFullName(user: EmployeeUser | ClientUser) {
     : null;
 }
 
+export function getUserDisplayName(user: EmployeeUser | ClientUser) {
+  return getUserFullName(user) ?? user.email;
+}
+
 export function getUserLabel(user: EmployeeUser | ClientUser) {
   return getUserFullName(user) ?? user.email;
 }

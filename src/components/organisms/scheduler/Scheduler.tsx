@@ -98,7 +98,7 @@ const Scheduler = ({
         // agenda: {
         //   event: EventAgenda
         // },
-        event: Event
+        // event: Event
         // eventContentWrapper: Event
         // eventContentWrapper: ({ children }) => <div>{children}</div>
       }
@@ -112,7 +112,7 @@ const Scheduler = ({
         {...props}
         components={components}
         // eventPropGetter={() => ({ className: getRandomBackgroudColor() })}
-        eventPropGetter={() => ({ className: 'bg-cyan-500 overflow-visible' })}
+        // eventPropGetter={() => ({ className: 'bg-cyan-500 overflow-visible' })}
         // dayPropGetter={() => ({ className: 'overflow-visible' })}
         localizer={localizer}
         startAccessor="start"

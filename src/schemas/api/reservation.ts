@@ -42,6 +42,14 @@ export const reservationSchema = z.object({
   address: address.optional()
 });
 
+export const visitWithReservationSchema = visitSchema.extend({
+  reservation: reservationSchema
+});
+
+export const visitWithReservationListSchema = z.array(
+  visitWithReservationSchema
+);
+
 export const reservationListSchema = z.array(reservationSchema);
 
 export type Reservation = z.infer<typeof reservationSchema>;
@@ -49,3 +57,5 @@ export type Reservation = z.infer<typeof reservationSchema>;
 export type Visit = z.infer<typeof visitSchema>;
 
 export type VisitWithEmployees = z.infer<typeof visitWithEmployeesSchema>;
+
+export type VisitWithReservation = z.infer<typeof visitWithReservationSchema>;

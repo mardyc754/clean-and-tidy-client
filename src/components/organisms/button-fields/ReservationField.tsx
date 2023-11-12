@@ -1,6 +1,5 @@
 import clsx from 'clsx';
 
-import { getWeekDayNameWithFrequencyAndDate } from '~/utils/dateUtils';
 import { createReservationTitle } from '~/utils/reservationUtils';
 
 import type { Reservation } from '~/schemas/api/reservation';
@@ -19,13 +18,7 @@ const ReservationField = ({ data }: ReservationDetailsProps) => {
         'md:flex-row md:space-y-0'
       )}
     >
-      <p className="font-semibold">
-        {`${createReservationTitle(data)}, 
-        ${getWeekDayNameWithFrequencyAndDate(
-          data.visits?.[0]?.startDate,
-          data.frequency
-        )}`}
-      </p>
+      <p className="font-semibold">{createReservationTitle(data)}</p>
       <div className="flex space-x-4">
         <Button href={`/reservations/${data.name}`}>Manage</Button>
         {/* <Button>Manage</Button> */}
