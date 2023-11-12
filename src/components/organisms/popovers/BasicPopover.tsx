@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useFloating } from '@floating-ui/react-dom';
+import { Placement, useFloating } from '@floating-ui/react-dom';
 import { Fragment } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Popover, Portal, Transition } from '@headlessui/react';
@@ -7,20 +7,26 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
 interface BasicPopoverProps {
   buttonComponent: React.ReactNode;
+  buttonClasses?: string;
   children?: React.ReactNode;
+  placement?: Placement;
 }
 
 export default function BasicPopover({
   children,
-  buttonComponent
+  buttonComponent,
+  buttonClasses = '',
+  placement = 'right'
 }: BasicPopoverProps) {
   const { refs, floatingStyles } = useFloating({
     // placement: 'bottom-start'
-    placement: 'bottom-start'
+    // placement: 'bottom-start'
+    placement
   });
   return (
-    <Popover className="relative h-full">
+    <Popover className="relative">
       <Popover.Button
+        className={buttonClasses}
         ref={refs.setReference}
         // className={clsx(
         //   'text-white/90 ui-open:text-white',

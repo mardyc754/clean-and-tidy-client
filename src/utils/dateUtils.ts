@@ -3,9 +3,8 @@ import {
   frequencyToDescriptionMap,
   frequencyToPrefixMap
 } from '~/constants/mappings';
-
 import dayjs from '~/lib/dayjs';
-import { CleaningFrequency } from '~/types/enums';
+import type { CleaningFrequency } from '~/types/enums';
 
 type ValidDayjsDate = dayjs.Dayjs | Date | string | number | null | undefined;
 
@@ -92,6 +91,15 @@ export function displayDatesAsTimespan(
   endDate: ValidDayjsDate
 ) {
   return `${extractHourStringFromDate(startDate)} - ${extractHourStringFromDate(
+    endDate
+  )}`;
+}
+
+export function displayDatesAsFullTimespan(
+  startDate: ValidDayjsDate,
+  endDate: ValidDayjsDate
+) {
+  return `${displayDateWithHours(startDate)} - ${extractHourStringFromDate(
     endDate
   )}`;
 }

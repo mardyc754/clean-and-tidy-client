@@ -5,10 +5,11 @@ import type { Service } from '~/schemas/api/services';
 
 import { getAllServices } from '~/api/services';
 
-import { prefetchUserData } from '~/server/prefetchUserData';
+import { fetchUserData } from '~/server/prefetchUserData';
 
 import { HeroSection } from '~/components/organisms/layout';
 import { PageWrapper } from '~/components/template';
+import { isAuthenticated, isEmployeeUser } from '~/utils/userUtils';
 
 const Home = ({
   data
@@ -21,7 +22,16 @@ const Home = ({
 };
 
 export const getServerSideProps = (async (ctx) => {
-  const currentUserData = await prefetchUserData(ctx);
+  const fetchedUser = await fetchUserData(ctx);
+
+  if (isEmployeeUser(fetchedUser.userData)) {
+    return {
+      redirect: {
+        destination: '/employee/profile',
+        permanent: false
+      }
+    };
+  }
 
   let data: Service[] = [];
   try {
@@ -29,7 +39,7 @@ export const getServerSideProps = (async (ctx) => {
   } catch (error) {
     return {
       props: {
-        ...currentUserData,
+        ...fetchedUser,
         data: []
       }
     }; // temporary
@@ -37,7 +47,7 @@ export const getServerSideProps = (async (ctx) => {
 
   return {
     props: {
-      ...currentUserData,
+      ...fetchedUser,
       data
     }
   };

@@ -4,11 +4,13 @@ import type { Reservation } from '~/schemas/api/reservation';
 
 import SectionWithButton from './SectionWithButton';
 
-interface ReservationDetailsProps {
+interface ReservationToBeConfirmedField {
   data: Reservation;
 }
 
-const ReservationField = ({ data }: ReservationDetailsProps) => {
+const ReservationToBeConfirmedField = ({
+  data
+}: ReservationToBeConfirmedField) => {
   return (
     <SectionWithButton
       label={createReservationTitle(data)}
@@ -17,4 +19,4 @@ const ReservationField = ({ data }: ReservationDetailsProps) => {
   );
 };
 
-export default ReservationField;
+export default ReservationToBeConfirmedField;

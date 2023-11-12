@@ -41,7 +41,8 @@ export const getEventsFromReservation = (reservation: Reservation) => {
     title: title,
     start: convertISOStringToDate(visit.startDate),
     end: convertISOStringToDate(visit.endDate),
-    resource: omit(visit, ['startDate', 'endDate', 'name'])
+    // resource: omit(visit, ['startDate', 'endDate', 'name'])
+    resource: visit
   }));
 };
 
@@ -50,7 +51,8 @@ export const getEventsFromVisits = (visits: VisitWithReservation[]) => {
     title: createReservationTitleForEmployee(visit.reservation),
     start: convertISOStringToDate(visit.startDate),
     end: convertISOStringToDate(visit.endDate),
-    resource: omit(visit, ['startDate', 'endDate', 'name'])
+    // resource: omit(visit, ['startDate', 'endDate', 'name'])
+    resource: visit
   }));
 };
 

@@ -3,7 +3,7 @@ import type { ButtonHTMLAttributes } from 'react';
 import { OptionalLink } from '../links';
 import clsx from 'clsx';
 
-type ButtonProps = {
+export type ButtonProps = {
   color?: 'default' | 'danger';
   href?: string;
 } & ButtonHTMLAttributes<HTMLButtonElement>;

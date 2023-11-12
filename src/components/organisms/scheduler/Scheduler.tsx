@@ -11,7 +11,8 @@ import {
 import { localizer } from '~/lib/dayjs';
 import { Visit } from '~/schemas/api/reservation';
 import { dateWithHour } from '~/utils/dateUtils';
-import { BasicPopover } from '../popovers';
+import { BasicPopover, VisitEventPopover } from '../popovers';
+import { VisitDetailsDialog } from '../dialogs';
 
 function getRandomBackgroudColor() {
   const colors = [
@@ -38,18 +39,31 @@ function getRandomBackgroudColor() {
 }
 
 interface VisitEvent extends CalendarEvent {
-  resource: Omit<Visit, 'startDate' | 'endDate' | 'name'>;
+  resource: Visit;
 }
+
 function Event({ event, ...props }: EventProps<VisitEvent>) {
-  // console.log({ event, ...props });
+  const { resource } = event;
+  const [isOpen, setIsOpen] = React.useState(false);
   return (
-    // <p>
-    //   <strong>{event.title}</strong>
-    //   <span>{event.resource.id}</span>
-    // </p>
-    <BasicPopover buttonComponent={event.title}></BasicPopover>
+    <div className="h-full" onClick={() => setIsOpen(true)}>
+      <p>{event.title}</p>
+      <VisitDetailsDialog
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        data={resource}
+      />
+    </div>
   );
 }
+
+// function Event({ event, ...props }: EventProps<VisitEvent>) {
+//   const { resource } = event;
+//   // console.log({ event, ...props });
+//   return (
+//     <VisitEventPopover name={event.title} placement="right" data={resource} />
+//   );
+// }
 
 function EventAgenda({ event }: EventProps) {
   return (
@@ -98,7 +112,7 @@ const Scheduler = ({
         // agenda: {
         //   event: EventAgenda
         // },
-        // event: Event
+        event: Event
         // eventContentWrapper: Event
         // eventContentWrapper: ({ children }) => <div>{children}</div>
       }

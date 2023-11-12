@@ -33,7 +33,7 @@ export default function EmployeeProfile({
       visits={visitEvents}
       userData={userData}
       isLoadingEvents={isLoading}
-    />
+    ></ProfilePageTemplate>
   );
 }
 
