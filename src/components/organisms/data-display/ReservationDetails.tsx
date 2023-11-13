@@ -11,11 +11,13 @@ import { ReservationActions } from '../button-fields';
 interface ReservationDetailsProps {
   data: Reservation;
   manageable?: boolean;
+  expandVisitDetails?: boolean;
 }
 
 const ReservationDetails = ({
   data,
-  manageable = false
+  manageable = false,
+  expandVisitDetails = false
 }: ReservationDetailsProps) => {
   const visits = useMemo(() => data.visits ?? [], [data.visits]);
 
@@ -32,6 +34,7 @@ const ReservationDetails = ({
         {visits.map((visit, i) => {
           return (
             <VisitDisclosure
+              defaultOpen={expandVisitDetails}
               data={visit}
               key={`ReservationDisclosure-${i}`}
               manageable={manageable}

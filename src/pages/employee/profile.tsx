@@ -4,9 +4,9 @@ import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 
 import { fetchUserData } from '~/server/prefetchUserData';
 
-import { visit } from '~/constants/queryKeys';
+import { reservation, visit } from '~/constants/queryKeys';
 
-import { getEmployeeVisits } from '~/api/employee';
+import { getEmployeeReservations, getEmployeeVisits } from '~/api/employee';
 
 import type { EmployeeUser } from '~/schemas/api/auth';
 
@@ -14,6 +14,9 @@ import { ProfilePageTemplate } from '~/components/template';
 
 import { getEventsFromVisits } from '~/utils/scheduler';
 import { isEmployeeUser } from '~/utils/userUtils';
+import { Status } from '~/types/enums';
+import ReservationToBeConfirmedField from '~/components/organisms/button-fields/ReservationToBeConfirmedField';
+import { Heading2 } from '~/components/atoms/typography/headings';
 
 export default function EmployeeProfile({
   userData
@@ -21,6 +24,12 @@ export default function EmployeeProfile({
   const { data: visitList, isLoading } = useQuery({
     queryKey: visit.employee(userData.id),
     queryFn: () => getEmployeeVisits(userData.id)
+  });
+
+  const { data: reservationList, isLoading: isLoadingReservations } = useQuery({
+    queryKey: reservation.employee(userData.id),
+    queryFn: () =>
+      getEmployeeReservations(userData.id, { status: Status.TO_BE_CONFIRMED })
   });
 
   const visitEvents = useMemo(
@@ -33,7 +42,19 @@ export default function EmployeeProfile({
       visits={visitEvents}
       userData={userData}
       isLoadingEvents={isLoading}
-    ></ProfilePageTemplate>
+    >
+      <div className="flex flex-col items-baseline py-8">
+        <Heading2>Awaiting reservations</Heading2>
+        <div className="flex w-full flex-col space-y-4 pt-8">
+          {reservationList?.map((reservation) => (
+            <ReservationToBeConfirmedField
+              data={reservation}
+              key={`ReservationToBeConfirmedField-${reservation.id}`}
+            />
+          ))}
+        </div>
+      </div>
+    </ProfilePageTemplate>
   );
 }
 

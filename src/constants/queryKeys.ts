@@ -1,4 +1,5 @@
 import type { ReservationQueryOptions } from '~/api/types';
+import type { Status } from '~/types/enums';
 
 // example query key factory
 //
@@ -15,7 +16,12 @@ export const user = ['user'];
 export const reservation = {
   all: ['reservations'] as const,
   find: () => [...reservation.all, 'find'] as const,
-  client: (email: string) => [...reservation.find(), { email }] as const,
+  client: (email: string) =>
+    [...reservation.find(), 'client', { email }] as const,
+  employee: (id: number) =>
+    [...reservation.find(), 'employee', { id }] as const,
+  employeeWithStatus: (id: number, status: Status) =>
+    [...reservation.employee(id), { status }] as const,
   lists: () => [...reservation.all, 'list'] as const,
   list: (filters: string) => [...reservation.lists(), { filters }] as const,
   details: () => [...reservation.all, 'detail'] as const,

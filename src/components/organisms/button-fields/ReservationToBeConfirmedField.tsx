@@ -1,8 +1,10 @@
-import { createReservationTitle } from '~/utils/reservationUtils';
+import { createReservationTitleForEmployee } from '~/utils/reservationUtils';
 
 import type { Reservation } from '~/schemas/api/reservation';
 
 import SectionWithButton from './SectionWithButton';
+import { ReservationDetailsDialog } from '../dialogs';
+import { useState } from 'react';
 
 interface ReservationToBeConfirmedField {
   data: Reservation;
@@ -11,11 +13,20 @@ interface ReservationToBeConfirmedField {
 const ReservationToBeConfirmedField = ({
   data
 }: ReservationToBeConfirmedField) => {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <SectionWithButton
-      label={createReservationTitle(data)}
-      buttonProps={{ href: `/reservations/${data.name}`, content: 'Manage' }}
-    />
+    <>
+      <SectionWithButton
+        label={createReservationTitleForEmployee(data)}
+        buttonProps={{ onClick: () => setIsOpen(true), content: 'Manage' }}
+      />
+      <ReservationDetailsDialog
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        data={data}
+      />
+    </>
   );
 };
 

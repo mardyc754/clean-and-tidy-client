@@ -14,16 +14,19 @@ import { VisitActions } from '../button-fields';
 interface ReservationDisclosureProps {
   data: Visit;
   manageable?: boolean;
+  defaultOpen?: boolean;
 }
 
 const VisitDisclosure = ({
   data,
-  manageable = false
+  manageable = false,
+  defaultOpen = false
 }: ReservationDisclosureProps) => {
   const employees = useMemo(() => data.employees ?? [], [data.employees]);
 
   return (
     <Disclosure
+      defaultOpen={defaultOpen}
       titleComponent={
         <div className="flex flex-1 flex-col py-2 md:flex-row md:items-center md:justify-between">
           <p className="font-emphasize text-2xl">
@@ -39,7 +42,7 @@ const VisitDisclosure = ({
         <div className="pb-4">
           <VisitDetailsList data={data} />
         </div>
-        <EmployeeList data={employees} />
+        {employees.length > 0 && <EmployeeList data={employees} />}
         {manageable && <VisitActions />}
       </div>
     </Disclosure>
