@@ -2,18 +2,29 @@ import DialogBase from './DialogBase';
 import type { Visit } from '~/schemas/api/reservation';
 import { Button } from '~/components/atoms/buttons';
 import { ExtendedVisitDetailsList } from '../lists';
+import { visit } from '~/constants/queryKeys';
+import { getVisitById } from '~/api/visit';
+import { useQuery } from '@tanstack/react-query';
+import { Spinner } from '~/components/molecules/status-indicators';
 
 type VisitDetailsDialogProps = {
   isOpen: boolean;
   onClose: VoidFunction;
-  data: Visit;
+  visitId: Visit['id'];
 };
 
 const VisitDetailsDialog = ({
   isOpen,
   onClose,
-  data
+  visitId
 }: VisitDetailsDialogProps) => {
+  const options = { includeEmployees: true };
+
+  const { data, isLoading } = useQuery({
+    queryKey: visit.detail(visitId, options),
+    queryFn: () => getVisitById(visitId, { includeEmployees: true })
+  });
+
   return (
     <DialogBase
       onClose={onClose}
@@ -27,7 +38,11 @@ const VisitDetailsDialog = ({
         </div>
       )}
     >
-      <ExtendedVisitDetailsList data={data} />
+      {!data || isLoading ? (
+        <Spinner caption="Loading visit data..." />
+      ) : (
+        <ExtendedVisitDetailsList data={data} />
+      )}
     </DialogBase>
   );
 };

@@ -8,10 +8,9 @@ import {
   EventWrapperProps
 } from 'react-big-calendar';
 
+import type { Visit } from '~/schemas/api/reservation';
 import { localizer } from '~/lib/dayjs';
-import { Visit } from '~/schemas/api/reservation';
 import { dateWithHour } from '~/utils/dateUtils';
-import { BasicPopover, VisitEventPopover } from '../popovers';
 import { VisitDetailsDialog } from '../dialogs';
 
 function getRandomBackgroudColor() {
@@ -51,7 +50,7 @@ function Event({ event, ...props }: EventProps<VisitEvent>) {
       <VisitDetailsDialog
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
-        data={resource}
+        visitId={resource.id}
       />
     </div>
   );

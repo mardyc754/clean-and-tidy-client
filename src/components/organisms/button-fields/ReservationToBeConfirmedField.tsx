@@ -24,7 +24,7 @@ const ReservationToBeConfirmedField = ({
       <ReservationDetailsDialog
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
-        data={data}
+        reservationName={data.name}
       />
     </>
   );

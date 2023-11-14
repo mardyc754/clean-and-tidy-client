@@ -55,5 +55,6 @@ export const reservationStatusMap = new Map([
     Status.TO_BE_CANCELLED,
     { label: 'To be cancelled', style: 'text-orange-500' }
   ],
-  [Status.CANCELLED, { label: 'Cancelled', style: 'text-stone-500' }]
+  [Status.CANCELLED, { label: 'Cancelled', style: 'text-stone-500' }],
+  [Status.UNKNOWN, { label: 'Unknown', style: '' }]
 ]);

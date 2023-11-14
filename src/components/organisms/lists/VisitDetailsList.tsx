@@ -3,8 +3,7 @@ import clsx from 'clsx';
 import type { Visit } from '~/schemas/api/reservation';
 
 import { convertToCamelCase } from '~/utils/stringUtils';
-
-import { reservationStatusMap } from '~/constants/mappings';
+import { getReservationStatusDescription } from '~/utils/reservationUtils';
 
 import { LabeledTypography } from '~/components/atoms/typography/labeled-text';
 
@@ -13,10 +12,10 @@ interface VisitDetailsListProps {
 }
 
 const VisitDetailsList = ({ data }: VisitDetailsListProps) => {
-  const status = reservationStatusMap.get(data.status);
+  const status = getReservationStatusDescription(data.employees);
 
   const visitData = new Map([
-    ['Status', status?.label ?? ''],
+    // ['Status', status?.label ?? ''],
     ['Detergents included', data.includeDetergents ? 'Yes' : 'No'],
     ['Cost', `${data.cost.toFixed(2)} zł`]
   ]);

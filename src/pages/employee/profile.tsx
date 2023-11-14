@@ -11,12 +11,13 @@ import { getEmployeeReservations, getEmployeeVisits } from '~/api/employee';
 import type { EmployeeUser } from '~/schemas/api/auth';
 
 import { ProfilePageTemplate } from '~/components/template';
+import ReservationToBeConfirmedField from '~/components/organisms/button-fields/ReservationToBeConfirmedField';
+import { Heading2 } from '~/components/atoms/typography/headings';
 
 import { getEventsFromVisits } from '~/utils/scheduler';
 import { isEmployeeUser } from '~/utils/userUtils';
+
 import { Status } from '~/types/enums';
-import ReservationToBeConfirmedField from '~/components/organisms/button-fields/ReservationToBeConfirmedField';
-import { Heading2 } from '~/components/atoms/typography/headings';
 
 export default function EmployeeProfile({
   userData
@@ -33,7 +34,7 @@ export default function EmployeeProfile({
   });
 
   const visitEvents = useMemo(
-    () => getEventsFromVisits(visitList ?? []),
+    () => getEventsFromVisits(visitList?.map(({ visit }) => visit) ?? []),
     [visitList]
   );
 

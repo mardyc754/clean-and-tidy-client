@@ -15,3 +15,7 @@ export type ReservationQueryOptions = RequireAtLeastOne<{
   includeServices: boolean;
   includeAddress: boolean;
 }>;
+
+export type VisitQueryOptions = RequireAtLeastOne<{
+  includeEmployees: boolean;
+}>;
