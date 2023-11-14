@@ -1,36 +1,54 @@
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
 
 import { getCurrentUser } from '~/api/auth';
 
-import { user } from '~/constants/queryKeys';
+import type { AuthenticatedUser } from '~/schemas/api/auth';
 
-import type { ClientUser, EmployeeUser, User } from '~/schemas/api/auth';
+import { user as userQueryKey } from '~/constants/queryKeys';
 
-import { UserRole } from '~/types/enums';
+import {
+  isAuthenticated,
+  isClientUser,
+  isEmployeeUser
+} from '~/utils/userUtils';
 
-const isClientUser = (user: User | undefined): user is ClientUser => {
-  return !!user && 'role' in user && user.role === UserRole.CLIENT;
-};
-
-const isEmployeeUser = (user: User | undefined): user is EmployeeUser => {
-  return (
-    !!user &&
-    'role' in user &&
-    [UserRole.EMPLOYEE, UserRole.ADMIN].includes(user.role)
-  );
-};
-
-export const useAuth = () => {
-  const { data, isLoading, error, isSuccess } = useQuery({
-    queryKey: user,
+export const useAuth = (
+  validationCallback?: (user: AuthenticatedUser) => boolean,
+  redirectIfUnauthenticated = false
+) => {
+  const router = useRouter();
+  const {
+    data: user,
+    isPending,
+    error,
+    isSuccess
+  } = useQuery({
+    queryKey: userQueryKey,
     queryFn: getCurrentUser
   });
 
+  const hasAccess =
+    isAuthenticated(user) && (!validationCallback || validationCallback(user));
+
+  const getUser = () => {
+    return hasAccess ? user : null;
+  };
+
+  useEffect(() => {
+    if (!isPending && !hasAccess && redirectIfUnauthenticated) {
+      void router.push('/login');
+    }
+  }, [user, isPending, router, redirectIfUnauthenticated]);
+
   return {
-    currentUser: data && 'role' in data ? data : null,
+    currentUser: getUser(),
     error,
-    isClient: isClientUser(data),
-    isEmployee: isEmployeeUser(data),
-    isSuccess
+    isClient: isClientUser(user),
+    isEmployee: isEmployeeUser(user),
+    isSuccess,
+    isPending,
+    hasAccess
   };
 };

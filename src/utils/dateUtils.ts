@@ -1,6 +1,10 @@
 import type { ManipulateType } from 'dayjs';
-
+import {
+  frequencyToDescriptionMap,
+  frequencyToPrefixMap
+} from '~/constants/mappings';
 import dayjs from '~/lib/dayjs';
+import type { CleaningFrequency } from '~/types/enums';
 
 type ValidDayjsDate = dayjs.Dayjs | Date | string | number | null | undefined;
 
@@ -91,6 +95,15 @@ export function displayDatesAsTimespan(
   )}`;
 }
 
+export function displayDatesAsFullTimespan(
+  startDate: ValidDayjsDate,
+  endDate: ValidDayjsDate
+) {
+  return `${displayDateWithHours(startDate)} - ${extractHourStringFromDate(
+    endDate
+  )}`;
+}
+
 export function convertISOStringToDate(date: string) {
   return dayjs(date).toDate();
 }
@@ -100,4 +113,25 @@ export function daysBetween(
   endDate: ValidDayjsDate
 ) {
   return Math.abs(dayjs(endDate).diff(startDate, 'day'));
+}
+
+export function getWeekDayName(date: ValidDayjsDate) {
+  return dayjs(date).format('dddd');
+}
+
+export function getWeekDayNameWithFrequency(
+  date: ValidDayjsDate,
+  frequency: CleaningFrequency
+) {
+  const prefix = frequencyToPrefixMap.get(frequency);
+
+  return `${prefix}${getWeekDayName(date)}`;
+}
+
+export function getWeekDayNameWithFrequencyAndDate(
+  date: ValidDayjsDate,
+  frequency: CleaningFrequency
+) {
+  const frequencyDescription = frequencyToDescriptionMap.get(frequency);
+  return `${frequencyDescription}, from ${displayDateWithHours(date)}`;
 }

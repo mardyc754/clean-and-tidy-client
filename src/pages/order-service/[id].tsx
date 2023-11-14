@@ -1,13 +1,6 @@
 import { useMemo } from 'react';
-import type {
-  InferGetStaticPropsType,
-  GetStaticProps,
-  GetServerSideProps,
-  InferGetServerSidePropsType
-} from 'next';
+import type { InferGetStaticPropsType, GetStaticProps } from 'next';
 import { type NextRouter, withRouter } from 'next/router';
-
-import { getCookie, getCookies } from 'cookies-next';
 
 import {
   configureDetailsIndicatorData,
@@ -16,7 +9,6 @@ import {
 } from '~/constants/orderServiceForm';
 
 import { getAllServices, getServiceById } from '~/api/services';
-import { getServerSideUserData } from '~/server/prefetchUserData';
 
 import type { Service } from '~/schemas/api/services';
 
@@ -28,7 +20,6 @@ import {
   SummaryForm
 } from '~/components/organisms/forms';
 import { OrderServiceFormPage } from '~/components/template';
-import { prefetchUserData } from '~/server/prefetchUserData';
 
 function getCurrentStepComponent(index: number, data: Service | null) {
   let componentData;

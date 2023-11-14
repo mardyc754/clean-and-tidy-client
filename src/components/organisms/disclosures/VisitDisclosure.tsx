@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { useMemo } from 'react';
 
 import type { Visit } from '~/schemas/api/reservation';
 
@@ -6,29 +6,27 @@ import {
   displayDatesAsTimespan,
   extractDateStringFromDate
 } from '~/utils/dateUtils';
-import { convertToCamelCase } from '~/utils/stringUtils';
 
-import { reservationStatusMap } from '~/constants/mappings';
-
-import { LabeledTypography } from '~/components/atoms/typography/labeled-text';
 import { Disclosure } from '~/components/organisms/disclosures';
+import { EmployeeList, VisitDetailsList } from '../lists';
+import { VisitActions } from '../button-fields';
 
 interface ReservationDisclosureProps {
   data: Visit;
+  manageable?: boolean;
+  defaultOpen?: boolean;
 }
 
-const VisitDisclosure = ({ data }: ReservationDisclosureProps) => {
-  const status = reservationStatusMap.get(data.status);
-
-  const reservationData = new Map([
-    ['Status', data.status],
-    ['Detergents included', data.includeDetergents ? 'Yes' : 'No'],
-    ['Cost', `${data.cost.toFixed(2)} zł`],
-    ['Status', status?.label ?? '']
-  ]);
+const VisitDisclosure = ({
+  data,
+  manageable = false,
+  defaultOpen = false
+}: ReservationDisclosureProps) => {
+  const employees = useMemo(() => data.employees ?? [], [data.employees]);
 
   return (
     <Disclosure
+      defaultOpen={defaultOpen}
       titleComponent={
         <div className="flex flex-1 flex-col py-2 md:flex-row md:items-center md:justify-between">
           <p className="font-emphasize text-2xl">
@@ -41,19 +39,11 @@ const VisitDisclosure = ({ data }: ReservationDisclosureProps) => {
       }
     >
       <div className="flex-1">
-        {Array.from(reservationData).map(([key, value], index) => (
-          <LabeledTypography
-            label={key}
-            value={value}
-            contentDistribution="stretch"
-            labelClasses="text-xl"
-            valueClasses={clsx(
-              'text-2xl',
-              key === 'Status' ? status?.style : ''
-            )}
-            key={`SingleReservationData-${convertToCamelCase(key)}-${index}`}
-          />
-        ))}
+        <div className="pb-4">
+          <VisitDetailsList data={data} />
+        </div>
+        {employees.length > 0 && <EmployeeList data={employees} />}
+        {manageable && <VisitActions />}
       </div>
     </Disclosure>
   );

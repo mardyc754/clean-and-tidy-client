@@ -10,7 +10,8 @@ export enum Status {
   ACTIVE = 'ACTIVE',
   CLOSED = 'CLOSED',
   TO_BE_CANCELLED = 'TO_BE_CANCELLED',
-  CANCELLED = 'CANCELLED'
+  CANCELLED = 'CANCELLED',
+  UNKNOWN = 'UNKNOWN' // extra status used exclusively by client for handling undefined status
 }
 
 export enum UserRole {

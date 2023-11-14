@@ -1,15 +1,24 @@
-import { Disclosure as HDisclosure, Transition } from '@headlessui/react';
+import {
+  Disclosure as HDisclosure,
+  DisclosureProps as HDisclosureProps,
+  Transition
+} from '@headlessui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
-interface DisclosurePropss {
+interface DisclosureProps {
+  defaultOpen?: boolean;
   titleComponent: React.ReactNode;
   children: React.ReactNode;
 }
 
-const Disclosure = ({ titleComponent, children }: DisclosurePropss) => {
+const Disclosure = ({
+  titleComponent,
+  children,
+  defaultOpen = false
+}: DisclosureProps) => {
   return (
-    <HDisclosure as="div">
+    <HDisclosure as="div" defaultOpen={defaultOpen}>
       <HDisclosure.Button
         as="div"
         className="flex items-center justify-between gap-4 bg-white px-6 py-4 shadow-md focus:outline-none ui-open:rounded-t-lg ui-open:border-b-2 ui-open:border-b-slate-200 ui-not-open:rounded-lg"

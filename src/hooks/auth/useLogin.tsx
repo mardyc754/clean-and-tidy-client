@@ -1,7 +1,6 @@
 import toast from 'react-hot-toast';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type { FormEvent } from 'react';
 
 import { user } from '~/constants/queryKeys';
 
@@ -28,11 +27,20 @@ export const useLogin = ({ redirectOnSuccessHandler }: useLoginProps) => {
     LoginData
   >({
     mutationFn: login,
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: user });
-      await redirectOnSuccessHandler?.();
-    },
+    onSuccess: () =>
+      toast.promise(
+        (async () => {
+          await queryClient.invalidateQueries({ queryKey: user });
+          await redirectOnSuccessHandler?.();
+        })(),
+        {
+          loading: 'Loading...',
+          success: 'Login success',
+          error: 'Login failed'
+        }
+      ),
     onError: (error) => {
+      // need to throw an error or at least reject the promise
       if (error.data.affectedField) {
         setError(error.data.affectedField, { message: error.message });
         return;
@@ -40,19 +48,11 @@ export const useLogin = ({ redirectOnSuccessHandler }: useLoginProps) => {
     }
   });
 
-  const onSubmit = (event: FormEvent<HTMLFormElement>) =>
-    toast.promise(
-      handleSubmit((values, e) => {
-        e?.preventDefault();
+  const onSubmit = handleSubmit((values, e) => {
+    e?.preventDefault();
 
-        mutation.mutate(values);
-      })(event),
-      {
-        loading: 'Loading...',
-        success: 'Login success',
-        error: 'Login failed'
-      }
-    );
+    mutation.mutate(values);
+  });
 
   return { onSubmit, methods };
 };

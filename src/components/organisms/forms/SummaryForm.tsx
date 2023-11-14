@@ -1,3 +1,5 @@
+import toast from 'react-hot-toast';
+import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { omit } from 'lodash';
 import { useShallow } from 'zustand/react/shallow';
@@ -15,8 +17,6 @@ import { AddressDataField, SummaryView } from '~/components/organisms/layout';
 import { Heading2 } from '~/components/atoms/typography/headings';
 
 import { StepButtons } from '../form-fields';
-import toast from 'react-hot-toast';
-import { useEffect } from 'react';
 
 interface SummaryFormProps {
   serviceName: string;

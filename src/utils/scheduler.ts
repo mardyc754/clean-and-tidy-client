@@ -1,9 +1,17 @@
-import type { Reservation, Visit } from '~/schemas/api/reservation';
+import { omit } from 'lodash';
+
+import type {
+  Reservation,
+  VisitWithReservation
+} from '~/schemas/api/reservation';
 
 import { convertISOStringToDate } from './dateUtils';
-import { service } from '~/schemas/api/services';
+import {
+  createReservationTitle,
+  createReservationTitleForEmployee
+} from './reservationUtils';
 
-const makeReservationTitle = (reservation: Reservation) => {
+export const makeReservationTitle = (reservation: Reservation) => {
   const services = reservation.services ?? [];
 
   // const prioritizedServices = services.toSorted(
@@ -27,12 +35,24 @@ const makeReservationTitle = (reservation: Reservation) => {
 export const getEventsFromReservation = (reservation: Reservation) => {
   const visits = reservation.visits ?? [];
 
-  const title = makeReservationTitle(reservation);
+  const title = createReservationTitle(reservation);
 
-  return visits.map((reservation) => ({
+  return visits.map((visit) => ({
     title: title,
-    start: convertISOStringToDate(reservation.startDate),
-    end: convertISOStringToDate(reservation.endDate)
+    start: convertISOStringToDate(visit.startDate),
+    end: convertISOStringToDate(visit.endDate),
+    // resource: omit(visit, ['startDate', 'endDate', 'name'])
+    resource: visit
+  }));
+};
+
+export const getEventsFromVisits = (visits: VisitWithReservation[]) => {
+  return visits.map((visit) => ({
+    title: createReservationTitleForEmployee(visit.reservation),
+    start: convertISOStringToDate(visit.startDate),
+    end: convertISOStringToDate(visit.endDate),
+    // resource: omit(visit, ['startDate', 'endDate', 'name'])
+    resource: visit
   }));
 };
 
@@ -42,6 +62,16 @@ export const getMaxEndDateFromReservations = (reservations: Reservation[]) => {
   const dates = visits.map((visit) => visit?.endDate);
 
   const maxDate = Math.max(...dates.map((date) => new Date(date!).getTime()));
+
+  return new Date(maxDate);
+};
+
+export const getMaxEndDateFromReservationVisits = (
+  visits: ReturnType<typeof getEventsFromReservation>
+) => {
+  const endDates = visits.map((visit) => visit?.end);
+
+  const maxDate = Math.max(...endDates.map((date) => new Date(date).getTime()));
 
   return new Date(maxDate);
 };
