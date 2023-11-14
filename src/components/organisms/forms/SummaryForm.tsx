@@ -100,7 +100,7 @@ const SummaryForm = ({ serviceName }: SummaryFormProps) => {
         endDate: (endDate() as Date).toISOString(),
         cost: totalCost,
         includeDetergents,
-        employeeIds: [2, 3] // TODO: get employee ids from backend
+        employeeIds: [2] // TODO: get employee ids from backend
       },
       bookerEmail: clientData.email,
       address,

@@ -36,16 +36,13 @@ export default function EmployeeProfile({
     () => getEventsFromVisits(visitList?.map(({ visit }) => visit) ?? []),
     [visitList]
   );
-
   return (
     <ProfilePageTemplate
       visits={visitEvents}
       userData={userData}
       isLoadingEvents={isLoading}
     >
-      {reservationList && reservationList.length > 0 && (
-        <ReservationToConfirmList data={reservationList} />
-      )}
+      {reservationList && <ReservationToConfirmList data={reservationList} />}
     </ProfilePageTemplate>
   );
 }

@@ -21,7 +21,7 @@ const ExtendedVisitDetailsList = ({ data }: VisitDetailsListProps) => {
   const listedData = new Map([
     ['Date', extractDateStringFromDate(data.startDate)],
     ['Hours', displayDatesAsTimespan(data.startDate, data.endDate)],
-    // ['Status', status?.label ?? ''],
+    ['Status', status?.label ?? ''],
     ['Detergents included', data.includeDetergents ? 'Yes' : 'No'],
     ['Cost', `${data.cost.toFixed(2)} zł`]
   ]);

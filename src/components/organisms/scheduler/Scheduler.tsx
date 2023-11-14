@@ -41,20 +41,24 @@ interface VisitEvent extends CalendarEvent {
   resource: Visit;
 }
 
-function Event({ event, ...props }: EventProps<VisitEvent>) {
+const Event = React.memo(({ event, ...props }: EventProps<VisitEvent>) => {
   const { resource } = event;
   const [isOpen, setIsOpen] = React.useState(false);
   return (
     <div className="h-full" onClick={() => setIsOpen(true)}>
       <p>{event.title}</p>
-      <VisitDetailsDialog
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        visitId={resource.id}
-      />
+      {isOpen && (
+        <VisitDetailsDialog
+          isOpen
+          onClose={() => setIsOpen(false)}
+          visitId={resource.id}
+        />
+      )}
     </div>
   );
-}
+});
+
+Event.displayName = 'Event';
 
 // function Event({ event, ...props }: EventProps<VisitEvent>) {
 //   const { resource } = event;
