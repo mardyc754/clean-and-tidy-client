@@ -23,7 +23,7 @@ const EmployeeList = ({ data }: EmployeeListProps) => {
               <span className="font-semibold">{`${employee.firstName} ${employee.lastName}`}</span>
               {` (${employee.email})`}
             </li>
-            <StatusIndicator status={status} />
+            <StatusIndicator perspective="employee" status={status} />
           </div>
         ))}
       </ul>

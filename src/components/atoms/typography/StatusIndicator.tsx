@@ -1,17 +1,26 @@
 import clsx from 'clsx';
-import { reservationStatusMap } from '~/constants/mappings';
+import {
+  employeeReservationStatusMap,
+  reservationStatusMap
+} from '~/constants/mappings';
 import type { Status } from '~/types/enums';
 
 type StatusIndicatorProps = {
   status: Status;
+  perspective?: 'client' | 'employee';
   component?: 'div' | 'span' | 'p';
 };
 
 const StatusIndicator = ({
   status,
+  perspective = 'client',
   component = 'span'
 }: StatusIndicatorProps) => {
-  const statusData = reservationStatusMap.get(status);
+  const statusSource =
+    perspective === 'client'
+      ? reservationStatusMap
+      : employeeReservationStatusMap;
+  const statusData = statusSource.get(status);
 
   return (
     <span

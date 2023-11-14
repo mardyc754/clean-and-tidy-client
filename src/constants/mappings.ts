@@ -58,3 +58,18 @@ export const reservationStatusMap = new Map([
   [Status.CANCELLED, { label: 'Cancelled', style: 'text-stone-500' }],
   [Status.UNKNOWN, { label: 'Unknown', style: '' }]
 ]);
+
+export const employeeReservationStatusMap = new Map([
+  [
+    Status.TO_BE_CONFIRMED,
+    { label: 'Needs to confirm', style: 'text-yellow-500' }
+  ],
+  [Status.ACTIVE, { label: 'Accepted', style: 'text-green-500' }],
+  [Status.CLOSED, { label: 'Closed', style: '' }],
+  [
+    Status.TO_BE_CANCELLED,
+    { label: 'Needs to confirm cancelation', style: 'text-orange-500' }
+  ],
+  [Status.CANCELLED, { label: 'Cancelled', style: 'text-stone-500' }],
+  [Status.UNKNOWN, { label: 'Unknown', style: '' }]
+]);
