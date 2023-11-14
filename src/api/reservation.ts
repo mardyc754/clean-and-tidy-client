@@ -60,3 +60,16 @@ export const changeReservationStatus = async (
     data
   });
 };
+
+export const confirmReservation = async (
+  reservationName: string,
+  employeeId: number
+) => {
+  return await handleFetchingData({
+    path: `/reservations/${reservationName}/confirm`,
+    method: 'put',
+    successSchema: reservationSchema as ZodType<Reservation>,
+    errorSchema: basicError,
+    data: { employeeId }
+  });
+};

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 import { useQuery, type DehydratedState } from '@tanstack/react-query';
+import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 
 import { fetchUserData } from '~/server/prefetchUserData';
 
@@ -11,11 +11,10 @@ import type { ClientUser } from '~/schemas/api/auth';
 import { visit } from '~/constants/queryKeys';
 
 import { ProfilePageTemplate } from '~/components/template';
-import { Heading2 } from '~/components/atoms/typography/headings';
-import { ReservationField } from '~/components/organisms/button-fields';
 
 import { getEventsFromReservation } from '~/utils/scheduler';
 import { isClientUser } from '~/utils/userUtils';
+import { ReservationList } from '~/components/organisms/lists';
 
 export default function ClientProfile({
   userData
@@ -39,17 +38,7 @@ export default function ClientProfile({
       userData={userData}
       isLoadingEvents={isLoading}
     >
-      <div className="flex flex-col items-baseline py-8">
-        <Heading2>Your reservations</Heading2>
-        <div className="flex w-full flex-col space-y-4 pt-8">
-          {reservationList?.map((reservation) => (
-            <ReservationField
-              data={reservation}
-              key={`Reservation-${reservation.id}`}
-            />
-          ))}
-        </div>
-      </div>
+      <ReservationList data={reservationList ?? []} />
     </ProfilePageTemplate>
   );
 }

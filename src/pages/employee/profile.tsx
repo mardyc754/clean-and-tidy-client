@@ -11,8 +11,7 @@ import { getEmployeeReservations, getEmployeeVisits } from '~/api/employee';
 import type { EmployeeUser } from '~/schemas/api/auth';
 
 import { ProfilePageTemplate } from '~/components/template';
-import ReservationToBeConfirmedField from '~/components/organisms/button-fields/ReservationToBeConfirmedField';
-import { Heading2 } from '~/components/atoms/typography/headings';
+import { ReservationToConfirmList } from '~/components/organisms/lists';
 
 import { getEventsFromVisits } from '~/utils/scheduler';
 import { isEmployeeUser } from '~/utils/userUtils';
@@ -44,17 +43,9 @@ export default function EmployeeProfile({
       userData={userData}
       isLoadingEvents={isLoading}
     >
-      <div className="flex flex-col items-baseline py-8">
-        <Heading2>Awaiting reservations</Heading2>
-        <div className="flex w-full flex-col space-y-4 pt-8">
-          {reservationList?.map((reservation) => (
-            <ReservationToBeConfirmedField
-              data={reservation}
-              key={`ReservationToBeConfirmedField-${reservation.id}`}
-            />
-          ))}
-        </div>
-      </div>
+      {reservationList && reservationList.length > 0 && (
+        <ReservationToConfirmList data={reservationList} />
+      )}
     </ProfilePageTemplate>
   );
 }

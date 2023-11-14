@@ -3,3 +3,5 @@ export { default as ReservationGeneralDetailsList } from './ReservationGeneralDe
 export { default as VisitDetailsList } from './VisitDetailsList';
 export { default as EmployeeList } from './EmployeeList';
 export { default as ExtendedVisitDetailsList } from './ExtendedVisitDetailsList';
+export { default as ReservationList } from './ReservationList';
+export { default as ReservationToConfirmList } from './ReservationToConfirmList';

@@ -1,15 +1,25 @@
-import { Heading3 } from '~/components/atoms/typography/headings';
+import clsx from 'clsx';
 
-interface ListWrapperProps {
+import { Heading3, Heading2 } from '~/components/atoms/typography/headings';
+
+export interface ListWrapperProps {
   title: string;
   children?: React.ReactNode;
+  component?: 'h2' | 'h3';
+  contentWrapperClasses?: string;
 }
 
-const ListWrapper = ({ title, children }: ListWrapperProps) => {
+const ListWrapper = ({
+  title,
+  component = 'h3',
+  contentWrapperClasses = '',
+  children
+}: ListWrapperProps) => {
+  const Heading = component === 'h2' ? Heading2 : Heading3;
   return (
     <div className="py-8">
-      <Heading3>{title}</Heading3>
-      <div className="pt-4">{children}</div>
+      <Heading>{title}</Heading>
+      <div className={clsx('pt-4', contentWrapperClasses)}>{children}</div>
     </div>
   );
 };
