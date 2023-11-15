@@ -1,5 +1,7 @@
-import type { SummaryData } from '~/types/forms';
 import { SummaryTypography } from '~/components/atoms/typography/labeled-text';
+
+import type { SummaryData } from '~/types/forms';
+
 import LabeledTypographyList from './LabeledTypographyList';
 
 type SummarySectionProps = {

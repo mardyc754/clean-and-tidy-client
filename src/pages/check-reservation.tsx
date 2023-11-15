@@ -1,17 +1,18 @@
 import { FormProvider } from 'react-hook-form';
 
+import { getServerSideUserData } from '~/server/prefetchUserData';
+
 import useReservationFinder from '~/hooks/reservation/useReservationFinder';
 
 import { Button } from '~/components/atoms/buttons';
 import { Heading1, Heading2 } from '~/components/atoms/typography/headings';
 import { Textfield } from '~/components/molecules/form-fields';
-import { ReservationDetails } from '~/components/organisms/data-display';
-import { PageWrapper } from '~/components/template';
 import {
   IconIndicator,
   Spinner
 } from '~/components/molecules/status-indicators';
-import { getServerSideUserData } from '~/server/prefetchUserData';
+import { ReservationDetails } from '~/components/organisms/data-display';
+import { PageWrapper } from '~/components/template';
 
 const CheckReservation = () => {
   const { data, error, status, methods, onSubmit, isLoading } =

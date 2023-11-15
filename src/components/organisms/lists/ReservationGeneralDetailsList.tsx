@@ -1,17 +1,18 @@
 import clsx from 'clsx';
 
+import {
+  frequencyToDescriptionMap,
+  reservationStatusMap
+} from '~/constants/mappings';
+
 import type { Reservation } from '~/schemas/api/reservation';
 
 import { LabeledTypography } from '~/components/atoms/typography/labeled-text';
 
-import { convertToCamelCase } from '~/utils/stringUtils';
 import { displayDateWithHours } from '~/utils/dateUtils';
+import { convertToCamelCase } from '~/utils/stringUtils';
 
 import ListWrapper from '../wrappers/ListWrapper';
-import {
-  reservationStatusMap,
-  frequencyToDescriptionMap
-} from '~/constants/mappings';
 
 interface ReservationDetailsListProps {
   data: Reservation; // TODO: maybe use simplified version of Reservation

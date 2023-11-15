@@ -1,8 +1,7 @@
-import { useFormContext, useWatch } from 'react-hook-form';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { type InputHTMLAttributes } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import { Label } from '~/components/atoms/forms';
 

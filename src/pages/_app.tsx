@@ -1,7 +1,6 @@
+import { config, library } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
-
-import { useState } from 'react';
+import { fas } from '@fortawesome/free-solid-svg-icons';
 import {
   type DehydratedState,
   HydrationBoundary,
@@ -9,15 +8,14 @@ import {
   QueryClientProvider
 } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { library, config } from '@fortawesome/fontawesome-svg-core';
-import { fas } from '@fortawesome/free-solid-svg-icons';
-import { Toaster } from 'react-hot-toast';
-import { SessionProvider } from 'next-auth/react';
 import type { Session } from 'next-auth';
+import { SessionProvider } from 'next-auth/react';
 import type { AppType } from 'next/app';
-
-import '~/styles/globals.css';
+import { useState } from 'react';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { Toaster } from 'react-hot-toast';
 import '~/styles/Calendar.css';
+import '~/styles/globals.css';
 
 config.autoAddCss = false;
 library.add(fas);

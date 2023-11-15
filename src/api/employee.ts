@@ -2,10 +2,10 @@ import type { ZodType } from 'zod';
 
 import { basicError } from '~/schemas/api/common';
 import {
-  visitWithStatusAndReservationListSchema,
-  reservationListSchema,
+  type Reservation,
   type VisitWithStatusAndReservation,
-  type Reservation
+  reservationListSchema,
+  visitWithStatusAndReservationListSchema
 } from '~/schemas/api/reservation';
 
 import type { Status } from '~/types/enums';

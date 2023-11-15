@@ -6,10 +6,12 @@ import {
   type CalendarProps as ReactCalendarProps
 } from 'react-calendar';
 import { useFormContext } from 'react-hook-form';
+
 import { ErrorLabel } from '~/components/atoms/forms';
 
-import type { ValidDate } from '~/types/forms';
 import { nextDay } from '~/utils/dateUtils';
+
+import type { ValidDate } from '~/types/forms';
 
 interface CalendarProps extends Omit<ReactCalendarProps, 'onChange'> {
   name: string;

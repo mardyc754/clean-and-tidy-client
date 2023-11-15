@@ -1,7 +1,8 @@
-import SummaryView from './SummaryView';
-
 import { Heading2 } from '~/components/atoms/typography/headings';
+
 import type { SummaryData } from '~/types/forms';
+
+import SummaryView from './SummaryView';
 
 type SummarySectionProps = {
   data: SummaryData;

@@ -1,8 +1,10 @@
-import { convertToCamelCase } from '~/utils/stringUtils';
 import type { EmployeeWithStatus } from '~/schemas/api/reservation';
 
-import SecondaryListWrapper from '../wrappers/SecondaryListWrapper';
 import { StatusIndicator } from '~/components/atoms/typography';
+
+import { convertToCamelCase } from '~/utils/stringUtils';
+
+import SecondaryListWrapper from '../wrappers/SecondaryListWrapper';
 
 interface EmployeeListProps {
   data: EmployeeWithStatus[];

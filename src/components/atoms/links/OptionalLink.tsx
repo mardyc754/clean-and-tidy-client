@@ -1,5 +1,5 @@
-import React from 'react';
 import Link, { type LinkProps } from 'next/link';
+import React from 'react';
 
 type OptionalLinkProps = Partial<LinkProps> & {
   children?: React.ReactNode;

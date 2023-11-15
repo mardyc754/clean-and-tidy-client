@@ -1,12 +1,12 @@
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+
+import { user as userQueryKey } from '~/constants/queryKeys';
 
 import { getCurrentUser } from '~/api/auth';
 
 import type { AuthenticatedUser } from '~/schemas/api/auth';
-
-import { user as userQueryKey } from '~/constants/queryKeys';
 
 import {
   isAuthenticated,

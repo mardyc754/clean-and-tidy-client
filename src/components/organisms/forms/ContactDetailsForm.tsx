@@ -1,16 +1,16 @@
+import { useRouter } from 'next/router';
 import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form';
 
 import {
-  contactDetailsResolver,
-  type ContactDetailsFormData
+  type ContactDetailsFormData,
+  contactDetailsResolver
 } from '~/schemas/forms/orderService';
 
 import { useOrderServiceFormStore } from '~/stores/orderServiceFormStore';
 
-import { Textfield, TextArea } from '~/components/molecules/form-fields';
+import { TextArea, Textfield } from '~/components/molecules/form-fields';
 
 import { StepButtons } from '../form-fields';
-import { useRouter } from 'next/router';
 
 const ContactDetailsForm = () => {
   const methods = useForm<ContactDetailsFormData>({

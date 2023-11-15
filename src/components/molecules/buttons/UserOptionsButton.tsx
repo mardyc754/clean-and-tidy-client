@@ -1,17 +1,18 @@
-import Link from 'next/link';
 import {
   faCircleUser,
   faRightFromBracket
 } from '@fortawesome/free-solid-svg-icons';
+import Link from 'next/link';
+
+import type { AuthenticatedUser } from '~/schemas/api/auth';
 
 import { useLogout } from '~/hooks/auth/useLogout';
 
 import { getUserLabel } from '~/utils/userUtils';
 
-import type { AuthenticatedUser } from '~/schemas/api/auth';
+import { UserRole } from '~/types/enums';
 
 import ButtonWithDropdown from './ButtonWithDropdown';
-import { UserRole } from '~/types/enums';
 
 interface UserOptionsButtonProps {
   userData: AuthenticatedUser;

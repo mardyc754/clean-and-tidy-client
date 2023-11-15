@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import { persist, devtools } from 'zustand/middleware';
+import { devtools, persist } from 'zustand/middleware';
+
 import { ClientUser, EmployeeUser, User } from '~/schemas/api/auth';
 import { Employee } from '~/schemas/api/employee';
 

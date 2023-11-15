@@ -1,6 +1,6 @@
-import Link from 'next/link';
-import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 import type { DehydratedState } from '@tanstack/react-query';
+import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import Link from 'next/link';
 
 import { prefetchUserData } from '~/server/prefetchUserData';
 

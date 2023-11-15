@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { Heading3, Heading2 } from '~/components/atoms/typography/headings';
+import { Heading2, Heading3 } from '~/components/atoms/typography/headings';
 
 export interface ListWrapperProps {
   title: string;

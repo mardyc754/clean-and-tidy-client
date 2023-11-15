@@ -1,6 +1,6 @@
+import { type DehydratedState, useQuery } from '@tanstack/react-query';
+import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { useMemo } from 'react';
-import { useQuery, type DehydratedState } from '@tanstack/react-query';
-import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 
 import { fetchUserData } from '~/server/prefetchUserData';
 
@@ -10,8 +10,8 @@ import { getEmployeeReservations, getEmployeeVisits } from '~/api/employee';
 
 import type { EmployeeUser } from '~/schemas/api/auth';
 
-import { ProfilePageTemplate } from '~/components/template';
 import { ReservationToConfirmList } from '~/components/organisms/lists';
+import { ProfilePageTemplate } from '~/components/template';
 
 import { getEventsFromVisits } from '~/utils/scheduler';
 import { isEmployeeUser } from '~/utils/userUtils';

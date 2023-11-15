@@ -1,5 +1,5 @@
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 
 export const loginDataValidator = z.object({
   email: z.string().email(),

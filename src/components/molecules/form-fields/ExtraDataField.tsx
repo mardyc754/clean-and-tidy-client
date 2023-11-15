@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { useFormContext, useWatch } from 'react-hook-form';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useEffect, useState } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import { type ServiceWithUnit } from '~/schemas/api/services';
 

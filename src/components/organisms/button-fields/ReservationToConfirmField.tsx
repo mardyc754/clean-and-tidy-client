@@ -1,10 +1,11 @@
-import { createReservationTitleForEmployee } from '~/utils/reservationUtils';
+import { useState } from 'react';
 
 import type { Reservation } from '~/schemas/api/reservation';
 
-import SectionWithButton from './SectionWithButton';
+import { createReservationTitleForEmployee } from '~/utils/reservationUtils';
+
 import { ReservationDetailsDialog } from '../dialogs';
-import { useState } from 'react';
+import SectionWithButton from './SectionWithButton';
 
 interface ReservationToBeConfirmedField {
   data: Reservation;

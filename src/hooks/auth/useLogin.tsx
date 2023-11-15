@@ -1,14 +1,14 @@
-import toast from 'react-hot-toast';
-import { useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 
 import { user } from '~/constants/queryKeys';
 
 import { login } from '~/api/auth';
 import type { ResponseError } from '~/api/errors/ResponseError';
 
-import { loginDataResolver, type LoginData } from '~/schemas/forms/auth';
 import type { LoginErrorData, LoginSuccessData } from '~/schemas/api/auth';
+import { type LoginData, loginDataResolver } from '~/schemas/forms/auth';
 
 interface useLoginProps {
   redirectOnSuccessHandler?: () => Promise<void> | VoidFunction;

@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import {
   FormProvider,
@@ -12,6 +13,8 @@ import {
   cleaningDetailsResolver
 } from '~/schemas/forms/orderService';
 
+import { useOrderServiceFormStore } from '~/stores/orderServiceFormStore';
+
 import { Checkbox, NumericInput } from '~/components/atoms/forms';
 
 import {
@@ -20,8 +23,6 @@ import {
   RadioGroup,
   StepButtons
 } from '../form-fields';
-import { useOrderServiceFormStore } from '~/stores/orderServiceFormStore';
-import { useRouter } from 'next/router';
 
 interface CleaningDetailsFormProps {
   data: Service;

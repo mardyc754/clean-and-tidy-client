@@ -1,12 +1,11 @@
 import type { ZodType } from 'zod';
 
-import {
-  reservationSchema,
-  type Reservation,
-  reservationListSchema
-} from '~/schemas/api/reservation';
-
 import { basicError } from '~/schemas/api/common';
+import {
+  type Reservation,
+  reservationListSchema,
+  reservationSchema
+} from '~/schemas/api/reservation';
 import type { ReservationCreationData } from '~/schemas/forms/orderService';
 import type { StatusChangeData } from '~/schemas/forms/reservationManagement';
 

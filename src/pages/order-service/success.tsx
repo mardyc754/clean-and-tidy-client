@@ -2,8 +2,8 @@ import { useRouter } from 'next/router';
 
 import { getServerSideUserData } from '~/server/prefetchUserData';
 
-import { ResultPageWrapper } from '~/components/template';
 import { Button } from '~/components/atoms/buttons';
+import { ResultPageWrapper } from '~/components/template';
 
 const Success = () => {
   const router = useRouter();

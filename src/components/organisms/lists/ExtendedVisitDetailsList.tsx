@@ -2,14 +2,14 @@ import clsx from 'clsx';
 
 import type { Visit } from '~/schemas/api/reservation';
 
-import { convertToCamelCase } from '~/utils/stringUtils';
-
 import { LabeledTypography } from '~/components/atoms/typography/labeled-text';
+
 import {
   displayDatesAsTimespan,
   extractDateStringFromDate
 } from '~/utils/dateUtils';
 import { getReservationStatusDescription } from '~/utils/reservationUtils';
+import { convertToCamelCase } from '~/utils/stringUtils';
 
 interface VisitDetailsListProps {
   data: Visit;

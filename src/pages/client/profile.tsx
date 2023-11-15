@@ -1,20 +1,20 @@
+import { type DehydratedState, useQuery } from '@tanstack/react-query';
+import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { useMemo } from 'react';
-import { useQuery, type DehydratedState } from '@tanstack/react-query';
-import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 
 import { fetchUserData } from '~/server/prefetchUserData';
+
+import { visit } from '~/constants/queryKeys';
 
 import { getClientReservations } from '~/api/client';
 
 import type { ClientUser } from '~/schemas/api/auth';
 
-import { visit } from '~/constants/queryKeys';
-
+import { ReservationList } from '~/components/organisms/lists';
 import { ProfilePageTemplate } from '~/components/template';
 
 import { getEventsFromReservation } from '~/utils/scheduler';
 import { isClientUser } from '~/utils/userUtils';
-import { ReservationList } from '~/components/organisms/lists';
 
 export default function ClientProfile({
   userData

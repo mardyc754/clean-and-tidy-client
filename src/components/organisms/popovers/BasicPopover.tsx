@@ -1,9 +1,9 @@
-import clsx from 'clsx';
 import { Placement, useFloating } from '@floating-ui/react-dom';
-import { Fragment } from 'react';
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Popover, Portal, Transition } from '@headlessui/react';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import clsx from 'clsx';
+import { Fragment } from 'react';
 
 interface BasicPopoverProps {
   buttonComponent: React.ReactNode;

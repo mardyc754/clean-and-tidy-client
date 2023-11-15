@@ -3,14 +3,17 @@ import React, { useMemo } from 'react';
 import {
   Calendar,
   type Event as CalendarEvent,
-  type EventProps,
   type CalendarProps,
+  type EventProps,
   EventWrapperProps
 } from 'react-big-calendar';
 
-import type { Visit } from '~/schemas/api/reservation';
 import { localizer } from '~/lib/dayjs';
+
+import type { Visit } from '~/schemas/api/reservation';
+
 import { dateWithHour } from '~/utils/dateUtils';
+
 import { VisitDetailsDialog } from '../dialogs';
 
 function getRandomBackgroudColor() {

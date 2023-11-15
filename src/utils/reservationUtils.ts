@@ -2,12 +2,15 @@ import {
   frequencyToDescriptionMap,
   reservationStatusMap
 } from '~/constants/mappings';
+
 import type {
   EmployeeWithStatus,
   Reservation
 } from '~/schemas/api/reservation';
-import { displayDateWithHours } from './dateUtils';
+
 import { Status } from '~/types/enums';
+
+import { displayDateWithHours } from './dateUtils';
 
 export const getMainServiceForReservation = (reservation: Reservation) => {
   return reservation.services?.find(

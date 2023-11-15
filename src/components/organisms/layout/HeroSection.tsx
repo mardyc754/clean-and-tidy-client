@@ -1,13 +1,14 @@
 import Image from 'next/image';
-import HeroSectionImage from '~/assets/living_room.jpg';
-import type { Service } from '~/schemas/api/services';
+import { useMemo, useState } from 'react';
 
-import LargeTypography from '~/components/atoms/typography/regular-text/LargeTypography';
+import HeroSectionImage from '~/assets/living_room.jpg';
+
+import type { Service } from '~/schemas/api/services';
 
 import { Button } from '~/components/atoms/buttons';
 import { Heading1 } from '~/components/atoms/typography/headings';
+import LargeTypography from '~/components/atoms/typography/regular-text/LargeTypography';
 import { Dropdown } from '~/components/molecules/form-fields';
-import { useMemo, useState } from 'react';
 
 type HeroSectionProps = {
   services: Service[];

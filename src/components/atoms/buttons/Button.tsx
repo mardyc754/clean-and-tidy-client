@@ -1,7 +1,7 @@
+import clsx from 'clsx';
 import type { ButtonHTMLAttributes } from 'react';
 
 import { OptionalLink } from '../links';
-import clsx from 'clsx';
 
 export type ButtonProps = {
   color?: 'default' | 'danger';

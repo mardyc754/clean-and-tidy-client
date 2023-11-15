@@ -1,18 +1,20 @@
 import { useMemo } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+
+import { NumericInput } from '~/components/atoms/forms';
 import {
   CalendarWithHours,
   RadioGroup
 } from '~/components/organisms/form-fields';
-import { NumericInput } from '~/components/atoms/forms';
 
-import type { SingleVisitData } from '~/types/user';
-import type { ChangeDataMode } from '~/types/forms';
 import type { CleaningFrequency } from '~/types/enums';
+import type { ChangeDataMode } from '~/types/forms';
+import type { SingleVisitData } from '~/types/user';
+
 import {
   changeDataModeData,
   frequencyValues
 } from '../../../constants/mappings';
-import { FormProvider, useForm } from 'react-hook-form';
 
 type ChangeCleaningDataFormProps = {
   data: SingleVisitData;

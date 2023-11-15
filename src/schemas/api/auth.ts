@@ -2,8 +2,8 @@ import { z } from 'zod';
 
 import { UserRole } from '~/types/enums';
 
-import { basicError } from './common';
 import { clientSchema } from './client';
+import { basicError } from './common';
 import { employeeSchema } from './employee';
 
 export const registrationSuccess = z.object({

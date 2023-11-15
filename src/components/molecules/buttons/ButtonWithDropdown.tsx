@@ -1,11 +1,13 @@
-import { Menu } from '@headlessui/react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faChevronDown,
-  type IconDefinition
+  type IconDefinition,
+  faChevronDown
 } from '@fortawesome/free-solid-svg-icons';
-import DropdownMenuItem from '../../atoms/buttons/DropdownMenuItem';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Menu } from '@headlessui/react';
+
 import { convertToCamelCase } from '~/utils/stringUtils';
+
+import DropdownMenuItem from '../../atoms/buttons/DropdownMenuItem';
 
 interface ButtonWithDropdownProps {
   label: string;

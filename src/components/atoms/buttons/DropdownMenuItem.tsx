@@ -1,7 +1,7 @@
-import clsx from 'clsx';
-import { Menu } from '@headlessui/react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Menu } from '@headlessui/react';
+import clsx from 'clsx';
 import type { ButtonHTMLAttributes } from 'react';
 
 interface DropdownButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {

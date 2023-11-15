@@ -1,14 +1,13 @@
-import React, { type InputHTMLAttributes, type ChangeEvent } from 'react';
-
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+import clsx from 'clsx';
+import React, { type ChangeEvent, type InputHTMLAttributes } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import type { SetRequired } from 'type-fest';
 
-import Label from './Label';
-import Input from './Input';
-import NumericInputControl from './NumericInputControl';
-import clsx from 'clsx';
 import ErrorLabel from './ErrorLabel';
+import Input from './Input';
+import Label from './Label';
+import NumericInputControl from './NumericInputControl';
 
 export type NumericInputProps = {
   max?: number;

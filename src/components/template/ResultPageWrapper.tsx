@@ -1,9 +1,9 @@
+import type { NavigationButtonProps } from '~/components/atoms/buttons/NavigationButton';
 import { Heading1 } from '~/components/atoms/typography/headings';
 import { PageWrapper } from '~/components/template';
-import type { NavigationButtonProps } from '~/components/atoms/buttons/NavigationButton';
 
-import type { PageWrapperProps } from './PageWrapper';
 import { IconIndicator } from '../molecules/status-indicators';
+import type { PageWrapperProps } from './PageWrapper';
 
 type ResultPageTemplateProps = {
   heading: string;

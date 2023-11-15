@@ -1,11 +1,10 @@
 import { QueryClient, dehydrate } from '@tanstack/react-query';
-
-import type { GetServerSidePropsContext } from 'next';
 import type { AxiosResponse } from 'axios';
-
-import { fetcher } from '~/lib/axios';
+import type { GetServerSidePropsContext } from 'next';
 
 import { user } from '~/constants/queryKeys';
+
+import { fetcher } from '~/lib/axios';
 
 import type { User } from '~/schemas/api/auth';
 

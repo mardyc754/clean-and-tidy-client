@@ -1,23 +1,22 @@
-import toast from 'react-hot-toast';
-import { useQueryClient, useMutation } from '@tanstack/react-query';
-import { useForm } from 'react-hook-form';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { omit } from 'lodash';
 import type { FormEvent } from 'react';
+import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+
+import { user } from '~/constants/queryKeys';
 
 import { register } from '~/api/auth';
 import type { ResponseError } from '~/api/errors/ResponseError';
 
-import { user } from '~/constants/queryKeys';
-
 import type {
-  RegistrationSuccessData,
-  RegistrationErrorData
+  RegistrationErrorData,
+  RegistrationSuccessData
 } from '~/schemas/api/auth';
 import {
-  registrationDataResolver,
-  type RegistrationData
+  type RegistrationData,
+  registrationDataResolver
 } from '~/schemas/forms/auth';
-
-import { omit } from 'lodash';
 
 interface useRegisterProps {
   redirectOnSuccessHandler?: () => Promise<void>;

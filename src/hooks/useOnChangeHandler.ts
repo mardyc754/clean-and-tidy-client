@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useWatch, type FieldValues, type Path } from 'react-hook-form';
+import { type FieldValues, type Path, useWatch } from 'react-hook-form';
 
 export const useOnChangeHandler = <
   T,

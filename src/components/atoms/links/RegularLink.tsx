@@ -1,4 +1,5 @@
 import Link from 'next/link';
+
 type RegularLinkProps = {
   href: string;
   children: string;

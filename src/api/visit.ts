@@ -1,11 +1,9 @@
 import type { ZodType } from 'zod';
 
-import { visitSchema, type Visit } from '~/schemas/api/reservation';
-
 import { basicError } from '~/schemas/api/common';
+import { type Visit, visitSchema } from '~/schemas/api/reservation';
 
 import { handleFetchingData } from './handleFetchingData';
-
 import type { VisitQueryOptions } from './types';
 
 export const getVisitById = async (id: number, options?: VisitQueryOptions) => {

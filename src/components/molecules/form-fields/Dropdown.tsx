@@ -1,8 +1,8 @@
-import clsx from 'clsx';
-import { Fragment, type Dispatch, type SetStateAction } from 'react';
-import { Listbox, Transition } from '@headlessui/react';
+import { faCheck, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { Listbox, Transition } from '@headlessui/react';
+import clsx from 'clsx';
+import { type Dispatch, Fragment, type SetStateAction } from 'react';
 
 type DropdownOption = { id: number; name: string };
 

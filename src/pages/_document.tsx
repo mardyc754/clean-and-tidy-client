@@ -1,4 +1,5 @@
-import { Html, Head, Main, NextScript } from 'next/document';
+import { Head, Html, Main, NextScript } from 'next/document';
+
 import { outfitSemiBold, robotoBold } from '~/settings/fontSetting';
 
 export default function Document() {

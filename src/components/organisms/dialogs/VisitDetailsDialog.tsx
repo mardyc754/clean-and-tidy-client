@@ -1,11 +1,16 @@
-import DialogBase from './DialogBase';
-import type { Visit } from '~/schemas/api/reservation';
-import { Button } from '~/components/atoms/buttons';
-import { ExtendedVisitDetailsList } from '../lists';
-import { visit } from '~/constants/queryKeys';
-import { getVisitById } from '~/api/visit';
 import { useQuery } from '@tanstack/react-query';
+
+import { visit } from '~/constants/queryKeys';
+
+import { getVisitById } from '~/api/visit';
+
+import type { Visit } from '~/schemas/api/reservation';
+
+import { Button } from '~/components/atoms/buttons';
 import { Spinner } from '~/components/molecules/status-indicators';
+
+import { ExtendedVisitDetailsList } from '../lists';
+import DialogBase from './DialogBase';
 
 type VisitDetailsDialogProps = {
   isOpen: boolean;

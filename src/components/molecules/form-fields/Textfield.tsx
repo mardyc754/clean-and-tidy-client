@@ -1,6 +1,6 @@
 import clsx from 'clsx';
-import { useFormContext } from 'react-hook-form';
 import type { InputHTMLAttributes } from 'react';
+import { useFormContext } from 'react-hook-form';
 import type { SetRequired } from 'type-fest';
 
 import { ErrorLabel, Input, Label } from '~/components/atoms/forms';

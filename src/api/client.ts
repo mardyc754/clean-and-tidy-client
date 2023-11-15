@@ -2,8 +2,8 @@ import type { ZodType } from 'zod';
 
 import { basicError } from '~/schemas/api/common';
 import {
-  reservationListSchema,
-  type Reservation
+  type Reservation,
+  reservationListSchema
 } from '~/schemas/api/reservation';
 
 import { handleFetchingData } from './handleFetchingData';

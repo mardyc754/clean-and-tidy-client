@@ -1,9 +1,10 @@
+import { AxiosError, type AxiosRequestConfig, type AxiosResponse } from 'axios';
 import { ZodError, type ZodType } from 'zod';
 
-import { AxiosError, type AxiosResponse, type AxiosRequestConfig } from 'axios';
-
 import { fetcher } from '~/lib/axios';
+
 import type { BackendBasicErrorData } from '~/schemas/api/common';
+
 import { ResponseError } from './errors/ResponseError';
 
 type ResponseRecord = Partial<Record<string, unknown>> & {

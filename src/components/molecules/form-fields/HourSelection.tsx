@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { useEffect, useMemo } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
-import { HourTile, ErrorLabel } from '~/components/atoms/forms';
+import { ErrorLabel, HourTile } from '~/components/atoms/forms';
 
 import { dateWithHour, extractHourFromDate } from '~/utils/dateUtils';
 

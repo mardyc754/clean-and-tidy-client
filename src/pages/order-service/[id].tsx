@@ -1,18 +1,17 @@
-import { useMemo } from 'react';
-import type { InferGetStaticPropsType, GetStaticProps } from 'next';
+import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { type NextRouter, withRouter } from 'next/router';
+import { useMemo } from 'react';
 
 import {
   configureDetailsIndicatorData,
   contactDetailsIndicatorData,
   summaryIndicatorData
 } from '~/constants/orderServiceForm';
+import { EMPTY_DATA_PLACEHOLDER } from '~/constants/primitives';
 
 import { getAllServices, getServiceById } from '~/api/services';
 
 import type { Service } from '~/schemas/api/services';
-
-import { EMPTY_DATA_PLACEHOLDER } from '~/constants/primitives';
 
 import {
   CleaningDetailsForm,

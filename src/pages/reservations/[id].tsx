@@ -1,14 +1,14 @@
-import type { InferGetServerSidePropsType, GetStaticProps } from 'next';
+import type { GetStaticProps, InferGetServerSidePropsType } from 'next';
+
+import { getAllReservations, getReservationByName } from '~/api/reservation';
 
 import type { Reservation } from '~/schemas/api/reservation';
 
 import { useAuth } from '~/hooks/auth/useAuth';
 
+import { Heading1 } from '~/components/atoms/typography/headings';
 import { ReservationDetails } from '~/components/organisms/data-display';
 import { PageWrapper } from '~/components/template';
-import { Heading1 } from '~/components/atoms/typography/headings';
-
-import { getAllReservations, getReservationByName } from '~/api/reservation';
 
 export default function ReservationPage({
   data

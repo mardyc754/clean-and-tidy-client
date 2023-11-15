@@ -1,4 +1,5 @@
 import type { StepIndicator } from '~/types/forms';
+
 import { FormStepIndicator } from '../atoms/layout';
 
 type ThreeStepIndicatorProps = {

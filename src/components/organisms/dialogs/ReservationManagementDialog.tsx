@@ -1,8 +1,11 @@
-import type { SingleVisitData } from '~/types/user';
-import DialogBase from './DialogBase';
-import { LabeledTypography } from '~/components/atoms/typography/labeled-text';
-import { extractHourStringFromDate, getDateAfter } from '~/utils/dateUtils';
 import { Button, NavigationButton } from '~/components/atoms/buttons';
+import { LabeledTypography } from '~/components/atoms/typography/labeled-text';
+
+import { extractHourStringFromDate, getDateAfter } from '~/utils/dateUtils';
+
+import type { SingleVisitData } from '~/types/user';
+
+import DialogBase from './DialogBase';
 
 type ReservationManagementDialogProps = {
   isOpen: boolean;

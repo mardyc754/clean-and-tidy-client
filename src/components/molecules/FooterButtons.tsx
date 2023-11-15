@@ -1,5 +1,6 @@
-import { NavbarButton } from '~/components/atoms/buttons';
 import { useAuth } from '~/hooks/auth/useAuth';
+
+import { NavbarButton } from '~/components/atoms/buttons';
 
 const FooterButtons = () => {
   const { currentUser } = useAuth();

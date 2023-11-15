@@ -1,14 +1,15 @@
-import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 import type { DehydratedState } from '@tanstack/react-query';
-
-import type { Service } from '~/schemas/api/services';
-
-import { getAllServices } from '~/api/services';
+import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
 import { fetchUserData } from '~/server/prefetchUserData';
 
+import { getAllServices } from '~/api/services';
+
+import type { Service } from '~/schemas/api/services';
+
 import { HeroSection } from '~/components/organisms/layout';
 import { PageWrapper } from '~/components/template';
+
 import { isAuthenticated, isEmployeeUser } from '~/utils/userUtils';
 
 const Home = ({

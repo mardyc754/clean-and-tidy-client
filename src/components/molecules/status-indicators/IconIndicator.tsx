@@ -1,9 +1,9 @@
-import clsx from 'clsx';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faCircleXmark,
-  faCircleCheck
+  faCircleCheck,
+  faCircleXmark
 } from '@fortawesome/free-regular-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import clsx from 'clsx';
 
 const iconIndicatorVariantData = {
   success: { color: 'text-green-500', icon: faCircleCheck },

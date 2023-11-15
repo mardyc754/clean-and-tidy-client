@@ -2,14 +2,15 @@ import { useMemo } from 'react';
 
 import type { Visit } from '~/schemas/api/reservation';
 
+import { Disclosure } from '~/components/organisms/disclosures';
+
 import {
   displayDatesAsTimespan,
   extractDateStringFromDate
 } from '~/utils/dateUtils';
 
-import { Disclosure } from '~/components/organisms/disclosures';
-import { EmployeeList, VisitDetailsList } from '../lists';
 import { VisitActions } from '../button-fields';
+import { EmployeeList, VisitDetailsList } from '../lists';
 
 interface ReservationDisclosureProps {
   data: Visit;

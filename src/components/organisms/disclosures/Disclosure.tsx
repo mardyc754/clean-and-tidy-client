@@ -1,10 +1,10 @@
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   Disclosure as HDisclosure,
   DisclosureProps as HDisclosureProps,
   Transition
 } from '@headlessui/react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
 interface DisclosureProps {
   defaultOpen?: boolean;

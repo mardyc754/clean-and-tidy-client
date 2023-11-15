@@ -1,13 +1,13 @@
 import type { ZodType } from 'zod';
 
-import {
-  primaryServices,
-  services,
-  service,
-  type PrimaryService,
-  type Service
-} from '~/schemas/api/services';
 import { basicError } from '~/schemas/api/common';
+import {
+  type PrimaryService,
+  type Service,
+  primaryServices,
+  service,
+  services
+} from '~/schemas/api/services';
 
 import { handleFetchingData } from './handleFetchingData';
 import type { AllServicesQueryOptions, ServiceQueryOptions } from './types';

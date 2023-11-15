@@ -1,12 +1,13 @@
+import { useSummaryData } from '~/hooks/useSummaryData';
+
 import { Heading1 } from '~/components/atoms/typography/headings';
 import { MultiStepFormIndicator } from '~/components/molecules';
-import { PageWrapper } from '~/components/template';
 import { SummarySection } from '~/components/organisms/layout';
+import { PageWrapper } from '~/components/template';
 
 import type { StepIndicator } from '~/types/forms';
 
 import type { PageWrapperProps } from './PageWrapper';
-import { useSummaryData } from '~/hooks/useSummaryData';
 
 type OrderCleaningFormPageProps = {
   stepIndicatorData: StepIndicator[];

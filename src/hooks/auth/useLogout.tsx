@@ -1,6 +1,6 @@
-import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
+import toast from 'react-hot-toast';
 
 import { user } from '~/constants/queryKeys';
 

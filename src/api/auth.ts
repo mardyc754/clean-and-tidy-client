@@ -1,14 +1,13 @@
 import {
-  registrationSuccess,
+  loginError,
+  loginSuccess,
+  logoutSuccess,
   registrationError,
-  loginSuccess as loginSuccess,
-  loginError as loginError,
-  userSchema,
-  logoutSuccess
+  registrationSuccess,
+  userSchema
 } from '~/schemas/api/auth';
-
-import type { LoginData, RegistrationData } from '~/schemas/forms/auth';
 import { basicError } from '~/schemas/api/common';
+import type { LoginData, RegistrationData } from '~/schemas/forms/auth';
 
 import { handleFetchingData } from './handleFetchingData';
 

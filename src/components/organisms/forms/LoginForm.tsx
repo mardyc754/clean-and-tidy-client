@@ -2,9 +2,9 @@ import { FormProvider } from 'react-hook-form';
 
 import { useLogin } from '~/hooks/auth/useLogin';
 
-import { Textfield } from '~/components/molecules/form-fields';
 import { SubmitButton } from '~/components/atoms/buttons';
 import { RegularLink } from '~/components/atoms/links';
+import { Textfield } from '~/components/molecules/form-fields';
 
 interface LoginFormProps {
   redirectOnSuccessHandler?: () => Promise<void> | VoidFunction;

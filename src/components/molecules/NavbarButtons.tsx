@@ -1,6 +1,6 @@
 import { useAuth } from '~/hooks/auth/useAuth';
 
-import { NavbarButton, Button } from '~/components/atoms/buttons';
+import { Button, NavbarButton } from '~/components/atoms/buttons';
 
 import { UserOptionsButton } from './buttons';
 

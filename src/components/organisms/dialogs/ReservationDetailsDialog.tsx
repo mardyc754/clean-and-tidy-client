@@ -1,13 +1,19 @@
-import DialogBase from './DialogBase';
-import { Button } from '~/components/atoms/buttons';
-import { ReservationDetails } from '../data-display';
-import type { Reservation } from '~/schemas/api/reservation';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { confirmReservation, getReservationByName } from '~/api/reservation';
-import { reservation } from '~/constants/queryKeys';
-import { Spinner } from '~/components/molecules/status-indicators';
-import { useAuth } from '~/hooks/auth/useAuth';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
+
+import { reservation } from '~/constants/queryKeys';
+
+import { confirmReservation, getReservationByName } from '~/api/reservation';
+
+import type { Reservation } from '~/schemas/api/reservation';
+
+import { useAuth } from '~/hooks/auth/useAuth';
+
+import { Button } from '~/components/atoms/buttons';
+import { Spinner } from '~/components/molecules/status-indicators';
+
+import { ReservationDetails } from '../data-display';
+import DialogBase from './DialogBase';
 
 type ReservationDetailsDialogProps = {
   isOpen: boolean;

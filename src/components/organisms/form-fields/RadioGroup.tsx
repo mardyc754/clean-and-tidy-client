@@ -1,9 +1,10 @@
+import { RadioGroup as HeadlessRadioGroup } from '@headlessui/react';
 import clsx from 'clsx';
 import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { RadioGroup as HeadlessRadioGroup } from '@headlessui/react';
 
 import { ErrorLabel, RadioField } from '~/components/atoms/forms';
+
 import type { RadioFieldOption } from '~/types/forms';
 
 type RadioGroupProps<T extends RadioFieldOption> = {

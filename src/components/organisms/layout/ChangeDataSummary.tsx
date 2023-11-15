@@ -1,5 +1,6 @@
-import { LabeledTypography } from '~/components/atoms/typography/labeled-text';
 import { Heading2 } from '~/components/atoms/typography/headings';
+import { LabeledTypography } from '~/components/atoms/typography/labeled-text';
+
 import type { SummaryData } from '~/types/forms';
 
 type ChangeDataSummaryProps = {

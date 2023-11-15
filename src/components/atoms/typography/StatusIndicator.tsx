@@ -1,8 +1,10 @@
 import clsx from 'clsx';
+
 import {
   employeeReservationStatusMap,
   reservationStatusMap
 } from '~/constants/mappings';
+
 import type { Status } from '~/types/enums';
 
 type StatusIndicatorProps = {

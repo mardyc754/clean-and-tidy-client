@@ -1,9 +1,10 @@
 import { FormProvider } from 'react-hook-form';
 
-import { Textfield } from '~/components/molecules/form-fields';
+import { useRegister } from '~/hooks/auth/useRegister';
+
 import { SubmitButton } from '~/components/atoms/buttons';
 import { RegularLink } from '~/components/atoms/links';
-import { useRegister } from '~/hooks/auth/useRegister';
+import { Textfield } from '~/components/molecules/form-fields';
 
 interface RegistrationFormProps {
   redirectOnSuccessHandler?: () => Promise<void>;

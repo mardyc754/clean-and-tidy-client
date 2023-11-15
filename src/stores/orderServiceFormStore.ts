@@ -1,23 +1,24 @@
+import type { ValueOf } from 'type-fest';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import type { ValueOf } from 'type-fest';
 
+import { DETERGENT_COST } from '~/constants/primitives';
+
+import type {
+  BasicServiceData,
+  OrderedService,
+  Service
+} from '~/schemas/api/services';
 import type {
   Address,
   ContactDetails,
   OrderServiceInputData
 } from '~/schemas/forms/orderService';
-import type {
-  BasicServiceData,
-  Service,
-  OrderedService
-} from '~/schemas/api/services';
 
-import { DETERGENT_COST } from '~/constants/primitives';
+import { advanceByMinutes, mergeDayDateAndHourDate } from '~/utils/dateUtils';
 
 import type { CleaningFrequency } from '~/types/enums';
 import type { CleaningFrequencyData, ValidDate } from '~/types/forms';
-import { advanceByMinutes, mergeDayDateAndHourDate } from '~/utils/dateUtils';
 
 interface OrderServiceFormStoreState {
   currentStep: number;

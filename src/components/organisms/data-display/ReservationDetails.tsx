@@ -5,8 +5,8 @@ import type { Reservation } from '~/schemas/api/reservation';
 import { Heading3 } from '~/components/atoms/typography/headings';
 import { VisitDisclosure } from '~/components/organisms/disclosures';
 
-import { ReservationGeneralDetailsList, ServiceList } from '../lists';
 import { ReservationActions } from '../button-fields';
+import { ReservationGeneralDetailsList, ServiceList } from '../lists';
 
 interface ReservationDetailsProps {
   data: Reservation;

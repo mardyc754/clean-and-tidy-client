@@ -1,7 +1,9 @@
 import Head from 'next/head';
-import { Footer, Navbar } from '../organisms/layout';
+
 import { useAuth } from '~/hooks/auth/useAuth';
+
 import { PageLoader } from '../molecules/status-indicators';
+import { Footer, Navbar } from '../organisms/layout';
 
 export type PageWrapperProps = {
   title: string;

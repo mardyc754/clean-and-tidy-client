@@ -1,6 +1,6 @@
-import { createReservationTitle } from '~/utils/reservationUtils';
-
 import type { Reservation } from '~/schemas/api/reservation';
+
+import { createReservationTitle } from '~/utils/reservationUtils';
 
 import SectionWithButton from './SectionWithButton';
 
