@@ -2,7 +2,7 @@ import { useShallow } from 'zustand/react/shallow';
 
 import { EMPTY_DATA_PLACEHOLDER } from '~/constants/primitives';
 
-import { useOrderServiceFormStore } from '~/stores/orderServiceFormStore';
+import { useOrderServiceFormStore } from '~/stores/orderService/orderServiceFormStore';
 
 import {
   displayDayDateAndHourDate,

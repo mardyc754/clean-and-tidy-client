@@ -6,7 +6,7 @@ import {
   contactDetailsResolver
 } from '~/schemas/forms/orderService';
 
-import { useOrderServiceFormStore } from '~/stores/orderServiceFormStore';
+import { useOrderServiceFormStore } from '~/stores/orderService/orderServiceFormStore';
 
 import { TextArea, Textfield } from '~/components/molecules/form-fields';
 

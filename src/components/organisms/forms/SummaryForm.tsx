@@ -9,7 +9,7 @@ import { reservation } from '~/constants/queryKeys';
 
 import { createReservation } from '~/api/reservation';
 
-import { useOrderServiceFormStore } from '~/stores/orderServiceFormStore';
+import { useOrderServiceFormStore } from '~/stores/orderService/orderServiceFormStore';
 
 import { useSummaryData } from '~/hooks/useSummaryData';
 
