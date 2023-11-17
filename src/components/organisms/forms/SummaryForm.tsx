@@ -26,8 +26,6 @@ const SummaryForm = ({ serviceName }: SummaryFormProps) => {
   const queryClient = useQueryClient();
 
   const {
-    decreaseStep,
-    currentStep,
     // recurring reservation creation data
     frequency,
     fullStartDate,
@@ -35,7 +33,8 @@ const SummaryForm = ({ serviceName }: SummaryFormProps) => {
     includeDetergents,
     address,
     clientData,
-    services
+    services,
+    resetOrderServiceForm
   } = useOrderServiceFormStore(
     useShallow((state) => ({
       decreaseStep: state.decreaseStep,
@@ -47,7 +46,8 @@ const SummaryForm = ({ serviceName }: SummaryFormProps) => {
       includeDetergents: state.includeDetergents,
       address: state.addressData,
       clientData: state.clientData,
-      services: state.orderedServices
+      services: state.orderedServices,
+      resetOrderServiceForm: state.resetOrderServiceForm
     }))
   );
 
@@ -70,6 +70,9 @@ const SummaryForm = ({ serviceName }: SummaryFormProps) => {
         },
         '/order-service/success'
       );
+      resetOrderServiceForm();
+      useOrderServiceFormStore.persist.clearStorage();
+
       toast.dismiss();
     },
     onError: async (error) => {
@@ -93,8 +96,12 @@ const SummaryForm = ({ serviceName }: SummaryFormProps) => {
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (!frequency || !fullStartDate() || !endDate()) {
+      return;
+    }
+
     mutation.mutate({
-      frequency: frequency!,
+      frequency: frequency,
       visitData: {
         startDate: (fullStartDate() as Date).toISOString(),
         endDate: (endDate() as Date).toISOString(),
@@ -105,10 +112,12 @@ const SummaryForm = ({ serviceName }: SummaryFormProps) => {
       bookerEmail: clientData.email,
       address,
       contactDetails: clientData,
-      services: services.map((service) => ({
-        serviceId: service.id,
-        ...omit(service, ['name', 'unit', 'id'])
-      }))
+      services: services
+        .filter((service) => !!service)
+        .map((service) => ({
+          serviceId: service!.id,
+          ...omit(service, ['name', 'unit', 'id'])
+        }))
     });
   };
 

@@ -1,7 +1,11 @@
 import type { ValueOf } from 'type-fest';
 import { type StateCreator } from 'zustand';
 
-import type { Address, ContactDetails } from '~/schemas/forms/orderService';
+import type {
+  Address,
+  ContactDetails,
+  ContactDetailsFormData
+} from '~/schemas/forms/orderService';
 
 export interface ContactDetailsSlice {
   clientData: ContactDetails;
@@ -14,12 +18,10 @@ export interface ContactDetailsSlice {
     fieldName: keyof Address,
     value: ValueOf<typeof fieldName>
   ) => void;
+  contactDetailsFormData: () => ContactDetailsFormData;
 }
 
-export const createContactDetailsSlice: StateCreator<ContactDetailsSlice> = (
-  set,
-  get
-) => ({
+export const initialContactDetailsState = {
   clientData: {
     firstName: '',
     lastName: '',
@@ -33,7 +35,14 @@ export const createContactDetailsSlice: StateCreator<ContactDetailsSlice> = (
     // door: '',
     postCode: '',
     city: ''
-  },
+  }
+};
+
+export const createContactDetailsSlice: StateCreator<ContactDetailsSlice> = (
+  set,
+  get
+) => ({
+  ...initialContactDetailsState,
   onChangeClientData: (fieldName, value) => {
     set(() => ({
       clientData: { ...get().clientData, [fieldName]: value }
@@ -43,5 +52,9 @@ export const createContactDetailsSlice: StateCreator<ContactDetailsSlice> = (
     set(() => ({
       addressData: { ...get().addressData, [fieldName]: value }
     }));
-  }
+  },
+  contactDetailsFormData: () => ({
+    ...get().clientData,
+    ...get().addressData
+  })
 });

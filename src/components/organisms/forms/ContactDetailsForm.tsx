@@ -13,8 +13,21 @@ import { TextArea, Textfield } from '~/components/molecules/form-fields';
 import { StepButtons } from '../form-fields';
 
 const ContactDetailsForm = () => {
+  const {
+    onChangeClientData,
+    onChangeAddressData,
+    currentStep,
+    contactDetailsFormData
+  } = useOrderServiceFormStore((state) => ({
+    onChangeAddressData: state.onChangeAddressData,
+    onChangeClientData: state.onChangeClientData,
+    currentStep: state.currentStep,
+    contactDetailsFormData: state.contactDetailsFormData
+  }));
+
   const methods = useForm<ContactDetailsFormData>({
-    resolver: contactDetailsResolver
+    resolver: contactDetailsResolver,
+    defaultValues: contactDetailsFormData()
   });
 
   const {
@@ -22,21 +35,6 @@ const ContactDetailsForm = () => {
     formState: { errors }
   } = methods;
 
-  const {
-    onChangeClientData,
-    onChangeAddressData,
-    currentStep,
-    decreaseStep,
-    increaseStep
-  } = useOrderServiceFormStore((state) => ({
-    onChangeAddressData: state.onChangeAddressData,
-    onChangeClientData: state.onChangeClientData,
-    currentStep: state.currentStep,
-    decreaseStep: state.decreaseStep,
-    increaseStep: state.increaseStep
-  }));
-
-  // console.log(methods.watch());
   const router = useRouter();
 
   const onDecreaseStep = async () => {
@@ -158,7 +156,6 @@ const ContactDetailsForm = () => {
             name="extraInfo"
           />
         </div>
-        {/* <StepButtons currentStep={currentStep} onDecreaseStep={decreaseStep} /> */}
         <StepButtons
           currentStep={currentStep}
           onDecreaseStep={onDecreaseStep}

@@ -11,29 +11,32 @@ import { NumericInput } from '~/components/atoms/forms';
 type ExtraDataFieldProps = {
   data: ServiceWithUnit;
   name: string;
+  defaultValue?: number;
   onChangeNumberOfUnits: (value: number) => void;
 };
 
 const ExtraDataField = ({
   data,
   name,
+  defaultValue,
   onChangeNumberOfUnits
 }: ExtraDataFieldProps) => {
   const { name: serviceName, unit } = data;
   const { name: unitName, price } = unit;
 
-  const [selected, setSelected] = useState(false);
+  const [selected, setSelected] = useState(!!defaultValue);
+  // const [selected, setSelected] = useState(false);
 
-  const { setValue, unregister } = useFormContext();
+  const { setValue } = useFormContext();
   const currentNumberOfUnits = useWatch({ name }) as number;
   // enable numeric field on button click
   // or disable it when number of units becomes 0
   useEffect(() => {
     if (selected) {
-      setValue(name, 1);
-      onChangeNumberOfUnits(1);
+      setValue(name, defaultValue ? defaultValue : 1); // set the value to 1 if increase from 0 or undefined
+      onChangeNumberOfUnits(defaultValue ? defaultValue : 1);
     } else {
-      unregister(name);
+      setValue(name, 0);
     }
   }, [selected]);
 
@@ -57,7 +60,8 @@ const ExtraDataField = ({
       </div>
       {selected ? (
         <NumericInput
-          initialValue={1}
+          initialValue={defaultValue}
+          // initialValue={1}
           name={name}
           min={0}
           max={50}

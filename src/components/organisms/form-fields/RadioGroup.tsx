@@ -12,6 +12,7 @@ type RadioGroupProps<T extends RadioFieldOption> = {
   label: string;
   optionList: T[];
   errorLabel?: string;
+  defaultValue: T['value'] | null;
   onChange?: (value: T['value'], availableOptions: T[]) => void;
 };
 
@@ -20,6 +21,7 @@ const RadioGroup = <T extends RadioFieldOption>({
   label,
   optionList,
   errorLabel,
+  defaultValue,
   onChange
 }: RadioGroupProps<T>) => {
   const { register, setValue } = useFormContext();
@@ -35,7 +37,7 @@ const RadioGroup = <T extends RadioFieldOption>({
 
   return (
     <div className={clsx('py-4', !errorLabel && 'mb-4')}>
-      <HeadlessRadioGroup onChange={handleChange}>
+      <HeadlessRadioGroup defaultValue={defaultValue} onChange={handleChange}>
         <HeadlessRadioGroup.Label className="py-1">
           {label}
         </HeadlessRadioGroup.Label>

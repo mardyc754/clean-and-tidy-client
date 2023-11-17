@@ -1,8 +1,8 @@
 import clsx from 'clsx';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 // import 'react-calendar/dist/Calendar.css'; // for testing purposes only
 import { type CalendarProps as ReactCalendarProps } from 'react-calendar';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import { MediumTypography } from '~/components/atoms/typography/regular-text';
 import { Calendar } from '~/components/molecules/calendar';
@@ -32,13 +32,19 @@ const CalendarWithHours = ({
   hourErrorLabel,
   ...props
 }: CalendarWithLabelProps) => {
-  const { setValue, watch } = useFormContext();
+  const { setValue } = useFormContext();
+  const [isMounted, setIsMounted] = useState(false);
 
-  const currentDate = watch(calendarInputName) as ValidDate;
+  const currentDate = useWatch({ name: calendarInputName }) as ValidDate;
 
   useEffect(() => {
-    setValue(hourInputName, null);
-    onChangeHour?.(null);
+    // do not reset hour value on first render
+    if (isMounted) {
+      setValue(hourInputName, null);
+      onChangeHour?.(null);
+    } else {
+      setIsMounted(true);
+    }
   }, [currentDate]);
 
   return (
@@ -54,6 +60,7 @@ const CalendarWithHours = ({
           name={calendarInputName}
           onChange={onChangeDate}
           errorLabel={dateErrorLabel}
+          defaultValue={currentDate}
           {...props}
         />
         <HourSelection

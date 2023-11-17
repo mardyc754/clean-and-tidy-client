@@ -14,8 +14,10 @@ import type { AppType } from 'next/app';
 import { useState } from 'react';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { Toaster } from 'react-hot-toast';
-import '~/styles/Calendar.css';
+
 import '~/styles/globals.css';
+
+import '~/styles/Calendar.css';
 
 config.autoAddCss = false;
 library.add(fas);

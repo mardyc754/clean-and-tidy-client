@@ -44,6 +44,7 @@ const Calendar = ({
         // tileDisabled={({ date }) => date.getDay() === 0 || date.getDay() === 6}
         onChange={handleChange}
         value={value}
+        // defaultValue={value}
         // temporary in order to quiet hydrate errors
         calendarType="iso8601"
         locale="en-US"

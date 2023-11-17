@@ -1,11 +1,13 @@
+import { omit } from 'lodash';
 import { type StateCreator } from 'zustand';
 
+import { initialCleaningDetailsFormData } from '~/constants/orderServiceForm';
 import { DETERGENT_COST } from '~/constants/primitives';
 
-import type {
-  BasicServiceData,
-  OrderedService,
-  Service
+import {
+  type BasicServiceData,
+  type OrderedService,
+  type Service
 } from '~/schemas/api/services';
 import type { OrderServiceInputData } from '~/schemas/forms/orderService';
 
@@ -19,46 +21,56 @@ import {
   createOrUpdateOrderedService
 } from './utils';
 
+type StoredDate = ValidDate | string;
+
 export interface CleaningDetailsSlice {
   totalCost: number;
   durationInMinutes: number;
   includeDetergents: boolean;
-  startDate: ValidDate;
-  hourDate: ValidDate;
-  orderedServices: OrderedService[];
+  // dates coming from the local storage are stored as ISO strings
+  // in order not to mix the Date and string types together,
+  // we convert the ISO strings to Date objects
+  startDate: StoredDate;
+  hourDate: StoredDate;
+  orderedServices: (OrderedService | undefined)[];
   cleaningFrequencyDisplayData: CleaningFrequencyData | null;
   onChangeServiceNumberOfUnits: (
     numberOfUnits: number,
     isMainService: boolean,
-    serviceData: BasicServiceData
+    serviceData: BasicServiceData,
+    positionOnList: number
   ) => void;
   onChangeIncludeDetergents: (includeDetergents: boolean) => void;
   onChangeStartDate: (startDate: ValidDate) => void;
   onChangeHourDate: (hourDate: ValidDate) => void;
-  fullStartDate: () => ValidDate;
+  fullStartDate: () => StoredDate;
   setData: (formData: OrderServiceInputData, serviceData: Service) => void;
   getServiceById: (id: BasicServiceData['id']) => OrderedService | undefined;
   getServiceNumberOfUnits: (id: BasicServiceData['id']) => number;
-  removeService: (id: BasicServiceData['id']) => OrderedService[];
+  // removeService: (id: BasicServiceData['id']) => OrderedService[];
+  removeService: (id: BasicServiceData['id']) => void;
   onChangeCleaningFrequency: (
     cleaningFrequency: CleaningFrequency,
     availableFrequencies: CleaningFrequencyData[]
   ) => void;
   endDate: () => ValidDate;
+  cleaningDetailsFormData: () => OrderServiceInputData;
+  resetCleaningDetailsData: () => void;
 }
+
+export const initialCleaningDetailsState = {
+  ...omit(initialCleaningDetailsFormData, ['extraServices']),
+  totalCost: 0,
+  durationInMinutes: 0,
+  orderedServices: [],
+  cleaningFrequencyDisplayData: null
+};
 
 export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
   set,
   get
 ) => ({
-  totalCost: 0,
-  durationInMinutes: 0,
-  orderedServices: [],
-  orderServiceFormData: null,
-  cleaningFrequencyDisplayData: null,
-  startDate: null,
-  hourDate: null,
-  includeDetergents: false,
+  ...initialCleaningDetailsState,
   setData: (formData, serviceData) =>
     set((state) => {
       const { id, name, unit, cleaningFrequencies } = serviceData;
@@ -116,7 +128,12 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
         : state.totalCost - DETERGENT_COST
     }));
   },
-  onChangeServiceNumberOfUnits: (numberOfUnits, isMainService, serviceData) => {
+  onChangeServiceNumberOfUnits: (
+    numberOfUnits,
+    isMainService,
+    serviceData,
+    positionOnList
+  ) => {
     set((state) => {
       const newService = createOrUpdateOrderedService(
         serviceData,
@@ -125,11 +142,11 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
         numberOfUnits
       );
 
-      const newServices = [...state.removeService(serviceData.id)];
+      // const newServices = [...state.removeService(serviceData.id)];
+      const newServices = [...state.orderedServices];
+      newServices[positionOnList] = newService;
 
-      if (newService.numberOfUnits > 0) {
-        newServices.push(newService);
-      }
+      // newServices.push(newService);
 
       return {
         orderedServices: newServices,
@@ -137,11 +154,26 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
       };
     });
   },
-  removeService: (id) =>
-    get().orderedServices.filter((service) => id !== service.id),
+  // removeService: (id) =>
+  //   get().orderedServices.filter((service) =>  !!service && id !== service.id),
+  removeService: (id) => {
+    set((state) => {
+      const oldServiceIndex = state.orderedServices.findIndex(
+        (service) => service?.id === id
+      );
+
+      const newService = [...state.orderedServices];
+
+      newService[oldServiceIndex] = undefined;
+
+      return {
+        orderedServices: newService
+      };
+    });
+  },
   getServiceNumberOfUnits: (id) => get().getServiceById(id)?.numberOfUnits ?? 0,
   getServiceById: (id) =>
-    get().orderedServices.find((service) => id === service.id),
+    get().orderedServices.find((service) => id === service?.id),
   endDate: () => {
     const fullStartDate = get().fullStartDate();
 
@@ -166,8 +198,8 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
     }
 
     return mergeDayDateAndHourDate(
-      get().startDate as Date,
-      get().hourDate as Date
+      new Date(startDate as Date | string),
+      new Date(hourDate as Date | string)
     );
   },
   onChangeCleaningFrequency: (cleaningFrequency, availableFrequencies) => {
@@ -183,5 +215,33 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
   },
   onChangeHourDate: (hourDate) => {
     set(() => ({ hourDate }));
+  },
+  cleaningDetailsFormData: () => {
+    const {
+      orderedServices,
+      cleaningFrequencyDisplayData,
+      startDate,
+      hourDate,
+      includeDetergents
+    } = get();
+
+    return {
+      numberOfUnits:
+        orderedServices.find((service) => service?.isMainServiceForReservation)
+          ?.numberOfUnits ?? 0,
+      cleaningFrequency: cleaningFrequencyDisplayData?.value ?? null,
+      startDate: startDate ? new Date(startDate as Date | string) : null,
+      hourDate: hourDate ? new Date(hourDate as Date | string) : null,
+      includeDetergents,
+      extraServices:
+        orderedServices.map((service) =>
+          !service ? service : service.numberOfUnits
+        ) ?? []
+    };
+  },
+  resetCleaningDetailsData: () => {
+    set({
+      ...initialCleaningDetailsState
+    });
   }
 });

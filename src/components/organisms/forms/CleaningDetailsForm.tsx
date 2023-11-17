@@ -1,8 +1,9 @@
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form';
+import { useShallow } from 'zustand/react/shallow';
 
-import type { Service, ServiceWithUnit } from '~/schemas/api/services';
+import { type Service, type ServiceWithUnit } from '~/schemas/api/services';
 import {
   type OrderServiceInputData,
   cleaningDetailsResolver
@@ -31,30 +32,23 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
     onChangeCleaningFrequency,
     onChangeStartDate,
     onChangeHourDate,
-    currentStep,
-    increaseStep,
-    decreaseStep
-  } = useOrderServiceFormStore((state) => ({
-    setData: state.setData,
-    onChangeIncludeDetergents: state.onChangeIncludeDetergents,
-    onChangeServiceNumberOfUnits: state.onChangeServiceNumberOfUnits,
-    onChangeCleaningFrequency: state.onChangeCleaningFrequency,
-    onChangeStartDate: state.onChangeStartDate,
-    onChangeHourDate: state.onChangeHourDate,
-    currentStep: state.currentStep,
-    increaseStep: state.increaseStep,
-    decreaseStep: state.decreaseStep
-  }));
+    cleaningDetailsFormData,
+    currentStep
+  } = useOrderServiceFormStore(
+    useShallow((state) => ({
+      setData: state.setData,
+      onChangeIncludeDetergents: state.onChangeIncludeDetergents,
+      onChangeServiceNumberOfUnits: state.onChangeServiceNumberOfUnits,
+      onChangeCleaningFrequency: state.onChangeCleaningFrequency,
+      onChangeStartDate: state.onChangeStartDate,
+      onChangeHourDate: state.onChangeHourDate,
+      currentStep: state.currentStep,
+      cleaningDetailsFormData: state.cleaningDetailsFormData
+    }))
+  );
 
   const methods = useForm<OrderServiceInputData>({
-    defaultValues: {
-      numberOfUnits: 0,
-      cleaningFrequency: null,
-      includeDetergents: false,
-      startDate: null,
-      hourDate: null,
-      extraServices: []
-    },
+    defaultValues: cleaningDetailsFormData(),
     resolver: cleaningDetailsResolver
   });
 
@@ -74,11 +68,6 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
   ) as ServiceWithUnit[];
 
   const router = useRouter();
-  // console.log(data);
-  // const currentValues = useWatch<OrderServiceInputData>({
-  //   control: methods.control
-  // });
-  // console.log(currentValues);
 
   const onSubmit: SubmitHandler<OrderServiceInputData> = async () => {
     await router.push({
@@ -93,7 +82,6 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
 
   return (
     <FormProvider {...methods}>
-      {/* <form className="py-16" onSubmit={handleSubmit(increaseStep)}> */}
       <form className="py-16" onSubmit={handleSubmit(onSubmit)}>
         <NumericInput
           min={0}
@@ -103,13 +91,19 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
           wrapperClassName="items-center py-4"
           errorLabel={errors.numberOfUnits?.message}
           onChange={(value: number) =>
-            onChangeServiceNumberOfUnits(value, true, { id, name, unit })
+            onChangeServiceNumberOfUnits(
+              value,
+              true,
+              { id, name, unit },
+              secondaryServicesWithUnit.length
+            )
           }
         />
         {cleaningFrequencyData.length > 1 && (
           <RadioGroup
             name="cleaningFrequency"
             label="Cleaning frequency"
+            defaultValue={methods.watch('cleaningFrequency')}
             optionList={cleaningFrequencyData}
             onChange={onChangeCleaningFrequency}
             errorLabel={errors.cleaningFrequency?.message}
@@ -133,6 +127,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
         />
         {secondaryServicesWithUnit.length > 0 && (
           <ExtraDataMultiSelect
+            defaultValues={methods.watch('extraServices')}
             name="extraServices"
             className="py-4"
             data={secondaryServicesWithUnit}

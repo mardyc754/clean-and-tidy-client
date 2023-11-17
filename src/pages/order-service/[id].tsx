@@ -1,6 +1,6 @@
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { type NextRouter, withRouter } from 'next/router';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import {
   configureDetailsIndicatorData,
@@ -12,6 +12,8 @@ import { EMPTY_DATA_PLACEHOLDER } from '~/constants/primitives';
 import { getAllServices, getServiceById } from '~/api/services';
 
 import type { Service } from '~/schemas/api/services';
+
+import { useOrderServiceFormStore } from '~/stores/orderService/orderServiceFormStore';
 
 import {
   CleaningDetailsForm,
@@ -54,16 +56,18 @@ function OrderService({
   data,
   router
 }: InferGetStaticPropsType<typeof getStaticProps> & { router: NextRouter }) {
-  // InferGetServerSidePropsType<typeof getServerSideProps> & {
-  // router: NextRouter;
-  // }) {
+  const [serviceIdChecked, setServiceIdChecked] = useState(false);
 
-  // const { currentStep } = useOrderServiceFormStore((state) => ({
-  //   currentStep: state.currentStep
-  // }));
+  const { changeServiceId } = useOrderServiceFormStore((state) => ({
+    changeServiceId: state.changeServiceId
+  }));
 
-  // const router = useRouter();
-  // const query = router.query;
+  useEffect(() => {
+    if (data) {
+      changeServiceId(data.id);
+    }
+    setServiceIdChecked(true);
+  }, [data.id, changeServiceId]);
 
   const currentStep = useMemo(() => {
     const step = router.query.currentStep;
@@ -88,7 +92,7 @@ function OrderService({
       heading={currentStepData.heading}
       stepIndicatorData={currentStepData.stepIndidatorData}
     >
-      {currentStepData.stepComponent}
+      {serviceIdChecked && currentStepData.stepComponent}
       {/* <StepButtons
         cancelHref="/"
         currentStep={currentStep}

@@ -2,11 +2,13 @@ import type { BasicServiceData, OrderedService } from '~/schemas/api/services';
 
 export const createOrUpdateOrderedService = (
   service: BasicServiceData,
-  orderedServices: OrderedService[],
+  orderedServices: (OrderedService | undefined)[],
   isMainServiceForReservation: boolean,
   numberOfUnits: number
 ) => {
-  const orderedService = orderedServices.find(({ id }) => id === service.id);
+  const orderedService = orderedServices.find(
+    (orderedService) => orderedService?.id === service.id
+  );
   if (orderedService) {
     orderedService.numberOfUnits = numberOfUnits;
     return orderedService;
@@ -20,12 +22,15 @@ export const createOrUpdateOrderedService = (
 };
 
 export const calculateTotalCostAndDuration = (
-  orderedServices: OrderedService[]
+  orderedServices: (OrderedService | undefined)[]
 ) => {
   return orderedServices.reduce(
     (acc, service) => {
-      const price = service.unit?.price ?? 0;
-      const duration = service.unit?.duration ?? 0;
+      if (!service?.unit) {
+        return acc;
+      }
+      const price = service.unit.price;
+      const duration = service.unit.duration;
       return {
         totalCost: acc.totalCost + price * service.numberOfUnits,
         durationInMinutes:

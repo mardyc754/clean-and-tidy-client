@@ -21,6 +21,8 @@ const config = {
     '^~/components/(.*)$',
     '^~/utils/(.*)$',
     '^~/types/(.*)$',
+    '^~/styles/globals.css$',
+    '^~/styles/(.*)$',
     '^[./]'
   ],
   importOrderSeparation: true,

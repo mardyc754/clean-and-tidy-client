@@ -1,13 +1,15 @@
 import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
+import { devtools, persist } from 'zustand/middleware';
 
 import {
   type CleaningDetailsSlice,
-  createCleaningDetailsSlice
+  createCleaningDetailsSlice,
+  initialCleaningDetailsState
 } from './cleaningDetailsSlice';
 import {
   type ContactDetailsSlice,
-  createContactDetailsSlice
+  createContactDetailsSlice,
+  initialContactDetailsState
 } from './contactDetailsSlice';
 import {
   type ServiceNavigationSlice,
@@ -16,15 +18,26 @@ import {
 
 type OrderServiceFormStoreState = CleaningDetailsSlice &
   ContactDetailsSlice &
-  ServiceNavigationSlice;
+  ServiceNavigationSlice & {
+    resetOrderServiceForm: () => void;
+  };
 
 export const useOrderServiceFormStore = create<OrderServiceFormStoreState>()(
   devtools(
-    (...actions) => ({
-      ...createCleaningDetailsSlice(...actions),
-      ...createContactDetailsSlice(...actions),
-      ...createServiceNavigationSlice(...actions)
-    }),
+    persist(
+      (set, ...actions) => ({
+        ...createCleaningDetailsSlice(set, ...actions),
+        ...createContactDetailsSlice(set, ...actions),
+        ...createServiceNavigationSlice(set, ...actions),
+        resetOrderServiceForm: () => {
+          set({
+            ...initialCleaningDetailsState,
+            ...initialContactDetailsState
+          });
+        }
+      }),
+      { name: 'orderServiceFormStore' }
+    ),
     { name: 'orderServiceFormStore' }
   )
 );
