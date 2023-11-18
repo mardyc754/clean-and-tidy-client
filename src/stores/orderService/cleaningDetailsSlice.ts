@@ -23,7 +23,7 @@ import {
 
 type StoredDate = ValidDate | string;
 
-export interface CleaningDetailsSlice {
+interface CleaningDetailsSliceData {
   totalCost: number;
   durationInMinutes: number;
   includeDetergents: boolean;
@@ -34,6 +34,8 @@ export interface CleaningDetailsSlice {
   hourDate: StoredDate;
   orderedServices: (OrderedService | undefined)[];
   cleaningFrequencyDisplayData: CleaningFrequencyData | null;
+}
+export interface CleaningDetailsSlice extends CleaningDetailsSliceData {
   onChangeServiceNumberOfUnits: (
     numberOfUnits: number,
     isMainService: boolean,
@@ -54,7 +56,9 @@ export interface CleaningDetailsSlice {
     availableFrequencies: CleaningFrequencyData[]
   ) => void;
   endDate: () => ValidDate;
-  cleaningDetailsFormData: () => OrderServiceInputData;
+  getInitialCleaningDetailsFormData: (
+    overrides?: Partial<CleaningDetailsSliceData>
+  ) => OrderServiceInputData;
   resetCleaningDetailsData: () => void;
 }
 
@@ -142,11 +146,8 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
         numberOfUnits
       );
 
-      // const newServices = [...state.removeService(serviceData.id)];
       const newServices = [...state.orderedServices];
       newServices[positionOnList] = newService;
-
-      // newServices.push(newService);
 
       return {
         orderedServices: newServices,
@@ -154,8 +155,6 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
       };
     });
   },
-  // removeService: (id) =>
-  //   get().orderedServices.filter((service) =>  !!service && id !== service.id),
   removeService: (id) => {
     set((state) => {
       const oldServiceIndex = state.orderedServices.findIndex(
@@ -216,7 +215,7 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
   onChangeHourDate: (hourDate) => {
     set(() => ({ hourDate }));
   },
-  cleaningDetailsFormData: () => {
+  getInitialCleaningDetailsFormData: () => {
     const {
       orderedServices,
       cleaningFrequencyDisplayData,

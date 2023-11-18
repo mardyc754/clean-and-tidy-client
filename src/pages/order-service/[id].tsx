@@ -1,6 +1,6 @@
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { type NextRouter, withRouter } from 'next/router';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 
 import {
   configureDetailsIndicatorData,
@@ -58,16 +58,27 @@ function OrderService({
 }: InferGetStaticPropsType<typeof getStaticProps> & { router: NextRouter }) {
   const [serviceIdChecked, setServiceIdChecked] = useState(false);
 
-  const { changeServiceId } = useOrderServiceFormStore((state) => ({
-    changeServiceId: state.changeServiceId
-  }));
+  const { changeServiceId, onChangeCleaningFrequency } =
+    useOrderServiceFormStore((state) => ({
+      changeServiceId: state.changeServiceId,
+      onChangeCleaningFrequency: state.onChangeCleaningFrequency
+    }));
 
   useEffect(() => {
     if (data) {
       changeServiceId(data.id);
     }
     setServiceIdChecked(true);
-  }, [data.id, changeServiceId]);
+  }, [data.id, changeServiceId, data]);
+
+  useLayoutEffect(() => {
+    if (data.cleaningFrequencies?.length == 1) {
+      onChangeCleaningFrequency(
+        data.cleaningFrequencies[0]!.value,
+        data.cleaningFrequencies
+      );
+    }
+  }, [data.cleaningFrequencies, onChangeCleaningFrequency]);
 
   const currentStep = useMemo(() => {
     const step = router.query.currentStep;

@@ -32,7 +32,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
     onChangeCleaningFrequency,
     onChangeStartDate,
     onChangeHourDate,
-    cleaningDetailsFormData,
+    getInitialCleaningDetailsFormData,
     currentStep
   } = useOrderServiceFormStore(
     useShallow((state) => ({
@@ -43,12 +43,12 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
       onChangeStartDate: state.onChangeStartDate,
       onChangeHourDate: state.onChangeHourDate,
       currentStep: state.currentStep,
-      cleaningDetailsFormData: state.cleaningDetailsFormData
+      getInitialCleaningDetailsFormData: state.getInitialCleaningDetailsFormData
     }))
   );
 
   const methods = useForm<OrderServiceInputData>({
-    defaultValues: cleaningDetailsFormData(),
+    defaultValues: getInitialCleaningDetailsFormData(),
     resolver: cleaningDetailsResolver
   });
 
