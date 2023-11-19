@@ -1,5 +1,6 @@
 import { FormProvider } from 'react-hook-form';
 
+import { useAuth } from '~/hooks/auth/useAuth';
 import { useContactDetailsForm } from '~/hooks/orderServiceForm/useContactDetailsForm';
 import { useOrderServiceFormNavigation } from '~/hooks/orderServiceForm/useOrderServiceFormNavigation';
 
@@ -8,6 +9,8 @@ import { TextArea, Textfield } from '~/components/molecules/form-fields';
 import { StepButtons } from '../form-fields';
 
 const ContactDetailsForm = () => {
+  const { currentUser } = useAuth();
+
   const { onChangeStep } = useOrderServiceFormNavigation();
   const {
     methods,
@@ -53,6 +56,8 @@ const ContactDetailsForm = () => {
             type="email"
             name="email"
             required
+            defaultValue={currentUser?.email}
+            disabled={!!currentUser?.email}
             className="w-full"
             onChange={(value) => {
               onChangeClientData('email', value);

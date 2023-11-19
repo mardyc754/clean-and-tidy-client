@@ -37,7 +37,7 @@ const ServiceList = ({ data }: ServiceListProps) => {
       {secondaryServices.map((serviceData, i) => (
         <LabeledTypography
           label={serviceData.service.name}
-          value={`${serviceData.numberOfUnits} x ${serviceData.service.unit?.shortName}`}
+          value={`x ${serviceData.numberOfUnits}`}
           contentDistribution="horizontal"
           labelClasses={'text-lg'}
           valueClasses={'text-lg font-sans'}

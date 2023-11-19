@@ -10,10 +10,14 @@ import type { ResponseError } from '~/api/errors/ResponseError';
 import type { LogoutSuccessData } from '~/schemas/api/auth';
 import type { BackendBasicErrorData } from '~/schemas/common';
 
+import { useOrderServiceFormStore } from '~/stores/orderService/orderServiceFormStore';
+
 export const useLogout = () => {
   const router = useRouter();
 
   const queryClient = useQueryClient();
+
+  const { resetOrderServiceForm } = useOrderServiceFormStore();
 
   const mutation = useMutation<
     LogoutSuccessData,
@@ -22,6 +26,9 @@ export const useLogout = () => {
     mutationFn: logout,
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: user });
+
+      resetOrderServiceForm();
+      useOrderServiceFormStore.persist.clearStorage();
 
       await router.push('/');
     }
