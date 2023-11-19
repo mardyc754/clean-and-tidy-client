@@ -21,8 +21,21 @@ interface UserOptionsButtonProps {
 const UserOptionsDropdown = ({ userData }: UserOptionsButtonProps) => {
   const { logout } = useLogout();
 
-  const profileHref =
-    userData.role === UserRole.CLIENT ? '/client/profile' : '/employee/profile';
+  let profileHref = '/';
+
+  switch (userData.role) {
+    case UserRole.CLIENT:
+      profileHref = '/client/profile';
+      break;
+    case UserRole.EMPLOYEE:
+      profileHref = '/employee/profile';
+      break;
+    case UserRole.ADMIN:
+      profileHref = '/admin/profile';
+      break;
+    default:
+      break;
+  }
 
   return (
     <ButtonWithDropdown

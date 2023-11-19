@@ -10,7 +10,7 @@ import {
 } from '~/utils/dateUtils';
 
 import { VisitActions } from '../button-fields';
-import { EmployeeList, VisitDetailsList } from '../lists';
+import { EmployeeSecondaryList, VisitDetailsList } from '../lists';
 
 interface ReservationDisclosureProps {
   data: Visit;
@@ -43,7 +43,7 @@ const VisitDisclosure = ({
         <div className="pb-4">
           <VisitDetailsList data={data} />
         </div>
-        {employees.length > 0 && <EmployeeList data={employees} />}
+        {employees.length > 0 && <EmployeeSecondaryList data={employees} />}
         {manageable && <VisitActions />}
       </div>
     </Disclosure>

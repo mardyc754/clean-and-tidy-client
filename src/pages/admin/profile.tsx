@@ -1,23 +1,28 @@
-import { type DehydratedState } from '@tanstack/react-query';
+import { type DehydratedState, useQuery } from '@tanstack/react-query';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
 import { fetchUserData } from '~/server/prefetchUserData';
 
-import type { RegularEmployeeUser } from '~/schemas/api/auth';
+import type { AdminUser } from '~/schemas/api/auth';
 
+import { useEmployeeList } from '~/hooks/employee/useEmployeeList';
 import { useEmployeeVisits } from '~/hooks/employee/useEmployeeVisits';
 
+import { EmployeeTable } from '~/components/organisms/data-display';
+import { EmployeeList } from '~/components/organisms/lists';
 import { ReservationToConfirmList } from '~/components/organisms/lists';
 import { ProfilePageTemplate } from '~/components/template';
 
-import { isRegularEmployeeUser } from '~/utils/userUtils';
+import { isAdminUser } from '~/utils/userUtils';
 
-export default function EmployeeProfile({
+export default function AdminProfile({
   userData
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { visitEvents, reservationList, isLoading } = useEmployeeVisits({
     employeeId: userData.id
   });
+
+  const { employeeList } = useEmployeeList();
 
   return (
     <ProfilePageTemplate
@@ -25,6 +30,8 @@ export default function EmployeeProfile({
       userData={userData}
       isLoadingEvents={isLoading}
     >
+      {/* {employeeList && <EmployeeList data={employeeList} />} */}
+      {employeeList && <EmployeeTable data={employeeList} />}
       {reservationList && <ReservationToConfirmList data={reservationList} />}
     </ProfilePageTemplate>
   );
@@ -35,7 +42,7 @@ export const getServerSideProps = (async (ctx) => {
 
   const { userData, dehydratedState } = initialData;
 
-  if (!isRegularEmployeeUser(userData)) {
+  if (!isAdminUser(userData)) {
     return {
       redirect: {
         destination: '/login',
@@ -52,5 +59,5 @@ export const getServerSideProps = (async (ctx) => {
   };
 }) satisfies GetServerSideProps<{
   dehydratedState: DehydratedState;
-  userData: RegularEmployeeUser;
+  userData: AdminUser;
 }>;

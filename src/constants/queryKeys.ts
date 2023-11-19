@@ -14,6 +14,11 @@ import type { Status } from '~/types/enums';
 
 export const user = ['user'];
 
+export const employee = {
+  all: ['employees'] as const,
+  find: (id: number) => [...employee.all, { id }] as const
+};
+
 export const reservation = {
   all: ['reservations'] as const,
   find: () => [...reservation.all, 'find'] as const,

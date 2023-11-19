@@ -7,9 +7,9 @@
   --cyan-50: #e0f7fa;
   --cyan-100: #b2ebf2;
   --cyan-200: #80deea;
-  --cyan-300: #4dd0e1;
-  --cyan-400: #26c6da;
-  --cyan-500: #00bcd4;
+  --cyan-300: #4dcfe0;
+  --cyan-400: #26c4d9;
+  --cyan-500: #00bdd6;
   --cyan-600: #00acc1;
   --cyan-700: #0097a7;
   --cyan-800: #00838f;
@@ -47,15 +47,20 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
+    /* --primary: 222.2 47.4% 11.2%; */
+    --primary: 187 100%, 42%;
+    --primary-light: 187 71% 50%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
+    /* --secondary: 187 71% 59%; */
     --secondary-foreground: 222.2 47.4% 11.2%;
 
-    --muted: 210 40% 96.1%;
+    /* --muted: 210 40% 96.1%; */
+    --muted: 187 71% 59%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
+    /* --accent: 210 40% 96.1%; */
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
 

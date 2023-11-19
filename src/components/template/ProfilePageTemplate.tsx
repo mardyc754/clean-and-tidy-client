@@ -15,6 +15,8 @@ import {
 } from '~/utils/scheduler';
 import { getUserLabel } from '~/utils/userUtils';
 
+import { UserProfileCard } from '../organisms/cards';
+
 type ProfilePageTemplateProps = {
   visits: ReturnType<typeof getEventsFromReservation>;
   userData: AuthenticatedUser;
@@ -39,11 +41,8 @@ const ProfilePageTemplate = ({
       <div className="p-16">
         <Heading1>Your profile</Heading1>
 
-        <div className="my-8 flex items-center gap-16 rounded-xl bg-white p-12 shadow-md">
-          <div className="flex gap-8 font-link">
-            <p className="text-4xl">{getUserLabel(userData)}</p>
-            <Button>Edit profile</Button>
-          </div>
+        <div className="py-8">
+          <UserProfileCard data={userData} />
         </div>
         {children}
         <div className="flex flex-col items-baseline py-8">
