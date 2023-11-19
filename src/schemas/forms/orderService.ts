@@ -96,7 +96,16 @@ export const contactDetails = z.object({
   email: z.string().email()
 });
 
-export const contactDetailsForm = address.merge(contactDetails);
+export const extraInfoDataSchema = z.object({
+  extraInfo: z
+    .string()
+    .max(500, { message: 'Extra info must have at most 500 characters' })
+    .nullable()
+});
+
+export const contactDetailsForm = address
+  .merge(contactDetails)
+  .merge(extraInfoDataSchema);
 
 export type Address = z.infer<typeof address>;
 
@@ -120,32 +129,34 @@ export const orderedServiceSchema = basicService.extend({
   numberOfUnits: z.number().int().max(500).min(1)
 });
 
-export const reservationCreationSchema = z.object({
-  frequency: z.nativeEnum(CleaningFrequency),
-  bookerEmail: z.string().email(),
-  visitData: visitCreationDataSchema,
-  // endDate: z.string().datetime(),
-  address: address.or(z.number().int()),
-  contactDetails: contactDetails,
-  services: z
-    .array(
-      orderedServiceSchema
-        .pick({
-          id: true,
-          numberOfUnits: true,
-          isMainServiceForReservation: true
-        })
-        .transform((val) => ({
-          serviceId: val.id,
-          numberOfUnits: val.numberOfUnits,
-          isMainServiceForReservation: val.isMainServiceForReservation
-        }))
-    )
-    .refine(
-      (arr) =>
-        arr.filter((service) => service.isMainServiceForReservation).length ===
-        1
-    )
-});
+export const reservationCreationSchema = z
+  .object({
+    frequency: z.nativeEnum(CleaningFrequency),
+    bookerEmail: z.string().email(),
+    visitData: visitCreationDataSchema,
+    // endDate: z.string().datetime(),
+    address: address.or(z.number().int()),
+    contactDetails: contactDetails,
+    services: z
+      .array(
+        orderedServiceSchema
+          .pick({
+            id: true,
+            numberOfUnits: true,
+            isMainServiceForReservation: true
+          })
+          .transform((val) => ({
+            serviceId: val.id,
+            numberOfUnits: val.numberOfUnits,
+            isMainServiceForReservation: val.isMainServiceForReservation
+          }))
+      )
+      .refine(
+        (arr) =>
+          arr.filter((service) => service.isMainServiceForReservation)
+            .length === 1
+      )
+  })
+  .merge(extraInfoDataSchema);
 
 export type ReservationCreationData = z.infer<typeof reservationCreationSchema>;

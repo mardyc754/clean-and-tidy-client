@@ -18,16 +18,18 @@ const StepButtons = ({
 }: StepButtonsProps) => {
   return (
     <div className="m-0 flex justify-between">
-      <Button
-        href={currentStep === 0 ? cancelHref : undefined}
-        onClick={(e) => {
-          e.preventDefault();
-          onDecreaseStep();
-        }}
-        className="w-72 py-4"
-      >
-        Return
-      </Button>
+      <div className={clsx('flex flex-col', 'pb-4')}>
+        <Button
+          href={currentStep === 0 ? cancelHref : undefined}
+          onClick={(e) => {
+            e.preventDefault();
+            onDecreaseStep();
+          }}
+          className="w-72 py-4"
+        >
+          Return
+        </Button>
+      </div>
       <div className={clsx('flex flex-col', !submitErrorLabel && 'pb-4')}>
         <Button type="submit" className="w-72 py-4">
           Continue

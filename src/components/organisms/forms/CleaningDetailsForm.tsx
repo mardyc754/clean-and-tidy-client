@@ -1,15 +1,9 @@
-import { useRouter } from 'next/router';
-import { useEffect, useMemo } from 'react';
-import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form';
-import { useShallow } from 'zustand/react/shallow';
+import { FormProvider } from 'react-hook-form';
 
-import { type Service, type ServiceWithUnit } from '~/schemas/api/services';
-import {
-  type OrderServiceInputData,
-  cleaningDetailsResolver
-} from '~/schemas/forms/orderService';
+import { type Service } from '~/schemas/api/services';
 
-import { useOrderServiceFormStore } from '~/stores/orderService/orderServiceFormStore';
+import { useCleaningDetailsForm } from '~/hooks/orderServiceForm/useCleaningDetailsForm';
+import { useOrderServiceFormNavigation } from '~/hooks/orderServiceForm/useOrderServiceFormNavigation';
 
 import { Checkbox, NumericInput } from '~/components/atoms/forms';
 
@@ -25,82 +19,24 @@ interface CleaningDetailsFormProps {
 }
 
 const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
-  const { id, name, unit, minNumberOfUnitsIfPrimary, minCostIfPrimary } = data;
+  const { unit, id, name } = data;
+  const { onChangeStep, returnToHomePage } = useOrderServiceFormNavigation();
+
   const {
+    methods,
+    errors,
+    cleaningFrequencyData,
+    secondaryServicesWithUnit,
+    onSubmit,
     onChangeIncludeDetergents,
     onChangeServiceNumberOfUnits,
     onChangeCleaningFrequency,
     onChangeStartDate,
-    onChangeHourDate,
-    getInitialCleaningDetailsFormData,
-    currentStep,
-    totalCost
-  } = useOrderServiceFormStore(
-    useShallow((state) => ({
-      setData: state.setData,
-      onChangeIncludeDetergents: state.onChangeIncludeDetergents,
-      onChangeServiceNumberOfUnits: state.onChangeServiceNumberOfUnits,
-      onChangeCleaningFrequency: state.onChangeCleaningFrequency,
-      onChangeStartDate: state.onChangeStartDate,
-      onChangeHourDate: state.onChangeHourDate,
-      currentStep: state.currentStep,
-      totalCost: state.totalCost,
-      getInitialCleaningDetailsFormData: state.getInitialCleaningDetailsFormData
-    }))
-  );
-
-  const methods = useForm<OrderServiceInputData>({
-    defaultValues: getInitialCleaningDetailsFormData(),
-    resolver: cleaningDetailsResolver(
-      minNumberOfUnitsIfPrimary,
-      minCostIfPrimary
-    )
+    onChangeHourDate
+  } = useCleaningDetailsForm({
+    data,
+    submitHandler: async () => await onChangeStep(2)
   });
-
-  const {
-    handleSubmit,
-    formState: { errors }
-  } = methods;
-
-  const cleaningFrequencyData = useMemo(
-    () => data?.cleaningFrequencies ?? [],
-    [data]
-  );
-
-  useEffect(() => {
-    methods.register('totalCost', { value: totalCost });
-    methods.setValue('totalCost', totalCost);
-  }, [methods, totalCost]);
-
-  useEffect(() => {
-    if (!unit) {
-      methods.register('numberOfUnits', { value: 0 });
-      onChangeServiceNumberOfUnits(
-        0,
-        true,
-        { id, name, unit },
-        secondaryServicesWithUnit.length
-      );
-    }
-  }, [id, methods, name, onChangeServiceNumberOfUnits, unit]);
-
-  const secondaryServicesWithUnit = useMemo(
-    () => data.secondaryServices?.filter((service) => !!service.unit) ?? [],
-    [data]
-  ) as ServiceWithUnit[];
-
-  const router = useRouter();
-
-  const onSubmit: SubmitHandler<OrderServiceInputData> = async () => {
-    await router.push({
-      pathname: router.pathname,
-      query: { ...router.query, currentStep: 2 }
-    });
-  };
-
-  const onDecreaseStep = async () => {
-    await router.push('/');
-  };
 
   const mainSlot = unit ? (
     <NumericInput
@@ -130,7 +66,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={onSubmit}>
         <div className="flex flex-col space-y-4 py-16">
           {mainSlot}
           {cleaningFrequencyData.length > 1 && (
@@ -170,8 +106,8 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
         </div>
         <StepButtons
           submitErrorLabel={errors.totalCost?.message}
-          currentStep={currentStep}
-          onDecreaseStep={onDecreaseStep}
+          currentStep={1}
+          onDecreaseStep={returnToHomePage}
         />
       </form>
     </FormProvider>

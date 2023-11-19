@@ -38,7 +38,8 @@ export const reservationSchema = z.object({
   bookerLastName: z.string().max(50),
   visits: z.array(visitSchema).optional(),
   services: z.array(serviceForReservation).optional(),
-  address: address.optional()
+  address: address.optional(),
+  extraInfo: z.string().max(500).nullish()
 });
 
 export const visitWithReservationSchema = visitSchema.extend({

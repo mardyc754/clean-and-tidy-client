@@ -10,6 +10,7 @@ import type {
 export interface ContactDetailsSlice {
   clientData: ContactDetails;
   addressData: Address;
+  extraInfo: string | null;
   onChangeClientData: (
     fieldName: keyof ContactDetails,
     value: ValueOf<typeof fieldName>
@@ -19,6 +20,7 @@ export interface ContactDetailsSlice {
     value: ValueOf<typeof fieldName>
   ) => void;
   contactDetailsFormData: () => ContactDetailsFormData;
+  onChangeExtraInfo: (value: string) => void;
 }
 
 export const initialContactDetailsState = {
@@ -35,7 +37,8 @@ export const initialContactDetailsState = {
     // door: '',
     postCode: '',
     city: ''
-  }
+  },
+  extraInfo: null
 };
 
 export const createContactDetailsSlice: StateCreator<ContactDetailsSlice> = (
@@ -55,6 +58,12 @@ export const createContactDetailsSlice: StateCreator<ContactDetailsSlice> = (
   },
   contactDetailsFormData: () => ({
     ...get().clientData,
-    ...get().addressData
-  })
+    ...get().addressData,
+    extraInfo: get().extraInfo
+  }),
+  onChangeExtraInfo: (value) => {
+    set(() => ({
+      extraInfo: value
+    }));
+  }
 });
