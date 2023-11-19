@@ -56,9 +56,7 @@ export interface CleaningDetailsSlice extends CleaningDetailsSliceData {
     availableFrequencies: CleaningFrequencyData[]
   ) => void;
   endDate: () => ValidDate;
-  getInitialCleaningDetailsFormData: (
-    overrides?: Partial<CleaningDetailsSliceData>
-  ) => OrderServiceInputData;
+  getInitialCleaningDetailsFormData: () => OrderServiceInputData;
   resetCleaningDetailsData: () => void;
 }
 
@@ -221,7 +219,8 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
       cleaningFrequencyDisplayData,
       startDate,
       hourDate,
-      includeDetergents
+      includeDetergents,
+      totalCost
     } = get();
 
     return {
@@ -231,11 +230,12 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
       cleaningFrequency: cleaningFrequencyDisplayData?.value ?? null,
       startDate: startDate ? new Date(startDate as Date | string) : null,
       hourDate: hourDate ? new Date(hourDate as Date | string) : null,
-      includeDetergents,
       extraServices:
         orderedServices.map((service) =>
           !service ? service : service.numberOfUnits
-        ) ?? []
+        ) ?? [],
+      totalCost,
+      includeDetergents
     };
   },
   resetCleaningDetailsData: () => {

@@ -1,12 +1,12 @@
 import type { ZodType } from 'zod';
 
-import { basicError } from '~/schemas/api/common';
 import {
   type Reservation,
   type VisitWithStatusAndReservation,
   reservationListSchema,
   visitWithStatusAndReservationListSchema
 } from '~/schemas/api/reservation';
+import { basicError } from '~/schemas/common';
 
 import type { Status } from '~/types/enums';
 

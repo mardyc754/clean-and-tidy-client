@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { ISOString } from './common';
+import { ISOString } from '../common';
 
 export const employeeSchema = z.object({
   id: z.number().int(),

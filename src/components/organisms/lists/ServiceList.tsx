@@ -1,5 +1,3 @@
-import clsx from 'clsx';
-
 import type { ServiceForReservation } from '~/schemas/api/services';
 
 import { LabeledTypography } from '~/components/atoms/typography/labeled-text';
@@ -13,26 +11,37 @@ interface ServiceListProps {
 }
 
 const ServiceList = ({ data }: ServiceListProps) => {
+  const mainService = data.find(
+    (service) => service.isMainServiceForReservation
+  );
+
+  const secondaryServices = data.filter(
+    (service) => !service.isMainServiceForReservation
+  );
+
   return (
     <ListWrapper title="Services">
-      {data.map((serviceData, i) => (
+      {mainService && (
+        <LabeledTypography
+          label={mainService.service.name}
+          value={
+            mainService.numberOfUnits > 0
+              ? `${mainService.numberOfUnits} x ${mainService.service.unit?.shortName}`
+              : ''
+          }
+          contentDistribution="horizontal"
+          labelClasses={'text-xl font-emphasize'}
+          valueClasses={'text-xl font-emphasize'}
+        />
+      )}
+      {secondaryServices.map((serviceData, i) => (
         <LabeledTypography
           label={serviceData.service.name}
-          value={`x ${serviceData.numberOfUnits}`}
+          value={`${serviceData.numberOfUnits} x ${serviceData.service.unit?.shortName}`}
           contentDistribution="horizontal"
-          labelClasses={clsx(
-            'text-xl',
-            serviceData.isMainServiceForReservation
-              ? 'text-xl font-emphasize'
-              : 'text-lg'
-          )}
-          valueClasses={clsx(
-            'text-xl',
-            serviceData.isMainServiceForReservation
-              ? 'text-xl font-emphasize'
-              : 'text-lg font-sans'
-          )}
-          key={`OrderedServices-${convertToCamelCase(
+          labelClasses={'text-lg'}
+          valueClasses={'text-lg font-sans'}
+          key={`OrderedServices-secondary-${convertToCamelCase(
             serviceData.service.name
           )}-${i}`}
         />

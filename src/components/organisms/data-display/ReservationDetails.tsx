@@ -23,6 +23,7 @@ const ReservationDetails = ({
 
   const services = useMemo(() => data.services ?? [], [data.services]);
 
+  console.log(data);
   return (
     <>
       <ServiceList data={services} />

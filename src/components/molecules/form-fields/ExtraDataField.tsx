@@ -22,7 +22,7 @@ const ExtraDataField = ({
   onChangeNumberOfUnits
 }: ExtraDataFieldProps) => {
   const { name: serviceName, unit } = data;
-  const { name: unitName, price } = unit;
+  const { shortName, price } = unit;
 
   const [selected, setSelected] = useState(!!defaultValue);
   // const [selected, setSelected] = useState(false);
@@ -38,6 +38,7 @@ const ExtraDataField = ({
     } else {
       setValue(name, 0);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected]);
 
   // or disable it when number of units becomes 0
@@ -56,7 +57,7 @@ const ExtraDataField = ({
         `}
       >
         <p className="font-medium">{serviceName}</p>
-        <p className="text-sm">{`${price} zł/${unitName}`}</p>
+        <p className="text-sm">{`${price} zł/${shortName}`}</p>
       </div>
       {selected ? (
         <NumericInput

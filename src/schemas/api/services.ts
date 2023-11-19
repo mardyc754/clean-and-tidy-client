@@ -3,17 +3,22 @@ import { z } from 'zod';
 
 import { CleaningFrequency } from '~/types/enums';
 
+import { decimalToFloat } from '../common';
+
 export const basicService = z.object({
   id: z.number().int(),
   name: z.string().max(100),
   unit: z.union([
     z.object({
-      name: z.string().max(40),
+      shortName: z.string().max(40),
+      fullName: z.string().max(60),
       price: z.string().transform((val) => parseFloat(val.replace(',', '.'))),
       duration: z.number().max(480)
     }),
     z.null()
-  ])
+  ]),
+  minNumberOfUnitsIfPrimary: z.number().int().min(1).nullish(),
+  minCostIfPrimary: decimalToFloat.nullish()
 });
 
 export const service = basicService.merge(
@@ -40,15 +45,15 @@ export const primaryService = service.merge(
 // TODO: divide into main service and extra service
 export const orderedServiceSchema = basicService.extend({
   isMainServiceForReservation: z.boolean(),
-  numberOfUnits: z.number().int().max(500).min(1)
+  numberOfUnits: z.number().int().max(500).min(0)
 });
 
 export const serviceForReservation = z.object({
   isMainServiceForReservation: z.boolean(),
-  numberOfUnits: z.number().int().max(500).min(1),
+  numberOfUnits: z.number().int().max(500).min(0),
   reservationId: z.number().int(),
   serviceId: z.number().int(),
-  service: service.pick({ id: true, name: true })
+  service
 });
 
 export const primaryServices = z.array(primaryService);

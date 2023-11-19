@@ -6,7 +6,7 @@ import {
   registrationSuccess,
   userSchema
 } from '~/schemas/api/auth';
-import { basicError } from '~/schemas/api/common';
+import { basicError } from '~/schemas/common';
 import type { LoginData, RegistrationData } from '~/schemas/forms/auth';
 
 import { handleFetchingData } from './handleFetchingData';

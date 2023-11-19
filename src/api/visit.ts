@@ -1,7 +1,7 @@
 import type { ZodType } from 'zod';
 
-import { basicError } from '~/schemas/api/common';
 import { type Visit, visitSchema } from '~/schemas/api/reservation';
+import { basicError } from '~/schemas/common';
 
 import { handleFetchingData } from './handleFetchingData';
 import type { VisitQueryOptions } from './types';

@@ -7,6 +7,7 @@ import type { OrderServiceInputData } from '~/schemas/forms/orderService';
 import { ExtraDataField } from '~/components/molecules/form-fields';
 
 type ExtraDataMultiSelectProps = {
+  title: string;
   name: string;
   data: ServiceWithUnit[];
   defaultValues?: OrderServiceInputData['extraServices'];
@@ -19,7 +20,8 @@ type ExtraDataMultiSelectProps = {
   ) => void;
 };
 
-const ExtraDataMultiSelect = ({
+const ServiceMultiSelect = ({
+  title,
   name,
   data,
   className = '',
@@ -28,7 +30,7 @@ const ExtraDataMultiSelect = ({
 }: ExtraDataMultiSelectProps) => {
   return (
     <div className={`${className}`}>
-      <p className={`py-2 text-base`}>Extra services</p>
+      <p className={`py-2 text-base`}>{title}</p>
       <div className="flex flex-col space-y-4">
         {data.map((item, index) => (
           <ExtraDataField
@@ -46,4 +48,4 @@ const ExtraDataMultiSelect = ({
   );
 };
 
-export default ExtraDataMultiSelect;
+export default ServiceMultiSelect;

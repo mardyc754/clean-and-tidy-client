@@ -1,8 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
-import { ISOString } from '~/schemas/api/common';
 import { basicService } from '~/schemas/api/services';
+import { ISOString } from '~/schemas/common';
 
 import { CleaningFrequency } from '~/types/enums';
 
@@ -12,7 +12,7 @@ export const orderServiceSubmitDataSchema = z.object({
     .number()
     .int()
     .max(500, { message: 'Must be less than 500' })
-    .min(30, { message: 'Must be atleast 30' }),
+    .min(1, { message: `Must be atleast 1` }),
   cleaningFrequency: z.nativeEnum(CleaningFrequency, {
     required_error: 'Cleaning frequency is required',
     invalid_type_error: 'Cleaning frequency is required'
@@ -26,8 +26,39 @@ export const orderServiceSubmitDataSchema = z.object({
     invalid_type_error: 'Select an hour'
   }),
   includeDetergents: z.boolean(),
-  extraServices: z.array(z.number().int().or(z.undefined())).optional()
+  extraServices: z.array(z.number().int().or(z.undefined())).optional(),
+  totalCost: z.number().min(0)
 });
+
+export function createOrderServiceSubmitDataSchema(
+  minNumberOfUnits?: number | null,
+  minCost?: number | null
+) {
+  const minUnits = minNumberOfUnits ?? 0;
+
+  const schema = orderServiceSubmitDataSchema.extend({
+    numberOfUnits: z
+      .number()
+      .int()
+      .max(500, { message: 'Must be less than 500' })
+      .min(minUnits, {
+        message: `Must be atleast ${minUnits}`
+      }),
+    totalCost: z.number().min(minCost ?? 0, {
+      message: `Total cost must be greater than ${minCost}`
+    })
+  });
+
+  if (!minNumberOfUnits) {
+    return schema.omit({ numberOfUnits: true });
+  }
+
+  if (!minCost) {
+    return schema.omit({ totalCost: true });
+  }
+
+  return schema;
+}
 
 export const orderServiceInputDataSchema = orderServiceSubmitDataSchema.extend({
   cleaningFrequency: z.nativeEnum(CleaningFrequency).nullable(),
@@ -41,9 +72,14 @@ export type OrderServiceSubmitData = z.infer<
 
 export type OrderServiceInputData = z.infer<typeof orderServiceInputDataSchema>;
 
-export const cleaningDetailsResolver = zodResolver(
-  orderServiceSubmitDataSchema
-);
+export function cleaningDetailsResolver(
+  minNumberOfUnits?: number | null,
+  minTotalCost?: number | null
+) {
+  return zodResolver(
+    createOrderServiceSubmitDataSchema(minNumberOfUnits, minTotalCost)
+  );
+}
 
 // CONTACT DETAILS PAGE
 export const address = z.object({

@@ -8,7 +8,7 @@ import { logout } from '~/api/auth';
 import type { ResponseError } from '~/api/errors/ResponseError';
 
 import type { LogoutSuccessData } from '~/schemas/api/auth';
-import type { BackendBasicErrorData } from '~/schemas/api/common';
+import type { BackendBasicErrorData } from '~/schemas/common';
 
 export const useLogout = () => {
   const router = useRouter();

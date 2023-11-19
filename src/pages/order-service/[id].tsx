@@ -1,6 +1,6 @@
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { type NextRouter, withRouter } from 'next/router';
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import {
   configureDetailsIndicatorData,
@@ -71,7 +71,7 @@ function OrderService({
     setServiceIdChecked(true);
   }, [data.id, changeServiceId, data]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (data.cleaningFrequencies?.length == 1) {
       onChangeCleaningFrequency(
         data.cleaningFrequencies[0]!.value,

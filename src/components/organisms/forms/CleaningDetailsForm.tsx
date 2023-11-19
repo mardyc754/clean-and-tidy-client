@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form';
 import { useShallow } from 'zustand/react/shallow';
 
@@ -15,8 +15,8 @@ import { Checkbox, NumericInput } from '~/components/atoms/forms';
 
 import {
   CalendarWithHours,
-  ExtraDataMultiSelect,
   RadioGroup,
+  ServiceMultiSelect,
   StepButtons
 } from '../form-fields';
 
@@ -25,7 +25,7 @@ interface CleaningDetailsFormProps {
 }
 
 const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
-  const { id, name, unit } = data;
+  const { id, name, unit, minNumberOfUnitsIfPrimary, minCostIfPrimary } = data;
   const {
     onChangeIncludeDetergents,
     onChangeServiceNumberOfUnits,
@@ -33,7 +33,8 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
     onChangeStartDate,
     onChangeHourDate,
     getInitialCleaningDetailsFormData,
-    currentStep
+    currentStep,
+    totalCost
   } = useOrderServiceFormStore(
     useShallow((state) => ({
       setData: state.setData,
@@ -43,13 +44,17 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
       onChangeStartDate: state.onChangeStartDate,
       onChangeHourDate: state.onChangeHourDate,
       currentStep: state.currentStep,
+      totalCost: state.totalCost,
       getInitialCleaningDetailsFormData: state.getInitialCleaningDetailsFormData
     }))
   );
 
   const methods = useForm<OrderServiceInputData>({
     defaultValues: getInitialCleaningDetailsFormData(),
-    resolver: cleaningDetailsResolver
+    resolver: cleaningDetailsResolver(
+      minNumberOfUnitsIfPrimary,
+      minCostIfPrimary
+    )
   });
 
   const {
@@ -61,6 +66,23 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
     () => data?.cleaningFrequencies ?? [],
     [data]
   );
+
+  useEffect(() => {
+    methods.register('totalCost', { value: totalCost });
+    methods.setValue('totalCost', totalCost);
+  }, [methods, totalCost]);
+
+  useEffect(() => {
+    if (!unit) {
+      methods.register('numberOfUnits', { value: 0 });
+      onChangeServiceNumberOfUnits(
+        0,
+        true,
+        { id, name, unit },
+        secondaryServicesWithUnit.length
+      );
+    }
+  }, [id, methods, name, onChangeServiceNumberOfUnits, unit]);
 
   const secondaryServicesWithUnit = useMemo(
     () => data.secondaryServices?.filter((service) => !!service.unit) ?? [],
@@ -80,62 +102,74 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
     await router.push('/');
   };
 
+  const mainSlot = unit ? (
+    <NumericInput
+      min={0}
+      max={500}
+      name="numberOfUnits"
+      label={unit.fullName}
+      errorLabel={errors.numberOfUnits?.message}
+      onChange={(value: number) =>
+        onChangeServiceNumberOfUnits(
+          value,
+          true,
+          { id, name, unit },
+          secondaryServicesWithUnit.length
+        )
+      }
+    />
+  ) : secondaryServicesWithUnit.length > 0 ? (
+    <ServiceMultiSelect
+      title="Select services"
+      defaultValues={methods.watch('extraServices')}
+      name="extraServices"
+      data={secondaryServicesWithUnit}
+      onChangeNumberOfUnits={onChangeServiceNumberOfUnits}
+    />
+  ) : null;
+
   return (
     <FormProvider {...methods}>
-      <form className="py-16" onSubmit={handleSubmit(onSubmit)}>
-        <NumericInput
-          min={0}
-          max={500}
-          name="numberOfUnits"
-          label="Area size (in m2)"
-          wrapperClassName="items-center py-4"
-          errorLabel={errors.numberOfUnits?.message}
-          onChange={(value: number) =>
-            onChangeServiceNumberOfUnits(
-              value,
-              true,
-              { id, name, unit },
-              secondaryServicesWithUnit.length
-            )
-          }
-        />
-        {cleaningFrequencyData.length > 1 && (
-          <RadioGroup
-            name="cleaningFrequency"
-            label="Cleaning frequency"
-            defaultValue={methods.watch('cleaningFrequency')}
-            optionList={cleaningFrequencyData}
-            onChange={onChangeCleaningFrequency}
-            errorLabel={errors.cleaningFrequency?.message}
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="flex flex-col space-y-4 py-16">
+          {mainSlot}
+          {cleaningFrequencyData.length > 1 && (
+            <RadioGroup
+              name="cleaningFrequency"
+              label="Cleaning frequency"
+              defaultValue={methods.watch('cleaningFrequency')}
+              optionList={cleaningFrequencyData}
+              onChange={onChangeCleaningFrequency}
+              errorLabel={errors.cleaningFrequency?.message}
+            />
+          )}
+          <Checkbox
+            name="includeDetergents"
+            label="Detergents"
+            caption="Include detergents (+15zł)"
+            onChange={onChangeIncludeDetergents}
           />
-        )}
-        <Checkbox
-          name="includeDetergents"
-          className="py-4"
-          label="Detergents"
-          caption="Include detergents (+15zł)"
-          onChange={onChangeIncludeDetergents}
-        />
-        <CalendarWithHours
-          calendarInputName="startDate"
-          hourInputName="hourDate"
-          label="Cleaning start date"
-          onChangeDate={onChangeStartDate}
-          onChangeHour={onChangeHourDate}
-          dateErrorLabel={errors.startDate?.message}
-          hourErrorLabel={errors.hourDate?.message}
-        />
-        {secondaryServicesWithUnit.length > 0 && (
-          <ExtraDataMultiSelect
-            defaultValues={methods.watch('extraServices')}
-            name="extraServices"
-            className="py-4"
-            data={secondaryServicesWithUnit}
-            onChangeNumberOfUnits={onChangeServiceNumberOfUnits}
+          <CalendarWithHours
+            calendarInputName="startDate"
+            hourInputName="hourDate"
+            label="Cleaning start date"
+            onChangeDate={onChangeStartDate}
+            onChangeHour={onChangeHourDate}
+            dateErrorLabel={errors.startDate?.message}
+            hourErrorLabel={errors.hourDate?.message}
           />
-        )}
-        {/* <StepButtons currentStep={currentStep} onDecreaseStep={decreaseStep} /> */}
+          {secondaryServicesWithUnit.length > 0 && unit && (
+            <ServiceMultiSelect
+              title="Extra services"
+              defaultValues={methods.watch('extraServices')}
+              name="extraServices"
+              data={secondaryServicesWithUnit}
+              onChangeNumberOfUnits={onChangeServiceNumberOfUnits}
+            />
+          )}
+        </div>
         <StepButtons
+          submitErrorLabel={errors.totalCost?.message}
           currentStep={currentStep}
           onDecreaseStep={onDecreaseStep}
         />

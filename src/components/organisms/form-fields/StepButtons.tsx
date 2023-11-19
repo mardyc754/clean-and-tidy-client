@@ -1,14 +1,19 @@
+import clsx from 'clsx';
+
 import { Button } from '~/components/atoms/buttons';
+import { ErrorLabel } from '~/components/atoms/forms';
 
 type StepButtonsProps = {
   cancelHref?: string;
   currentStep: number;
+  submitErrorLabel?: string;
   onDecreaseStep: VoidFunction;
 };
 
 const StepButtons = ({
   cancelHref = '/',
   currentStep,
+  submitErrorLabel,
   onDecreaseStep
 }: StepButtonsProps) => {
   return (
@@ -23,9 +28,12 @@ const StepButtons = ({
       >
         Return
       </Button>
-      <Button type="submit" className="w-72 py-4">
-        Continue
-      </Button>
+      <div className={clsx('flex flex-col', !submitErrorLabel && 'pb-4')}>
+        <Button type="submit" className="w-72 py-4">
+          Continue
+        </Button>
+        {submitErrorLabel && <ErrorLabel>{submitErrorLabel}</ErrorLabel>}
+      </div>
     </div>
   );
 };
