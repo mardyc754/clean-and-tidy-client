@@ -4,6 +4,7 @@ import { type InputHTMLAttributes } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import { Label } from '~/components/atoms/forms';
+import { Checkbox as ShadcnCheckbox } from '~/components/shadcn/ui/checkbox';
 
 interface CheckboxProps
   extends Omit<
@@ -57,6 +58,7 @@ const Checkbox = ({
   return (
     <CheckboxWrapper name={name} label={label} className={className}>
       <div className="flex items-center">
+        {/*
         <div className={`relative h-6 w-6 rounded-lg ${wrapperStyle}`}>
           {checked && (
             <div
@@ -82,9 +84,21 @@ const Checkbox = ({
               onChange?.(newValue);
             }}
           />
-        </div>
-        <div className="px-2">
-          <p className="text-xs">{caption}</p>
+        </div> */}
+
+        <ShadcnCheckbox
+          defaultChecked={checked}
+          {...register(name, { value: false })}
+          onClick={() => {
+            const newValue = !checked;
+            setValue(name, newValue);
+            onChange?.(newValue);
+          }}
+        />
+        <div className="p-1">
+          <label htmlFor={name} className="text-xs">
+            {caption}
+          </label>
         </div>
       </div>
     </CheckboxWrapper>

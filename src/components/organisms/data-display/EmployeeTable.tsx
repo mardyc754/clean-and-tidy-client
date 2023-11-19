@@ -14,7 +14,6 @@ import {
 import { displayDatesAsTimespan } from '~/utils/dateUtils';
 
 import { ManageEmployeeDialog } from '../dialogs';
-import { ManageEmployeeDropdown } from '../form-fields';
 
 function createEmployeeRows(data: Employee[]) {
   return data.map((employee) => {
@@ -65,7 +64,7 @@ const EmployeeTable = ({ data }: EmployeeTableProps) => {
           </TableHeader>
           <TableBody>
             {rows?.length ? (
-              rows.map((row) => (
+              rows.map((row, index) => (
                 <TableRow key={`employeeList-row-body-${row.id}`}>
                   {Object.values(row).map((cell, i) => (
                     <TableCell
@@ -75,7 +74,7 @@ const EmployeeTable = ({ data }: EmployeeTableProps) => {
                     </TableCell>
                   ))}
                   <TableCell>
-                    <ManageEmployeeDialog />
+                    <ManageEmployeeDialog employeeData={data[index]!} />
                   </TableCell>
                 </TableRow>
               ))

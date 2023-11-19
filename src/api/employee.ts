@@ -1,12 +1,13 @@
 import type { ZodType } from 'zod';
 
-import { employeeSchema } from '~/schemas/api/employee';
+import { Employee, employeeSchema } from '~/schemas/api/employee';
 import {
   type Reservation,
   type VisitWithStatusAndReservation,
   reservationSchema,
   visitWithStatusAndReservationSchema
 } from '~/schemas/api/reservation';
+import { type Service, service } from '~/schemas/api/services';
 import { basicError } from '~/schemas/common';
 
 import type { Status } from '~/types/enums';
@@ -50,5 +51,18 @@ export const getAllEmployees = async () => {
     method: 'get',
     successSchema: employeeSchema.array(),
     errorSchema: basicError
+  });
+};
+
+export const changeEmployeeServiceAssignment = async (
+  employeeId: Employee['id'],
+  serviceIds: Array<Service['id']>
+) => {
+  return await handleFetchingData({
+    path: `/employees/${employeeId}/services`,
+    method: 'put',
+    successSchema: service.array() as unknown as ZodType<Service[]>,
+    errorSchema: basicError,
+    data: { serviceIds }
   });
 };

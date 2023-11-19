@@ -1,5 +1,7 @@
-import { ButtonProps } from '~/components/atoms/buttons/Button';
-import { Button } from '~/components/shadcn/ui/button';
+import clsx from 'clsx';
+
+import Button, { type ButtonProps } from '~/components/atoms/buttons/Button';
+// import { Button } from '~/components/shadcn/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -9,11 +11,10 @@ import {
   DialogTitle,
   DialogTrigger as DialogTriggerBase
 } from '~/components/shadcn/ui/dialog';
-import { Input } from '~/components/shadcn/ui/input';
-import { Label } from '~/components/shadcn/ui/label';
 
 interface DialogTriggerButtonProps {
   buttonLabel: string;
+  className?: string;
   dialogTitle?: string;
   dialogDescription?: string;
   children: React.ReactNode;
@@ -67,15 +68,16 @@ const DialogTriggerButton = ({
   buttonLabel,
   dialogTitle,
   dialogDescription,
-  children,
-  actions
-}: DialogTriggerButtonProps) => {
+  className,
+  children
+}: // actions
+DialogTriggerButtonProps) => {
   return (
     <Dialog>
       <DialogTriggerBase asChild>
-        <Button variant="outline">{buttonLabel}</Button>
+        <Button>{buttonLabel}</Button>
       </DialogTriggerBase>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className={clsx('sm:max-w-[425px]', className)}>
         <DialogHeader>
           {dialogTitle && <DialogTitle>{dialogTitle}</DialogTitle>}
           {dialogDescription && (
@@ -83,13 +85,13 @@ const DialogTriggerButton = ({
           )}
         </DialogHeader>
         {children}
-        <DialogFooter>
+        {/* <DialogFooter>
           {actions?.map(({ children, ...otherProps }, i) => (
             <Button key={`dialogTriggerButton-action-${i}`} {...otherProps}>
               {children}
             </Button>
           ))}
-        </DialogFooter>
+        </DialogFooter> */}
       </DialogContent>
     </Dialog>
   );
