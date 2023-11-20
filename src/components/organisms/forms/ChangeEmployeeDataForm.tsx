@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
-import { employee, service } from '~/constants/queryKeys';
+import { service } from '~/constants/queryKeys';
 
 import { changeEmployeeServiceAssignment } from '~/api/employee';
 
@@ -22,10 +22,10 @@ const ChangeEmployeeDataForm = ({
   employeeData,
   serviceData
 }: ChangeEmployeeDataFormProps) => {
+  const queryClient = useQueryClient();
+
   const primaryServices = serviceData.filter((service) => service.isPrimary);
   const secondaryServices = serviceData.filter((service) => !service.isPrimary);
-
-  const queryClient = useQueryClient();
 
   const methods = useForm({
     defaultValues: {
@@ -74,31 +74,37 @@ const ChangeEmployeeDataForm = ({
           );
         })}
       >
-        <div className="flex flex-col space-y-4  py-4">
-          <p className="font-emphasize text-lg">Services</p>
-          <div className="max-h-[40vh] space-y-4 overflow-auto">
-            <div className="flex flex-col space-y-2">
-              <p>Primary services</p>
-              <div>
-                {primaryServices.map((service) => (
-                  <Checkbox
-                    key={`serviceDataCheckbox-${service.id}`}
-                    name={`employeeServices.${service.id}`}
-                    caption={service.name}
-                  />
-                ))}
+        <div className="max-h-[60vh] space-y-4 overflow-auto">
+          {/* <div>
+            <p className="font-emphasize text-lg">Administration</p>
+            <Checkbox name={`isAdmin`} caption={'Employee is admin'} />
+          </div> */}
+          <div className="flex flex-col space-y-4">
+            <p className="font-emphasize text-lg">Services</p>
+            <div>
+              <div className="flex flex-col space-y-2">
+                <p>Primary services</p>
+                <div>
+                  {primaryServices.map((service) => (
+                    <Checkbox
+                      key={`serviceDataCheckbox-${service.id}`}
+                      name={`employeeServices.${service.id}`}
+                      caption={service.name}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
-            <div className="flex flex-col space-y-2">
-              <p>Secondary services</p>
-              <div>
-                {secondaryServices.map((service) => (
-                  <Checkbox
-                    key={`serviceDataCheckbox-${service.id}`}
-                    name={`employeeServices.${service.id}`}
-                    caption={service.name}
-                  />
-                ))}
+              <div className="flex flex-col space-y-2">
+                <p>Secondary services</p>
+                <div>
+                  {secondaryServices.map((service) => (
+                    <Checkbox
+                      key={`serviceDataCheckbox-${service.id}`}
+                      name={`employeeServices.${service.id}`}
+                      caption={service.name}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
           </div>

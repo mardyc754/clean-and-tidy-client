@@ -8,7 +8,8 @@ const Input = forwardRef<
   InputHTMLAttributes<HTMLInputElement>
 >(({ className = '', ...props }, ref) => {
   return (
-    <ShadcnInput
+    // <ShadcnInput
+    <input
       {...props}
       className={clsx('rounded-lg outline-none', className)}
       ref={ref}

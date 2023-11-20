@@ -46,7 +46,7 @@ const Textfield = ({
           onChange?.(newValue);
         }}
         {...props}
-        className="p-6 shadow-sm"
+        className="p-4 shadow-sm"
       />
       <ErrorLabel>{errorLabel ?? ''}</ErrorLabel>
     </div>

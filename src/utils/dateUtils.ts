@@ -9,7 +9,13 @@ import dayjs from '~/lib/dayjs';
 
 import type { CleaningFrequency } from '~/types/enums';
 
-type ValidDayjsDate = dayjs.Dayjs | Date | string | number | null | undefined;
+export type ValidDayjsDate =
+  | dayjs.Dayjs
+  | Date
+  | string
+  | number
+  | null
+  | undefined;
 
 export function extractDateStringFromDate(date: ValidDayjsDate) {
   return date ? dayjs(date).format('DD.MM.YYYY') : '--.--.----';
@@ -137,4 +143,11 @@ export function getWeekDayNameWithFrequencyAndDate(
 ) {
   const frequencyDescription = frequencyToDescriptionMap.get(frequency);
   return `${frequencyDescription}, from ${displayDateWithHours(date)}`;
+}
+
+export function isTheSameDay(
+  firstDate: ValidDayjsDate,
+  secondDate: ValidDayjsDate
+) {
+  return dayjs(firstDate).isSame(secondDate, 'day');
 }
