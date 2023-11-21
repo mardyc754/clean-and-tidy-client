@@ -1,8 +1,9 @@
 import type { RequireAtLeastOne } from 'type-fest';
 
-export type AllServicesQueryOptions = {
+export type AllServicesQueryOptions = RequireAtLeastOne<{
   primaryOnly: boolean;
-};
+  includeEmployees: boolean;
+}>;
 
 export type ServiceQueryOptions = RequireAtLeastOne<{
   includeSecondaryServices: boolean;

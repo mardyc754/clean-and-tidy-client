@@ -1,11 +1,13 @@
 import type { ZodType } from 'zod';
 
+import { Employee, employeeSchema } from '~/schemas/api/employee';
 import {
   type Reservation,
   type VisitWithStatusAndReservation,
-  reservationListSchema,
-  visitWithStatusAndReservationListSchema
+  reservationSchema,
+  visitWithStatusAndReservationSchema
 } from '~/schemas/api/reservation';
+import { type Service, service } from '~/schemas/api/services';
 import { basicError } from '~/schemas/common';
 
 import type { Status } from '~/types/enums';
@@ -21,7 +23,7 @@ export const getEmployeeVisits = async (employeeId: number) => {
     path: `/employees/${employeeId}/visits`,
     method: 'get',
     successSchema:
-      visitWithStatusAndReservationListSchema as unknown as ZodType<
+      visitWithStatusAndReservationSchema.array() as unknown as ZodType<
         VisitWithStatusAndReservation[]
       >,
     errorSchema: basicError
@@ -35,8 +37,32 @@ export const getEmployeeReservations = async (
   return await handleFetchingData({
     path: `/employees/${employeeId}/reservations`,
     method: 'get',
-    successSchema: reservationListSchema as ZodType<Reservation[]>,
+    successSchema: reservationSchema.array() as unknown as ZodType<
+      Reservation[]
+    >,
     errorSchema: basicError,
     params: options
+  });
+};
+
+export const getAllEmployees = async () => {
+  return await handleFetchingData({
+    path: '/employees',
+    method: 'get',
+    successSchema: employeeSchema.array(),
+    errorSchema: basicError
+  });
+};
+
+export const changeEmployeeServiceAssignment = async (
+  employeeId: Employee['id'],
+  serviceIds: Array<Service['id']>
+) => {
+  return await handleFetchingData({
+    path: `/employees/${employeeId}/services`,
+    method: 'put',
+    successSchema: service.array() as unknown as ZodType<Service[]>,
+    errorSchema: basicError,
+    data: { serviceIds }
   });
 };

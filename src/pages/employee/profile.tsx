@@ -1,41 +1,24 @@
-import { type DehydratedState, useQuery } from '@tanstack/react-query';
+import { type DehydratedState } from '@tanstack/react-query';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import { useMemo } from 'react';
 
 import { fetchUserData } from '~/server/prefetchUserData';
 
-import { reservation, visit } from '~/constants/queryKeys';
+import type { RegularEmployeeUser } from '~/schemas/api/auth';
 
-import { getEmployeeReservations, getEmployeeVisits } from '~/api/employee';
-
-import type { EmployeeUser } from '~/schemas/api/auth';
+import { useEmployeeVisits } from '~/hooks/employee/useEmployeeVisits';
 
 import { ReservationToConfirmList } from '~/components/organisms/lists';
 import { ProfilePageTemplate } from '~/components/template';
 
-import { getEventsFromVisits } from '~/utils/scheduler';
-import { isEmployeeUser } from '~/utils/userUtils';
-
-import { Status } from '~/types/enums';
+import { isRegularEmployeeUser } from '~/utils/userUtils';
 
 export default function EmployeeProfile({
   userData
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const { data: visitList, isLoading } = useQuery({
-    queryKey: visit.employee(userData.id),
-    queryFn: () => getEmployeeVisits(userData.id)
+  const { visitEvents, reservationList, isLoading } = useEmployeeVisits({
+    employeeId: userData.id
   });
 
-  const { data: reservationList, isLoading: isLoadingReservations } = useQuery({
-    queryKey: reservation.employee(userData.id),
-    queryFn: () =>
-      getEmployeeReservations(userData.id, { status: Status.TO_BE_CONFIRMED })
-  });
-
-  const visitEvents = useMemo(
-    () => getEventsFromVisits(visitList?.map(({ visit }) => visit) ?? []),
-    [visitList]
-  );
   return (
     <ProfilePageTemplate
       visits={visitEvents}
@@ -52,7 +35,7 @@ export const getServerSideProps = (async (ctx) => {
 
   const { userData, dehydratedState } = initialData;
 
-  if (!isEmployeeUser(userData)) {
+  if (!isRegularEmployeeUser(userData)) {
     return {
       redirect: {
         destination: '/login',
@@ -69,5 +52,5 @@ export const getServerSideProps = (async (ctx) => {
   };
 }) satisfies GetServerSideProps<{
   dehydratedState: DehydratedState;
-  userData: EmployeeUser;
+  userData: RegularEmployeeUser;
 }>;

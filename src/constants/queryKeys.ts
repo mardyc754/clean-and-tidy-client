@@ -1,4 +1,9 @@
-import type { ReservationQueryOptions, VisitQueryOptions } from '~/api/types';
+import type {
+  AllServicesQueryOptions,
+  ReservationQueryOptions,
+  ServiceQueryOptions,
+  VisitQueryOptions
+} from '~/api/types';
 
 import type { Status } from '~/types/enums';
 
@@ -13,6 +18,12 @@ import type { Status } from '~/types/enums';
 // };
 
 export const user = ['user'];
+
+export const employee = {
+  all: ['employees'] as const,
+  find: (id: number) => [...employee.all, { id }] as const,
+  findServices: (id: number) => [...employee.find(id), 'services'] as const
+};
 
 export const reservation = {
   all: ['reservations'] as const,
@@ -43,4 +54,17 @@ export const visit = {
     [...visit.details(), id, { options }] as const,
   reservationVisitDetail: (id: number) =>
     [...reservation.details(), ...visit.detail(id)] as const
+};
+
+export const service = {
+  all: ['services'] as const,
+  filter: (filters?: ServiceQueryOptions | AllServicesQueryOptions) =>
+    [...service.all, 'filter', { filters }] as const,
+  find: (id: number) => [...service.all, 'find', { id }] as const,
+  employees: () => [...service.all, 'employees'] as const,
+  employeesWithFilters: (
+    filters?: ServiceQueryOptions | AllServicesQueryOptions
+  ) => [...service.filter(filters), 'employees'] as const,
+  singleServiceEmployees: (id: number) =>
+    [...service.find(id), 'employees'] as const
 };

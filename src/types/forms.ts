@@ -35,4 +35,5 @@ export type CleaningFrequencyData = {
 };
 
 export type NullableDate = Date | null;
-export type ValidDate = NullableDate | [NullableDate, NullableDate];
+// export type ValidDate = NullableDate | [NullableDate, NullableDate];
+export type ValidDate = NullableDate;

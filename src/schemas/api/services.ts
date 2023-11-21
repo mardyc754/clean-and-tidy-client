@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { CleaningFrequency } from '~/types/enums';
 
 import { decimalToFloat } from '../common';
+import { employeeSchema } from './employee';
 
 export const basicService = z.object({
   id: z.number().int(),
@@ -30,7 +31,8 @@ export const service = basicService.merge(
       .optional(),
     isPrimary: z.boolean(),
     secondaryServices: z.array(basicService).optional(),
-    primaryServices: z.array(basicService).optional()
+    primaryServices: z.array(basicService).optional(),
+    employees: employeeSchema.array().optional()
   })
 );
 

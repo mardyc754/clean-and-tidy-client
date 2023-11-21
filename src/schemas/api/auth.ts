@@ -46,11 +46,11 @@ export const clientUserSchema = clientSchema.extend({
   role: z.literal(UserRole.CLIENT)
 });
 
-export const regularEmployeeUserSchema = clientSchema.extend({
+export const regularEmployeeUserSchema = employeeSchema.extend({
   role: z.literal(UserRole.EMPLOYEE)
 });
 
-export const adminUserSchema = clientSchema.extend({
+export const adminUserSchema = employeeSchema.extend({
   role: z.literal(UserRole.ADMIN)
 });
 

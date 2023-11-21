@@ -17,7 +17,7 @@ import { Toaster } from 'react-hot-toast';
 
 import '~/styles/globals.css';
 
-import '~/styles/Calendar.css';
+// import '~/styles/Calendar.css';
 
 config.autoAddCss = false;
 library.add(fas);

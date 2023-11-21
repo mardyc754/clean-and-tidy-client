@@ -1,7 +1,5 @@
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
-// import 'react-calendar/dist/Calendar.css'; // for testing purposes only
-import { type CalendarProps as ReactCalendarProps } from 'react-calendar';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import { MediumTypography } from '~/components/atoms/typography/regular-text';
@@ -19,7 +17,7 @@ type CalendarWithLabelProps = {
   onChangeDate?: (value: ValidDate) => void;
   dateErrorLabel?: string;
   hourErrorLabel?: string;
-} & Omit<ReactCalendarProps, 'onChange' | 'value'>;
+};
 
 const CalendarWithHours = ({
   label,
@@ -45,7 +43,7 @@ const CalendarWithHours = ({
     } else {
       setIsMounted(true);
     }
-  }, [currentDate]);
+  }, [currentDate, hourInputName, isMounted, onChangeHour, setValue]);
 
   return (
     <div className="flex flex-col">

@@ -8,7 +8,8 @@ export const employeeSchema = z.object({
   lastName: z.string().max(50),
   email: z.string().email().max(100),
   startHour: ISOString,
-  endHour: ISOString
+  endHour: ISOString,
+  isAdmin: z.boolean()
 });
 
 export const adminSchema = employeeSchema.extend({
