@@ -59,7 +59,6 @@ const CalendarWithHours = ({
           onChange={onChangeDate}
           errorLabel={dateErrorLabel}
           defaultValue={currentDate}
-          {...props}
         />
         <HourSelection
           name={hourInputName}

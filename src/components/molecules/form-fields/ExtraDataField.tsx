@@ -70,15 +70,17 @@ const ExtraDataField = ({
           onChange={onChangeNumberOfUnits}
         />
       ) : (
-        <Button
-          className="flex items-center px-3 py-3"
-          onClick={(e) => {
-            e.preventDefault();
-            setSelected(true);
-          }}
-        >
-          <FontAwesomeIcon icon={faPlus} className="h-3 w-3" />
-        </Button>
+        <div>
+          <Button
+            className="flex h-auto items-center rounded-full p-3"
+            onClick={(e) => {
+              e.preventDefault();
+              setSelected(true);
+            }}
+          >
+            <FontAwesomeIcon icon={faPlus} className="h-3 w-3" />
+          </Button>
+        </div>
       )}
     </div>
   );
