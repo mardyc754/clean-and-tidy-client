@@ -21,6 +21,8 @@ export const user = ['user'];
 
 export const employee = {
   all: ['employees'] as const,
+  workingHours: (serviceId: number) =>
+    [...employee.all, 'workingHours', { serviceId }] as const,
   find: (id: number) => [...employee.all, { id }] as const,
   findServices: (id: number) => [...employee.find(id), 'services'] as const
 };

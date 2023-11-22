@@ -151,3 +151,14 @@ export function isTheSameDay(
 ) {
   return dayjs(firstDate).isSame(secondDate, 'day');
 }
+
+export function isAfter(firstDate: ValidDayjsDate, secondDate: ValidDayjsDate) {
+  return dayjs(firstDate).isAfter(secondDate);
+}
+
+export function isBefore(
+  firstDate: ValidDayjsDate,
+  secondDate: ValidDayjsDate
+) {
+  return dayjs(firstDate).isBefore(secondDate);
+}

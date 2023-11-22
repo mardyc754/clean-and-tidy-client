@@ -3,6 +3,7 @@ import { FormProvider } from 'react-hook-form';
 import { type Service } from '~/schemas/api/services';
 
 import { useCleaningDetailsForm } from '~/hooks/orderServiceForm/useCleaningDetailsForm';
+import { useEmployeeWorkingHours } from '~/hooks/orderServiceForm/useEmployeeWorkingHours';
 import { useOrderServiceFormNavigation } from '~/hooks/orderServiceForm/useOrderServiceFormNavigation';
 
 import { Checkbox, NumericInput } from '~/components/atoms/forms';
@@ -37,6 +38,10 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
     data,
     submitHandler: async () => await onChangeStep(2)
   });
+
+  const { employeesWithWorkingHours } = useEmployeeWorkingHours(id);
+
+  console.log(employeesWithWorkingHours);
 
   const mainSlot = unit ? (
     <NumericInput

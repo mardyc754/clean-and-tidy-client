@@ -94,10 +94,10 @@ export function useOrderServiceFormSubmit() {
       frequency: frequency,
       visitData: {
         startDate: (fullStartDate() as Date).toISOString(),
-        endDate: (endDate() as Date).toISOString(),
+        endDate: endDate()!.toISOString(),
         cost: totalCost,
         includeDetergents,
-        employeeIds: [2] // TODO: get employee ids from backend
+        employeeIds: [3] // TODO: get employee ids from backend
       },
       bookerEmail: clientData.email,
       address,

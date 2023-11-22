@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { ISOString } from '../common';
+import { ISOString, timespanSchema } from '../common';
 
 export const employeeSchema = z.object({
   id: z.number().int(),
@@ -16,6 +16,14 @@ export const adminSchema = employeeSchema.extend({
   isAdmin: z.literal(true)
 });
 
+export const employeeWithWorkingHoursSchema = employeeSchema.extend({
+  workingHours: timespanSchema.array()
+});
+
 export type Employee = z.infer<typeof employeeSchema>;
 
 export type Admin = z.infer<typeof adminSchema>;
+
+export type EmployeeWithWorkingHours = z.infer<
+  typeof employeeWithWorkingHoursSchema
+>;

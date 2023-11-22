@@ -28,18 +28,18 @@ const HourSelection = ({
   const hourAvailabilityData = useMemo(
     () => [
       // available field will be later replaced by availableEmployees array
-      { hour: 7, available: false },
+      { hour: 7, available: true },
       { hour: 8, available: true },
       { hour: 9, available: true },
       { hour: 10, available: true },
-      { hour: 11, available: false },
-      { hour: 12, available: false },
-      { hour: 13, available: false },
+      { hour: 11, available: true },
+      { hour: 12, available: true },
+      { hour: 13, available: true },
       { hour: 14, available: true },
       { hour: 15, available: true },
       { hour: 16, available: true },
       { hour: 17, available: true },
-      { hour: 18, available: false }
+      { hour: 18, available: true }
     ],
     []
   );

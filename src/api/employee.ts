@@ -1,6 +1,10 @@
 import type { ZodType } from 'zod';
 
-import { Employee, employeeSchema } from '~/schemas/api/employee';
+import {
+  type Employee,
+  employeeSchema,
+  employeeWithWorkingHoursSchema
+} from '~/schemas/api/employee';
 import {
   type Reservation,
   type VisitWithStatusAndReservation,
@@ -16,6 +20,11 @@ import { handleFetchingData } from './handleFetchingData';
 
 type EmployeeReservationQueryOptions = {
   status: Status;
+};
+
+type EmployeeWorkingHoursQueryOptions = {
+  from: string;
+  to: string;
 };
 
 export const getEmployeeVisits = async (employeeId: number) => {
@@ -64,5 +73,18 @@ export const changeEmployeeServiceAssignment = async (
     successSchema: service.array() as unknown as ZodType<Service[]>,
     errorSchema: basicError,
     data: { serviceIds }
+  });
+};
+
+export const getEmployeeWorkingHours = async (
+  serviceId: Service['id'],
+  options?: EmployeeWorkingHoursQueryOptions
+) => {
+  return await handleFetchingData({
+    path: `/employees/services/${serviceId}/working-hours`,
+    method: 'get',
+    successSchema: employeeWithWorkingHoursSchema.array(),
+    errorSchema: basicError,
+    params: options
   });
 };

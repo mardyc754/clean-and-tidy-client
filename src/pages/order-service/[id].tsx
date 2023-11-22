@@ -1,6 +1,6 @@
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { type NextRouter, withRouter } from 'next/router';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
 import {
   configureDetailsIndicatorData,
@@ -13,7 +13,7 @@ import { getAllServices, getServiceById } from '~/api/services';
 
 import type { Service } from '~/schemas/api/services';
 
-import { useOrderServiceFormStore } from '~/stores/orderService/orderServiceFormStore';
+import { useOrderServicePageLoading } from '~/hooks/orderServiceForm/useOrderServicePageLoading';
 
 import {
   CleaningDetailsForm,
@@ -56,29 +56,7 @@ function OrderService({
   data,
   router
 }: InferGetStaticPropsType<typeof getStaticProps> & { router: NextRouter }) {
-  const [serviceIdChecked, setServiceIdChecked] = useState(false);
-
-  const { changeServiceId, onChangeCleaningFrequency } =
-    useOrderServiceFormStore((state) => ({
-      changeServiceId: state.changeServiceId,
-      onChangeCleaningFrequency: state.onChangeCleaningFrequency
-    }));
-
-  useEffect(() => {
-    if (data) {
-      changeServiceId(data.id);
-    }
-    setServiceIdChecked(true);
-  }, [data.id, changeServiceId, data]);
-
-  useEffect(() => {
-    if (data.cleaningFrequencies?.length == 1) {
-      onChangeCleaningFrequency(
-        data.cleaningFrequencies[0]!.value,
-        data.cleaningFrequencies
-      );
-    }
-  }, [data.cleaningFrequencies, onChangeCleaningFrequency]);
+  const { serviceIdChecked } = useOrderServicePageLoading({ data });
 
   const currentStep = useMemo(() => {
     const step = router.query.currentStep;
@@ -88,7 +66,6 @@ function OrderService({
 
     return 0;
   }, [router.query.currentStep]);
-  // console.log(query);
 
   const currentStepData = useMemo(
     () => getCurrentStepComponent(currentStep, data),
@@ -104,12 +81,6 @@ function OrderService({
       stepIndicatorData={currentStepData.stepIndidatorData}
     >
       {serviceIdChecked && currentStepData.stepComponent}
-      {/* <StepButtons
-        cancelHref="/"
-        currentStep={currentStep}
-        setCurrentStep={setCurrentStep}
-        maxStep={2}
-      /> */}
     </OrderServiceFormPage>
   );
 }
