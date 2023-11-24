@@ -1,3 +1,4 @@
+import { AllEmployeesQueryOptions } from '~/api/employee';
 import type {
   AllServicesQueryOptions,
   ReservationQueryOptions,
@@ -21,6 +22,8 @@ export const user = ['user'];
 
 export const employee = {
   all: ['employees'] as const,
+  filters: (filters?: AllEmployeesQueryOptions) =>
+    [...employee.all, 'filters', { filters }] as const,
   workingHours: (serviceId: number) =>
     [...employee.all, 'workingHours', { serviceId }] as const,
   find: (id: number) => [...employee.all, { id }] as const,

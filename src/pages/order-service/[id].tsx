@@ -108,10 +108,7 @@ export const getStaticProps = (async ({ params }) => {
     };
   }
 
-  const data = await getServiceById(params.id as string, {
-    includeSecondaryServices: true,
-    includeCleaningFrequencies: true
-  });
+  const data = await getServiceById(params.id as string);
 
   if ('hasError' in data) {
     return {

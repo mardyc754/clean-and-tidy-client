@@ -97,7 +97,7 @@ export function useOrderServiceFormSubmit() {
         endDate: endDate()!.toISOString(),
         cost: totalCost,
         includeDetergents,
-        employeeIds: [3] // TODO: get employee ids from backend
+        employeeIds: [4] // TODO: get employee ids from backend
       },
       bookerEmail: clientData.email,
       address,

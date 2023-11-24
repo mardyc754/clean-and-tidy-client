@@ -1,36 +1,35 @@
-import { type DehydratedState, useQuery } from '@tanstack/react-query';
+import { type DehydratedState } from '@tanstack/react-query';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
 import { fetchUserData } from '~/server/prefetchUserData';
 
 import type { AdminUser } from '~/schemas/api/auth';
 
-import { useEmployeeList } from '~/hooks/employee/useEmployeeList';
+import { useEmployeeListWithVisits } from '~/hooks/employee/useEmployeeList';
 import { useEmployeeVisits } from '~/hooks/employee/useEmployeeVisits';
 
 import { EmployeeTable } from '~/components/organisms/data-display';
-import { EmployeeList } from '~/components/organisms/lists';
 import { ReservationToConfirmList } from '~/components/organisms/lists';
 import { ProfilePageTemplate } from '~/components/template';
 
+import { getEventsFromEmployees } from '~/utils/scheduler';
 import { isAdminUser } from '~/utils/userUtils';
 
 export default function AdminProfile({
   userData
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const { visitEvents, reservationList, isLoading } = useEmployeeVisits({
+  const { reservationList, isLoading } = useEmployeeVisits({
     employeeId: userData.id
   });
 
-  const { employeeList } = useEmployeeList();
+  const { employeeList } = useEmployeeListWithVisits();
 
   return (
     <ProfilePageTemplate
-      visits={visitEvents}
+      visits={getEventsFromEmployees(employeeList ?? [])}
       userData={userData}
       isLoadingEvents={isLoading}
     >
-      {/* {employeeList && <EmployeeList data={employeeList} />} */}
       {employeeList && <EmployeeTable data={employeeList} />}
       {reservationList && <ReservationToConfirmList data={reservationList} />}
     </ProfilePageTemplate>

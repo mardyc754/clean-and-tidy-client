@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { visit } from '~/constants/queryKeys';
 
-import { getVisitById } from '~/api/visit';
+import { getVisitByIdWithEmployees } from '~/api/visit';
 
 import type { Visit } from '~/schemas/api/reservation';
 
@@ -23,11 +23,9 @@ const VisitDetailsDialog = ({
   onClose,
   visitId
 }: VisitDetailsDialogProps) => {
-  const options = { includeEmployees: true };
-
   const { data, isLoading } = useQuery({
-    queryKey: visit.detail(visitId, options),
-    queryFn: () => getVisitById(visitId, { includeEmployees: true })
+    queryKey: visit.detail(visitId, { includeEmployees: true }),
+    queryFn: () => getVisitByIdWithEmployees(visitId)
   });
 
   return (

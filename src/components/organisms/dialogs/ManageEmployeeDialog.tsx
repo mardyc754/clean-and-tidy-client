@@ -1,6 +1,6 @@
 import type { Employee } from '~/schemas/api/employee';
 
-import { useServices } from '~/hooks/adminForms/useServices';
+import { useServicesWithEmployees } from '~/hooks/adminForms/useServices';
 
 import { DialogTriggerButton } from '.';
 import { ChangeEmployeeDataForm } from '../forms';
@@ -10,7 +10,7 @@ interface ManageEmployeeDialogProps {
 }
 
 const ManageEmployeeDialog = ({ employeeData }: ManageEmployeeDialogProps) => {
-  const { services } = useServices({ includeEmployees: true });
+  const { services } = useServicesWithEmployees();
 
   return (
     <DialogTriggerButton

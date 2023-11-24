@@ -2,23 +2,19 @@ import { useMemo } from 'react';
 
 import type { AuthenticatedUser } from '~/schemas/api/auth';
 
-import { Button } from '~/components/atoms/buttons';
 import { Heading1, Heading2 } from '~/components/atoms/typography/headings';
 import { Spinner } from '~/components/molecules/status-indicators';
 import { Scheduler } from '~/components/organisms/scheduler';
 import { PageWrapper } from '~/components/template';
 
 import { daysBetween } from '~/utils/dateUtils';
-import {
-  type getEventsFromReservation,
-  getMaxEndDateFromReservationVisits
-} from '~/utils/scheduler';
-import { getUserLabel } from '~/utils/userUtils';
+import { getMaxEndDateFromReservationVisits } from '~/utils/scheduler';
 
 import { UserProfileCard } from '../organisms/cards';
+import type { VisitEvent } from '../organisms/scheduler/Scheduler';
 
 type ProfilePageTemplateProps = {
-  visits: ReturnType<typeof getEventsFromReservation>;
+  visits: VisitEvent[];
   userData: AuthenticatedUser;
   isLoadingEvents?: boolean;
   children?: React.ReactNode;

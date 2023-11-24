@@ -2,15 +2,14 @@ import type { ZodType } from 'zod';
 
 import {
   type Reservation,
-  reservationListSchema,
-  reservationSchema
+  type ReservationWithExtendedVisits,
+  reservationSchema,
+  reservationWithExtendedVisitsSchema
 } from '~/schemas/api/reservation';
 import { basicError } from '~/schemas/common';
 import type { ReservationCreationData } from '~/schemas/forms/orderService';
-import type { StatusChangeData } from '~/schemas/forms/reservationManagement';
 
 import { handleFetchingData } from './handleFetchingData';
-import type { ReservationQueryOptions } from './types';
 
 export const createReservation = async (data: ReservationCreationData) => {
   return await handleFetchingData({
@@ -22,41 +21,27 @@ export const createReservation = async (data: ReservationCreationData) => {
   });
 };
 
-export const getReservationByName = async (
-  name: string,
-  options?: ReservationQueryOptions
-) => {
+export const getReservationByName = async (name: string) => {
   return await handleFetchingData({
     path: `/reservations/${name}`,
     method: 'get',
-    successSchema: reservationSchema as ZodType<Reservation>,
+    successSchema:
+      reservationWithExtendedVisitsSchema as unknown as ZodType<ReservationWithExtendedVisits>,
     errorSchema: basicError,
-    params: options
+    params: {
+      includeVisits: true,
+      includeServices: true,
+      includeAddress: true
+    }
   });
 };
 
-export const getAllReservations = async (options?: ReservationQueryOptions) => {
+export const getAllReservations = async () => {
   return await handleFetchingData({
     path: '/reservations',
     method: 'get',
-    successSchema: reservationListSchema as ZodType<Reservation[]>,
-    errorSchema: basicError,
-    params: options
-  });
-};
-
-export const changeReservationStatus = async (
-  name: string,
-  data: StatusChangeData
-  // options?: ReservationQueryOptions
-) => {
-  return await handleFetchingData({
-    path: `/reservations/${name}/status`,
-    method: 'put',
-    successSchema: reservationSchema as ZodType<Reservation>,
-    errorSchema: basicError,
-    // params: options,
-    data
+    successSchema: reservationSchema.array() as ZodType<Reservation[]>,
+    errorSchema: basicError
   });
 };
 
@@ -67,7 +52,7 @@ export const confirmReservation = async (
   return await handleFetchingData({
     path: `/reservations/${reservationName}/confirm`,
     method: 'put',
-    successSchema: reservationSchema as ZodType<Reservation>,
+    successSchema: reservationSchema as unknown as ZodType<Reservation>,
     errorSchema: basicError,
     data: { employeeId }
   });

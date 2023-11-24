@@ -31,10 +31,13 @@ export const service = basicService.merge(
       .optional(),
     isPrimary: z.boolean(),
     secondaryServices: z.array(basicService).optional(),
-    primaryServices: z.array(basicService).optional(),
-    employees: employeeSchema.array().optional()
+    primaryServices: z.array(basicService).optional()
   })
 );
+
+export const serviceWithEmployees = service.extend({
+  employees: employeeSchema.array()
+});
 
 export const services = z.array(service);
 
@@ -71,3 +74,5 @@ export type PrimaryService = z.infer<typeof primaryService>;
 export type OrderedService = z.infer<typeof orderedServiceSchema>;
 
 export type ServiceForReservation = z.infer<typeof serviceForReservation>;
+
+export type ServiceWithEmployees = z.infer<typeof serviceWithEmployees>;

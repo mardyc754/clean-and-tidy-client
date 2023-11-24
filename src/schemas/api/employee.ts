@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { Status } from '~/types/enums';
+
 import { ISOString, timespanSchema } from '../common';
 
 export const employeeSchema = z.object({
@@ -20,6 +22,11 @@ export const employeeWithWorkingHoursSchema = employeeSchema.extend({
   workingHours: timespanSchema.array()
 });
 
+export const employeeWithStatusSchema = z.object({
+  employee: employeeSchema,
+  status: z.nativeEnum(Status)
+});
+
 export type Employee = z.infer<typeof employeeSchema>;
 
 export type Admin = z.infer<typeof adminSchema>;
@@ -27,3 +34,5 @@ export type Admin = z.infer<typeof adminSchema>;
 export type EmployeeWithWorkingHours = z.infer<
   typeof employeeWithWorkingHoursSchema
 >;
+
+export type EmployeeWithStatus = z.infer<typeof employeeWithStatusSchema>;

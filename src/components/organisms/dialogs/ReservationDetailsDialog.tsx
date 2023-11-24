@@ -8,6 +8,7 @@ import { confirmReservation, getReservationByName } from '~/api/reservation';
 import type { Reservation } from '~/schemas/api/reservation';
 
 import { useAuth } from '~/hooks/auth/useAuth';
+import { useReservation } from '~/hooks/reservation/useReservation';
 
 import { Button } from '~/components/atoms/buttons';
 import { Spinner } from '~/components/molecules/status-indicators';
@@ -28,18 +29,9 @@ const ReservationDetailsDialog = ({
 }: ReservationDetailsDialogProps) => {
   const queryClient = useQueryClient();
 
-  const options = {
-    includeVisits: true,
-    includeServices: true,
-    includeAddress: true
-  };
-
   const { currentUser } = useAuth();
 
-  const { data, isLoading } = useQuery({
-    queryKey: [...reservation.find(), reservationName, options],
-    queryFn: () => getReservationByName(reservationName, options)
-  });
+  const { data, isLoading } = useReservation(reservationName);
 
   const mutation = useMutation({
     mutationFn: (userId: number) => confirmReservation(reservationName, userId),

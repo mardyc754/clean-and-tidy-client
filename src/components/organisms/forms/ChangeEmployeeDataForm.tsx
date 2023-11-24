@@ -7,7 +7,7 @@ import { service } from '~/constants/queryKeys';
 import { changeEmployeeServiceAssignment } from '~/api/employee';
 
 import type { Employee } from '~/schemas/api/employee';
-import type { Service } from '~/schemas/api/services';
+import type { ServiceWithEmployees } from '~/schemas/api/services';
 
 import Button from '~/components/atoms/buttons/Button';
 import { Checkbox } from '~/components/atoms/forms';
@@ -15,7 +15,7 @@ import { DialogFooter } from '~/components/shadcn/ui/dialog';
 
 interface ChangeEmployeeDataFormProps {
   employeeData: Employee;
-  serviceData: Service[];
+  serviceData: ServiceWithEmployees[];
 }
 
 const ChangeEmployeeDataForm = ({
@@ -75,10 +75,6 @@ const ChangeEmployeeDataForm = ({
         })}
       >
         <div className="max-h-[60vh] space-y-4 overflow-auto">
-          {/* <div>
-            <p className="font-emphasize text-lg">Administration</p>
-            <Checkbox name={`isAdmin`} caption={'Employee is admin'} />
-          </div> */}
           <div className="flex flex-col space-y-4">
             <p className="font-emphasize text-lg">Services</p>
             <div>

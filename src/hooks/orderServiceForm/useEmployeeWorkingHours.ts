@@ -1,20 +1,17 @@
 import { useQuery } from '@tanstack/react-query';
-import { is } from 'date-fns/locale';
-import { useEffect } from 'react';
 
 import { employee } from '~/constants/queryKeys';
 
-import { getEmployeeWorkingHours } from '~/api/employee';
+import { getEmployeesWorkingHours } from '~/api/employee';
 
-import { Timespan } from '~/schemas/common';
+import { type Timespan } from '~/schemas/common';
 
-import { isAfter } from '~/utils/dateUtils';
+import { displayDateWithHours, isAfter } from '~/utils/dateUtils';
 
 const calculateBusyHours = (allEmployeeWorkingHours: Timespan[][]) => {
   let busyHours = allEmployeeWorkingHours[0] ?? [];
 
   allEmployeeWorkingHours.slice(1).forEach((singleEmployeeWorkingHours) => {
-    // const conflictingTimespans: Timespan[][] = [];
     const newBusyHours: Timespan[] = [];
 
     // check the hour conflicts between employees
@@ -51,8 +48,19 @@ const calculateBusyHours = (allEmployeeWorkingHours: Timespan[][]) => {
 export function useEmployeeWorkingHours(serviceId: number) {
   const { data: employeesWithWorkingHours, isSuccess } = useQuery({
     queryKey: employee.workingHours(serviceId),
-    queryFn: () => getEmployeeWorkingHours(serviceId)
+    queryFn: () => getEmployeesWorkingHours(serviceId)
   });
+
+  const busyHours = calculateBusyHours(
+    employeesWithWorkingHours?.map(({ workingHours }) => workingHours) ?? []
+  );
+
+  console.log(
+    busyHours.map(({ start, end }) => ({
+      start: displayDateWithHours(start),
+      end: displayDateWithHours(end)
+    }))
+  );
 
   return { employeesWithWorkingHours };
 }

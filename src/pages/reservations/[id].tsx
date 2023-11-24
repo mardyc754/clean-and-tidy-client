@@ -81,11 +81,7 @@ export const getStaticProps = (async ({ params }) => {
   let data: Reservation | null = null;
 
   try {
-    data = await getReservationByName(params.id as string, {
-      includeVisits: true,
-      includeServices: true,
-      includeAddress: true
-    });
+    data = await getReservationByName(params.id as string);
   } catch (error) {
     return {
       notFound: true

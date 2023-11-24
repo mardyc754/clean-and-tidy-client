@@ -3,6 +3,7 @@ import {
   reservationStatusMap
 } from '~/constants/mappings';
 
+import { Employee, EmployeeWithVisits } from '~/schemas/api/employee';
 import type {
   EmployeeWithStatus,
   Reservation
@@ -32,6 +33,20 @@ export const createReservationTitle = (reservation: Reservation) => {
   return `${mainServiceName}, ${frequencyName}, from ${displayDateWithHours(
     reservation?.visits?.[0]?.startDate
   )}`;
+};
+
+export const createReservationTitleForAdmin = (
+  employee: EmployeeWithVisits,
+  reservation: Reservation
+) => {
+  const { firstName, lastName } = employee;
+
+  const mainServiceName =
+    getMainServiceForReservation(reservation)?.service.name;
+
+  const frequencyName = frequencyToDescriptionMap.get(reservation.frequency);
+
+  return `${firstName} ${lastName}, ${mainServiceName}, ${frequencyName}`;
 };
 
 export const createReservationTitleForEmployee = (reservation: Reservation) => {
