@@ -5,7 +5,7 @@ import { reservation, visit } from '~/constants/queryKeys';
 
 import { getEmployeeReservations, getEmployeeVisits } from '~/api/employee';
 
-import { getEventsFromVisits } from '~/utils/scheduler';
+import { getEventsFromVisitParts } from '~/utils/scheduler';
 
 import { Status } from '~/types/enums';
 
@@ -26,7 +26,7 @@ export function useEmployeeVisits({ employeeId }: useEmployeeVisitsOptions) {
   });
 
   const visitEvents = useMemo(
-    () => getEventsFromVisits(visitList?.map(({ visit }) => visit) ?? []),
+    () => getEventsFromVisitParts(visitList ?? []),
     [visitList]
   );
 

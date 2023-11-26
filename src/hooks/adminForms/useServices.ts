@@ -16,7 +16,7 @@ export function useServices(options?: AllServicesQueryOptions) {
 
 export function useServicesWithEmployees() {
   const { data: services, isLoading } = useQuery({
-    queryKey: service.employeesWithFilters({ includeEmployees: true }),
+    queryKey: service.employeesWithFilters({ includeEmployee: true }),
     queryFn: getAllServicesWithEmployees
   });
 

@@ -1,16 +1,22 @@
 import { useState } from 'react';
 
-import type { Reservation } from '~/schemas/api/reservation';
+import type {
+  Reservation,
+  ReservationWithExtendedVisits
+} from '~/schemas/api/reservation';
 
 import { SectionWithButton } from '~/components/organisms/button-fields';
 
-import { createReservationTitleForEmployee } from '~/utils/reservationUtils';
+import {
+  createReservationTitleForEmployee,
+  getMainServiceForReservation
+} from '~/utils/reservationUtils';
 
 import { ReservationDetailsDialog } from '../dialogs';
 import ListWrapper from '../wrappers/ListWrapper';
 
 interface ReservationToConfirmListProps {
-  data: Reservation[];
+  data: ReservationWithExtendedVisits[];
 }
 
 const ReservationToConfirmList = ({ data }: ReservationToConfirmListProps) => {
@@ -30,7 +36,10 @@ const ReservationToConfirmList = ({ data }: ReservationToConfirmListProps) => {
                 onClick: () => setCurrentData(reservation),
                 content: 'Manage'
               }}
-              label={createReservationTitleForEmployee(reservation)}
+              label={createReservationTitleForEmployee(
+                reservation,
+                getMainServiceForReservation(reservation)
+              )}
               key={`ReservationToConfirmField-${reservation.id}`}
             />
           ))}

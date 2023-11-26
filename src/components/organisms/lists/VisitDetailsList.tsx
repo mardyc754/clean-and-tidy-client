@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import type { Visit } from '~/schemas/api/reservation';
+import type { VisitWithEmployees } from '~/schemas/api/reservation';
 
 import { LabeledTypography } from '~/components/atoms/typography/labeled-text';
 
@@ -8,7 +8,7 @@ import { convertToCamelCase } from '~/utils/stringUtils';
 import { getVisitCost, getVisitStatusDescription } from '~/utils/visitUtils';
 
 interface VisitDetailsListProps {
-  data: Visit;
+  data: VisitWithEmployees;
 }
 
 const VisitDetailsList = ({ data }: VisitDetailsListProps) => {

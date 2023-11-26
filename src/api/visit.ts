@@ -1,10 +1,8 @@
 import type { ZodType } from 'zod';
 
 import {
-  type Visit,
-  type VisitWithEmployees,
-  visitSchema,
-  visitWithEmployeesSchema
+  type VisitPartWithVisitData,
+  visitPartWithVisitData
 } from '~/schemas/api/reservation';
 import { basicError } from '~/schemas/common';
 
@@ -14,7 +12,8 @@ export const getVisitById = async (id: number) => {
   return await handleFetchingData({
     path: `/visits/${id}`,
     method: 'get',
-    successSchema: visitSchema as unknown as ZodType<Visit>,
+    successSchema:
+      visitPartWithVisitData as unknown as ZodType<VisitPartWithVisitData>,
     errorSchema: basicError
   });
 };
@@ -24,8 +23,8 @@ export const getVisitByIdWithEmployees = async (id: number) => {
     path: `/visits/${id}`,
     method: 'get',
     successSchema:
-      visitWithEmployeesSchema as unknown as ZodType<VisitWithEmployees>,
+      visitPartWithVisitData as unknown as ZodType<VisitPartWithVisitData>,
     errorSchema: basicError,
-    params: { includeEmployees: true }
+    params: { includeEmployee: true }
   });
 };

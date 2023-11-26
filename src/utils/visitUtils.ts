@@ -2,11 +2,15 @@ import { reservationStatusMap } from '~/constants/mappings';
 import { DETERGENT_COST } from '~/constants/primitives';
 
 import type { Employee } from '~/schemas/api/employee';
-import type { Visit, VisitPart } from '~/schemas/api/reservation';
+import type {
+  Visit,
+  VisitPart,
+  VisitWithEmployees
+} from '~/schemas/api/reservation';
 
 import { Status } from '~/types/enums';
 
-export function getVisitEmployees(visit: Visit) {
+export function getVisitEmployees(visit: VisitWithEmployees) {
   const { visitParts } = visit;
 
   const uniqueEmployeeIds = new Set(
@@ -30,7 +34,7 @@ export function getVisitStartEndDates(visit: Visit) {
   };
 }
 
-export function getVisitCost(visit: Visit) {
+export function getVisitCost(visit: VisitWithEmployees) {
   const detergentsCost = visit.includeDetergents ? DETERGENT_COST : 0;
 
   return (
@@ -73,12 +77,16 @@ export const getStatusFromVisitParts = (visitParts: VisitPart[]) => {
   return getCumulatedStatus(statuses);
 };
 
-export function getVisitStatusDescription(visit: Visit) {
+export function getVisitStatusDescription(visit: VisitWithEmployees) {
   return reservationStatusMap.get(getStatusFromVisitParts(visit.visitParts));
 }
 
+export function getVisitPartStatusDescription(visitPart: VisitPart) {
+  return reservationStatusMap.get(visitPart.status);
+}
+
 export const getEmployeeStatusFromVisit = (
-  visit: Visit,
+  visit: VisitWithEmployees,
   employeeId: Employee['id']
 ) => {
   const employeeVisitParts = visit.visitParts.filter(
@@ -88,7 +96,7 @@ export const getEmployeeStatusFromVisit = (
   return getStatusFromVisitParts(employeeVisitParts);
 };
 
-export const getVisitEmployeesWithStatuses = (visit: Visit) => {
+export const getVisitEmployeesWithStatuses = (visit: VisitWithEmployees) => {
   const employees = getVisitEmployees(visit);
 
   return employees.map((employee) => ({

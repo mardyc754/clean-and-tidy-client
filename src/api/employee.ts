@@ -7,13 +7,15 @@ import {
   employeeWithWorkingHoursSchema
 } from '~/schemas/api/employee';
 import {
+  EmployeeReservation,
   type EmployeeWithVisits,
   type Reservation,
-  ReservationWithServices,
+  VisitPartWithServiceAndReservation,
   type VisitWithStatusAndReservation,
+  employeeReservationsSchema,
   employeeWithVisitsSchema,
   reservationWithExtendedVisitsSchema,
-  reservationWithServicesSchema,
+  visitPartWithServiceAndReservation,
   visitWithStatusAndReservationSchema
 } from '~/schemas/api/reservation';
 import { type Service, service } from '~/schemas/api/services';
@@ -93,8 +95,8 @@ export const getEmployeeVisits = async (employeeId: number) => {
     path: `/employees/${employeeId}/visits`,
     method: 'get',
     successSchema:
-      visitWithStatusAndReservationSchema.array() as unknown as ZodType<
-        VisitWithStatusAndReservation[]
+      visitPartWithServiceAndReservation.array() as unknown as ZodType<
+        VisitPartWithServiceAndReservation[]
       >,
     errorSchema: basicError
   });
@@ -156,8 +158,8 @@ export const getEmployeeReservations = async (
   return await handleFetchingData({
     path: `/employees/${employeeId}/reservations`,
     method: 'get',
-    successSchema: reservationWithServicesSchema.array() as unknown as ZodType<
-      ReservationWithServices[]
+    successSchema: employeeReservationsSchema.array() as unknown as ZodType<
+      EmployeeReservation[]
     >,
     errorSchema: basicError,
     params

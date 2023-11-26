@@ -5,9 +5,10 @@ import { CleaningFrequency, Status } from '~/types/enums';
 import { ISOString, decimalToFloat } from '../common';
 import { address } from '../forms/orderService';
 import { employeeSchema } from './employee';
-import { serviceForReservation } from './services';
+import { basicService, serviceForVisitPart } from './services';
 
 export const visitPartSchema = z.object({
+  id: z.number().int(),
   employeeId: z.number().int(),
   serviceId: z.number().int(),
   numberOfUnits: z.number().int(),
@@ -19,12 +20,18 @@ export const visitPartSchema = z.object({
 
 export type VisitPart = z.infer<typeof visitPartSchema>;
 
-export const visitPartWithEmployeesSchema = visitPartSchema.extend({
+export const visitPartWithEmployeeSchema = visitPartSchema.extend({
   employee: employeeSchema
 });
 
+export const visitPartWithVisitData = visitPartWithEmployeeSchema.extend({
+  includeDetergents: z.boolean()
+});
+
+export type VisitPartWithVisitData = z.infer<typeof visitPartWithVisitData>;
+
 export type VisitPartWithEmployees = z.infer<
-  typeof visitPartWithEmployeesSchema
+  typeof visitPartWithEmployeeSchema
 >;
 
 export const visitSchema = z.object({
@@ -32,7 +39,11 @@ export const visitSchema = z.object({
   name: z.string().max(100),
   includeDetergents: z.boolean(),
   reservationId: z.number().int(),
-  visitParts: z.array(visitPartWithEmployeesSchema)
+  visitParts: z.array(visitPartSchema)
+});
+
+export const visitSchemaWithEmployees = visitSchema.extend({
+  visitParts: z.array(visitPartWithEmployeeSchema)
 });
 
 export const reservationSchema = z.object({
@@ -49,22 +60,25 @@ export const reservationSchema = z.object({
   extraInfo: z.string().max(500).nullish()
 });
 
-export const reservationWithServicesSchema = reservationSchema.extend({
-  services: z.array(serviceForReservation)
+export const employeeReservationsSchema = reservationSchema.extend({
+  visits: z.array(visitSchema),
+  services: z.array(serviceForVisitPart)
 });
 
-export const reservationWithVisitsSchema = reservationWithServicesSchema.extend(
-  {
-    visits: z.array(visitSchema),
-    address: address.optional()
-  }
-);
+export const reservationWithVisitsSchema = reservationSchema.extend({
+  visits: z.array(visitSchema),
+  services: z.array(serviceForVisitPart),
+  address: address.optional()
+});
 
 export const reservationWithExtendedVisitsSchema =
-  reservationWithVisitsSchema.merge(reservationWithServicesSchema);
+  reservationWithVisitsSchema.extend({
+    visits: z.array(visitSchemaWithEmployees),
+    services: z.array(serviceForVisitPart)
+  });
 
-export const visitWithReservationSchema = visitSchema.extend({
-  reservation: reservationWithServicesSchema
+export const visitWithReservationSchema = visitSchemaWithEmployees.extend({
+  reservation: employeeReservationsSchema
 });
 
 export const visitWithStatusAndReservationSchema = z.object({
@@ -76,18 +90,28 @@ export const employeeWithVisitsSchema = employeeSchema.extend({
   visits: visitWithStatusAndReservationSchema.array()
 });
 
+export const visitPartWithServiceAndReservation = visitPartSchema.extend({
+  service: basicService,
+  reservation: reservationSchema
+});
+
+export type VisitPartWithServiceAndReservation = z.infer<
+  typeof visitPartWithServiceAndReservation
+>;
+
 export type Reservation = z.infer<typeof reservationSchema>;
 
 export type ReservationWithVisits = z.infer<typeof reservationWithVisitsSchema>;
 
-export type ReservationWithServices = z.infer<
-  typeof reservationWithServicesSchema
->;
+export type EmployeeReservation = z.infer<typeof employeeReservationsSchema>;
+
 export type ReservationWithExtendedVisits = z.infer<
   typeof reservationWithExtendedVisitsSchema
 >;
 
 export type Visit = z.infer<typeof visitSchema>;
+
+export type VisitWithEmployees = z.infer<typeof visitSchemaWithEmployees>;
 
 export type VisitWithReservation = z.infer<typeof visitWithReservationSchema>;
 

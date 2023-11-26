@@ -36,7 +36,7 @@ export const getAllServicesWithEmployees = async () => {
       ServiceWithEmployees[]
     >,
     errorSchema: basicError,
-    params: { includeEmployees: true }
+    params: { includeEmployee: true }
   });
 };
 
@@ -62,7 +62,7 @@ export const getServiceByIdWithEmployees = async (id: string) => {
     params: {
       includeSecondaryServices: true,
       includeCleaningFrequencies: true,
-      includeEmployees: true
+      includeEmployee: true
     }
   });
 };

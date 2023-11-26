@@ -45,7 +45,7 @@ const ChangeEmployeeDataForm = ({
       return toast.promise(
         (async () => {
           await queryClient.invalidateQueries({
-            queryKey: service.employeesWithFilters({ includeEmployees: true })
+            queryKey: service.employeesWithFilters({ includeEmployee: true })
           });
         })(),
         {

@@ -1,14 +1,14 @@
 import type { Placement } from '@floating-ui/react-dom';
 import React from 'react';
 
-import type { Visit } from '~/schemas/api/reservation';
+import type { VisitWithEmployees } from '~/schemas/api/reservation';
 
 import { VisitDetailsList } from '../lists';
 import BasicPopover from './BasicPopover';
 
 interface VisitEventPopoverProps {
   name: React.ReactNode;
-  data: Visit;
+  data: VisitWithEmployees;
   placement?: Placement;
 }
 

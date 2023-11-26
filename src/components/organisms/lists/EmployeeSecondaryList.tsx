@@ -1,4 +1,4 @@
-import type { Visit } from '~/schemas/api/reservation';
+import type { VisitWithEmployees } from '~/schemas/api/reservation';
 
 import { StatusIndicator } from '~/components/atoms/typography';
 
@@ -8,7 +8,7 @@ import { getVisitEmployeesWithStatuses } from '~/utils/visitUtils';
 import SecondaryListWrapper from '../wrappers/SecondaryListWrapper';
 
 interface EmployeeListProps {
-  data: Visit;
+  data: VisitWithEmployees;
 }
 
 const EmployeeList = ({ data }: EmployeeListProps) => {

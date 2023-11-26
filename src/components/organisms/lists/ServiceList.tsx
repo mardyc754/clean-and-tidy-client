@@ -1,4 +1,4 @@
-import type { ServiceForReservation } from '~/schemas/api/services';
+import type { ServiceForVisitPart } from '~/schemas/api/services';
 
 import { LabeledTypography } from '~/components/atoms/typography/labeled-text';
 
@@ -7,7 +7,7 @@ import { convertToCamelCase } from '~/utils/stringUtils';
 import ListWrapper from '../wrappers/ListWrapper';
 
 interface ServiceListProps {
-  data: ServiceForReservation[];
+  data: ServiceForVisitPart[];
 }
 
 const ServiceList = ({ data }: ServiceListProps) => {
@@ -23,10 +23,10 @@ const ServiceList = ({ data }: ServiceListProps) => {
     <ListWrapper title="Services">
       {mainService && (
         <LabeledTypography
-          label={mainService.service.name}
+          label={mainService.name}
           value={
             mainService.numberOfUnits > 0
-              ? `${mainService.numberOfUnits} x ${mainService.service.unit?.shortName}`
+              ? `${mainService.numberOfUnits} x ${mainService.unit?.shortName}`
               : ''
           }
           contentDistribution="horizontal"
@@ -36,13 +36,13 @@ const ServiceList = ({ data }: ServiceListProps) => {
       )}
       {secondaryServices.map((serviceData, i) => (
         <LabeledTypography
-          label={serviceData.service.name}
+          label={serviceData.name}
           value={`x ${serviceData.numberOfUnits}`}
           contentDistribution="horizontal"
           labelClasses={'text-lg'}
           valueClasses={'text-lg font-sans'}
           key={`OrderedServices-secondary-${convertToCamelCase(
-            serviceData.service.name
+            serviceData.name
           )}-${i}`}
         />
       ))}

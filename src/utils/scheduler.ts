@@ -1,6 +1,7 @@
 import type {
   EmployeeWithVisits,
-  ReservationWithVisits
+  ReservationWithVisits,
+  VisitPartWithServiceAndReservation
 } from '~/schemas/api/reservation';
 import type {
   ReservationWithExtendedVisits,
@@ -15,23 +16,7 @@ import {
   createReservationTitleForAdmin,
   createReservationTitleForEmployee
 } from './reservationUtils';
-
-export const makeReservationTitle = (
-  reservation: ReservationWithExtendedVisits
-) => {
-  const services = reservation.services ?? [];
-
-  const mainService = services.find(
-    (service) => service.isMainServiceForReservation
-  )!;
-  const restServices = services.filter(
-    (service) => !service.isMainServiceForReservation
-  );
-
-  return [mainService, ...restServices]
-    .map((data) => data.service.name)
-    .join(' + ');
-};
+import { getVisitStartEndDates } from './visitUtils';
 
 export const getEventsFromReservation = (
   reservation: ReservationWithVisits
@@ -40,21 +25,31 @@ export const getEventsFromReservation = (
 
   const title = createReservationTitle(reservation);
 
-  return visits.map((visit) => ({
-    title: title,
-    start: convertISOStringToDate(visit.startDate),
-    end: convertISOStringToDate(visit.endDate),
-    resource: { visitId: visit.id }
-  }));
+  return visits.map((visit) => {
+    const { startDate, endDate } = getVisitStartEndDates(visit);
+    return {
+      title: title,
+      start: convertISOStringToDate(startDate),
+      end: convertISOStringToDate(endDate),
+      resource: { visitId: visit.id }
+    };
+  });
 };
 
-export const getEventsFromVisits = (visits: VisitWithReservation[]) => {
-  return visits.map((visit) => ({
-    title: createReservationTitleForEmployee(visit.reservation),
-    start: convertISOStringToDate(visit.startDate),
-    end: convertISOStringToDate(visit.endDate),
-    resource: { visitId: visit.id }
-  }));
+export const getEventsFromVisitParts = (
+  visits: VisitPartWithServiceAndReservation[]
+) => {
+  return visits.map((visit) => {
+    return {
+      title: createReservationTitleForEmployee(
+        visit.reservation,
+        visit.service
+      ),
+      start: convertISOStringToDate(visit.startDate),
+      end: convertISOStringToDate(visit.endDate),
+      resource: { visitId: visit.id }
+    };
+  });
 };
 
 export const getEventsFromEmployees = (employees: EmployeeWithVisits[]) => {

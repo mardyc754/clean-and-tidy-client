@@ -1,9 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 
 import { reservation } from '~/constants/queryKeys';
 
-import { confirmReservation, getReservationByName } from '~/api/reservation';
+import { confirmReservation } from '~/api/reservation';
 
 import type { Reservation } from '~/schemas/api/reservation';
 

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import type { Visit } from '~/schemas/api/reservation';
+import type { VisitWithEmployees } from '~/schemas/api/reservation';
 
 import { Disclosure } from '~/components/organisms/disclosures';
 
@@ -14,7 +14,7 @@ import { VisitActions } from '../button-fields';
 import { EmployeeSecondaryList, VisitDetailsList } from '../lists';
 
 interface ReservationDisclosureProps {
-  data: Visit;
+  data: VisitWithEmployees;
   manageable?: boolean;
   defaultOpen?: boolean;
 }

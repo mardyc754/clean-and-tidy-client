@@ -10,7 +10,7 @@ import {
 
 import { localizer } from '~/lib/dayjs';
 
-import type { Visit } from '~/schemas/api/reservation';
+import type { VisitWithEmployees } from '~/schemas/api/reservation';
 
 import { dateWithHour } from '~/utils/dateUtils';
 
@@ -41,7 +41,7 @@ function getRandomBackgroudColor() {
 }
 
 export interface VisitEvent extends CalendarEvent {
-  resource: { visitId: Visit['id'] };
+  resource: { visitId: VisitWithEmployees['id'] };
 }
 
 const Event = React.memo(({ event, ...props }: EventProps<VisitEvent>) => {

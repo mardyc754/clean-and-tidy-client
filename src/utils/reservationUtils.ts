@@ -3,13 +3,15 @@ import {
   reservationStatusMap
 } from '~/constants/mappings';
 
-import { Employee, EmployeeWithVisits } from '~/schemas/api/employee';
+import { EmployeeWithVisits } from '~/schemas/api/employee';
 import type {
+  EmployeeReservation,
   EmployeeWithStatus,
   Reservation,
   ReservationWithExtendedVisits,
-  ReservationWithServices
+  VisitPartWithServiceAndReservation
 } from '~/schemas/api/reservation';
+import { BasicServiceData } from '~/schemas/api/services';
 
 import { Status } from '~/types/enums';
 
@@ -17,7 +19,7 @@ import { displayDateWithHours } from './dateUtils';
 import { getVisitStartEndDates } from './visitUtils';
 
 export const getMainServiceForReservation = (
-  reservation: ReservationWithServices
+  reservation: EmployeeReservation | ReservationWithExtendedVisits
 ) => {
   return reservation.services?.find(
     (service) => service.isMainServiceForReservation
@@ -25,7 +27,7 @@ export const getMainServiceForReservation = (
 };
 
 export const getExtraServicesForReservation = (
-  reservation: ReservationWithServices
+  reservation: EmployeeReservation
 ) => {
   return reservation.services?.filter(
     (service) => service.isMainServiceForReservation
@@ -33,10 +35,9 @@ export const getExtraServicesForReservation = (
 };
 
 export const createReservationTitle = (
-  reservation: ReservationWithExtendedVisits
+  reservation: ReservationWithExtendedVisits | EmployeeReservation
 ) => {
-  const mainServiceName =
-    getMainServiceForReservation(reservation)?.service.name;
+  const mainServiceName = getMainServiceForReservation(reservation)?.name;
   const frequencyName = frequencyToDescriptionMap.get(reservation.frequency);
 
   return `${mainServiceName}, ${frequencyName}, from ${displayDateWithHours(
@@ -58,15 +59,17 @@ export const createReservationTitleForAdmin = (
   return `${firstName} ${lastName}, ${mainServiceName}, ${frequencyName}`;
 };
 
-export const createReservationTitleForEmployee = (reservation: Reservation) => {
+export const createReservationTitleForEmployee = (
+  reservation: Reservation,
+  service?: BasicServiceData
+) => {
   const { bookerFirstName, bookerLastName } = reservation;
 
-  const mainServiceName =
-    getMainServiceForReservation(reservation)?.service.name;
+  const serviceName = service?.name ?? 'Service';
 
   const frequencyName = frequencyToDescriptionMap.get(reservation.frequency);
 
-  return `${bookerFirstName} ${bookerLastName}, ${mainServiceName}, ${frequencyName}`;
+  return `${bookerFirstName} ${bookerLastName}, ${serviceName}, ${frequencyName}`;
 };
 
 export const getStatusFromEmployees = (employees: EmployeeWithStatus[]) => {

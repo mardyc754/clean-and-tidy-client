@@ -2,7 +2,7 @@ import type { RequireAtLeastOne } from 'type-fest';
 
 export type AllServicesQueryOptions = RequireAtLeastOne<{
   primaryOnly: boolean;
-  includeEmployees: boolean;
+  includeEmployee: boolean;
 }>;
 
 export type ServiceQueryOptions = RequireAtLeastOne<{
@@ -18,5 +18,5 @@ export type ReservationQueryOptions = RequireAtLeastOne<{
 }>;
 
 export type VisitQueryOptions = RequireAtLeastOne<{
-  includeEmployees: boolean;
+  includeEmployee: boolean;
 }>;
