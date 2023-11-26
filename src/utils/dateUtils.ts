@@ -95,7 +95,7 @@ export function advanceByMinutes(date: ValidDayjsDate, minutes: number) {
   return dayjs(date).add(minutes, 'm').toDate();
 }
 
-export function displayDatesAsTimespan(
+export function displayDatesAsTimestamp(
   startDate: ValidDayjsDate,
   endDate: ValidDayjsDate
 ) {
@@ -104,7 +104,7 @@ export function displayDatesAsTimespan(
   )}`;
 }
 
-export function displayDatesAsFullTimespan(
+export function displayDatesAsFullTimestamp(
   startDate: ValidDayjsDate,
   endDate: ValidDayjsDate
 ) {

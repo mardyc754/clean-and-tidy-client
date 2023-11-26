@@ -6,32 +6,41 @@ import {
 import { Employee, EmployeeWithVisits } from '~/schemas/api/employee';
 import type {
   EmployeeWithStatus,
-  Reservation
+  Reservation,
+  ReservationWithExtendedVisits,
+  ReservationWithServices
 } from '~/schemas/api/reservation';
 
 import { Status } from '~/types/enums';
 
 import { displayDateWithHours } from './dateUtils';
+import { getVisitStartEndDates } from './visitUtils';
 
-export const getMainServiceForReservation = (reservation: Reservation) => {
+export const getMainServiceForReservation = (
+  reservation: ReservationWithServices
+) => {
   return reservation.services?.find(
     (service) => service.isMainServiceForReservation
   );
 };
 
-export const getExtraServicesForReservation = (reservation: Reservation) => {
+export const getExtraServicesForReservation = (
+  reservation: ReservationWithServices
+) => {
   return reservation.services?.filter(
     (service) => service.isMainServiceForReservation
   );
 };
 
-export const createReservationTitle = (reservation: Reservation) => {
+export const createReservationTitle = (
+  reservation: ReservationWithExtendedVisits
+) => {
   const mainServiceName =
     getMainServiceForReservation(reservation)?.service.name;
   const frequencyName = frequencyToDescriptionMap.get(reservation.frequency);
 
   return `${mainServiceName}, ${frequencyName}, from ${displayDateWithHours(
-    reservation?.visits?.[0]?.startDate
+    getVisitStartEndDates(reservation.visits[0]!).startDate
   )}`;
 };
 

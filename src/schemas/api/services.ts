@@ -5,7 +5,7 @@ import { CleaningFrequency } from '~/types/enums';
 
 import { decimalToFloat } from '../common';
 import { employeeSchema } from './employee';
-import { visitPartSchema } from './visit';
+import { visitPartSchema } from './reservation';
 
 export const basicService = z.object({
   id: z.number().int(),
@@ -48,10 +48,10 @@ export const primaryService = service.merge(
   })
 );
 
-export const orderedVisitPart = visitPartSchema.omit({
-  cost: true,
-  startDate: true,
-  endDate: true
+export const orderedVisitPart = z.object({
+  employeeId: z.number().int(),
+  serviceId: z.number().int(),
+  numberOfUnits: z.number().int()
 });
 
 // TODO: divide into main service and extra service
@@ -62,7 +62,6 @@ export const orderedServiceSchema = basicService.extend({
 
 export const serviceForReservation = z.object({
   isMainServiceForReservation: z.boolean(),
-  numberOfUnits: z.number().int().max(500).min(0),
   reservationId: z.number().int(),
   serviceId: z.number().int(),
   service

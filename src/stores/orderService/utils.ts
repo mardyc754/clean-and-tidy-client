@@ -1,11 +1,11 @@
 import type { Employee } from '~/schemas/api/employee';
+import type { VisitPart } from '~/schemas/api/reservation';
 import type {
   BasicServiceData,
   OrderedService,
   OrderedVisitPart,
   Service
 } from '~/schemas/api/services';
-import type { VisitPart } from '~/schemas/api/visit';
 
 import { advanceDateByNMinutes } from '~/utils/dateUtils';
 
@@ -141,7 +141,7 @@ export const prepareVisitParts = (
     );
   });
 
-  return orderedServices.reduce((acc, service) => {
+  return orderedServices.reduce<VisitPart[]>((acc, service) => {
     if (!service?.unit) {
       return acc;
     }
@@ -162,7 +162,7 @@ export const prepareVisitParts = (
         startDate: currentDate.toISOString(),
         endDate: visitPartEndDate.toISOString(),
         cost: totalCost
-      };
+      } as VisitPart;
 
       currentDate = visitPartEndDate;
 

@@ -11,7 +11,7 @@ import {
   TableRow
 } from '~/components/shadcn/ui/table';
 
-import { displayDatesAsTimespan } from '~/utils/dateUtils';
+import { displayDatesAsTimestamp } from '~/utils/dateUtils';
 
 import { ManageEmployeeDialog } from '../dialogs';
 
@@ -21,7 +21,7 @@ function createEmployeeRows(data: Employee[]) {
       id: employee.id,
       employeeFullName: `${employee.firstName} ${employee.lastName}`,
       email: employee.email,
-      workingHours: displayDatesAsTimespan(
+      workingHours: displayDatesAsTimestamp(
         employee.startHour,
         employee.endHour
       ),

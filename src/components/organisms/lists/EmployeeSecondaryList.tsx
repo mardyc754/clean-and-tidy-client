@@ -1,20 +1,23 @@
-import type { EmployeeWithStatus } from '~/schemas/api/reservation';
+import type { Visit } from '~/schemas/api/reservation';
 
 import { StatusIndicator } from '~/components/atoms/typography';
 
 import { convertToCamelCase } from '~/utils/stringUtils';
+import { getVisitEmployeesWithStatuses } from '~/utils/visitUtils';
 
 import SecondaryListWrapper from '../wrappers/SecondaryListWrapper';
 
 interface EmployeeListProps {
-  data: EmployeeWithStatus[];
+  data: Visit;
 }
 
 const EmployeeList = ({ data }: EmployeeListProps) => {
+  const employeesWithStatuses = getVisitEmployeesWithStatuses(data);
+
   return (
     <SecondaryListWrapper title="Assigned employees">
       <ul className="list-inside list-disc">
-        {data.map(({ employee, status }, index) => (
+        {employeesWithStatuses.map(({ employee, status }, index) => (
           <div
             className="flex justify-between"
             key={`SingleReservationEmployee-${convertToCamelCase(

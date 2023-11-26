@@ -5,7 +5,10 @@ import {
   reservationStatusMap
 } from '~/constants/mappings';
 
-import type { Reservation } from '~/schemas/api/reservation';
+import type {
+  Reservation,
+  ReservationWithExtendedVisits
+} from '~/schemas/api/reservation';
 
 import { LabeledTypography } from '~/components/atoms/typography/labeled-text';
 
@@ -15,7 +18,7 @@ import { convertToCamelCase } from '~/utils/stringUtils';
 import ListWrapper from '../wrappers/ListWrapper';
 
 interface ReservationDetailsListProps {
-  data: Reservation; // TODO: maybe use simplified version of Reservation
+  data: ReservationWithExtendedVisits; // TODO: maybe use simplified version of Reservation
 }
 
 const ReservationGeneralDetailsList = ({

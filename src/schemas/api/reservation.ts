@@ -4,21 +4,35 @@ import { CleaningFrequency, Status } from '~/types/enums';
 
 import { ISOString, decimalToFloat } from '../common';
 import { address } from '../forms/orderService';
-import { employeeSchema, employeeWithStatusSchema } from './employee';
+import { employeeSchema } from './employee';
 import { serviceForReservation } from './services';
+
+export const visitPartSchema = z.object({
+  employeeId: z.number().int(),
+  serviceId: z.number().int(),
+  numberOfUnits: z.number().int(),
+  startDate: z.string().datetime(),
+  endDate: z.string().datetime(),
+  cost: decimalToFloat,
+  status: z.nativeEnum(Status)
+});
+
+export type VisitPart = z.infer<typeof visitPartSchema>;
+
+export const visitPartWithEmployeesSchema = visitPartSchema.extend({
+  employee: employeeSchema
+});
+
+export type VisitPartWithEmployees = z.infer<
+  typeof visitPartWithEmployeesSchema
+>;
 
 export const visitSchema = z.object({
   id: z.number().int(),
   name: z.string().max(100),
-  startDate: ISOString,
-  endDate: ISOString,
   includeDetergents: z.boolean(),
-  cost: decimalToFloat,
-  reservationId: z.number().int()
-});
-
-export const visitWithEmployeesSchema = visitSchema.extend({
-  employees: z.array(employeeWithStatusSchema)
+  reservationId: z.number().int(),
+  visitParts: z.array(visitPartWithEmployeesSchema)
 });
 
 export const reservationSchema = z.object({
@@ -46,11 +60,8 @@ export const reservationWithVisitsSchema = reservationWithServicesSchema.extend(
   }
 );
 
-export const reservationWithExtendedVisitsSchema = reservationWithVisitsSchema
-  .extend({
-    visits: z.array(visitWithEmployeesSchema)
-  })
-  .merge(reservationWithServicesSchema);
+export const reservationWithExtendedVisitsSchema =
+  reservationWithVisitsSchema.merge(reservationWithServicesSchema);
 
 export const visitWithReservationSchema = visitSchema.extend({
   reservation: reservationWithServicesSchema
@@ -83,7 +94,5 @@ export type VisitWithReservation = z.infer<typeof visitWithReservationSchema>;
 export type VisitWithStatusAndReservation = z.infer<
   typeof visitWithStatusAndReservationSchema
 >;
-
-export type VisitWithEmployees = z.infer<typeof visitWithEmployeesSchema>;
 
 export type EmployeeWithVisits = z.infer<typeof employeeWithVisitsSchema>;
