@@ -86,14 +86,19 @@ export const visitWithStatusAndReservationSchema = z.object({
   status: z.nativeEnum(Status)
 });
 
-export const employeeWithVisitsSchema = employeeSchema.extend({
-  visits: visitWithStatusAndReservationSchema.array()
+export const visitPartWithService = visitPartSchema.extend({
+  service: basicService
 });
 
-export const visitPartWithServiceAndReservation = visitPartSchema.extend({
-  service: basicService,
+export const visitPartWithServiceAndReservation = visitPartWithService.extend({
   reservation: reservationSchema
 });
+
+export const employeeWithVisitsSchema = employeeSchema.extend({
+  visitParts: z.array(visitPartWithServiceAndReservation)
+});
+
+export type VisitPartWithService = z.infer<typeof visitPartWithService>;
 
 export type VisitPartWithServiceAndReservation = z.infer<
   typeof visitPartWithServiceAndReservation

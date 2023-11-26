@@ -36,7 +36,7 @@ export const getAllServicesWithEmployees = async () => {
       ServiceWithEmployees[]
     >,
     errorSchema: basicError,
-    params: { includeEmployee: true }
+    params: { includeEmployees: true }
   });
 };
 

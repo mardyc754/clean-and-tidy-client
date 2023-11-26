@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
 import type {
-  Reservation,
-  ReservationWithExtendedVisits
+  EmployeeReservation,
+  Reservation
 } from '~/schemas/api/reservation';
 
 import { SectionWithButton } from '~/components/organisms/button-fields';
@@ -16,7 +16,7 @@ import { ReservationDetailsDialog } from '../dialogs';
 import ListWrapper from '../wrappers/ListWrapper';
 
 interface ReservationToConfirmListProps {
-  data: ReservationWithExtendedVisits[];
+  data: EmployeeReservation[];
 }
 
 const ReservationToConfirmList = ({ data }: ReservationToConfirmListProps) => {

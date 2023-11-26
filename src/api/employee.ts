@@ -7,16 +7,12 @@ import {
   employeeWithWorkingHoursSchema
 } from '~/schemas/api/employee';
 import {
-  EmployeeReservation,
+  type EmployeeReservation,
   type EmployeeWithVisits,
-  type Reservation,
-  VisitPartWithServiceAndReservation,
-  type VisitWithStatusAndReservation,
+  type VisitPartWithServiceAndReservation,
   employeeReservationsSchema,
   employeeWithVisitsSchema,
-  reservationWithExtendedVisitsSchema,
-  visitPartWithServiceAndReservation,
-  visitWithStatusAndReservationSchema
+  visitPartWithServiceAndReservation
 } from '~/schemas/api/reservation';
 import { type Service, service } from '~/schemas/api/services';
 import { basicError } from '~/schemas/common';
@@ -38,58 +34,6 @@ export type AllEmployeesQueryOptions = RequireAtLeastOne<{
   includeVisits: boolean;
 }>;
 
-// Example response:
-// [
-//   {
-//       "visitId": 108,
-//       "employeeId": 2,
-//       "status": "TO_BE_CONFIRMED",
-//       "visit": {
-//           "id": 108,
-//           "name": "reservation-uEan3YEAuLvFs1T5ZvTeXL-1",
-//           "startDate": "2023-11-28T09:00:00.000Z",
-//           "endDate": "2023-11-28T13:30:00.000Z",
-//           "includeDetergents": false,
-//           "cost": "225",
-//           "reservationId": 18,
-//           "reservation": {
-//               "id": 18,
-//               "name": "reservation-uEan3YEAuLvFs1T5ZvTeXL",
-//               "frequency": "ONCE",
-//               "endDate": "2023-11-28T13:30:00.000Z",
-//               "weekDay": 2,
-//               "status": "TO_BE_CONFIRMED",
-//               "bookerEmail": "test@example.com",
-//               "addressId": 18,
-//               "bookerFirstName": "Jan",
-//               "bookerLastName": "Testowy",
-//               "extraInfo": null,
-//               "services": [
-//                   {
-//                       "reservationId": 18,
-//                       "serviceId": 1,
-//                       "isMainServiceForReservation": true,
-//                       "numberOfUnits": 45,
-//                       "service": {
-//                           "id": 1,
-//                           "name": "Home Cleaning",
-//                           "unitId": 1,
-//                           "isPrimary": true,
-//                           "minNumberOfUnitsIfPrimary": 30,
-//                           "minCostIfPrimary": null,
-//                           "unit": {
-//                               "id": 1,
-//                               "shortName": "m2",
-//                               "fullName": "Area size (in m2)",
-//                               "price": "5",
-//                               "duration": 6
-//                           }
-//                       }
-//                   }
-//               ]
-//           }
-//       }
-//   },
 export const getEmployeeVisits = async (employeeId: number) => {
   return await handleFetchingData({
     path: `/employees/${employeeId}/visits`,
@@ -102,55 +46,6 @@ export const getEmployeeVisits = async (employeeId: number) => {
   });
 };
 
-// Example response:
-// [
-//   {
-//       "id": 18,
-//       "name": "reservation-uEan3YEAuLvFs1T5ZvTeXL",
-//       "frequency": "ONCE",
-//       "endDate": "2023-11-28T13:30:00.000Z",
-//       "weekDay": 2,
-//       "status": "TO_BE_CONFIRMED",
-//       "bookerEmail": "test@example.com",
-//       "addressId": 18,
-//       "bookerFirstName": "Jan",
-//       "bookerLastName": "Testowy",
-//       "extraInfo": null,
-//       "services": [
-//           {
-//               "reservationId": 18,
-//               "serviceId": 1,
-//               "isMainServiceForReservation": true,
-//               "numberOfUnits": 45,
-//               "service": {
-//                   "id": 1,
-//                   "name": "Home Cleaning",
-//                   "unitId": 1,
-//                   "isPrimary": true,
-//                   "minNumberOfUnitsIfPrimary": 30,
-//                   "minCostIfPrimary": null,
-//                   "unit": {
-//                       "id": 1,
-//                       "shortName": "m2",
-//                       "fullName": "Area size (in m2)",
-//                       "price": "5",
-//                       "duration": 6
-//                   }
-//               }
-//           }
-//       ],
-//       "visits": [
-//           {
-//               "id": 108,
-//               "name": "reservation-uEan3YEAuLvFs1T5ZvTeXL-1",
-//               "startDate": "2023-11-28T09:00:00.000Z",
-//               "endDate": "2023-11-28T13:30:00.000Z",
-//               "includeDetergents": false,
-//               "cost": "225",
-//               "reservationId": 18
-//           }
-//       ]
-//   },
 export const getEmployeeReservations = async (
   employeeId: number,
   params?: EmployeeReservationQueryOptions
@@ -175,77 +70,6 @@ export const getAllEmployees = async () => {
   });
 };
 
-// Example response:
-// [
-//   {
-//       "id": 1,
-//       "firstName": "Admin",
-//       "lastName": "User",
-//       "email": "admin@testmail.com",
-//       "startHour": "1970-01-01T06:00:00.000Z",
-//       "endHour": "1970-01-01T14:00:00.000Z",
-//       "isAdmin": true,
-//       "visits": []
-//   },
-//   {
-//       "id": 2,
-//       "firstName": "Rusty",
-//       "lastName": "Simonis",
-//       "email": "Rusty.Simonis@hotmail.com",
-//       "startHour": "1970-01-01T06:00:00.000Z",
-//       "endHour": "1970-01-01T14:00:00.000Z",
-//       "isAdmin": false,
-//       "visits": [
-//           {
-//               "visitId": 108,
-//               "employeeId": 2,
-//               "status": "TO_BE_CONFIRMED",
-//               "visit": {
-//                   "id": 108,
-//                   "name": "reservation-uEan3YEAuLvFs1T5ZvTeXL-1",
-//                   "startDate": "2023-11-28T09:00:00.000Z",
-//                   "endDate": "2023-11-28T13:30:00.000Z",
-//                   "includeDetergents": false,
-//                   "cost": "225",
-//                   "reservationId": 18,
-//                   "reservation": {
-//                       "id": 18,
-//                       "name": "reservation-uEan3YEAuLvFs1T5ZvTeXL",
-//                       "frequency": "ONCE",
-//                       "endDate": "2023-11-28T13:30:00.000Z",
-//                       "weekDay": 2,
-//                       "status": "TO_BE_CONFIRMED",
-//                       "bookerEmail": "test@example.com",
-//                       "addressId": 18,
-//                       "bookerFirstName": "Jan",
-//                       "bookerLastName": "Testowy",
-//                       "extraInfo": null,
-//                       "services": [
-//                           {
-//                               "reservationId": 18,
-//                               "serviceId": 1,
-//                               "isMainServiceForReservation": true,
-//                               "numberOfUnits": 45,
-//                               "service": {
-//                                   "id": 1,
-//                                   "name": "Home Cleaning",
-//                                   "unitId": 1,
-//                                   "isPrimary": true,
-//                                   "minNumberOfUnitsIfPrimary": 30,
-//                                   "minCostIfPrimary": null,
-//                                   "unit": {
-//                                       "id": 1,
-//                                       "shortName": "m2",
-//                                       "fullName": "Area size (in m2)",
-//                                       "price": "5",
-//                                       "duration": 6
-//                                   }
-//                               }
-//                           }
-//                       ]
-//                   }
-//               }
-//           },
 export const getAllEmployeesWithVisits = async () => {
   return await handleFetchingData({
     path: '/employees',

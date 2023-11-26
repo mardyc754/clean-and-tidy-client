@@ -13,8 +13,8 @@ import type { VisitEvent } from '~/components/organisms/scheduler/Scheduler';
 import { convertISOStringToDate } from './dateUtils';
 import {
   createReservationTitle,
-  createReservationTitleForAdmin,
-  createReservationTitleForEmployee
+  createReservationTitleForEmployee,
+  createVisitPartTitleForAdmin
 } from './reservationUtils';
 import { getVisitStartEndDates } from './visitUtils';
 
@@ -52,11 +52,22 @@ export const getEventsFromVisitParts = (
   });
 };
 
+// export const getEventsFromEmployees = (employees: EmployeeWithVisits[]) => {
+//   return employees.flatMap((employee) => {
+//     const employeeVisits = employee.visits.flatMap(({ visit }) => visit);
+//     return employeeVisits.map((visit) => ({
+//       title: createReservationTitleForAdmin(employee, visit.reservation),
+//       start: convertISOStringToDate(visit.startDate),
+//       end: convertISOStringToDate(visit.endDate),
+//       resource: { visitId: visit.id }
+//     }));
+//   });
+// };
+
 export const getEventsFromEmployees = (employees: EmployeeWithVisits[]) => {
   return employees.flatMap((employee) => {
-    const employeeVisits = employee.visits.flatMap(({ visit }) => visit);
-    return employeeVisits.map((visit) => ({
-      title: createReservationTitleForAdmin(employee, visit.reservation),
+    return employee.visitParts.map((visit) => ({
+      title: createVisitPartTitleForAdmin(employee, visit),
       start: convertISOStringToDate(visit.startDate),
       end: convertISOStringToDate(visit.endDate),
       resource: { visitId: visit.id }

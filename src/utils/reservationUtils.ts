@@ -1,19 +1,13 @@
-import {
-  frequencyToDescriptionMap,
-  reservationStatusMap
-} from '~/constants/mappings';
+import { frequencyToDescriptionMap } from '~/constants/mappings';
 
-import { EmployeeWithVisits } from '~/schemas/api/employee';
+import type { EmployeeWithVisits } from '~/schemas/api/reservation';
 import type {
   EmployeeReservation,
-  EmployeeWithStatus,
   Reservation,
   ReservationWithExtendedVisits,
   VisitPartWithServiceAndReservation
 } from '~/schemas/api/reservation';
-import { BasicServiceData } from '~/schemas/api/services';
-
-import { Status } from '~/types/enums';
+import type { BasicServiceData } from '~/schemas/api/services';
 
 import { displayDateWithHours } from './dateUtils';
 import { getVisitStartEndDates } from './visitUtils';
@@ -45,18 +39,19 @@ export const createReservationTitle = (
   )}`;
 };
 
-export const createReservationTitleForAdmin = (
+export const createVisitPartTitleForAdmin = (
   employee: EmployeeWithVisits,
-  reservation: Reservation
+  visitPart: VisitPartWithServiceAndReservation
+  // reservation: Reservation
 ) => {
   const { firstName, lastName } = employee;
 
-  const mainServiceName =
-    getMainServiceForReservation(reservation)?.service.name;
+  const serviceName = visitPart.service.name;
 
-  const frequencyName = frequencyToDescriptionMap.get(reservation.frequency);
+  // const frequencyName = frequencyToDescriptionMap.get(reservation.frequency);
 
-  return `${firstName} ${lastName}, ${mainServiceName}, ${frequencyName}`;
+  // return `${firstName} ${lastName}, ${serviceName}, ${frequencyName}`;
+  return `${firstName} ${lastName}, ${serviceName}`;
 };
 
 export const createReservationTitleForEmployee = (
@@ -70,42 +65,4 @@ export const createReservationTitleForEmployee = (
   const frequencyName = frequencyToDescriptionMap.get(reservation.frequency);
 
   return `${bookerFirstName} ${bookerLastName}, ${serviceName}, ${frequencyName}`;
-};
-
-export const getStatusFromEmployees = (employees: EmployeeWithStatus[]) => {
-  const statuses = employees.map((employee) => employee.status);
-
-  if (statuses.includes(Status.TO_BE_CONFIRMED)) {
-    return Status.TO_BE_CONFIRMED;
-  }
-
-  if (
-    statuses.some((status) => status === Status.ACTIVE) &&
-    !statuses.includes(Status.TO_BE_CONFIRMED) &&
-    !statuses.includes(Status.TO_BE_CANCELLED)
-  ) {
-    return Status.ACTIVE;
-  }
-
-  if (statuses.some((status) => status === Status.TO_BE_CANCELLED)) {
-    return Status.TO_BE_CANCELLED;
-  }
-
-  if (
-    statuses.every(
-      (status) => status === Status.CLOSED || status === Status.CANCELLED
-    )
-  ) {
-    return Status.CLOSED;
-  }
-
-  return Status.UNKNOWN;
-};
-
-export const getReservationStatusDescription = (
-  employees: EmployeeWithStatus[] | undefined
-) => {
-  return employees
-    ? reservationStatusMap.get(getStatusFromEmployees(employees ?? []))
-    : undefined;
 };
