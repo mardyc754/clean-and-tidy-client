@@ -39,10 +39,6 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
     submitHandler: async () => await onChangeStep(2)
   });
 
-  const { employeesWithWorkingHours } = useEmployeeWorkingHours(id);
-
-  console.log(employeesWithWorkingHours);
-
   const mainSlot = unit ? (
     <NumericInput
       min={0}
@@ -55,7 +51,8 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
           value,
           true,
           { id, name, unit },
-          secondaryServicesWithUnit.length
+          secondaryServicesWithUnit.length,
+          2
         )
       }
     />

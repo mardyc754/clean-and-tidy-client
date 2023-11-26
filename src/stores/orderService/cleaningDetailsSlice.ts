@@ -4,10 +4,10 @@ import { type StateCreator } from 'zustand';
 import { initialCleaningDetailsFormData } from '~/constants/orderServiceForm';
 import { DETERGENT_COST } from '~/constants/primitives';
 
+import type { Employee } from '~/schemas/api/employee';
 import {
   type BasicServiceData,
-  type OrderedService,
-  type Service
+  type OrderedService
 } from '~/schemas/api/services';
 import type { OrderServiceInputData } from '~/schemas/forms/orderService';
 
@@ -17,6 +17,7 @@ import type { CleaningFrequency } from '~/types/enums';
 import type { CleaningFrequencyData, ValidDate } from '~/types/forms';
 
 import {
+  calculateServiceNumberOfUnits,
   calculateTotalCostAndDuration,
   createOrUpdateOrderedService
 } from './utils';
@@ -36,20 +37,19 @@ interface CleaningDetailsSliceData {
   cleaningFrequencyDisplayData: CleaningFrequencyData | null;
 }
 export interface CleaningDetailsSlice extends CleaningDetailsSliceData {
+  availableEmployees: Array<Employee['id']>;
   onChangeServiceNumberOfUnits: (
     numberOfUnits: number,
     isMainService: boolean,
     serviceData: BasicServiceData,
-    positionOnList: number
+    positionOnList: number,
+    employeeId: number
   ) => void;
   onChangeIncludeDetergents: (includeDetergents: boolean) => void;
   onChangeStartDate: (startDate: ValidDate) => void;
   onChangeHourDate: (hourDate: ValidDate) => void;
   fullStartDate: () => StoredDate;
-  setData: (formData: OrderServiceInputData, serviceData: Service) => void;
   getServiceById: (id: BasicServiceData['id']) => OrderedService | undefined;
-  getServiceNumberOfUnits: (id: BasicServiceData['id']) => number;
-  // removeService: (id: BasicServiceData['id']) => OrderedService[];
   removeService: (id: BasicServiceData['id']) => void;
   onChangeCleaningFrequency: (
     cleaningFrequency: CleaningFrequency,
@@ -73,55 +73,7 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
   get
 ) => ({
   ...initialCleaningDetailsState,
-  setData: (formData, serviceData) =>
-    set((state) => {
-      const { id, name, unit, cleaningFrequencies } = serviceData;
-      const { numberOfUnits, cleaningFrequency, extraServices } = formData;
-
-      // get the current services data
-      const primaryService = createOrUpdateOrderedService(
-        { id, name, unit },
-        state.orderedServices,
-        true,
-        numberOfUnits
-      );
-
-      const secondaryServices: OrderedService[] = [];
-
-      serviceData.secondaryServices?.forEach((service, index) => {
-        const numberOfUnits = extraServices?.[index] ?? 0;
-
-        if (numberOfUnits > 0) {
-          secondaryServices.push(
-            createOrUpdateOrderedService(
-              service,
-              state.orderedServices,
-              false,
-              numberOfUnits
-            )
-          );
-        }
-      });
-
-      // synchronize cleaning freaquency display data with its current value
-      const cleaningFrequencyDisplayData =
-        cleaningFrequencies?.find(
-          (frequency) => cleaningFrequency === frequency.value
-        ) ?? null;
-
-      const services = [primaryService, ...secondaryServices];
-      // calculate the total cost and duration
-      const { totalCost, durationInMinutes } =
-        calculateTotalCostAndDuration(services);
-
-      return {
-        orderServiceFormData: formData,
-        orderedServices: services,
-        cleaningFrequencyDisplayData,
-        totalCost,
-        durationInMinutes
-      };
-    }),
+  availableEmployees: [2],
   onChangeIncludeDetergents: (includeDetergents) => {
     set((state) => ({
       includeDetergents,
@@ -134,18 +86,24 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
     numberOfUnits,
     isMainService,
     serviceData,
-    positionOnList
+    positionOnList,
+    employeeId
   ) => {
     set((state) => {
       const newService = createOrUpdateOrderedService(
         serviceData,
+        employeeId,
         state.orderedServices,
         isMainService,
         numberOfUnits
       );
 
       const newServices = [...state.orderedServices];
-      newServices[positionOnList] = newService;
+
+      const newServiceNumberOfUnits = calculateServiceNumberOfUnits(newService);
+
+      newServices[positionOnList] =
+        newServiceNumberOfUnits > 0 ? newService : undefined;
 
       return {
         orderedServices: newServices,
@@ -159,16 +117,15 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
         (service) => service?.id === id
       );
 
-      const newService = [...state.orderedServices];
+      const newServices = [...state.orderedServices];
 
-      newService[oldServiceIndex] = undefined;
+      newServices[oldServiceIndex] = undefined;
 
       return {
-        orderedServices: newService
+        orderedServices: newServices
       };
     });
   },
-  getServiceNumberOfUnits: (id) => get().getServiceById(id)?.numberOfUnits ?? 0,
   getServiceById: (id) =>
     get().orderedServices.find((service) => id === service?.id),
   endDate: () => {
@@ -194,10 +151,7 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
       return startDate;
     }
 
-    return mergeDayDateAndHourDate(
-      new Date(startDate as Date | string),
-      new Date(hourDate as Date | string)
-    );
+    return mergeDayDateAndHourDate(new Date(startDate), new Date(hourDate));
   },
   onChangeCleaningFrequency: (cleaningFrequency, availableFrequencies) => {
     set(() => ({
@@ -224,15 +178,15 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
     } = get();
 
     return {
-      numberOfUnits:
+      numberOfUnits: calculateServiceNumberOfUnits(
         orderedServices.find((service) => service?.isMainServiceForReservation)
-          ?.numberOfUnits ?? 0,
+      ),
       cleaningFrequency: cleaningFrequencyDisplayData?.value ?? null,
-      startDate: startDate ? new Date(startDate as Date | string) : null,
-      hourDate: hourDate ? new Date(hourDate as Date | string) : null,
+      startDate: startDate ? new Date(startDate) : null,
+      hourDate: hourDate ? new Date(hourDate) : null,
       extraServices:
         orderedServices.map((service) =>
-          !service ? service : service.numberOfUnits
+          !service ? service : calculateServiceNumberOfUnits(service)
         ) ?? [],
       totalCost,
       includeDetergents

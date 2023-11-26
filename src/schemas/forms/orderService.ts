@@ -6,6 +6,8 @@ import { ISOString } from '~/schemas/common';
 
 import { CleaningFrequency } from '~/types/enums';
 
+import { visitPartSchema } from '../api/visit';
+
 // CLEANING DETAILS PAGE
 export const orderServiceSubmitDataSchema = z.object({
   numberOfUnits: z
@@ -133,21 +135,22 @@ export const reservationCreationSchema = z
   .object({
     frequency: z.nativeEnum(CleaningFrequency),
     bookerEmail: z.string().email(),
-    visitData: visitCreationDataSchema,
+    // visitData: visitCreationDataSchema,
+    visitParts: z.array(visitPartSchema),
     // endDate: z.string().datetime(),
     address: address.or(z.number().int()),
     contactDetails: contactDetails,
+    includeDetergents: z.boolean(),
+
     services: z
       .array(
         orderedServiceSchema
           .pick({
             id: true,
-            numberOfUnits: true,
             isMainServiceForReservation: true
           })
           .transform((val) => ({
             serviceId: val.id,
-            numberOfUnits: val.numberOfUnits,
             isMainServiceForReservation: val.isMainServiceForReservation
           }))
       )

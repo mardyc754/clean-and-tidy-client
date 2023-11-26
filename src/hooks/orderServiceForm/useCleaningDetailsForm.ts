@@ -36,7 +36,6 @@ export function useCleaningDetailsForm({
     totalCost
   } = useOrderServiceFormStore(
     useShallow((state) => ({
-      setData: state.setData,
       onChangeIncludeDetergents: state.onChangeIncludeDetergents,
       onChangeServiceNumberOfUnits: state.onChangeServiceNumberOfUnits,
       onChangeCleaningFrequency: state.onChangeCleaningFrequency,
@@ -81,7 +80,8 @@ export function useCleaningDetailsForm({
         0,
         true,
         { id, name, unit },
-        secondaryServicesWithUnit.length
+        secondaryServicesWithUnit.length,
+        2 // TODO: hardcoded right now
       );
     }
   }, [

@@ -1,8 +1,7 @@
-import {
-  type BasicServiceData,
-  type ServiceWithUnit
-} from '~/schemas/api/services';
+import { type ServiceWithUnit } from '~/schemas/api/services';
 import type { OrderServiceInputData } from '~/schemas/forms/orderService';
+
+import type { CleaningDetailsSlice } from '~/stores/orderService/cleaningDetailsSlice';
 
 import { ExtraDataField } from '~/components/molecules/form-fields';
 
@@ -12,12 +11,7 @@ type ExtraDataMultiSelectProps = {
   data: ServiceWithUnit[];
   defaultValues?: OrderServiceInputData['extraServices'];
   className?: string;
-  onChangeNumberOfUnits: (
-    numberOfUnits: number,
-    isMainService: boolean,
-    serviceData: BasicServiceData,
-    positionOnList: number
-  ) => void;
+  onChangeNumberOfUnits: CleaningDetailsSlice['onChangeServiceNumberOfUnits'];
 };
 
 const ServiceMultiSelect = ({
@@ -39,7 +33,7 @@ const ServiceMultiSelect = ({
             key={`extra-data-multi-select-${item.id}`}
             data={item}
             onChangeNumberOfUnits={(value: number) =>
-              onChangeNumberOfUnits(value, false, item, index)
+              onChangeNumberOfUnits(value, false, item, index, 2)
             }
           />
         ))}

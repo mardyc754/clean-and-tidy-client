@@ -9,7 +9,6 @@ const NavbarButtons = () => {
 
   if (isPending) return null;
 
-  console.log(currentUser);
   return (
     <div className="flex w-full items-center justify-evenly">
       <NavbarButton href="/order-service">Order service</NavbarButton>

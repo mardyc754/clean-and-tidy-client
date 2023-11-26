@@ -10,6 +10,7 @@ import { reservation } from '~/constants/queryKeys';
 import { createReservation } from '~/api/reservation';
 
 import { useOrderServiceFormStore } from '~/stores/orderService/orderServiceFormStore';
+import { prepareVisitParts } from '~/stores/orderService/utils';
 
 export function useOrderServiceFormSubmit() {
   const queryClient = useQueryClient();
@@ -92,13 +93,8 @@ export function useOrderServiceFormSubmit() {
 
     mutation.mutate({
       frequency: frequency,
-      visitData: {
-        startDate: (fullStartDate() as Date).toISOString(),
-        endDate: endDate()!.toISOString(),
-        cost: totalCost,
-        includeDetergents,
-        employeeIds: [4] // TODO: get employee ids from backend
-      },
+      includeDetergents,
+      visitParts: prepareVisitParts(services, fullStartDate() as Date),
       bookerEmail: clientData.email,
       address,
       contactDetails: clientData,
@@ -106,7 +102,7 @@ export function useOrderServiceFormSubmit() {
         .filter((service) => !!service)
         .map((service) => ({
           serviceId: service!.id,
-          ...omit(service, ['name', 'unit', 'id'])
+          isMainServiceForReservation: service!.isMainServiceForReservation
         })),
       extraInfo
     });
