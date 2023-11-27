@@ -2,6 +2,8 @@ import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
+import type { ServiceWithBusyHours } from '~/schemas/api/services';
+
 import { MediumTypography } from '~/components/atoms/typography/regular-text';
 import { Calendar } from '~/components/molecules/calendar';
 import { HourSelection } from '~/components/molecules/form-fields';
@@ -12,6 +14,7 @@ type CalendarWithLabelProps = {
   calendarInputName: string;
   hourInputName: string;
   label: string;
+  servicesWithBusyHours: ServiceWithBusyHours[];
   direction?: 'column' | 'row';
   onChangeHour?: (value: ValidDate) => void;
   onChangeDate?: (value: ValidDate) => void;
@@ -28,12 +31,14 @@ const CalendarWithHours = ({
   onChangeHour,
   dateErrorLabel,
   hourErrorLabel,
-  ...props
+  servicesWithBusyHours
 }: CalendarWithLabelProps) => {
   const { setValue } = useFormContext();
   const [isMounted, setIsMounted] = useState(false);
 
   const currentDate = useWatch({ name: calendarInputName }) as ValidDate;
+
+  console.log(servicesWithBusyHours);
 
   useEffect(() => {
     // do not reset hour value on first render

@@ -12,10 +12,3 @@ export const decimalToFloat = z
   .transform((val) => parseFloat(val.replace(',', '.')));
 
 export type BackendBasicErrorData = z.infer<typeof basicError>;
-
-export const timespanSchema = z.object({
-  start: ISOString,
-  end: ISOString
-});
-
-export type Timespan = z.infer<typeof timespanSchema>;

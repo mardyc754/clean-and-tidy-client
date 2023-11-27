@@ -1,11 +1,7 @@
 import type { RequireAtLeastOne } from 'type-fest';
 import type { ZodType } from 'zod';
 
-import {
-  type Employee,
-  employeeSchema,
-  employeeWithWorkingHoursSchema
-} from '~/schemas/api/employee';
+import { type Employee, employeeSchema } from '~/schemas/api/employee';
 import {
   type EmployeeReservation,
   type EmployeeWithVisits,
@@ -92,37 +88,5 @@ export const changeEmployeeServiceAssignment = async (
     successSchema: service.array() as unknown as ZodType<Service[]>,
     errorSchema: basicError,
     data: { serviceIds }
-  });
-};
-
-// Example response:
-// [
-//   {
-//       "id": 2,
-//       "firstName": "Rusty",
-//       "lastName": "Simonis",
-//       "email": "Rusty.Simonis@hotmail.com",
-//       "startHour": "1970-01-01T06:00:00.000Z",
-//       "endHour": "1970-01-01T14:00:00.000Z",
-//       "isAdmin": false,
-//       "workingHours": [
-//           {
-//               "start": "2023-11-23T08:00:00.000Z",
-//               "end": "2023-11-23T13:00:00.000Z"
-//           },
-//           {
-//               "start": "2023-11-24T09:00:00.000Z",
-//               "end": "2023-11-24T15:00:00.000Z"
-//           },
-export const getEmployeesWorkingHours = async (
-  serviceId: Service['id'],
-  params?: EmployeeWorkingHoursQueryOptions
-) => {
-  return await handleFetchingData({
-    path: `/employees/services/${serviceId}/working-hours`,
-    method: 'get',
-    successSchema: employeeWithWorkingHoursSchema.array(),
-    errorSchema: basicError,
-    params
   });
 };

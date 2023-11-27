@@ -10,6 +10,8 @@ import {
 
 import { useOrderServiceFormStore } from '~/stores/orderService/orderServiceFormStore';
 
+import { useServicesBusyHours } from './useServicesBusyHours';
+
 interface CleaningDetailsFormProps {
   data: Service;
   submitHandler: SubmitHandler<OrderServiceInputData>;
@@ -25,6 +27,10 @@ export function useCleaningDetailsForm({
     () => data.secondaryServices?.filter((service) => !!service.unit) ?? [],
     [data]
   ) as ServiceWithUnit[];
+
+  const { servicesWithBusyHours } = useServicesBusyHours({
+    serviceIds: [id, ...secondaryServicesWithUnit.map((service) => service.id)]
+  });
 
   const {
     onChangeIncludeDetergents,
@@ -108,6 +114,7 @@ export function useCleaningDetailsForm({
     cleaningFrequencyData,
     secondaryServicesWithUnit,
     totalCost,
+    servicesWithBusyHours,
     onSubmit,
     onChangeIncludeDetergents,
     onChangeServiceNumberOfUnits,

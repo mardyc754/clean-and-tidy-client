@@ -9,15 +9,14 @@ import { employeeSchema } from './employee';
 export const basicService = z.object({
   id: z.number().int(),
   name: z.string().max(100),
-  unit: z.union([
-    z.object({
+  unit: z
+    .object({
       shortName: z.string().max(40),
       fullName: z.string().max(60),
       price: z.string().transform((val) => parseFloat(val.replace(',', '.'))),
       duration: z.number().max(480)
-    }),
-    z.null()
-  ]),
+    })
+    .nullish(),
   minNumberOfUnitsIfPrimary: z.number().int().min(1).nullish(),
   minCostIfPrimary: decimalToFloat.nullish()
 });
@@ -68,6 +67,15 @@ export const serviceForVisitPart = z
 
 export const primaryServices = z.array(primaryService);
 
+export const serviceWithBusyHours = basicService.extend({
+  busyHours: z.array(
+    z.object({
+      startDate: z.string().datetime(),
+      endDate: z.string().datetime()
+    })
+  )
+});
+
 export type Service = z.infer<typeof service>;
 
 export type ServiceWithUnit = SetNonNullable<BasicServiceData, 'unit'>;
@@ -83,3 +91,5 @@ export type ServiceWithEmployees = z.infer<typeof serviceWithEmployees>;
 export type OrderedVisitPart = z.infer<typeof orderedVisitPart>;
 
 export type ServiceForVisitPart = z.infer<typeof serviceForVisitPart>;
+
+export type ServiceWithBusyHours = z.infer<typeof serviceWithBusyHours>;

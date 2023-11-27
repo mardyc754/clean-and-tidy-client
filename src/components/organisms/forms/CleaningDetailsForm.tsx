@@ -3,7 +3,6 @@ import { FormProvider } from 'react-hook-form';
 import { type Service } from '~/schemas/api/services';
 
 import { useCleaningDetailsForm } from '~/hooks/orderServiceForm/useCleaningDetailsForm';
-import { useEmployeeWorkingHours } from '~/hooks/orderServiceForm/useEmployeeWorkingHours';
 import { useOrderServiceFormNavigation } from '~/hooks/orderServiceForm/useOrderServiceFormNavigation';
 
 import { Checkbox, NumericInput } from '~/components/atoms/forms';
@@ -28,6 +27,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
     errors,
     cleaningFrequencyData,
     secondaryServicesWithUnit,
+    servicesWithBusyHours,
     onSubmit,
     onChangeIncludeDetergents,
     onChangeServiceNumberOfUnits,
@@ -95,6 +95,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
             onChangeHour={onChangeHourDate}
             dateErrorLabel={errors.startDate?.message}
             hourErrorLabel={errors.hourDate?.message}
+            servicesWithBusyHours={servicesWithBusyHours ?? []}
           />
           {secondaryServicesWithUnit.length > 0 && unit && (
             <ServiceMultiSelect

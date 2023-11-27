@@ -1,18 +1,24 @@
+import { Stringified } from 'type-fest';
 import type { ZodType } from 'zod';
 
 import {
   type PrimaryService,
   type Service,
+  type ServiceWithBusyHours,
   type ServiceWithEmployees,
   primaryServices,
   service,
+  serviceWithBusyHours,
   serviceWithEmployees,
   services
 } from '~/schemas/api/services';
 import { basicError } from '~/schemas/common';
 
 import { handleFetchingData } from './handleFetchingData';
-import type { AllServicesQueryOptions } from './types';
+import type {
+  AllServicesQueryOptions,
+  ServiceBusyHoursQueryOptions
+} from './types';
 
 export const getAllServices = async (options?: AllServicesQueryOptions) => {
   const primaryOnly = options?.primaryOnly ?? false;
@@ -64,5 +70,31 @@ export const getServiceByIdWithEmployees = async (id: string) => {
       includeCleaningFrequencies: true,
       includeEmployee: true
     }
+  });
+};
+
+export const getServicesBusyHours = async (
+  params?: ServiceBusyHoursQueryOptions
+) => {
+  let parsedParams: Stringified<ServiceBusyHoursQueryOptions> | undefined =
+    undefined;
+
+  if (params) {
+    parsedParams = {
+      from: params.from,
+      to: params.to,
+      step: params.step as string | undefined,
+      serviceIds: params.serviceIds?.join(',')
+    };
+  }
+
+  return await handleFetchingData({
+    path: `/services/busy-hours`,
+    method: 'get',
+    successSchema: serviceWithBusyHours.array() as ZodType<
+      ServiceWithBusyHours[]
+    >,
+    errorSchema: basicError,
+    params: parsedParams
   });
 };
