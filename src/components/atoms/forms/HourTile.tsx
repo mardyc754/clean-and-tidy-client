@@ -1,13 +1,13 @@
-import { changeHourToDate } from '~/utils/dateUtils';
+import { changeHourToDate, extractHourStringFromDate } from '~/utils/dateUtils';
 
 import { MediumTypography } from '../typography/regular-text';
 
 type HourTileProps = {
-  value: number;
+  value: string;
   selected?: boolean;
   available?: boolean;
   disabled?: boolean;
-  onSelect: (value: number) => void;
+  onSelect: (value: string) => void;
 };
 
 const getHourTileStyle = (
@@ -54,7 +54,7 @@ const HourTile = ({
       return;
     }
 
-    onSelect(parseInt(e.currentTarget.getAttribute('data-value')!));
+    onSelect(e.currentTarget.getAttribute('data-value')!);
   };
 
   return (
@@ -70,7 +70,7 @@ const HourTile = ({
           selected && !disabled ? 'text-slate-100' : 'text-black'
         }`}
       >
-        {changeHourToDate(value)}
+        {extractHourStringFromDate(value)}
       </MediumTypography>
     </div>
   );

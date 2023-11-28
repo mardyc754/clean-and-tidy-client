@@ -67,13 +67,13 @@ export const serviceForVisitPart = z
 
 export const primaryServices = z.array(primaryService);
 
+export const timeInterval = z.object({
+  startDate: z.string().datetime(),
+  endDate: z.string().datetime()
+});
+
 export const serviceWithBusyHours = basicService.extend({
-  busyHours: z.array(
-    z.object({
-      startDate: z.string().datetime(),
-      endDate: z.string().datetime()
-    })
-  )
+  busyHours: z.array(timeInterval)
 });
 
 export type Service = z.infer<typeof service>;
@@ -91,5 +91,7 @@ export type ServiceWithEmployees = z.infer<typeof serviceWithEmployees>;
 export type OrderedVisitPart = z.infer<typeof orderedVisitPart>;
 
 export type ServiceForVisitPart = z.infer<typeof serviceForVisitPart>;
+
+export type TimeInterval = z.infer<typeof timeInterval>;
 
 export type ServiceWithBusyHours = z.infer<typeof serviceWithBusyHours>;

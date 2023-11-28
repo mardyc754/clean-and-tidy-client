@@ -7,7 +7,8 @@ import { DETERGENT_COST } from '~/constants/primitives';
 import type { Employee } from '~/schemas/api/employee';
 import {
   type BasicServiceData,
-  type OrderedService
+  type OrderedService,
+  Service
 } from '~/schemas/api/services';
 import type { OrderServiceInputData } from '~/schemas/forms/orderService';
 
@@ -57,6 +58,7 @@ export interface CleaningDetailsSlice extends CleaningDetailsSliceData {
   ) => void;
   endDate: () => ValidDate;
   getInitialCleaningDetailsFormData: () => OrderServiceInputData;
+  getOrderedServicesIds: () => Array<Service['id']>;
   resetCleaningDetailsData: () => void;
 }
 
@@ -196,5 +198,9 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
     set({
       ...initialCleaningDetailsState
     });
-  }
+  },
+  getOrderedServicesIds: () =>
+    (
+      get().orderedServices.filter((service) => !!service) as OrderedService[]
+    ).map((service) => service.id)
 });

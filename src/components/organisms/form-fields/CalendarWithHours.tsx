@@ -2,11 +2,16 @@ import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
-import type { ServiceWithBusyHours } from '~/schemas/api/services';
+import type {
+  ServiceWithBusyHours,
+  TimeInterval
+} from '~/schemas/api/services';
 
 import { MediumTypography } from '~/components/atoms/typography/regular-text';
 import { Calendar } from '~/components/molecules/calendar';
 import { HourSelection } from '~/components/molecules/form-fields';
+
+import { getHourAvailabilityData } from '~/utils/serviceUtils';
 
 import type { ValidDate } from '~/types/forms';
 
@@ -14,7 +19,7 @@ type CalendarWithLabelProps = {
   calendarInputName: string;
   hourInputName: string;
   label: string;
-  servicesWithBusyHours: ServiceWithBusyHours[];
+  busyHours: TimeInterval[];
   direction?: 'column' | 'row';
   onChangeHour?: (value: ValidDate) => void;
   onChangeDate?: (value: ValidDate) => void;
@@ -31,14 +36,12 @@ const CalendarWithHours = ({
   onChangeHour,
   dateErrorLabel,
   hourErrorLabel,
-  servicesWithBusyHours
+  busyHours
 }: CalendarWithLabelProps) => {
   const { setValue } = useFormContext();
   const [isMounted, setIsMounted] = useState(false);
 
   const currentDate = useWatch({ name: calendarInputName }) as ValidDate;
-
-  console.log(servicesWithBusyHours);
 
   useEffect(() => {
     // do not reset hour value on first render
@@ -56,7 +59,7 @@ const CalendarWithHours = ({
       <div
         className={clsx(
           'flex',
-          direction === 'column' && 'flex-col items-center space-y-4'
+          direction === 'column' && 'flex-col items-center space-x-8 space-y-4'
         )}
       >
         <Calendar
@@ -66,9 +69,9 @@ const CalendarWithHours = ({
           defaultValue={currentDate}
         />
         <HourSelection
+          direction="row"
+          hourAvailabilityData={getHourAvailabilityData(currentDate, busyHours)}
           name={hourInputName}
-          className="px-16"
-          direction={direction === 'column' ? 'row' : 'column'}
           disableSelection={!currentDate}
           onChange={onChangeHour}
           errorLabel={hourErrorLabel}

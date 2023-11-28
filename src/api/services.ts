@@ -6,11 +6,13 @@ import {
   type Service,
   type ServiceWithBusyHours,
   type ServiceWithEmployees,
+  TimeInterval,
   primaryServices,
   service,
   serviceWithBusyHours,
   serviceWithEmployees,
-  services
+  services,
+  timeInterval
 } from '~/schemas/api/services';
 import { basicError } from '~/schemas/common';
 
@@ -91,9 +93,7 @@ export const getServicesBusyHours = async (
   return await handleFetchingData({
     path: `/services/busy-hours`,
     method: 'get',
-    successSchema: serviceWithBusyHours.array() as ZodType<
-      ServiceWithBusyHours[]
-    >,
+    successSchema: timeInterval.array() as ZodType<TimeInterval[]>,
     errorSchema: basicError,
     params: parsedParams
   });

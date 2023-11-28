@@ -10,8 +10,6 @@ import {
 
 import { useOrderServiceFormStore } from '~/stores/orderService/orderServiceFormStore';
 
-import { useServicesBusyHours } from './useServicesBusyHours';
-
 interface CleaningDetailsFormProps {
   data: Service;
   submitHandler: SubmitHandler<OrderServiceInputData>;
@@ -28,10 +26,6 @@ export function useCleaningDetailsForm({
     [data]
   ) as ServiceWithUnit[];
 
-  const { servicesWithBusyHours } = useServicesBusyHours({
-    serviceIds: [id, ...secondaryServicesWithUnit.map((service) => service.id)]
-  });
-
   const {
     onChangeIncludeDetergents,
     onChangeServiceNumberOfUnits,
@@ -39,7 +33,9 @@ export function useCleaningDetailsForm({
     onChangeStartDate,
     onChangeHourDate,
     getInitialCleaningDetailsFormData,
-    totalCost
+    getOrderedServicesIds,
+    totalCost,
+    startDate
   } = useOrderServiceFormStore(
     useShallow((state) => ({
       onChangeIncludeDetergents: state.onChangeIncludeDetergents,
@@ -49,6 +45,8 @@ export function useCleaningDetailsForm({
       onChangeHourDate: state.onChangeHourDate,
       currentStep: state.currentStep,
       totalCost: state.totalCost,
+      startDate: state.startDate,
+      getOrderedServicesIds: state.getOrderedServicesIds,
       getInitialCleaningDetailsFormData: state.getInitialCleaningDetailsFormData
     }))
   );
@@ -114,7 +112,8 @@ export function useCleaningDetailsForm({
     cleaningFrequencyData,
     secondaryServicesWithUnit,
     totalCost,
-    servicesWithBusyHours,
+    startDate,
+    orderedServicesIds: getOrderedServicesIds(),
     onSubmit,
     onChangeIncludeDetergents,
     onChangeServiceNumberOfUnits,

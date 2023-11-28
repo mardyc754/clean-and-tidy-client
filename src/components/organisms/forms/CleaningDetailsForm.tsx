@@ -1,11 +1,17 @@
+import { useEffect, useState } from 'react';
 import { FormProvider } from 'react-hook-form';
 
 import { type Service } from '~/schemas/api/services';
 
 import { useCleaningDetailsForm } from '~/hooks/orderServiceForm/useCleaningDetailsForm';
 import { useOrderServiceFormNavigation } from '~/hooks/orderServiceForm/useOrderServiceFormNavigation';
+import { useServicesBusyHours } from '~/hooks/orderServiceForm/useServicesBusyHours';
 
 import { Checkbox, NumericInput } from '~/components/atoms/forms';
+
+import { endOfDay, startOfDay } from '~/utils/dateUtils';
+
+import type { TimeRange } from '~/types/forms';
 
 import {
   CalendarWithHours,
@@ -22,12 +28,17 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
   const { unit, id, name } = data;
   const { onChangeStep, returnToHomePage } = useOrderServiceFormNavigation();
 
+  const [availablityRange, setAvailablityRange] = useState<
+    TimeRange | undefined
+  >(undefined);
+
   const {
     methods,
     errors,
     cleaningFrequencyData,
     secondaryServicesWithUnit,
-    servicesWithBusyHours,
+    startDate,
+    orderedServicesIds,
     onSubmit,
     onChangeIncludeDetergents,
     onChangeServiceNumberOfUnits,
@@ -37,6 +48,23 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
   } = useCleaningDetailsForm({
     data,
     submitHandler: async () => await onChangeStep(2)
+  });
+
+  useEffect(() => {
+    if (startDate) {
+      setAvailablityRange({
+        from: startOfDay(startDate).toISOString(),
+        to: endOfDay(startDate).toISOString()
+      });
+    }
+  }, [startDate]);
+
+  const { servicesWithBusyHours } = useServicesBusyHours({
+    serviceIds:
+      orderedServicesIds.length > 0
+        ? Array.from(new Set([id, ...orderedServicesIds]))
+        : [id],
+    ...availablityRange
   });
 
   const mainSlot = unit ? (
@@ -95,7 +123,8 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
             onChangeHour={onChangeHourDate}
             dateErrorLabel={errors.startDate?.message}
             hourErrorLabel={errors.hourDate?.message}
-            servicesWithBusyHours={servicesWithBusyHours ?? []}
+            busyHours={servicesWithBusyHours ?? []}
+            direction="column"
           />
           {secondaryServicesWithUnit.length > 0 && unit && (
             <ServiceMultiSelect
