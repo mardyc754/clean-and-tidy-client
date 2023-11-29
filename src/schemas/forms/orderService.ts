@@ -81,6 +81,28 @@ export function cleaningDetailsResolver(
   );
 }
 
+export const timeSlot = z.object({
+  startDate: z.string().datetime(),
+  endDate: z.string().datetime()
+});
+
+export type TimeSlot = z.infer<typeof timeSlot>;
+
+export const employeeAvailabilityData = z.object({
+  id: z.number().int(),
+  workingHours: z.array(timeSlot),
+  numberOfWorkingHours: z.number()
+});
+
+export type EmployeeAvailabilityData = z.infer<typeof employeeAvailabilityData>;
+
+export const busyHoursData = z.object({
+  employees: z.array(employeeAvailabilityData),
+  busyHours: z.array(timeSlot)
+});
+
+export type BusyHoursData = z.infer<typeof busyHoursData>;
+
 // CONTACT DETAILS PAGE
 export const address = z.object({
   street: z.string().max(40),

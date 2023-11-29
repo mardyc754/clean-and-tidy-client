@@ -11,7 +11,8 @@ import {
   isAfterOrSame,
   isBefore,
   isBeforeOrSame,
-  minutesBetween
+  minutesBetween,
+  nextDay
 } from './dateUtils';
 
 /**
@@ -19,16 +20,18 @@ import {
  * @param allEmployeeWorkingHours the working hours of all employees
  * @returns the list with time intervals when all employees are busy
  */
-export const calculateBusyHours = (busyHours: TimeInterval[][]) => {
-  let calculatedBusyHours = busyHours[0] ?? [];
+export const calculateBusyHours = (
+  allEmployeeWorkingHours: TimeInterval[][]
+) => {
+  let busyHours = allEmployeeWorkingHours[0] ?? [];
 
-  busyHours.slice(1).forEach((singleEmployeeWorkingHours) => {
+  allEmployeeWorkingHours.slice(1).forEach((singleEmployeeWorkingHours) => {
     const newBusyHours: TimeInterval[] = [];
 
     // check the hour conflicts between employees
     // by comparing employee working hours with the rest of the employees
     singleEmployeeWorkingHours.forEach((interval) => {
-      const conflicts = calculatedBusyHours.filter(
+      const conflicts = busyHours.filter(
         (busyInterval) =>
           // four cases:
           // - interval starts before and finishes while busy
@@ -51,99 +54,57 @@ export const calculateBusyHours = (busyHours: TimeInterval[][]) => {
       });
     });
 
-    calculatedBusyHours = [...newBusyHours];
+    busyHours = [...newBusyHours];
   });
 
-  return calculatedBusyHours;
+  return busyHours;
 };
 
 /**
  * Merges busy hours into larger intervals
  * by using the sum of the sets of working hours
+ *
  * This is useful when calculating busy hours for multiple services at once
  * @param busyHours
  * @returns
  */
 export const mergeBusyHours = (busyHours: TimeInterval[][]) => {
-  let mergedBusyHours = busyHours[0] ?? [];
+  const currentInterval = {
+    startDate: new Date(0).toISOString(),
+    endDate: new Date(0).toISOString()
+  };
 
-  busyHours.slice(1).forEach((singleServiceBusyHours) => {
-    const newBusyHours: TimeInterval[] = [];
+  const mergedBusyHours = busyHours.flatMap((busyHours) => busyHours);
 
-    // check the hour conflicts between employees
-    // by comparing employee working hours with the rest of the employees
-    singleServiceBusyHours.forEach((interval) => {
-      const conflicts = mergedBusyHours.filter(
-        (busyInterval) =>
-          // four cases:
-          // - interval starts before and finishes while busy
-          // - interval is contained inside busy interval
-          // - busy interval contains interval
-          // - interval starts while busy and finishes after
-          isAfterOrSame(interval.endDate, busyInterval.startDate) &&
-          isAfterOrSame(busyInterval.endDate, interval.startDate)
-      );
+  mergedBusyHours.sort((a, b) => getTime(a.startDate) - getTime(b.startDate));
 
-      const otherIntervals = mergedBusyHours.filter(
-        (interval) => !conflicts.includes(interval)
-      );
+  const newBusyHours: TimeInterval[] = [];
 
-      newBusyHours.push(...otherIntervals);
+  mergedBusyHours.forEach((conflict, i) => {
+    if (i === 0) {
+      currentInterval.startDate = conflict.startDate;
+      currentInterval.endDate = conflict.endDate;
+    }
+    const nextConflict = mergedBusyHours[i + 1];
 
-      // create new intervals from conflicting intervals
-      // these are the merged intervals with the current one
-      const conflictingIntervals = conflicts.map((conflict) => {
-        return {
-          startDate: isAfter(interval.startDate, conflict.startDate)
-            ? conflict.startDate
-            : interval.startDate,
-          endDate: isAfter(interval.endDate, conflict.endDate)
-            ? interval.endDate
-            : conflict.endDate
-        };
-      });
+    if (
+      nextConflict &&
+      isAfterOrSame(conflict.endDate, nextConflict.startDate)
+    ) {
+      currentInterval.endDate = nextConflict.endDate;
+    } else {
+      newBusyHours.push({ ...currentInterval });
 
-      const currentInterval = {
-        startDate: new Date(0).toISOString(),
-        endDate: new Date(0).toISOString()
-      };
-
-      // there could happen that calculated intervals overlaps with each other
-      // so we need to merge them into larger intervals
-      conflictingIntervals
-        .toSorted((a, b) => getTime(b.startDate) - getTime(a.startDate))
-        .forEach((conflict, i) => {
-          if (i === 0) {
-            currentInterval.startDate = conflict.startDate;
-            currentInterval.endDate = conflict.endDate;
-          } else {
-            const nextConflict = conflictingIntervals[i + 1];
-
-            if (
-              nextConflict &&
-              isAfterOrSame(conflict.endDate, nextConflict.startDate)
-            ) {
-              currentInterval.endDate = nextConflict.endDate;
-            } else {
-              newBusyHours.push({ ...currentInterval });
-
-              currentInterval.endDate = nextConflict
-                ? nextConflict.endDate
-                : conflict.endDate;
-              currentInterval.startDate = nextConflict
-                ? nextConflict.startDate
-                : conflict.startDate;
-            }
-          }
-        });
-    });
-
-    mergedBusyHours = newBusyHours.toSorted(
-      (a, b) => getTime(b.startDate) - getTime(a.startDate)
-    );
+      currentInterval.endDate = nextConflict
+        ? nextConflict.endDate
+        : conflict.endDate;
+      currentInterval.startDate = nextConflict
+        ? nextConflict.startDate
+        : conflict.startDate;
+    }
   });
 
-  return mergedBusyHours;
+  return newBusyHours;
 };
 
 export function getDisplayedHours(
@@ -154,8 +115,10 @@ export function getDisplayedHours(
 ) {
   const hourList: string[] = [];
 
-  const startHour = dateWithHour(currentDate, start).toISOString();
-  const endHour = dateWithHour(currentDate, end).toISOString();
+  const date = currentDate ?? nextDay(new Date());
+
+  const startHour = dateWithHour(date, start).toISOString();
+  const endHour = dateWithHour(date, end).toISOString();
 
   const minutesDifference = minutesBetween(startHour, endHour);
 

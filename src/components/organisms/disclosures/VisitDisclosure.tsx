@@ -5,7 +5,7 @@ import type { VisitWithEmployees } from '~/schemas/api/reservation';
 import { Disclosure } from '~/components/organisms/disclosures';
 
 import {
-  displayDatesAsTimestamp,
+  displayDatesAsTimeslot,
   extractDateStringFromDate
 } from '~/utils/dateUtils';
 import { getVisitEmployees, getVisitStartEndDates } from '~/utils/visitUtils';
@@ -37,7 +37,7 @@ const VisitDisclosure = ({
             {extractDateStringFromDate(startDate)}
           </p>
           <p className="font-emphasize text-2xl">
-            {displayDatesAsTimestamp(startDate, endDate)}
+            {displayDatesAsTimeslot(startDate, endDate)}
           </p>
         </div>
       }

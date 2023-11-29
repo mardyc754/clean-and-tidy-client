@@ -2,10 +2,7 @@ import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
-import type {
-  ServiceWithBusyHours,
-  TimeInterval
-} from '~/schemas/api/services';
+import type { TimeInterval } from '~/schemas/api/services';
 
 import { MediumTypography } from '~/components/atoms/typography/regular-text';
 import { Calendar } from '~/components/molecules/calendar';

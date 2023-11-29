@@ -19,8 +19,6 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 // }
 import toObject from 'dayjs/plugin/toObject';
 import updateLocale from 'dayjs/plugin/updateLocale';
-import { dayjsLocalizer } from 'react-big-calendar';
-
 // // plugin to enable custom formats.
 // // it can be used, for example, to extract hour from the date
 // // example - current hour: dayjs(new Date()).format('HH:mm').toString()
@@ -38,7 +36,9 @@ import { dayjsLocalizer } from 'react-big-calendar';
 // //to check the day of the year
 // import dayOfYear from 'dayjs/plugin/dayOfYear';
 // // to check the week number
-// import weekOfYear from 'dayjs/plugin/weekOfYear';
+import weekOfYear from 'dayjs/plugin/weekOfYear';
+import { dayjsLocalizer } from 'react-big-calendar';
+
 // // to check the quarten
 // import quarterOfYear from 'dayjs/plugin/quarterOfYear';
 // // to measure the duration of the time
@@ -52,7 +52,7 @@ dayjs.extend(toObject);
 // dayjs.extend(localizedFormat);
 // dayjs.extend(localeData);
 // dayjs.extend(dayOfYear);
-// dayjs.extend(weekOfYear);
+dayjs.extend(weekOfYear);
 // dayjs.extend(quarterOfYear);
 // dayjs.extend(customParseFormat);
 // dayjs.extend(timezone);

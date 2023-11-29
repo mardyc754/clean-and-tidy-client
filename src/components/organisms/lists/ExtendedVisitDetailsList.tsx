@@ -5,7 +5,7 @@ import type { VisitPartWithEmployees } from '~/schemas/api/reservation';
 import { LabeledTypography } from '~/components/atoms/typography/labeled-text';
 
 import {
-  displayDatesAsTimestamp,
+  displayDatesAsTimeslot,
   extractDateStringFromDate
 } from '~/utils/dateUtils';
 import { convertToCamelCase } from '~/utils/stringUtils';
@@ -20,7 +20,7 @@ const ExtendedVisitDetailsList = ({ data }: VisitDetailsListProps) => {
 
   const listedData = new Map([
     ['Date', extractDateStringFromDate(data.startDate)],
-    ['Hours', displayDatesAsTimestamp(data.startDate, data.endDate)],
+    ['Hours', displayDatesAsTimeslot(data.startDate, data.endDate)],
     ['Status', status?.label ?? ''],
     ['Detergents included', data.includeDetergents ? 'Yes' : 'No'],
     ['Cost', `${data.cost.toFixed(2)} zł`]

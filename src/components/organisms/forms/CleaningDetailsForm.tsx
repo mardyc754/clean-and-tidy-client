@@ -9,7 +9,12 @@ import { useServicesBusyHours } from '~/hooks/orderServiceForm/useServicesBusyHo
 
 import { Checkbox, NumericInput } from '~/components/atoms/forms';
 
-import { endOfDay, startOfDay } from '~/utils/dateUtils';
+import {
+  endOfDay,
+  endOfWeek,
+  startOfDay,
+  startOfWeek
+} from '~/utils/dateUtils';
 
 import type { TimeRange } from '~/types/forms';
 
@@ -44,7 +49,8 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
     onChangeServiceNumberOfUnits,
     onChangeCleaningFrequency,
     onChangeStartDate,
-    onChangeHourDate
+    onChangeHourDate,
+    setAvailableEmployees
   } = useCleaningDetailsForm({
     data,
     submitHandler: async () => await onChangeStep(2)
@@ -53,19 +59,31 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
   useEffect(() => {
     if (startDate) {
       setAvailablityRange({
-        from: startOfDay(startDate).toISOString(),
-        to: endOfDay(startDate).toISOString()
+        // from: startOfDay(startDate).toISOString(),
+        // to: endOfDay(startDate).toISOString()
+        from: startOfWeek(startDate).toISOString(),
+        to: endOfWeek(startDate).toISOString()
       });
     }
   }, [startDate]);
 
-  const { servicesWithBusyHours } = useServicesBusyHours({
+  // in order to call the query more frequently,
+  // we can either disable cache for this query
+  // or provide a "day" query param - by doing this
+  // we can call the query more frequently
+  const { busyHoursData } = useServicesBusyHours({
     serviceIds:
       orderedServicesIds.length > 0
         ? Array.from(new Set([id, ...orderedServicesIds]))
         : [id],
     ...availablityRange
   });
+
+  useEffect(() => {
+    if (busyHoursData) {
+      setAvailableEmployees([...busyHoursData?.employees]);
+    }
+  }, [busyHoursData, setAvailableEmployees]);
 
   const mainSlot = unit ? (
     <NumericInput
@@ -123,7 +141,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
             onChangeHour={onChangeHourDate}
             dateErrorLabel={errors.startDate?.message}
             hourErrorLabel={errors.hourDate?.message}
-            busyHours={servicesWithBusyHours ?? []}
+            busyHours={busyHoursData?.busyHours ?? []}
             direction="column"
           />
           {secondaryServicesWithUnit.length > 0 && unit && (

@@ -1,6 +1,6 @@
 import type { Employee } from '~/schemas/api/employee';
 
-import { displayDatesAsTimestamp } from '~/utils/dateUtils';
+import { displayDatesAsTimeslot } from '~/utils/dateUtils';
 
 export function createEmployeeRows(data: Employee[]) {
   return data.map((employee) => {
@@ -8,7 +8,7 @@ export function createEmployeeRows(data: Employee[]) {
       id: employee.id,
       employeeFullName: `${employee.firstName} ${employee.lastName}`,
       email: employee.email,
-      workingHours: displayDatesAsTimestamp(
+      workingHours: displayDatesAsTimeslot(
         employee.startHour,
         employee.endHour
       ),

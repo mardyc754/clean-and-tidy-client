@@ -6,8 +6,13 @@ import type {
   OrderedVisitPart,
   Service
 } from '~/schemas/api/services';
+import type {
+  EmployeeAvailabilityData,
+  TimeSlot
+} from '~/schemas/forms/orderService';
 
-import { advanceDateByNMinutes } from '~/utils/dateUtils';
+import { advanceByMinutes } from '~/utils/dateUtils';
+import { calculateBusyHours } from '~/utils/serviceUtils';
 
 export const createOrUpdateOrderedService = (
   service: BasicServiceData,
@@ -152,10 +157,7 @@ export const prepareVisitParts = (
       const { totalCost, durationInMinutes } =
         calculateVisitPartCostAndDuration(visitPart, service.unit);
 
-      const visitPartEndDate = advanceDateByNMinutes(
-        currentDate,
-        durationInMinutes
-      );
+      const visitPartEndDate = advanceByMinutes(currentDate, durationInMinutes);
 
       const newVisitPart = {
         ...visitPart,
@@ -171,4 +173,26 @@ export const prepareVisitParts = (
 
     return [...acc, ...visitPartsForService];
   }, [] as VisitPart[]);
+};
+
+export const getAssignedEmployees = (
+  employees: EmployeeAvailabilityData[],
+  visitSlot: TimeSlot
+) => {
+  const notConlictingEmployees = employees.filter(
+    (employee) =>
+      calculateBusyHours([employee.workingHours, [visitSlot]]).length === 0
+  );
+
+  notConlictingEmployees.sort((a, b) => {
+    return a.numberOfWorkingHours - b.numberOfWorkingHours;
+  });
+
+  // TODO: right now only one employee is assigned,
+  // when the predicted visit slot is longer than 8 hours
+  // then the service should be split into multiple visit parts
+  // therefore multiple employees should be assigned
+  return notConlictingEmployees.length > 0
+    ? [notConlictingEmployees[0]!.id]
+    : [];
 };

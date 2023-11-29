@@ -15,11 +15,11 @@ export function useServicesBusyHours(options: ServiceBusyHoursQueryOptions) {
       : nextDayTimeSlot();
   const newOptions = { ...options, ...newTimeSlot };
 
-  const { data: servicesWithBusyHours, isSuccess } = useQuery({
+  const { data: busyHoursData, isSuccess } = useQuery({
     queryKey: service.workingHours(newOptions),
     queryFn: () => getServicesBusyHours(newOptions)
     // enabled: options?.from !== undefined || options?.to !== undefined
   });
 
-  return { servicesWithBusyHours, isSuccess };
+  return { busyHoursData, isSuccess };
 }

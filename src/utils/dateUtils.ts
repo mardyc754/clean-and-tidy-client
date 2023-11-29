@@ -91,7 +91,7 @@ export function advanceByMinutes(date: ValidDayjsDate, minutes: number) {
   return dayjs(date).add(minutes, 'm').toDate();
 }
 
-export function displayDatesAsTimestamp(
+export function displayDatesAsTimeslot(
   startDate: ValidDayjsDate,
   endDate: ValidDayjsDate
 ) {
@@ -100,7 +100,7 @@ export function displayDatesAsTimestamp(
   )}`;
 }
 
-export function displayDatesAsFullTimestamp(
+export function displayDatesAsFullTimeslot(
   startDate: ValidDayjsDate,
   endDate: ValidDayjsDate
 ) {
@@ -201,5 +201,18 @@ export const nextDayTimeSlot = () => {
   return {
     from: nextDay.startOf('day').toISOString(),
     to: nextDay.endOf('day').toISOString()
+  };
+};
+
+export const startOfWeek = (date: ValidDayjsDate) =>
+  dayjs(date).startOf('week').toDate();
+
+export const endOfWeek = (date: ValidDayjsDate) =>
+  dayjs(date).endOf('week').toDate();
+
+export const getTimeSlot = (date: ValidDayjsDate, duration: number) => {
+  return {
+    startDate: dayjs(date).toISOString(),
+    endDate: advanceByMinutes(date, duration).toISOString()
   };
 };

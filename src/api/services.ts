@@ -4,17 +4,14 @@ import type { ZodType } from 'zod';
 import {
   type PrimaryService,
   type Service,
-  type ServiceWithBusyHours,
   type ServiceWithEmployees,
-  TimeInterval,
   primaryServices,
   service,
-  serviceWithBusyHours,
   serviceWithEmployees,
-  services,
-  timeInterval
+  services
 } from '~/schemas/api/services';
 import { basicError } from '~/schemas/common';
+import { busyHoursData } from '~/schemas/forms/orderService';
 
 import { handleFetchingData } from './handleFetchingData';
 import type {
@@ -93,7 +90,7 @@ export const getServicesBusyHours = async (
   return await handleFetchingData({
     path: `/services/busy-hours`,
     method: 'get',
-    successSchema: timeInterval.array() as ZodType<TimeInterval[]>,
+    successSchema: busyHoursData,
     errorSchema: basicError,
     params: parsedParams
   });

@@ -26,22 +26,24 @@ export function useOrderServiceFormSubmit() {
     services,
     resetOrderServiceForm,
     totalCost,
-    extraInfo
+    extraInfo,
+    assignedEmployees
   } = useOrderServiceFormStore(
     useShallow((state) => ({
-      decreaseStep: state.decreaseStep,
       currentStep: state.currentStep,
       // reservation creation data
       frequency: state.cleaningFrequencyDisplayData?.value,
-      fullStartDate: state.fullStartDate,
-      endDate: state.endDate,
       includeDetergents: state.includeDetergents,
       address: state.addressData,
       clientData: state.clientData,
       services: state.orderedServices,
       totalCost: state.totalCost,
-      resetOrderServiceForm: state.resetOrderServiceForm,
-      extraInfo: state.extraInfo
+      extraInfo: state.extraInfo,
+      assignedEmployees: state.assignedEmployees,
+      decreaseStep: state.decreaseStep,
+      fullStartDate: state.fullStartDate,
+      endDate: state.endDate,
+      resetOrderServiceForm: state.resetOrderServiceForm
     }))
   );
 
