@@ -29,11 +29,6 @@ const Calendar = ({
     register(name);
   }, [name, register]);
 
-  // useEffect(() => {
-
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [defaultValue]);
-
   const handleChange = (value: ValidDate) => {
     setValue(name, value);
     onChange?.(value);
@@ -52,7 +47,6 @@ const Calendar = ({
           );
         }}
         fromMonth={nextDay(new Date())}
-        initialFocus
         {...props}
       />
       <ErrorLabel>{errorLabel}</ErrorLabel>

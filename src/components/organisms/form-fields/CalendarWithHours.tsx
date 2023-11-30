@@ -35,20 +35,20 @@ const CalendarWithHours = ({
   hourErrorLabel,
   busyHours
 }: CalendarWithLabelProps) => {
-  const { setValue } = useFormContext();
-  const [isMounted, setIsMounted] = useState(false);
+  // const { setValue } = useFormContext();
+  // const [isMounted, setIsMounted] = useState(false);
 
   const currentDate = useWatch({ name: calendarInputName }) as ValidDate;
 
-  useEffect(() => {
-    // do not reset hour value on first render
-    if (isMounted) {
-      setValue(hourInputName, null);
-      onChangeHour?.(null);
-    } else {
-      setIsMounted(true);
-    }
-  }, [currentDate, hourInputName, isMounted, onChangeHour, setValue]);
+  // useEffect(() => {
+  //   // do not reset hour value on first render
+  //   if (isMounted) {
+  //     setValue(hourInputName, null);
+  //     onChangeHour?.(null);
+  //   } else {
+  //     setIsMounted(true);
+  //   }
+  // }, [currentDate, hourInputName, isMounted, onChangeHour, setValue]);
 
   return (
     <div className="flex flex-col">

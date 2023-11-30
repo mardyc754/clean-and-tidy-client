@@ -1,5 +1,8 @@
-import { type ServiceWithUnit } from '~/schemas/api/services';
-import type { OrderServiceInputData } from '~/schemas/forms/orderService';
+import type { Service, ServiceWithUnit } from '~/schemas/api/services';
+import type {
+  EmployeeAvailabilityData,
+  OrderServiceInputData
+} from '~/schemas/forms/orderService';
 
 import type { CleaningDetailsSlice } from '~/stores/orderService/cleaningDetailsSlice';
 
@@ -12,6 +15,9 @@ type ExtraDataMultiSelectProps = {
   defaultValues?: OrderServiceInputData['extraServices'];
   className?: string;
   onChangeNumberOfUnits: CleaningDetailsSlice['onChangeServiceNumberOfUnits'];
+  serviceAvailabilityGetter?: (
+    serviceId: Service['id']
+  ) => EmployeeAvailabilityData[];
 };
 
 const ServiceMultiSelect = ({
@@ -20,6 +26,7 @@ const ServiceMultiSelect = ({
   data,
   className = '',
   defaultValues = [],
+  serviceAvailabilityGetter,
   onChangeNumberOfUnits
 }: ExtraDataMultiSelectProps) => {
   return (
@@ -33,8 +40,9 @@ const ServiceMultiSelect = ({
             key={`extra-data-multi-select-${item.id}`}
             data={item}
             onChangeNumberOfUnits={(value: number) =>
-              onChangeNumberOfUnits(value, false, item, index, 2)
+              onChangeNumberOfUnits(value, false, item, index)
             }
+            disabled={serviceAvailabilityGetter?.(item.id).length === 0}
           />
         ))}
       </div>

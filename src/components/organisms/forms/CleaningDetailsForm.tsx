@@ -50,7 +50,8 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
     onChangeCleaningFrequency,
     onChangeStartDate,
     onChangeHourDate,
-    setAvailableEmployees
+    setAvailableEmployees,
+    getAvailableEmployeesForService
   } = useCleaningDetailsForm({
     data,
     submitHandler: async () => await onChangeStep(2)
@@ -69,8 +70,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
 
   // in order to call the query more frequently,
   // we can either disable cache for this query
-  // or provide a "day" query param - by doing this
-  // we can call the query more frequently
+  // or provide a "day" query param
   const { busyHoursData } = useServicesBusyHours({
     serviceIds:
       orderedServicesIds.length > 0
@@ -97,8 +97,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
           value,
           true,
           { id, name, unit },
-          secondaryServicesWithUnit.length,
-          2
+          secondaryServicesWithUnit.length
         )
       }
     />
@@ -151,6 +150,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
               name="extraServices"
               data={secondaryServicesWithUnit}
               onChangeNumberOfUnits={onChangeServiceNumberOfUnits}
+              serviceAvailabilityGetter={getAvailableEmployeesForService}
             />
           )}
         </div>

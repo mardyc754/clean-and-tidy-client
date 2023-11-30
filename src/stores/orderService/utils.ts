@@ -1,4 +1,3 @@
-import type { Employee } from '~/schemas/api/employee';
 import type { VisitPart } from '~/schemas/api/reservation';
 import type {
   BasicServiceData,
@@ -11,36 +10,82 @@ import type {
   TimeSlot
 } from '~/schemas/forms/orderService';
 
-import { advanceByMinutes } from '~/utils/dateUtils';
-import { calculateBusyHours } from '~/utils/serviceUtils';
+import {
+  type ValidDayjsDate,
+  advanceByMinutes,
+  endOfDay,
+  getTimeSlot,
+  minutesBetween,
+  nextDay,
+  startOfDay
+} from '~/utils/dateUtils';
+import {
+  calculateBusyHours,
+  getStartDateForService
+} from '~/utils/serviceUtils';
 
+/**
+ * Creates or updates ordered service data from ordereed services list
+ * @param service ordered service data to be created or updated
+ * @param employees general list of employees being available for all of the ordered services
+ * @param orderedServices services already ordered by the user
+ * @param isMainServiceForReservation flag to set the service as main service for the reservation
+ * @param numberOfUnits new total number of units to be assigned to the service
+ * @param baseStartDate the start date of the main service that is the start date of all of the services
+ * @param positionOnList the position of the service in the ordered services list
+ * @returns created or updated service with assigned employees
+ */
 export const createOrUpdateOrderedService = (
   service: BasicServiceData,
-  employeeId: Employee['id'],
+  employees: EmployeeAvailabilityData[],
   orderedServices: (OrderedService | undefined)[],
   isMainServiceForReservation: boolean,
-  numberOfUnits: number
+  numberOfUnits: number,
+  baseStartDate: ValidDayjsDate,
+  positionOnList: number
 ) => {
-  const orderedService = orderedServices.find(
+  console.log(baseStartDate);
+
+  const startDate = baseStartDate
+    ? getStartDateForService(orderedServices, positionOnList, baseStartDate)
+    : null;
+
+  const availableEmployees = employees.filter((employee) =>
+    employee.services.includes(service.id)
+  );
+
+  if (availableEmployees.length === 0) {
+    return undefined;
+  }
+
+  const duration = (service.unit?.duration ?? 0) * numberOfUnits;
+
+  const assignedEmployees = startDate
+    ? getAssignedEmployees(availableEmployees, getTimeSlot(startDate, duration))
+    : availableEmployees.slice(0, 1).map((employee) => employee.id);
+
+  const orderedServiceIndex = orderedServices.findIndex(
     (orderedService) => orderedService?.id === service.id
   );
 
-  if (!orderedService) {
+  if (orderedServiceIndex === -1) {
     return {
       ...service,
       isMainServiceForReservation,
-      visitParts: [
-        {
-          serviceId: service.id,
-          employeeId,
-          numberOfUnits
-        }
-      ]
+      visitParts: assignedEmployees.map((employeeId) => ({
+        serviceId: service.id,
+        employeeId,
+        numberOfUnits: Math.ceil(numberOfUnits / assignedEmployees.length)
+      }))
     };
   }
 
-  const visitPart = orderedService?.visitParts.find(
-    (visitPart) => visitPart.employeeId === employeeId
+  const orderedService = orderedServices[orderedServiceIndex]!;
+
+  // there should be exactly one visit part within the service
+  // assigned to the specific employee
+  const visitPart = orderedService?.visitParts.find((visitPart) =>
+    assignedEmployees.includes(visitPart.employeeId)
   );
 
   if (visitPart) {
@@ -52,11 +97,11 @@ export const createOrUpdateOrderedService = (
     ...orderedService,
     visitParts: [
       ...orderedService.visitParts,
-      {
+      ...assignedEmployees.map((employeeId) => ({
         serviceId: service.id,
         employeeId,
         numberOfUnits
-      }
+      }))
     ]
   };
 };
@@ -175,6 +220,13 @@ export const prepareVisitParts = (
   }, [] as VisitPart[]);
 };
 
+/**
+ * Searches for employees that are not busy during the visit slot
+ * @param employees the list of all available employees for all ordered services
+ * @param visitSlot the time slot of the visit
+ * @returns the list of the ids of the employees that are not busy
+ *  during the visit slot ordered ascending by the number of working hours
+ */
 export const getAssignedEmployees = (
   employees: EmployeeAvailabilityData[],
   visitSlot: TimeSlot

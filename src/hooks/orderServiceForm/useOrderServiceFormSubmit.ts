@@ -25,9 +25,7 @@ export function useOrderServiceFormSubmit() {
     clientData,
     services,
     resetOrderServiceForm,
-    totalCost,
-    extraInfo,
-    assignedEmployees
+    extraInfo
   } = useOrderServiceFormStore(
     useShallow((state) => ({
       currentStep: state.currentStep,
@@ -39,7 +37,6 @@ export function useOrderServiceFormSubmit() {
       services: state.orderedServices,
       totalCost: state.totalCost,
       extraInfo: state.extraInfo,
-      assignedEmployees: state.assignedEmployees,
       decreaseStep: state.decreaseStep,
       fullStartDate: state.fullStartDate,
       endDate: state.endDate,

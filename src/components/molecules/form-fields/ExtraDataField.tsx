@@ -1,5 +1,7 @@
+import { useFloating } from '@floating-ui/react-dom';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
@@ -13,19 +15,19 @@ type ExtraDataFieldProps = {
   name: string;
   defaultValue?: number;
   onChangeNumberOfUnits: (value: number) => void;
+  disabled?: boolean;
 };
 
 const ExtraDataField = ({
   data,
   name,
   defaultValue,
+  disabled = false,
   onChangeNumberOfUnits
 }: ExtraDataFieldProps) => {
   const { name: serviceName, unit } = data;
-  const { shortName, price } = unit;
 
   const [selected, setSelected] = useState(!!defaultValue);
-  // const [selected, setSelected] = useState(false);
 
   const { setValue } = useFormContext();
   const currentNumberOfUnits = useWatch({ name }) as number;
@@ -56,13 +58,18 @@ const ExtraDataField = ({
         className={`flex flex-col 
         `}
       >
-        <p className="font-medium">{serviceName}</p>
-        <p className="text-sm">{`${price} zł/${shortName}`}</p>
+        <p className={clsx('font-medium', disabled && 'text-slate-400')}>
+          {serviceName}
+        </p>
+        {unit && (
+          <p
+            className={clsx('text-sm', disabled && 'text-slate-400')}
+          >{`${unit.price} zł/${unit.shortName}`}</p>
+        )}
       </div>
       {selected ? (
         <NumericInput
           initialValue={defaultValue}
-          // initialValue={1}
           name={name}
           min={0}
           max={50}
@@ -77,6 +84,7 @@ const ExtraDataField = ({
               e.preventDefault();
               setSelected(true);
             }}
+            disabled={disabled}
           >
             <FontAwesomeIcon icon={faPlus} className="h-3 w-3" />
           </Button>

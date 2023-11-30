@@ -1,10 +1,10 @@
 import clsx from 'clsx';
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import { ErrorLabel, HourTile } from '~/components/atoms/forms';
 
-import { dateWithHour, extractHourFromDate, isSame } from '~/utils/dateUtils';
+import { isSame } from '~/utils/dateUtils';
 
 import type { ValidDate } from '~/types/forms';
 import type { HourAvailability } from '~/types/service';
@@ -32,6 +32,7 @@ const HourSelection = ({
 
   useEffect(() => {
     register(name);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [name]);
 
   const currentValue = useWatch({ name }) as Date;
@@ -55,9 +56,10 @@ const HourSelection = ({
             available={available}
             disabled={disableSelection}
             selected={isSame(currentValue, hour)}
-            onSelect={(selectedHour) => {
-              setValue(name, selectedHour);
-              onChange?.(new Date(selectedHour));
+            onSelect={(stringifiedHourDate) => {
+              const hourDate = new Date(stringifiedHourDate);
+              setValue(name, hourDate);
+              onChange?.(hourDate);
             }}
           />
         ))}

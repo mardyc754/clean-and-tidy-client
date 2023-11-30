@@ -1,15 +1,18 @@
-import type { ServiceWithBusyHours } from '~/schemas/api/services';
+import { difference } from 'lodash';
+
+import type { OrderedService } from '~/schemas/api/services';
+
+import { calculateServiceCostAndDuration } from '~/stores/orderService/utils';
 
 import type { TimeInterval } from '~/types/service';
 
 import {
-  ValidDayjsDate,
+  type ValidDayjsDate,
   advanceByMinutes,
   dateWithHour,
   getTime,
   isAfter,
   isAfterOrSame,
-  isBefore,
   isBeforeOrSame,
   minutesBetween,
   nextDay
@@ -143,4 +146,27 @@ export function getHourAvailabilityData(
       return acc && !isBusy;
     }, true)
   }));
+}
+
+export function findMainService(services: Array<OrderedService | undefined>) {
+  return services.find((service) => service?.isMainServiceForReservation);
+}
+
+export function getStartDateForService(
+  orderedServices: Array<OrderedService | undefined>,
+  positionOnList: number,
+  baseStartDate: ValidDayjsDate
+) {
+  const mainService = findMainService(orderedServices);
+
+  const services = [
+    mainService,
+    ...difference(orderedServices, [mainService])
+  ].slice(0, positionOnList);
+
+  return services.reduce((acc, service) => {
+    const duration = calculateServiceCostAndDuration(service).durationInMinutes;
+
+    return advanceByMinutes(acc, duration);
+  }, baseStartDate);
 }

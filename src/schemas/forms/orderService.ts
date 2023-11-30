@@ -91,7 +91,8 @@ export type TimeSlot = z.infer<typeof timeSlot>;
 export const employeeAvailabilityData = z.object({
   id: z.number().int(),
   workingHours: z.array(timeSlot),
-  numberOfWorkingHours: z.number()
+  numberOfWorkingHours: z.number(),
+  services: z.array(z.number().int())
 });
 
 export type EmployeeAvailabilityData = z.infer<typeof employeeAvailabilityData>;

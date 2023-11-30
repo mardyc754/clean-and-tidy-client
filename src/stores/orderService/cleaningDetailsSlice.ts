@@ -4,22 +4,17 @@ import { type StateCreator } from 'zustand';
 import { initialCleaningDetailsFormData } from '~/constants/orderServiceForm';
 import { DETERGENT_COST } from '~/constants/primitives';
 
-import type { Employee } from '~/schemas/api/employee';
 import {
   type BasicServiceData,
   type OrderedService,
-  Service
+  type Service
 } from '~/schemas/api/services';
 import type {
   EmployeeAvailabilityData,
   OrderServiceInputData
 } from '~/schemas/forms/orderService';
 
-import {
-  advanceByMinutes,
-  getTimeSlot,
-  mergeDayDateAndHourDate
-} from '~/utils/dateUtils';
+import { advanceByMinutes, mergeDayDateAndHourDate } from '~/utils/dateUtils';
 
 import type { CleaningFrequency } from '~/types/enums';
 import type { CleaningFrequencyData, ValidDate } from '~/types/forms';
@@ -27,8 +22,7 @@ import type { CleaningFrequencyData, ValidDate } from '~/types/forms';
 import {
   calculateServiceNumberOfUnits,
   calculateTotalCostAndDuration,
-  createOrUpdateOrderedService,
-  getAssignedEmployees
+  createOrUpdateOrderedService
 } from './utils';
 
 type StoredDate = ValidDate | string;
@@ -47,13 +41,11 @@ interface CleaningDetailsSliceData {
 }
 export interface CleaningDetailsSlice extends CleaningDetailsSliceData {
   availableEmployees: EmployeeAvailabilityData[];
-  assignedEmployees: Employee['id'][];
   onChangeServiceNumberOfUnits: (
     numberOfUnits: number,
     isMainService: boolean,
     serviceData: BasicServiceData,
-    positionOnList: number,
-    employeeId: number
+    positionOnList: number
   ) => void;
   onChangeIncludeDetergents: (includeDetergents: boolean) => void;
   onChangeStartDate: (startDate: ValidDate) => void;
@@ -70,7 +62,9 @@ export interface CleaningDetailsSlice extends CleaningDetailsSliceData {
   getOrderedServicesIds: () => Array<Service['id']>;
   resetCleaningDetailsData: () => void;
   setAvailableEmployees: (employees: EmployeeAvailabilityData[]) => void;
-  calculateAssignedEmployees: () => Employee['id'][];
+  getAvailableEmployeesForService: (
+    serviceId: Service['id']
+  ) => EmployeeAvailabilityData[];
 }
 
 export const initialCleaningDetailsState = {
@@ -87,7 +81,6 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
 ) => ({
   ...initialCleaningDetailsState,
   availableEmployees: [],
-  assignedEmployees: [],
   onChangeIncludeDetergents: (includeDetergents) => {
     set((state) => ({
       includeDetergents,
@@ -100,16 +93,17 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
     numberOfUnits,
     isMainService,
     serviceData,
-    positionOnList,
-    employeeId
+    positionOnList
   ) => {
     set((state) => {
       const newService = createOrUpdateOrderedService(
         serviceData,
-        employeeId,
+        state.availableEmployees,
         state.orderedServices,
         isMainService,
-        numberOfUnits
+        numberOfUnits,
+        state.startDate,
+        positionOnList
       );
 
       const newServices = [...state.orderedServices];
@@ -121,7 +115,6 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
 
       return {
         orderedServices: newServices,
-        assignedEmployees: state.calculateAssignedEmployees(),
         ...calculateTotalCostAndDuration(newServices)
       };
     });
@@ -177,11 +170,27 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
     }));
   },
   onChangeStartDate: (startDate) => {
-    set((state) => ({
-      startDate,
-      hourDate: null,
-      assignedEmployees: state.calculateAssignedEmployees()
-    }));
+    set((state) => {
+      return {
+        startDate,
+        hourDate: null,
+        orderedServices: state.orderedServices.map((service, index) => {
+          if (!service) {
+            return service;
+          }
+
+          return createOrUpdateOrderedService(
+            service,
+            state.availableEmployees,
+            state.orderedServices,
+            service.isMainServiceForReservation,
+            calculateServiceNumberOfUnits(service),
+            startDate,
+            index
+          );
+        })
+      };
+    });
   },
   onChangeHourDate: (hourDate) => {
     set(() => ({ hourDate }));
@@ -223,11 +232,8 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
   setAvailableEmployees: (employees) => {
     set(() => ({ availableEmployees: employees }));
   },
-  calculateAssignedEmployees: () => {
-    const { startDate, durationInMinutes, availableEmployees } = get();
-    return getAssignedEmployees(
-      availableEmployees,
-      getTimeSlot(startDate, durationInMinutes)
-    );
-  }
+  getAvailableEmployeesForService: (serviceId) =>
+    get().availableEmployees.filter((employee) =>
+      employee.services.includes(serviceId)
+    )
 });

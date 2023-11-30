@@ -35,6 +35,7 @@ export function useCleaningDetailsForm({
     getInitialCleaningDetailsFormData,
     getOrderedServicesIds,
     setAvailableEmployees,
+    getAvailableEmployeesForService,
     totalCost,
     startDate
   } = useOrderServiceFormStore(
@@ -50,7 +51,8 @@ export function useCleaningDetailsForm({
       getOrderedServicesIds: state.getOrderedServicesIds,
       getInitialCleaningDetailsFormData:
         state.getInitialCleaningDetailsFormData,
-      setAvailableEmployees: state.setAvailableEmployees
+      setAvailableEmployees: state.setAvailableEmployees,
+      getAvailableEmployeesForService: state.getAvailableEmployeesForService
     }))
   );
 
@@ -87,8 +89,7 @@ export function useCleaningDetailsForm({
         0,
         true,
         { id, name, unit },
-        secondaryServicesWithUnit.length,
-        2 // TODO: hardcoded right now
+        secondaryServicesWithUnit.length
       );
     }
   }, [
@@ -123,6 +124,7 @@ export function useCleaningDetailsForm({
     onChangeCleaningFrequency,
     onChangeStartDate,
     onChangeHourDate,
-    setAvailableEmployees
+    setAvailableEmployees,
+    getAvailableEmployeesForService
   };
 }
