@@ -36,6 +36,7 @@ export function useCleaningDetailsForm({
     getOrderedServicesIds,
     setAvailableEmployees,
     getAvailableEmployeesForService,
+    cleaningFrequencyDisplayData,
     totalCost,
     startDate
   } = useOrderServiceFormStore(
@@ -52,7 +53,8 @@ export function useCleaningDetailsForm({
       getInitialCleaningDetailsFormData:
         state.getInitialCleaningDetailsFormData,
       setAvailableEmployees: state.setAvailableEmployees,
-      getAvailableEmployeesForService: state.getAvailableEmployeesForService
+      getAvailableEmployeesForService: state.getAvailableEmployeesForService,
+      cleaningFrequencyDisplayData: state.cleaningFrequencyDisplayData
     }))
   );
 
@@ -118,6 +120,7 @@ export function useCleaningDetailsForm({
     totalCost,
     startDate,
     orderedServicesIds: getOrderedServicesIds(),
+    cleaningFrequencyDisplayData,
     onSubmit,
     onChangeIncludeDetergents,
     onChangeServiceNumberOfUnits,

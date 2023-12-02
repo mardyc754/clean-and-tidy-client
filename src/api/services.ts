@@ -82,7 +82,7 @@ export const getServicesBusyHours = async (
     parsedParams = {
       from: params.from,
       to: params.to,
-      step: params.step as string | undefined,
+      frequency: params.frequency as string | undefined,
       serviceIds: params.serviceIds?.join(',')
     };
   }

@@ -44,6 +44,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
     secondaryServicesWithUnit,
     startDate,
     orderedServicesIds,
+    cleaningFrequencyDisplayData,
     onSubmit,
     onChangeIncludeDetergents,
     onChangeServiceNumberOfUnits,
@@ -76,7 +77,8 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
       orderedServicesIds.length > 0
         ? Array.from(new Set([id, ...orderedServicesIds]))
         : [id],
-    ...availablityRange
+    ...availablityRange,
+    frequency: cleaningFrequencyDisplayData?.value
   });
 
   useEffect(() => {
