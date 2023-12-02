@@ -1,5 +1,5 @@
 import { Logo } from '~/components/atoms/logo';
-import { NavbarButtons } from '~/components/molecules';
+import { NavbarButtons, NavigationButtons } from '~/components/molecules';
 
 const Navbar = () => {
   return (
@@ -9,6 +9,7 @@ const Navbar = () => {
       </div>
       <nav className="w-1/2">
         <NavbarButtons />
+        {/* <NavigationButtons /> */}
       </nav>
     </header>
   );

@@ -31,7 +31,7 @@ const OrderCleaningFormPage = ({
       <div className="flex flex-col p-16">
         <MultiStepFormIndicator stepIndicatorData={stepIndicatorData} />
         <div className="flex flex-col justify-evenly lg:flex-row">
-          <div className={`flex flex-col py-16 ${!showSummary ? 'w-3/5' : ''}`}>
+          <div className={`flex flex-1 flex-col px-16 py-16`}>
             <Heading1>{heading}</Heading1>
             {children}
           </div>

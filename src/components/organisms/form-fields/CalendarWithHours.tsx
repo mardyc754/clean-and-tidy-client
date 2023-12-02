@@ -1,12 +1,14 @@
 import clsx from 'clsx';
-import { useEffect } from 'react';
-// import 'react-calendar/dist/Calendar.css'; // for testing purposes only
-import { type CalendarProps as ReactCalendarProps } from 'react-calendar';
-import { useFormContext } from 'react-hook-form';
+import { useEffect, useState } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
+
+import type { TimeInterval } from '~/schemas/api/services';
 
 import { MediumTypography } from '~/components/atoms/typography/regular-text';
 import { Calendar } from '~/components/molecules/calendar';
 import { HourSelection } from '~/components/molecules/form-fields';
+
+import { getHourAvailabilityData } from '~/utils/serviceUtils';
 
 import type { ValidDate } from '~/types/forms';
 
@@ -14,12 +16,13 @@ type CalendarWithLabelProps = {
   calendarInputName: string;
   hourInputName: string;
   label: string;
+  busyHours: TimeInterval[];
   direction?: 'column' | 'row';
   onChangeHour?: (value: ValidDate) => void;
   onChangeDate?: (value: ValidDate) => void;
   dateErrorLabel?: string;
   hourErrorLabel?: string;
-} & Omit<ReactCalendarProps, 'onChange' | 'value'>;
+};
 
 const CalendarWithHours = ({
   label,
@@ -30,16 +33,22 @@ const CalendarWithHours = ({
   onChangeHour,
   dateErrorLabel,
   hourErrorLabel,
-  ...props
+  busyHours
 }: CalendarWithLabelProps) => {
-  const { setValue, watch } = useFormContext();
+  // const { setValue } = useFormContext();
+  // const [isMounted, setIsMounted] = useState(false);
 
-  const currentDate = watch(calendarInputName) as ValidDate;
+  const currentDate = useWatch({ name: calendarInputName }) as ValidDate;
 
-  useEffect(() => {
-    setValue(hourInputName, null);
-    onChangeHour?.(null);
-  }, [currentDate]);
+  // useEffect(() => {
+  //   // do not reset hour value on first render
+  //   if (isMounted) {
+  //     setValue(hourInputName, null);
+  //     onChangeHour?.(null);
+  //   } else {
+  //     setIsMounted(true);
+  //   }
+  // }, [currentDate, hourInputName, isMounted, onChangeHour, setValue]);
 
   return (
     <div className="flex flex-col">
@@ -47,19 +56,19 @@ const CalendarWithHours = ({
       <div
         className={clsx(
           'flex',
-          direction === 'column' && 'flex-col items-center space-y-4'
+          direction === 'column' && 'flex-col items-center space-x-8 space-y-4'
         )}
       >
         <Calendar
           name={calendarInputName}
           onChange={onChangeDate}
           errorLabel={dateErrorLabel}
-          {...props}
+          defaultValue={currentDate}
         />
         <HourSelection
+          direction="row"
+          hourAvailabilityData={getHourAvailabilityData(currentDate, busyHours)}
           name={hourInputName}
-          className="px-16"
-          direction={direction === 'column' ? 'row' : 'column'}
           disableSelection={!currentDate}
           onChange={onChangeHour}
           errorLabel={hourErrorLabel}

@@ -1,32 +1,29 @@
-// import 'react-calendar/dist/Calendar.css'; // for testing purposes only
 import clsx from 'clsx';
 import { useEffect } from 'react';
-import {
-  Calendar as ReactCalendar,
-  type CalendarProps as ReactCalendarProps
-} from 'react-calendar';
 import { useFormContext } from 'react-hook-form';
 
 import { ErrorLabel } from '~/components/atoms/forms';
+import { Calendar as ShadcnCalendar } from '~/components/shadcn/ui/calendar';
 
-import { nextDay } from '~/utils/dateUtils';
+import { type ValidDayjsDate, isTheSameDay, nextDay } from '~/utils/dateUtils';
 
 import type { ValidDate } from '~/types/forms';
 
-interface CalendarProps extends Omit<ReactCalendarProps, 'onChange'> {
+interface CalendarProps {
   name: string;
   errorLabel?: string;
+  defaultValue?: ValidDate;
   onChange?: (value: ValidDate) => void;
 }
 
 const Calendar = ({
   name,
-  value,
   errorLabel,
   onChange,
+  defaultValue,
   ...props
 }: CalendarProps) => {
-  const { register, setValue } = useFormContext();
+  const { register, setValue, getValues } = useFormContext();
 
   useEffect(() => {
     register(name);
@@ -39,14 +36,17 @@ const Calendar = ({
 
   return (
     <div className={clsx('flex flex-col', !errorLabel && 'mb-4')}>
-      <ReactCalendar
-        minDate={nextDay(new Date())}
-        // tileDisabled={({ date }) => date.getDay() === 0 || date.getDay() === 6}
-        onChange={handleChange}
-        value={value}
-        // temporary in order to quiet hydrate errors
-        calendarType="iso8601"
-        locale="en-US"
+      <ShadcnCalendar
+        ISOWeek
+        disabled={{ before: nextDay(new Date()) }}
+        onDayClick={handleChange}
+        selected={(date) => {
+          return isTheSameDay(
+            date,
+            (getValues(name) as ValidDayjsDate) ?? defaultValue
+          );
+        }}
+        fromMonth={nextDay(new Date())}
         {...props}
       />
       <ErrorLabel>{errorLabel}</ErrorLabel>

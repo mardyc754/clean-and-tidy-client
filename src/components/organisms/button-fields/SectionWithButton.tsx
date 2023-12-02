@@ -25,14 +25,7 @@ const SectionWithButton = ({
       <p className="font-semibold">{label}</p>
       <div className="flex space-x-4">
         <Button {...rest}>{buttonContent}</Button>
-        {/* <Button>Manage</Button> */}
       </div>
-      {/* <p className="font-semibold">
-        {getWeekDayNameWithFrequencyAndDate(
-          data.visits?.[0]?.startDate,
-          data.frequency
-        )}
-      </p> */}
     </div>
   );
 };

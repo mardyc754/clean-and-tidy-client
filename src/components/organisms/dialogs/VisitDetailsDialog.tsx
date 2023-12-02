@@ -2,9 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 
 import { visit } from '~/constants/queryKeys';
 
-import { getVisitById } from '~/api/visit';
+import { getVisitByIdWithEmployees } from '~/api/visit';
 
-import type { Visit } from '~/schemas/api/reservation';
+import type { VisitWithEmployees } from '~/schemas/api/reservation';
 
 import { Button } from '~/components/atoms/buttons';
 import { Spinner } from '~/components/molecules/status-indicators';
@@ -15,7 +15,7 @@ import DialogBase from './DialogBase';
 type VisitDetailsDialogProps = {
   isOpen: boolean;
   onClose: VoidFunction;
-  visitId: Visit['id'];
+  visitId: VisitWithEmployees['id'];
 };
 
 const VisitDetailsDialog = ({
@@ -23,11 +23,9 @@ const VisitDetailsDialog = ({
   onClose,
   visitId
 }: VisitDetailsDialogProps) => {
-  const options = { includeEmployees: true };
-
   const { data, isLoading } = useQuery({
-    queryKey: visit.detail(visitId, options),
-    queryFn: () => getVisitById(visitId, { includeEmployees: true })
+    queryKey: visit.detail(visitId, { includeEmployee: true }),
+    queryFn: () => getVisitByIdWithEmployees(visitId)
   });
 
   return (

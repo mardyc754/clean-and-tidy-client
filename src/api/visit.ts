@@ -1,17 +1,30 @@
 import type { ZodType } from 'zod';
 
-import { basicError } from '~/schemas/api/common';
-import { type Visit, visitSchema } from '~/schemas/api/reservation';
+import {
+  type VisitPartWithVisitData,
+  visitPartWithVisitData
+} from '~/schemas/api/reservation';
+import { basicError } from '~/schemas/common';
 
 import { handleFetchingData } from './handleFetchingData';
-import type { VisitQueryOptions } from './types';
 
-export const getVisitById = async (id: number, options?: VisitQueryOptions) => {
+export const getVisitById = async (id: number) => {
   return await handleFetchingData({
     path: `/visits/${id}`,
     method: 'get',
-    successSchema: visitSchema as unknown as ZodType<Visit>,
+    successSchema:
+      visitPartWithVisitData as unknown as ZodType<VisitPartWithVisitData>,
+    errorSchema: basicError
+  });
+};
+
+export const getVisitByIdWithEmployees = async (id: number) => {
+  return await handleFetchingData({
+    path: `/visits/${id}`,
+    method: 'get',
+    successSchema:
+      visitPartWithVisitData as unknown as ZodType<VisitPartWithVisitData>,
     errorSchema: basicError,
-    params: options
+    params: { includeEmployee: true }
   });
 };

@@ -3,7 +3,7 @@ import { ZodError, type ZodType } from 'zod';
 
 import { fetcher } from '~/lib/axios';
 
-import type { BackendBasicErrorData } from '~/schemas/api/common';
+import type { BackendBasicErrorData } from '~/schemas/common';
 
 import { ResponseError } from './errors/ResponseError';
 
@@ -41,7 +41,7 @@ function handleTypeErrors(err: unknown, typeErrorMessage: string) {
   if (err instanceof ZodError) {
     // eslint-disable-next-line no-console
     console.error(err);
-    return { message: typeErrorMessage, hasError: true };
+    return { message: err.message ?? typeErrorMessage, hasError: true };
   } else {
     throw err;
   }

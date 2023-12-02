@@ -14,8 +14,10 @@ import type { AppType } from 'next/app';
 import { useState } from 'react';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { Toaster } from 'react-hot-toast';
-import '~/styles/Calendar.css';
+
 import '~/styles/globals.css';
+
+// import '~/styles/Calendar.css';
 
 config.autoAddCss = false;
 library.add(fas);
@@ -37,7 +39,7 @@ const MyApp: AppType<{
           queries: {
             // With SSR, we usually want to set some default staleTime
             // above 0 to avoid refetching immediately on the client
-            staleTime: 60 * 1000
+            staleTime: 600 * 1000
           }
         }
       })

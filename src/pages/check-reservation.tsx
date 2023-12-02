@@ -2,7 +2,7 @@ import { FormProvider } from 'react-hook-form';
 
 import { getServerSideUserData } from '~/server/prefetchUserData';
 
-import useReservationFinder from '~/hooks/reservation/useReservationFinder';
+import { useReservationFinder } from '~/hooks/reservation/useReservationFinder';
 
 import { Button } from '~/components/atoms/buttons';
 import { Heading1, Heading2 } from '~/components/atoms/typography/headings';
@@ -16,11 +16,7 @@ import { PageWrapper } from '~/components/template';
 
 const CheckReservation = () => {
   const { data, error, status, methods, onSubmit, isLoading } =
-    useReservationFinder('reservationName', {
-      includeVisits: true,
-      includeServices: true,
-      includeAddress: true
-    });
+    useReservationFinder('reservationName');
 
   const {
     formState: { errors }

@@ -10,7 +10,7 @@ import {
 
 import { localizer } from '~/lib/dayjs';
 
-import type { Visit } from '~/schemas/api/reservation';
+import type { VisitWithEmployees } from '~/schemas/api/reservation';
 
 import { dateWithHour } from '~/utils/dateUtils';
 
@@ -40,8 +40,8 @@ function getRandomBackgroudColor() {
   return colors[Math.floor(Math.random() * colors.length)];
 }
 
-interface VisitEvent extends CalendarEvent {
-  resource: Visit;
+export interface VisitEvent extends CalendarEvent {
+  resource: { visitId: VisitWithEmployees['id'] };
 }
 
 const Event = React.memo(({ event, ...props }: EventProps<VisitEvent>) => {
@@ -54,7 +54,7 @@ const Event = React.memo(({ event, ...props }: EventProps<VisitEvent>) => {
         <VisitDetailsDialog
           isOpen
           onClose={() => setIsOpen(false)}
-          visitId={resource.id}
+          visitId={resource.visitId}
         />
       )}
     </div>

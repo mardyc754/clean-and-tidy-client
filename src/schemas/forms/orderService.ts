@@ -1,8 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
-import { ISOString } from '~/schemas/api/common';
 import { basicService } from '~/schemas/api/services';
+import { ISOString } from '~/schemas/common';
 
 import { CleaningFrequency } from '~/types/enums';
 
@@ -12,7 +12,7 @@ export const orderServiceSubmitDataSchema = z.object({
     .number()
     .int()
     .max(500, { message: 'Must be less than 500' })
-    .min(30, { message: 'Must be atleast 30' }),
+    .min(1, { message: `Must be atleast 1` }),
   cleaningFrequency: z.nativeEnum(CleaningFrequency, {
     required_error: 'Cleaning frequency is required',
     invalid_type_error: 'Cleaning frequency is required'
@@ -26,8 +26,39 @@ export const orderServiceSubmitDataSchema = z.object({
     invalid_type_error: 'Select an hour'
   }),
   includeDetergents: z.boolean(),
-  extraServices: z.array(z.number().int().or(z.undefined())).optional()
+  extraServices: z.array(z.number().int().or(z.undefined())).optional(),
+  totalCost: z.number().min(0)
 });
+
+export function createOrderServiceSubmitDataSchema(
+  minNumberOfUnits?: number | null,
+  minCost?: number | null
+) {
+  const minUnits = minNumberOfUnits ?? 0;
+
+  const schema = orderServiceSubmitDataSchema.extend({
+    numberOfUnits: z
+      .number()
+      .int()
+      .max(500, { message: 'Must be less than 500' })
+      .min(minUnits, {
+        message: `Must be atleast ${minUnits}`
+      }),
+    totalCost: z.number().min(minCost ?? 0, {
+      message: `Total cost must be greater than ${minCost}`
+    })
+  });
+
+  if (!minNumberOfUnits) {
+    return schema.omit({ numberOfUnits: true });
+  }
+
+  if (!minCost) {
+    return schema.omit({ totalCost: true });
+  }
+
+  return schema;
+}
 
 export const orderServiceInputDataSchema = orderServiceSubmitDataSchema.extend({
   cleaningFrequency: z.nativeEnum(CleaningFrequency).nullable(),
@@ -41,9 +72,37 @@ export type OrderServiceSubmitData = z.infer<
 
 export type OrderServiceInputData = z.infer<typeof orderServiceInputDataSchema>;
 
-export const cleaningDetailsResolver = zodResolver(
-  orderServiceSubmitDataSchema
-);
+export function cleaningDetailsResolver(
+  minNumberOfUnits?: number | null,
+  minTotalCost?: number | null
+) {
+  return zodResolver(
+    createOrderServiceSubmitDataSchema(minNumberOfUnits, minTotalCost)
+  );
+}
+
+export const timeSlot = z.object({
+  startDate: z.string().datetime(),
+  endDate: z.string().datetime()
+});
+
+export type TimeSlot = z.infer<typeof timeSlot>;
+
+export const employeeAvailabilityData = z.object({
+  id: z.number().int(),
+  workingHours: z.array(timeSlot),
+  numberOfWorkingHours: z.number(),
+  services: z.array(z.number().int())
+});
+
+export type EmployeeAvailabilityData = z.infer<typeof employeeAvailabilityData>;
+
+export const busyHoursData = z.object({
+  employees: z.array(employeeAvailabilityData),
+  busyHours: z.array(timeSlot)
+});
+
+export type BusyHoursData = z.infer<typeof busyHoursData>;
 
 // CONTACT DETAILS PAGE
 export const address = z.object({
@@ -60,7 +119,16 @@ export const contactDetails = z.object({
   email: z.string().email()
 });
 
-export const contactDetailsForm = address.merge(contactDetails);
+export const extraInfoDataSchema = z.object({
+  extraInfo: z
+    .string()
+    .max(500, { message: 'Extra info must have at most 500 characters' })
+    .nullable()
+});
+
+export const contactDetailsForm = address
+  .merge(contactDetails)
+  .merge(extraInfoDataSchema);
 
 export type Address = z.infer<typeof address>;
 
@@ -84,32 +152,42 @@ export const orderedServiceSchema = basicService.extend({
   numberOfUnits: z.number().int().max(500).min(1)
 });
 
-export const reservationCreationSchema = z.object({
-  frequency: z.nativeEnum(CleaningFrequency),
-  bookerEmail: z.string().email(),
-  visitData: visitCreationDataSchema,
-  // endDate: z.string().datetime(),
-  address: address.or(z.number().int()),
-  contactDetails: contactDetails,
-  services: z
-    .array(
-      orderedServiceSchema
-        .pick({
-          id: true,
-          numberOfUnits: true,
-          isMainServiceForReservation: true
-        })
-        .transform((val) => ({
-          serviceId: val.id,
-          numberOfUnits: val.numberOfUnits,
-          isMainServiceForReservation: val.isMainServiceForReservation
-        }))
-    )
-    .refine(
-      (arr) =>
-        arr.filter((service) => service.isMainServiceForReservation).length ===
-        1
-    )
-});
+export const reservationCreationSchema = z
+  .object({
+    frequency: z.nativeEnum(CleaningFrequency),
+    bookerEmail: z.string().email(),
+    visitParts: z.array(
+      z.object({
+        employeeId: z.number().int(),
+        serviceId: z.number().int(),
+        numberOfUnits: z.number().int(),
+        startDate: z.string().datetime(),
+        endDate: z.string().datetime(),
+        cost: z.number().min(0)
+      })
+    ),
+    address: address.or(z.number().int()),
+    contactDetails: contactDetails,
+    includeDetergents: z.boolean(),
+
+    services: z
+      .array(
+        orderedServiceSchema
+          .pick({
+            id: true,
+            isMainServiceForReservation: true
+          })
+          .transform((val) => ({
+            serviceId: val.id,
+            isMainServiceForReservation: val.isMainServiceForReservation
+          }))
+      )
+      .refine(
+        (arr) =>
+          arr.filter((service) => service.isMainServiceForReservation)
+            .length === 1
+      )
+  })
+  .merge(extraInfoDataSchema);
 
 export type ReservationCreationData = z.infer<typeof reservationCreationSchema>;

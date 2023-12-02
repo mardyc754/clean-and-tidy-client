@@ -2,7 +2,7 @@ import { useShallow } from 'zustand/react/shallow';
 
 import { EMPTY_DATA_PLACEHOLDER } from '~/constants/primitives';
 
-import { useOrderServiceFormStore } from '~/stores/orderServiceFormStore';
+import { useOrderServiceFormStore } from '~/stores/orderService/orderServiceFormStore';
 
 import {
   displayDayDateAndHourDate,
@@ -19,17 +19,18 @@ export const useSummaryData = (serviceName: string) => {
     startDate,
     hourDate,
     clientData,
-    addressData
+    addressData,
+    extraInfo
   } = useOrderServiceFormStore(
     useShallow((state) => ({
-      orderServiceFormData: state.orderServiceFormData,
       totalCost: state.totalCost,
       totalDuration: state.durationInMinutes,
       cleaningFrequency: state.cleaningFrequencyDisplayData,
       startDate: state.startDate,
       hourDate: state.hourDate,
       clientData: state.clientData,
-      addressData: state.addressData
+      addressData: state.addressData,
+      extraInfo: state.extraInfo
     }))
   );
 
@@ -51,6 +52,7 @@ export const useSummaryData = (serviceName: string) => {
 
   return {
     totalCost,
+    extraInfo,
     summaryData,
     contactDetails: { ...clientData, ...addressData }
   };

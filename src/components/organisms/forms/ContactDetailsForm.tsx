@@ -1,61 +1,31 @@
-import { useRouter } from 'next/router';
-import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form';
+import { FormProvider } from 'react-hook-form';
 
-import {
-  type ContactDetailsFormData,
-  contactDetailsResolver
-} from '~/schemas/forms/orderService';
-
-import { useOrderServiceFormStore } from '~/stores/orderServiceFormStore';
+import { useAuth } from '~/hooks/auth/useAuth';
+import { useContactDetailsForm } from '~/hooks/orderServiceForm/useContactDetailsForm';
+import { useOrderServiceFormNavigation } from '~/hooks/orderServiceForm/useOrderServiceFormNavigation';
 
 import { TextArea, Textfield } from '~/components/molecules/form-fields';
 
 import { StepButtons } from '../form-fields';
 
 const ContactDetailsForm = () => {
-  const methods = useForm<ContactDetailsFormData>({
-    resolver: contactDetailsResolver
-  });
+  const { currentUser } = useAuth();
 
+  const { onChangeStep } = useOrderServiceFormNavigation();
   const {
-    handleSubmit,
-    formState: { errors }
-  } = methods;
-
-  const {
-    onChangeClientData,
+    methods,
+    errors,
+    onSubmit,
     onChangeAddressData,
-    currentStep,
-    decreaseStep,
-    increaseStep
-  } = useOrderServiceFormStore((state) => ({
-    onChangeAddressData: state.onChangeAddressData,
-    onChangeClientData: state.onChangeClientData,
-    currentStep: state.currentStep,
-    decreaseStep: state.decreaseStep,
-    increaseStep: state.increaseStep
-  }));
-
-  // console.log(methods.watch());
-  const router = useRouter();
-
-  const onDecreaseStep = async () => {
-    await router.push({
-      pathname: router.pathname,
-      query: { ...router.query, currentStep: 1 }
-    });
-  };
-  const onSubmit: SubmitHandler<ContactDetailsFormData> = async () => {
-    await router.push({
-      pathname: router.pathname,
-      query: { ...router.query, currentStep: 3 }
-    });
-  };
+    onChangeClientData,
+    onChangeExtraInfo
+  } = useContactDetailsForm({
+    submitHandler: async () => await onChangeStep(3)
+  });
 
   return (
     <FormProvider {...methods}>
-      {/* <form onSubmit={handleSubmit(increaseStep)}> */}
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={onSubmit}>
         <div className="grid grid-cols-6 grid-rows-6 gap-10 py-16">
           <Textfield
             wrapperProps="col-span-3 row-span-1"
@@ -86,6 +56,8 @@ const ContactDetailsForm = () => {
             type="email"
             name="email"
             required
+            defaultValue={currentUser?.email}
+            disabled={!!currentUser?.email}
             className="w-full"
             onChange={(value) => {
               onChangeClientData('email', value);
@@ -156,12 +128,15 @@ const ContactDetailsForm = () => {
             className="h-full w-full"
             label="Extra Info"
             name="extraInfo"
+            onChange={(value) => {
+              onChangeExtraInfo(value);
+            }}
+            errorLabel={errors.extraInfo?.message}
           />
         </div>
-        {/* <StepButtons currentStep={currentStep} onDecreaseStep={decreaseStep} /> */}
         <StepButtons
-          currentStep={currentStep}
-          onDecreaseStep={onDecreaseStep}
+          currentStep={2}
+          onDecreaseStep={async () => await onChangeStep(1)}
         />
       </form>
     </FormProvider>

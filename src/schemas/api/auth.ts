@@ -2,8 +2,8 @@ import { z } from 'zod';
 
 import { UserRole } from '~/types/enums';
 
+import { basicError } from '../common';
 import { clientSchema } from './client';
-import { basicError } from './common';
 import { employeeSchema } from './employee';
 
 export const registrationSuccess = z.object({
@@ -46,11 +46,11 @@ export const clientUserSchema = clientSchema.extend({
   role: z.literal(UserRole.CLIENT)
 });
 
-export const regularEmployeeUserSchema = clientSchema.extend({
+export const regularEmployeeUserSchema = employeeSchema.extend({
   role: z.literal(UserRole.EMPLOYEE)
 });
 
-export const adminUserSchema = clientSchema.extend({
+export const adminUserSchema = employeeSchema.extend({
   role: z.literal(UserRole.ADMIN)
 });
 

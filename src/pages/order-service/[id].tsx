@@ -13,6 +13,8 @@ import { getAllServices, getServiceById } from '~/api/services';
 
 import type { Service } from '~/schemas/api/services';
 
+import { useOrderServicePageLoading } from '~/hooks/orderServiceForm/useOrderServicePageLoading';
+
 import {
   CleaningDetailsForm,
   ContactDetailsForm,
@@ -54,16 +56,7 @@ function OrderService({
   data,
   router
 }: InferGetStaticPropsType<typeof getStaticProps> & { router: NextRouter }) {
-  // InferGetServerSidePropsType<typeof getServerSideProps> & {
-  // router: NextRouter;
-  // }) {
-
-  // const { currentStep } = useOrderServiceFormStore((state) => ({
-  //   currentStep: state.currentStep
-  // }));
-
-  // const router = useRouter();
-  // const query = router.query;
+  const { serviceIdChecked } = useOrderServicePageLoading({ data });
 
   const currentStep = useMemo(() => {
     const step = router.query.currentStep;
@@ -73,7 +66,6 @@ function OrderService({
 
     return 0;
   }, [router.query.currentStep]);
-  // console.log(query);
 
   const currentStepData = useMemo(
     () => getCurrentStepComponent(currentStep, data),
@@ -88,13 +80,7 @@ function OrderService({
       heading={currentStepData.heading}
       stepIndicatorData={currentStepData.stepIndidatorData}
     >
-      {currentStepData.stepComponent}
-      {/* <StepButtons
-        cancelHref="/"
-        currentStep={currentStep}
-        setCurrentStep={setCurrentStep}
-        maxStep={2}
-      /> */}
+      {serviceIdChecked && currentStepData.stepComponent}
     </OrderServiceFormPage>
   );
 }
@@ -122,10 +108,7 @@ export const getStaticProps = (async ({ params }) => {
     };
   }
 
-  const data = await getServiceById(params.id as string, {
-    includeSecondaryServices: true,
-    includeCleaningFrequencies: true
-  });
+  const data = await getServiceById(params.id as string);
 
   if ('hasError' in data) {
     return {

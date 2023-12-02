@@ -3,17 +3,22 @@ import { z } from 'zod';
 
 import { CleaningFrequency } from '~/types/enums';
 
+import { decimalToFloat } from '../common';
+import { employeeSchema } from './employee';
+
 export const basicService = z.object({
   id: z.number().int(),
   name: z.string().max(100),
-  unit: z.union([
-    z.object({
-      name: z.string().max(40),
+  unit: z
+    .object({
+      shortName: z.string().max(40),
+      fullName: z.string().max(60),
       price: z.string().transform((val) => parseFloat(val.replace(',', '.'))),
       duration: z.number().max(480)
-    }),
-    z.null()
-  ])
+    })
+    .nullish(),
+  minNumberOfUnitsIfPrimary: z.number().int().min(1).nullish(),
+  minCostIfPrimary: decimalToFloat.nullish()
 });
 
 export const service = basicService.merge(
@@ -29,6 +34,10 @@ export const service = basicService.merge(
   })
 );
 
+export const serviceWithEmployees = service.extend({
+  employees: employeeSchema.array()
+});
+
 export const services = z.array(service);
 
 export const primaryService = service.merge(
@@ -37,21 +46,35 @@ export const primaryService = service.merge(
   })
 );
 
+export const orderedVisitPart = z.object({
+  employeeId: z.number().int(),
+  serviceId: z.number().int(),
+  numberOfUnits: z.number().int()
+});
+
 // TODO: divide into main service and extra service
 export const orderedServiceSchema = basicService.extend({
   isMainServiceForReservation: z.boolean(),
-  numberOfUnits: z.number().int().max(500).min(1)
+  visitParts: z.array(orderedVisitPart)
 });
 
-export const serviceForReservation = z.object({
-  isMainServiceForReservation: z.boolean(),
-  numberOfUnits: z.number().int().max(500).min(1),
-  reservationId: z.number().int(),
-  serviceId: z.number().int(),
-  service: service.pick({ id: true, name: true })
-});
+export const serviceForVisitPart = z
+  .object({
+    isMainServiceForReservation: z.boolean(),
+    reservationId: z.number().int()
+  })
+  .merge(basicService);
 
 export const primaryServices = z.array(primaryService);
+
+export const timeInterval = z.object({
+  startDate: z.string().datetime(),
+  endDate: z.string().datetime()
+});
+
+export const serviceWithBusyHours = basicService.extend({
+  busyHours: z.array(timeInterval)
+});
 
 export type Service = z.infer<typeof service>;
 
@@ -63,4 +86,12 @@ export type PrimaryService = z.infer<typeof primaryService>;
 
 export type OrderedService = z.infer<typeof orderedServiceSchema>;
 
-export type ServiceForReservation = z.infer<typeof serviceForReservation>;
+export type ServiceWithEmployees = z.infer<typeof serviceWithEmployees>;
+
+export type OrderedVisitPart = z.infer<typeof orderedVisitPart>;
+
+export type ServiceForVisitPart = z.infer<typeof serviceForVisitPart>;
+
+export type TimeInterval = z.infer<typeof timeInterval>;
+
+export type ServiceWithBusyHours = z.infer<typeof serviceWithBusyHours>;

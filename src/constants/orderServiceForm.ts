@@ -51,3 +51,12 @@ export const summaryIndicatorData = [
     outerTriangleColorClass: 'border-l-cyan-500'
   }
 ];
+
+export const initialCleaningDetailsFormData = {
+  numberOfUnits: 0,
+  cleaningFrequency: null,
+  includeDetergents: false,
+  startDate: null,
+  hourDate: null,
+  extraServices: [] as (number | undefined)[]
+} as const;

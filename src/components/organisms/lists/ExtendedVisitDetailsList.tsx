@@ -1,26 +1,26 @@
 import clsx from 'clsx';
 
-import type { Visit } from '~/schemas/api/reservation';
+import type { VisitPartWithEmployees } from '~/schemas/api/reservation';
 
 import { LabeledTypography } from '~/components/atoms/typography/labeled-text';
 
 import {
-  displayDatesAsTimespan,
+  displayDatesAsTimeslot,
   extractDateStringFromDate
 } from '~/utils/dateUtils';
-import { getReservationStatusDescription } from '~/utils/reservationUtils';
 import { convertToCamelCase } from '~/utils/stringUtils';
+import { getVisitPartStatusDescription } from '~/utils/visitUtils';
 
 interface VisitDetailsListProps {
-  data: Visit;
+  data: VisitPartWithEmployees;
 }
 
 const ExtendedVisitDetailsList = ({ data }: VisitDetailsListProps) => {
-  const status = getReservationStatusDescription(data.employees);
+  const status = getVisitPartStatusDescription(data);
 
   const listedData = new Map([
     ['Date', extractDateStringFromDate(data.startDate)],
-    ['Hours', displayDatesAsTimespan(data.startDate, data.endDate)],
+    ['Hours', displayDatesAsTimeslot(data.startDate, data.endDate)],
     ['Status', status?.label ?? ''],
     ['Detergents included', data.includeDetergents ? 'Yes' : 'No'],
     ['Cost', `${data.cost.toFixed(2)} zł`]

@@ -9,7 +9,13 @@ import dayjs from '~/lib/dayjs';
 
 import type { CleaningFrequency } from '~/types/enums';
 
-type ValidDayjsDate = dayjs.Dayjs | Date | string | number | null | undefined;
+export type ValidDayjsDate =
+  | dayjs.Dayjs
+  | Date
+  | string
+  | number
+  | null
+  | undefined;
 
 export function extractDateStringFromDate(date: ValidDayjsDate) {
   return date ? dayjs(date).format('DD.MM.YYYY') : '--.--.----';
@@ -28,11 +34,7 @@ export function changeHourToDate(hour: number) {
 }
 
 export function dateWithHour(date: ValidDayjsDate, hour: number) {
-  return dayjs(date ?? undefined)
-    .hour(hour)
-    .minute(0)
-    .second(0)
-    .toDate();
+  return dayjs(date).hour(hour).minute(0).second(0).toDate();
 }
 
 export function create(date: ValidDayjsDate, hour: number) {
@@ -89,7 +91,7 @@ export function advanceByMinutes(date: ValidDayjsDate, minutes: number) {
   return dayjs(date).add(minutes, 'm').toDate();
 }
 
-export function displayDatesAsTimespan(
+export function displayDatesAsTimeslot(
   startDate: ValidDayjsDate,
   endDate: ValidDayjsDate
 ) {
@@ -98,7 +100,7 @@ export function displayDatesAsTimespan(
   )}`;
 }
 
-export function displayDatesAsFullTimespan(
+export function displayDatesAsFullTimeslot(
   startDate: ValidDayjsDate,
   endDate: ValidDayjsDate
 ) {
@@ -116,6 +118,13 @@ export function daysBetween(
   endDate: ValidDayjsDate
 ) {
   return Math.abs(dayjs(endDate).diff(startDate, 'day'));
+}
+
+export function minutesBetween(
+  startDate: ValidDayjsDate,
+  endDate: ValidDayjsDate
+) {
+  return Math.abs(dayjs(endDate).diff(startDate, 'minute'));
 }
 
 export function getWeekDayName(date: ValidDayjsDate) {
@@ -138,3 +147,72 @@ export function getWeekDayNameWithFrequencyAndDate(
   const frequencyDescription = frequencyToDescriptionMap.get(frequency);
   return `${frequencyDescription}, from ${displayDateWithHours(date)}`;
 }
+
+export function isTheSameDay(
+  firstDate: ValidDayjsDate,
+  secondDate: ValidDayjsDate
+) {
+  return dayjs(firstDate).isSame(secondDate, 'day');
+}
+
+export function isAfter(firstDate: ValidDayjsDate, secondDate: ValidDayjsDate) {
+  return dayjs(firstDate).isAfter(secondDate);
+}
+
+export function isBefore(
+  firstDate: ValidDayjsDate,
+  secondDate: ValidDayjsDate
+) {
+  return dayjs(firstDate).isBefore(secondDate);
+}
+
+export function isAfterOrSame(
+  firstDate: ValidDayjsDate,
+  secondDate: ValidDayjsDate
+) {
+  return (
+    dayjs(firstDate).isAfter(secondDate) || dayjs(firstDate).isSame(secondDate)
+  );
+}
+
+export function isBeforeOrSame(
+  firstDate: ValidDayjsDate,
+  secondDate: ValidDayjsDate
+) {
+  return (
+    dayjs(firstDate).isBefore(secondDate) || dayjs(firstDate).isSame(secondDate)
+  );
+}
+
+export function isSame(firstDate: ValidDayjsDate, secondDate: ValidDayjsDate) {
+  return dayjs(firstDate).isSame(secondDate);
+}
+
+export const startOfDay = (date: ValidDayjsDate) =>
+  dayjs(date).startOf('day').toDate();
+
+export const endOfDay = (date: ValidDayjsDate) =>
+  dayjs(date).endOf('day').toDate();
+
+export const getTime = (date: ValidDayjsDate) => dayjs(date).toDate().getTime();
+
+export const nextDayTimeSlot = () => {
+  const nextDay = dayjs().add(1, 'day');
+  return {
+    from: nextDay.startOf('day').toISOString(),
+    to: nextDay.endOf('day').toISOString()
+  };
+};
+
+export const startOfWeek = (date: ValidDayjsDate) =>
+  dayjs(date).startOf('week').toDate();
+
+export const endOfWeek = (date: ValidDayjsDate) =>
+  dayjs(date).endOf('week').toDate();
+
+export const getTimeSlot = (date: ValidDayjsDate, duration: number) => {
+  return {
+    startDate: dayjs(date).toISOString(),
+    endDate: advanceByMinutes(date, duration).toISOString()
+  };
+};

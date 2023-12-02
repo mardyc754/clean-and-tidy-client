@@ -1,10 +1,11 @@
 import type { ZodType } from 'zod';
 
-import { basicError } from '~/schemas/api/common';
 import {
-  type Reservation,
-  reservationListSchema
+  type ReservationWithExtendedVisits,
+  ReservationWithVisits,
+  reservationWithVisitsSchema
 } from '~/schemas/api/reservation';
+import { basicError } from '~/schemas/common';
 
 import { handleFetchingData } from './handleFetchingData';
 
@@ -12,7 +13,9 @@ export const getClientReservations = async (clientId: number) => {
   return await handleFetchingData({
     path: `/clients/${clientId}/reservations`,
     method: 'get',
-    successSchema: reservationListSchema as ZodType<Reservation[]>,
+    successSchema: reservationWithVisitsSchema.array() as unknown as ZodType<
+      ReservationWithVisits[]
+    >,
     errorSchema: basicError
   });
 };

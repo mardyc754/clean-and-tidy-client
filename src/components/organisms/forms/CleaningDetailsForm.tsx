@@ -1,26 +1,27 @@
-import { useRouter } from 'next/router';
-import { useMemo } from 'react';
-import {
-  FormProvider,
-  type SubmitHandler,
-  useForm,
-  useWatch
-} from 'react-hook-form';
+import { useEffect, useState } from 'react';
+import { FormProvider } from 'react-hook-form';
 
-import type { Service, ServiceWithUnit } from '~/schemas/api/services';
-import {
-  type OrderServiceInputData,
-  cleaningDetailsResolver
-} from '~/schemas/forms/orderService';
+import { type Service } from '~/schemas/api/services';
 
-import { useOrderServiceFormStore } from '~/stores/orderServiceFormStore';
+import { useCleaningDetailsForm } from '~/hooks/orderServiceForm/useCleaningDetailsForm';
+import { useOrderServiceFormNavigation } from '~/hooks/orderServiceForm/useOrderServiceFormNavigation';
+import { useServicesBusyHours } from '~/hooks/orderServiceForm/useServicesBusyHours';
 
 import { Checkbox, NumericInput } from '~/components/atoms/forms';
 
 import {
+  endOfDay,
+  endOfWeek,
+  startOfDay,
+  startOfWeek
+} from '~/utils/dateUtils';
+
+import type { TimeRange } from '~/types/forms';
+
+import {
   CalendarWithHours,
-  ExtraDataMultiSelect,
   RadioGroup,
+  ServiceMultiSelect,
   StepButtons
 } from '../form-fields';
 
@@ -29,125 +30,136 @@ interface CleaningDetailsFormProps {
 }
 
 const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
-  const { id, name, unit } = data;
+  const { unit, id, name } = data;
+  const { onChangeStep, returnToHomePage } = useOrderServiceFormNavigation();
+
+  const [availablityRange, setAvailablityRange] = useState<
+    TimeRange | undefined
+  >(undefined);
+
   const {
+    methods,
+    errors,
+    cleaningFrequencyData,
+    secondaryServicesWithUnit,
+    startDate,
+    orderedServicesIds,
+    cleaningFrequencyDisplayData,
+    onSubmit,
     onChangeIncludeDetergents,
     onChangeServiceNumberOfUnits,
     onChangeCleaningFrequency,
     onChangeStartDate,
     onChangeHourDate,
-    currentStep,
-    increaseStep,
-    decreaseStep
-  } = useOrderServiceFormStore((state) => ({
-    setData: state.setData,
-    onChangeIncludeDetergents: state.onChangeIncludeDetergents,
-    onChangeServiceNumberOfUnits: state.onChangeServiceNumberOfUnits,
-    onChangeCleaningFrequency: state.onChangeCleaningFrequency,
-    onChangeStartDate: state.onChangeStartDate,
-    onChangeHourDate: state.onChangeHourDate,
-    currentStep: state.currentStep,
-    increaseStep: state.increaseStep,
-    decreaseStep: state.decreaseStep
-  }));
-
-  const methods = useForm<OrderServiceInputData>({
-    defaultValues: {
-      numberOfUnits: 0,
-      cleaningFrequency: null,
-      includeDetergents: false,
-      startDate: null,
-      hourDate: null,
-      extraServices: []
-    },
-    resolver: cleaningDetailsResolver
+    setAvailableEmployees,
+    getAvailableEmployeesForService
+  } = useCleaningDetailsForm({
+    data,
+    submitHandler: async () => await onChangeStep(2)
   });
 
-  const {
-    handleSubmit,
-    formState: { errors }
-  } = methods;
+  useEffect(() => {
+    if (startDate) {
+      setAvailablityRange({
+        // from: startOfDay(startDate).toISOString(),
+        // to: endOfDay(startDate).toISOString()
+        from: startOfWeek(startDate).toISOString(),
+        to: endOfWeek(startDate).toISOString()
+      });
+    }
+  }, [startDate]);
 
-  const cleaningFrequencyData = useMemo(
-    () => data?.cleaningFrequencies ?? [],
-    [data]
-  );
+  // in order to call the query more frequently,
+  // we can either disable cache for this query
+  // or provide a "day" query param
+  const { busyHoursData } = useServicesBusyHours({
+    serviceIds:
+      orderedServicesIds.length > 0
+        ? Array.from(new Set([id, ...orderedServicesIds]))
+        : [id],
+    ...availablityRange,
+    frequency: cleaningFrequencyDisplayData?.value
+  });
 
-  const secondaryServicesWithUnit = useMemo(
-    () => data.secondaryServices?.filter((service) => !!service.unit) ?? [],
-    [data]
-  ) as ServiceWithUnit[];
+  useEffect(() => {
+    if (busyHoursData) {
+      setAvailableEmployees([...busyHoursData?.employees]);
+    }
+  }, [busyHoursData, setAvailableEmployees]);
 
-  const router = useRouter();
-  // console.log(data);
-  // const currentValues = useWatch<OrderServiceInputData>({
-  //   control: methods.control
-  // });
-  // console.log(currentValues);
-
-  const onSubmit: SubmitHandler<OrderServiceInputData> = async () => {
-    await router.push({
-      pathname: router.pathname,
-      query: { ...router.query, currentStep: 2 }
-    });
-  };
-
-  const onDecreaseStep = async () => {
-    await router.push('/');
-  };
+  const mainSlot = unit ? (
+    <NumericInput
+      min={0}
+      max={500}
+      name="numberOfUnits"
+      label={unit.fullName}
+      errorLabel={errors.numberOfUnits?.message}
+      onChange={(value: number) =>
+        onChangeServiceNumberOfUnits(
+          value,
+          true,
+          { id, name, unit },
+          secondaryServicesWithUnit.length
+        )
+      }
+    />
+  ) : secondaryServicesWithUnit.length > 0 ? (
+    <ServiceMultiSelect
+      title="Select services"
+      defaultValues={methods.watch('extraServices')}
+      name="extraServices"
+      data={secondaryServicesWithUnit}
+      onChangeNumberOfUnits={onChangeServiceNumberOfUnits}
+    />
+  ) : null;
 
   return (
     <FormProvider {...methods}>
-      {/* <form className="py-16" onSubmit={handleSubmit(increaseStep)}> */}
-      <form className="py-16" onSubmit={handleSubmit(onSubmit)}>
-        <NumericInput
-          min={0}
-          max={500}
-          name="numberOfUnits"
-          label="Area size (in m2)"
-          wrapperClassName="items-center py-4"
-          errorLabel={errors.numberOfUnits?.message}
-          onChange={(value: number) =>
-            onChangeServiceNumberOfUnits(value, true, { id, name, unit })
-          }
-        />
-        {cleaningFrequencyData.length > 1 && (
-          <RadioGroup
-            name="cleaningFrequency"
-            label="Cleaning frequency"
-            optionList={cleaningFrequencyData}
-            onChange={onChangeCleaningFrequency}
-            errorLabel={errors.cleaningFrequency?.message}
+      <form onSubmit={onSubmit}>
+        <div className="flex flex-col space-y-4 py-16">
+          {mainSlot}
+          {cleaningFrequencyData.length > 1 && (
+            <RadioGroup
+              name="cleaningFrequency"
+              label="Cleaning frequency"
+              defaultValue={methods.watch('cleaningFrequency')}
+              optionList={cleaningFrequencyData}
+              onChange={onChangeCleaningFrequency}
+              errorLabel={errors.cleaningFrequency?.message}
+            />
+          )}
+          <Checkbox
+            name="includeDetergents"
+            label="Detergents"
+            caption="Include detergents (+15zł)"
+            onChange={onChangeIncludeDetergents}
           />
-        )}
-        <Checkbox
-          name="includeDetergents"
-          className="py-4"
-          label="Detergents"
-          caption="Include detergents (+15zł)"
-          onChange={onChangeIncludeDetergents}
-        />
-        <CalendarWithHours
-          calendarInputName="startDate"
-          hourInputName="hourDate"
-          label="Cleaning start date"
-          onChangeDate={onChangeStartDate}
-          onChangeHour={onChangeHourDate}
-          dateErrorLabel={errors.startDate?.message}
-          hourErrorLabel={errors.hourDate?.message}
-        />
-        {secondaryServicesWithUnit.length > 0 && (
-          <ExtraDataMultiSelect
-            name="extraServices"
-            className="py-4"
-            data={secondaryServicesWithUnit}
-            onChangeNumberOfUnits={onChangeServiceNumberOfUnits}
+          <CalendarWithHours
+            calendarInputName="startDate"
+            hourInputName="hourDate"
+            label="Cleaning start date"
+            onChangeDate={onChangeStartDate}
+            onChangeHour={onChangeHourDate}
+            dateErrorLabel={errors.startDate?.message}
+            hourErrorLabel={errors.hourDate?.message}
+            busyHours={busyHoursData?.busyHours ?? []}
+            direction="column"
           />
-        )}
-        {/* <StepButtons currentStep={currentStep} onDecreaseStep={decreaseStep} /> */}
+          {secondaryServicesWithUnit.length > 0 && unit && (
+            <ServiceMultiSelect
+              title="Extra services"
+              defaultValues={methods.watch('extraServices')}
+              name="extraServices"
+              data={secondaryServicesWithUnit}
+              onChangeNumberOfUnits={onChangeServiceNumberOfUnits}
+              serviceAvailabilityGetter={getAvailableEmployeesForService}
+            />
+          )}
+        </div>
         <StepButtons
-          currentStep={currentStep}
-          onDecreaseStep={onDecreaseStep}
+          submitErrorLabel={errors.totalCost?.message}
+          currentStep={1}
+          onDecreaseStep={returnToHomePage}
         />
       </form>
     </FormProvider>

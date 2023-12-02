@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import type { Reservation } from '~/schemas/api/reservation';
+import type { ReservationWithExtendedVisits } from '~/schemas/api/reservation';
 
 import { Heading3 } from '~/components/atoms/typography/headings';
 import { VisitDisclosure } from '~/components/organisms/disclosures';
@@ -9,7 +9,7 @@ import { ReservationActions } from '../button-fields';
 import { ReservationGeneralDetailsList, ServiceList } from '../lists';
 
 interface ReservationDetailsProps {
-  data: Reservation;
+  data: ReservationWithExtendedVisits;
   manageable?: boolean;
   expandVisitDetails?: boolean;
 }

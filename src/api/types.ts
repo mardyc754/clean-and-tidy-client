@@ -1,8 +1,11 @@
 import type { RequireAtLeastOne } from 'type-fest';
 
-export type AllServicesQueryOptions = {
+import type { CleaningFrequency } from '~/types/enums';
+
+export type AllServicesQueryOptions = RequireAtLeastOne<{
   primaryOnly: boolean;
-};
+  includeEmployee: boolean;
+}>;
 
 export type ServiceQueryOptions = RequireAtLeastOne<{
   includeSecondaryServices: boolean;
@@ -17,5 +20,12 @@ export type ReservationQueryOptions = RequireAtLeastOne<{
 }>;
 
 export type VisitQueryOptions = RequireAtLeastOne<{
-  includeEmployees: boolean;
+  includeEmployee: boolean;
+}>;
+
+export type ServiceBusyHoursQueryOptions = Partial<{
+  from: string;
+  to: string;
+  serviceIds: number[];
+  frequency: Omit<CleaningFrequency, 'ONCE'>;
 }>;

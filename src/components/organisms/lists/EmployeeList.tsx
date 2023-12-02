@@ -1,35 +1,24 @@
-import type { EmployeeWithStatus } from '~/schemas/api/reservation';
+import type { Employee } from '~/schemas/api/employee';
 
-import { StatusIndicator } from '~/components/atoms/typography';
+import { EmployeeDataField } from '~/components/organisms/button-fields';
 
-import { convertToCamelCase } from '~/utils/stringUtils';
-
-import SecondaryListWrapper from '../wrappers/SecondaryListWrapper';
+import ListWrapper from '../wrappers/ListWrapper';
 
 interface EmployeeListProps {
-  data: EmployeeWithStatus[];
+  data: Employee[];
 }
 
 const EmployeeList = ({ data }: EmployeeListProps) => {
   return (
-    <SecondaryListWrapper title="Assigned employees">
-      <ul className="list-inside list-disc">
-        {data.map(({ employee, status }, index) => (
-          <div
-            className="flex justify-between"
-            key={`SingleReservationEmployee-${convertToCamelCase(
-              employee.firstName
-            )}-${index}`}
-          >
-            <li className="text-lg">
-              <span className="font-semibold">{`${employee.firstName} ${employee.lastName}`}</span>
-              {` (${employee.email})`}
-            </li>
-            <StatusIndicator perspective="employee" status={status} />
-          </div>
-        ))}
-      </ul>
-    </SecondaryListWrapper>
+    <ListWrapper
+      component="h2"
+      contentWrapperClasses="flex w-full flex-col space-y-4 pt-8"
+      title="Employee list"
+    >
+      {data.map((employee) => (
+        <EmployeeDataField data={employee} key={`Employee-${employee.id}`} />
+      ))}
+    </ListWrapper>
   );
 };
 

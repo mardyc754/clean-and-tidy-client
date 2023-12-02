@@ -1,6 +1,4 @@
-import clsx from 'clsx';
-
-import type { ServiceForReservation } from '~/schemas/api/services';
+import type { ServiceForVisitPart } from '~/schemas/api/services';
 
 import { LabeledTypography } from '~/components/atoms/typography/labeled-text';
 
@@ -9,31 +7,42 @@ import { convertToCamelCase } from '~/utils/stringUtils';
 import ListWrapper from '../wrappers/ListWrapper';
 
 interface ServiceListProps {
-  data: ServiceForReservation[];
+  data: ServiceForVisitPart[];
 }
 
 const ServiceList = ({ data }: ServiceListProps) => {
+  const mainService = data.find(
+    (service) => service.isMainServiceForReservation
+  );
+
+  const secondaryServices = data.filter(
+    (service) => !service.isMainServiceForReservation
+  );
+
   return (
     <ListWrapper title="Services">
-      {data.map((serviceData, i) => (
+      {mainService && (
         <LabeledTypography
-          label={serviceData.service.name}
+          label={mainService.name}
+          value={
+            mainService.numberOfUnits > 0
+              ? `${mainService.numberOfUnits} x ${mainService.unit?.shortName}`
+              : ''
+          }
+          contentDistribution="horizontal"
+          labelClasses={'text-xl font-emphasize'}
+          valueClasses={'text-xl font-emphasize'}
+        />
+      )}
+      {secondaryServices.map((serviceData, i) => (
+        <LabeledTypography
+          label={serviceData.name}
           value={`x ${serviceData.numberOfUnits}`}
           contentDistribution="horizontal"
-          labelClasses={clsx(
-            'text-xl',
-            serviceData.isMainServiceForReservation
-              ? 'text-xl font-emphasize'
-              : 'text-lg'
-          )}
-          valueClasses={clsx(
-            'text-xl',
-            serviceData.isMainServiceForReservation
-              ? 'text-xl font-emphasize'
-              : 'text-lg font-sans'
-          )}
-          key={`OrderedServices-${convertToCamelCase(
-            serviceData.service.name
+          labelClasses={'text-lg'}
+          valueClasses={'text-lg font-sans'}
+          key={`OrderedServices-secondary-${convertToCamelCase(
+            serviceData.name
           )}-${i}`}
         />
       ))}
