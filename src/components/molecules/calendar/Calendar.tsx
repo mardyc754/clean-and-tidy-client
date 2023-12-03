@@ -1,6 +1,9 @@
 import clsx from 'clsx';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigation } from 'react-day-picker';
 import { useFormContext } from 'react-hook-form';
+
+import { useHolidays } from '~/hooks/dates/useHolidays';
 
 import { ErrorLabel } from '~/components/atoms/forms';
 import {
@@ -11,14 +14,12 @@ import {
 import { type ValidDayjsDate, isTheSameDay, nextDay } from '~/utils/dateUtils';
 
 import type { ValidDate } from '~/types/forms';
-import type { TimeInterval } from '~/types/service';
 
 type CalendarProps = {
   name: string;
   errorLabel?: string;
   defaultValue?: ValidDate;
   onChange?: (value: ValidDate) => void;
-  holidays?: TimeInterval[];
 } & Omit<
   ShadcnCalendarProps,
   'selected' | 'onDayClick' | 'mode' | 'disabled' | 'fromMonth'
@@ -29,10 +30,12 @@ const Calendar = ({
   errorLabel,
   onChange,
   defaultValue,
-  holidays,
   ...props
 }: CalendarProps) => {
   const { register, setValue, getValues } = useFormContext();
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+
+  const { holidays } = useHolidays(currentMonth.getFullYear());
 
   useEffect(() => {
     register(name);
@@ -53,7 +56,7 @@ const Calendar = ({
           //   from: new Date(holiday.startDate),
           //   to: new Date(holiday.endDate)
           // }))
-          ...(holidays ?? []).map((holiday) => new Date(holiday.startDate))
+          ...(holidays ?? []).map((holiday) => new Date(holiday))
         ]}
         onDayClick={handleChange}
         selected={(date) => {
@@ -63,6 +66,9 @@ const Calendar = ({
           );
         }}
         fromMonth={nextDay(new Date())}
+        onMonthChange={(month) => {
+          setCurrentMonth(month);
+        }}
         {...props}
       />
       <ErrorLabel>{errorLabel}</ErrorLabel>

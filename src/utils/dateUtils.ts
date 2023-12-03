@@ -233,3 +233,5 @@ export const getDaysBetween = (
 
   return days;
 };
+
+export const getYearFromDate = (date: ValidDayjsDate) => dayjs(date).year();

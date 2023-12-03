@@ -100,8 +100,7 @@ export type EmployeeAvailabilityData = z.infer<typeof employeeAvailabilityData>;
 
 export const busyHoursData = z.object({
   employees: z.array(employeeAvailabilityData),
-  busyHours: z.array(timeSlot),
-  holidays: z.array(timeSlot)
+  busyHours: z.array(timeSlot)
 });
 
 export type BusyHoursData = z.infer<typeof busyHoursData>;

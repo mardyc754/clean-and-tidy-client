@@ -143,7 +143,6 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
             dateErrorLabel={errors.startDate?.message}
             hourErrorLabel={errors.hourDate?.message}
             busyHours={busyHoursData?.busyHours ?? []}
-            holidays={busyHoursData?.holidays ?? []}
             direction="column"
           />
           {secondaryServicesWithUnit.length > 0 && unit && (

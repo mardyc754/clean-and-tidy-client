@@ -7,9 +7,15 @@ import type { BackendBasicErrorData } from '~/schemas/common';
 
 import { ResponseError } from './errors/ResponseError';
 
-type ResponseRecord = Partial<Record<string, unknown>> & {
-  message?: string;
-};
+type ResponseRecord =
+  | (Partial<Record<string, unknown>> & {
+      message?: string;
+    })
+  | string
+  | number
+  | boolean
+  | null
+  | undefined;
 
 type ResponseData = ResponseRecord | ResponseRecord[];
 

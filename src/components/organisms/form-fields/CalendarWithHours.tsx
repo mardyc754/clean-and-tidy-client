@@ -1,6 +1,5 @@
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
-import { useFormContext, useWatch } from 'react-hook-form';
+import { useWatch } from 'react-hook-form';
 
 import type { TimeInterval } from '~/schemas/api/services';
 
@@ -17,7 +16,6 @@ type CalendarWithLabelProps = {
   hourInputName: string;
   label: string;
   busyHours: TimeInterval[];
-  holidays?: TimeInterval[];
   direction?: 'column' | 'row';
   onChangeHour?: (value: ValidDate) => void;
   onChangeDate?: (value: ValidDate) => void;
@@ -34,8 +32,7 @@ const CalendarWithHours = ({
   onChangeHour,
   dateErrorLabel,
   hourErrorLabel,
-  busyHours,
-  holidays
+  busyHours
 }: CalendarWithLabelProps) => {
   // const { setValue } = useFormContext();
   // const [isMounted, setIsMounted] = useState(false);
@@ -66,7 +63,6 @@ const CalendarWithHours = ({
           onChange={onChangeDate}
           errorLabel={dateErrorLabel}
           defaultValue={currentDate}
-          holidays={holidays}
         />
         <HourSelection
           direction="row"
