@@ -6,6 +6,8 @@ import { ISOString } from '~/schemas/common';
 
 import { CleaningFrequency } from '~/types/enums';
 
+import { employeeSchema } from '../api/employee';
+
 // CLEANING DETAILS PAGE
 export const orderServiceSubmitDataSchema = z.object({
   numberOfUnits: z
@@ -88,8 +90,7 @@ export const timeSlot = z.object({
 
 export type TimeSlot = z.infer<typeof timeSlot>;
 
-export const employeeAvailabilityData = z.object({
-  id: z.number().int(),
+export const employeeAvailabilityData = employeeSchema.extend({
   workingHours: z.array(timeSlot),
   numberOfWorkingHours: z.number(),
   services: z.array(z.number().int())
