@@ -1,7 +1,8 @@
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
-import { useNavigation } from 'react-day-picker';
 import { useFormContext } from 'react-hook-form';
+
+import type { Timeslot } from '~/schemas/forms/orderService';
 
 import { useHolidays } from '~/hooks/dates/useHolidays';
 
@@ -19,6 +20,7 @@ type CalendarProps = {
   name: string;
   errorLabel?: string;
   defaultValue?: ValidDate;
+  busyDays?: Timeslot[];
   onChange?: (value: ValidDate) => void;
 } & Omit<
   ShadcnCalendarProps,
@@ -30,6 +32,7 @@ const Calendar = ({
   errorLabel,
   onChange,
   defaultValue,
+  busyDays,
   ...props
 }: CalendarProps) => {
   const { register, setValue, getValues } = useFormContext();
@@ -46,18 +49,22 @@ const Calendar = ({
     onChange?.(value);
   };
 
+  const holidayDates = (holidays ?? []).map((holiday) => new Date(holiday));
+
   return (
     <div className={clsx('flex flex-col', !errorLabel && 'mb-4')}>
       <ShadcnCalendar
         ISOWeek
         disabled={[
           { before: nextDay(new Date()) },
-          // ...(holidays ?? []).map((holiday) => ({
-          //   from: new Date(holiday.startDate),
-          //   to: new Date(holiday.endDate)
-          // }))
-          ...(holidays ?? []).map((holiday) => new Date(holiday))
+          ...holidayDates,
+          ...(busyDays ?? []).map((busyDay) => new Date(busyDay.startDate))
+          // to: new Date(busyDay.endDate)
         ]}
+        modifiers={{
+          holidays: holidayDates
+        }}
+        modifiersClassNames={{ holidays: 'text-red-500' }}
         onDayClick={handleChange}
         selected={(date) => {
           return isTheSameDay(

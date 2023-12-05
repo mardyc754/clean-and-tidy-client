@@ -11,10 +11,16 @@ import {
 } from '~/schemas/api/services';
 import type {
   EmployeeAvailabilityData,
-  OrderServiceInputData
+  OrderServiceInputData,
+  Timeslot
 } from '~/schemas/forms/orderService';
 
-import { advanceByMinutes, mergeDayDateAndHourDate } from '~/utils/dateUtils';
+import {
+  advanceByMinutes,
+  getTimeSlot,
+  mergeDayDateAndHourDate
+} from '~/utils/dateUtils';
+import { calculateBusyHours } from '~/utils/serviceUtils';
 
 import type { CleaningFrequency } from '~/types/enums';
 import type { CleaningFrequencyData, ValidDate } from '~/types/forms';
@@ -65,6 +71,7 @@ export interface CleaningDetailsSlice extends CleaningDetailsSliceData {
   getAvailableEmployeesForService: (
     serviceId: Service['id']
   ) => EmployeeAvailabilityData[];
+  canAddMoreServices: (busyHours: Timeslot[]) => boolean;
 }
 
 export const initialCleaningDetailsState = {
@@ -235,5 +242,26 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
   getAvailableEmployeesForService: (serviceId) =>
     get().availableEmployees.filter((employee) =>
       employee.services.includes(serviceId)
-    )
+    ),
+  canAddMoreServices: (busyHours) => {
+    const { startDate, hourDate } = get();
+
+    if (!startDate || !hourDate) {
+      return true;
+    }
+
+    const fullStartDate = mergeDayDateAndHourDate(
+      new Date(startDate),
+      new Date(hourDate)
+    );
+
+    if (!fullStartDate) {
+      return false;
+    }
+
+    const duration = get().durationInMinutes;
+    const timeslot = getTimeSlot(fullStartDate, duration);
+
+    return calculateBusyHours([busyHours, [timeslot]]).length === 0;
+  }
 });

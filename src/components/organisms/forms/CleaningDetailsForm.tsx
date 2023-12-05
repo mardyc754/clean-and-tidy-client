@@ -3,6 +3,8 @@ import { FormProvider } from 'react-hook-form';
 
 import { type Service } from '~/schemas/api/services';
 
+import { getAssignedEmployees } from '~/stores/orderService/utils';
+
 import { useCleaningDetailsForm } from '~/hooks/orderServiceForm/useCleaningDetailsForm';
 import { useOrderServiceFormNavigation } from '~/hooks/orderServiceForm/useOrderServiceFormNavigation';
 import { useServicesBusyHours } from '~/hooks/orderServiceForm/useServicesBusyHours';
@@ -45,6 +47,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
     startDate,
     orderedServicesIds,
     cleaningFrequencyDisplayData,
+    duration,
     onSubmit,
     onChangeIncludeDetergents,
     onChangeServiceNumberOfUnits,
@@ -52,7 +55,8 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
     onChangeStartDate,
     onChangeHourDate,
     setAvailableEmployees,
-    getAvailableEmployeesForService
+    getAvailableEmployeesForService,
+    canAddMoreServices
   } = useCleaningDetailsForm({
     data,
     submitHandler: async () => await onChangeStep(2)
@@ -143,6 +147,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
             dateErrorLabel={errors.startDate?.message}
             hourErrorLabel={errors.hourDate?.message}
             busyHours={busyHoursData?.busyHours ?? []}
+            currentDuration={duration}
             direction="column"
           />
           {secondaryServicesWithUnit.length > 0 && unit && (

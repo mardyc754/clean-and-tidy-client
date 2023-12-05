@@ -7,7 +7,7 @@ import type {
 } from '~/schemas/api/services';
 import type {
   EmployeeAvailabilityData,
-  TimeSlot
+  Timeslot
 } from '~/schemas/forms/orderService';
 
 import {
@@ -44,8 +44,6 @@ export const createOrUpdateOrderedService = (
   baseStartDate: ValidDayjsDate,
   positionOnList: number
 ) => {
-  console.log(baseStartDate);
-
   const startDate = baseStartDate
     ? getStartDateForService(orderedServices, positionOnList, baseStartDate)
     : null;
@@ -229,7 +227,7 @@ export const prepareVisitParts = (
  */
 export const getAssignedEmployees = (
   employees: EmployeeAvailabilityData[],
-  visitSlot: TimeSlot
+  visitSlot: Timeslot
 ) => {
   const notConlictingEmployees = employees.filter(
     (employee) =>

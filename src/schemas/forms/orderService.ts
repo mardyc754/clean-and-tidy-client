@@ -83,15 +83,15 @@ export function cleaningDetailsResolver(
   );
 }
 
-export const timeSlot = z.object({
+export const timeslot = z.object({
   startDate: z.string().datetime(),
   endDate: z.string().datetime()
 });
 
-export type TimeSlot = z.infer<typeof timeSlot>;
+export type Timeslot = z.infer<typeof timeslot>;
 
 export const employeeAvailabilityData = employeeSchema.extend({
-  workingHours: z.array(timeSlot),
+  workingHours: z.array(timeslot),
   numberOfWorkingHours: z.number(),
   services: z.array(z.number().int())
 });
@@ -100,7 +100,7 @@ export type EmployeeAvailabilityData = z.infer<typeof employeeAvailabilityData>;
 
 export const busyHoursData = z.object({
   employees: z.array(employeeAvailabilityData),
-  busyHours: z.array(timeSlot)
+  busyHours: z.array(timeslot)
 });
 
 export type BusyHoursData = z.infer<typeof busyHoursData>;

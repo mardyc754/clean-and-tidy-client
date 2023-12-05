@@ -7,6 +7,7 @@ import { MediumTypography } from '~/components/atoms/typography/regular-text';
 import { Calendar } from '~/components/molecules/calendar';
 import { HourSelection } from '~/components/molecules/form-fields';
 
+import { endOfDay, isSame, startOfDay } from '~/utils/dateUtils';
 import { getHourAvailabilityData } from '~/utils/serviceUtils';
 
 import type { ValidDate } from '~/types/forms';
@@ -16,6 +17,7 @@ type CalendarWithLabelProps = {
   hourInputName: string;
   label: string;
   busyHours: TimeInterval[];
+  currentDuration?: number;
   direction?: 'column' | 'row';
   onChangeHour?: (value: ValidDate) => void;
   onChangeDate?: (value: ValidDate) => void;
@@ -32,22 +34,18 @@ const CalendarWithHours = ({
   onChangeHour,
   dateErrorLabel,
   hourErrorLabel,
-  busyHours
+  busyHours,
+  currentDuration
 }: CalendarWithLabelProps) => {
-  // const { setValue } = useFormContext();
-  // const [isMounted, setIsMounted] = useState(false);
-
   const currentDate = useWatch({ name: calendarInputName }) as ValidDate;
 
-  // useEffect(() => {
-  //   // do not reset hour value on first render
-  //   if (isMounted) {
-  //     setValue(hourInputName, null);
-  //     onChangeHour?.(null);
-  //   } else {
-  //     setIsMounted(true);
-  //   }
-  // }, [currentDate, hourInputName, isMounted, onChangeHour, setValue]);
+  // const busyDays = busyHours.filter(
+  //   (busyHour) =>
+  //     isSame(busyHour.startDate, startOfDay(busyHour.startDate)) &&
+  //     isSame(busyHour.endDate, endOfDay(busyHour.endDate))
+  // );
+
+  // console.log('>>> busyDays', busyDays);
 
   return (
     <div className="flex flex-col">
@@ -63,8 +61,10 @@ const CalendarWithHours = ({
           onChange={onChangeDate}
           errorLabel={dateErrorLabel}
           defaultValue={currentDate}
+          // busyDays={busyDays}
         />
         <HourSelection
+          selectedDuration={currentDuration}
           direction="row"
           hourAvailabilityData={getHourAvailabilityData(currentDate, busyHours)}
           name={hourInputName}
