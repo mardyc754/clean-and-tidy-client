@@ -64,7 +64,7 @@ const Calendar = ({
         modifiers={{
           holidays: holidayDates
         }}
-        modifiersClassNames={{ holidays: 'text-red-500' }}
+        modifiersClassNames={{ holidays: 'text-cyan-500 font-bold' }}
         onDayClick={handleChange}
         selected={(date) => {
           return isTheSameDay(

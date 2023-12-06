@@ -113,6 +113,8 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
         positionOnList
       );
 
+      console.log('newService', newService);
+
       const newServices = [...state.orderedServices];
 
       const newServiceNumberOfUnits = calculateServiceNumberOfUnits(newService);
