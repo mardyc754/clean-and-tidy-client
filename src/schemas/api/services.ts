@@ -47,7 +47,7 @@ export const primaryService = service.merge(
 );
 
 export const orderedVisitPart = z.object({
-  employeeId: z.number().int(),
+  employeeId: z.number().int().optional(),
   serviceId: z.number().int(),
   numberOfUnits: z.number().int()
 });

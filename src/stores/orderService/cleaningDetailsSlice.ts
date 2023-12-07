@@ -103,24 +103,13 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
     positionOnList
   ) => {
     set((state) => {
-      const newService = createOrUpdateOrderedService(
+      const newServices = createOrUpdateOrderedService(
         serviceData,
-        state.availableEmployees,
         state.orderedServices,
         isMainService,
         numberOfUnits,
-        state.startDate,
         positionOnList
       );
-
-      console.log('newService', newService);
-
-      const newServices = [...state.orderedServices];
-
-      const newServiceNumberOfUnits = calculateServiceNumberOfUnits(newService);
-
-      newServices[positionOnList] =
-        newServiceNumberOfUnits > 0 ? newService : undefined;
 
       return {
         orderedServices: newServices,
@@ -182,22 +171,7 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
     set((state) => {
       return {
         startDate,
-        hourDate: null,
-        orderedServices: state.orderedServices.map((service, index) => {
-          if (!service) {
-            return service;
-          }
-
-          return createOrUpdateOrderedService(
-            service,
-            state.availableEmployees,
-            state.orderedServices,
-            service.isMainServiceForReservation,
-            calculateServiceNumberOfUnits(service),
-            startDate,
-            index
-          );
-        })
+        hourDate: null
       };
     });
   },

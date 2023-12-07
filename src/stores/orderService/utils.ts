@@ -30,92 +30,13 @@ import {
 /**
  * Creates or updates ordered service data from ordereed services list
  * @param service ordered service data to be created or updated
- * @param employees general list of employees being available for all of the ordered services
  * @param orderedServices services already ordered by the user
  * @param isMainServiceForReservation flag to set the service as main service for the reservation
  * @param numberOfUnits new total number of units to be assigned to the service
- * @param baseStartDate the start date of the main service that is the start date of all of the services
  * @param positionOnList the position of the service in the ordered services list
  * @returns created or updated service with assigned employees
  */
 export const createOrUpdateOrderedService = (
-  service: BasicServiceData,
-  employees: EmployeeAvailabilityData[],
-  orderedServices: (OrderedService | undefined)[],
-  isMainServiceForReservation: boolean,
-  numberOfUnits: number,
-  baseStartDate: ValidDayjsDate,
-  positionOnList: number
-) => {
-  const startDate = baseStartDate
-    ? getStartDateForService(orderedServices, positionOnList, baseStartDate)
-    : null;
-
-  // const availableEmployees = employees.filter((employee) =>
-  //   employee.services.includes(service.id)
-  // );
-
-  // if (availableEmployees.length === 0) {
-  //   return undefined;
-  // }
-
-  const duration = (service.unit?.duration ?? 0) * numberOfUnits;
-
-  // const assignedEmployees = startDate
-  //   ? getAssignedEmployees(availableEmployees, getTimeSlot(startDate, duration))
-  //   : availableEmployees.slice(0, 1).map((employee) => employee.id);
-
-  const orderedServiceIndex = orderedServices.findIndex(
-    (orderedService) => orderedService?.id === service.id
-  );
-
-  if (orderedServiceIndex === -1) {
-    return {
-      ...service,
-      isMainServiceForReservation,
-      visitParts: [2].map((employeeId) => ({
-        serviceId: service.id,
-        employeeId,
-        // numberOfUnits: Math.ceil(numberOfUnits / assignedEmployees.length)
-        numberOfUnits: Math.ceil(numberOfUnits / 1)
-      }))
-    };
-  }
-
-  const orderedService = orderedServices[orderedServiceIndex]!;
-
-  // there should be exactly one visit part within the service
-  // assigned to the specific employee
-  const visitPart = orderedService?.visitParts.find(
-    (visitPart) =>
-      // assignedEmployees.includes(visitPart.employeeId) && service.id === visitPart.serviceId
-      [2].includes(visitPart.employeeId) && service.id === visitPart.serviceId
-  );
-
-  if (visitPart) {
-    visitPart.numberOfUnits = numberOfUnits;
-    return orderedService;
-  }
-
-  return {
-    ...orderedService,
-    visitParts: [
-      ...orderedService.visitParts,
-      // ...assignedEmployees.map((employeeId) => ({
-      //   serviceId: service.id,
-      //   employeeId,
-      //   numberOfUnits
-      // }))
-      ...[2].map((employeeId) => ({
-        serviceId: service.id,
-        employeeId,
-        numberOfUnits
-      }))
-    ]
-  };
-};
-
-export const createOrUpdateOrderedService2 = (
   service: BasicServiceData,
   orderedServices: (OrderedService | undefined)[],
   isMainServiceForReservation: boolean,
@@ -128,122 +49,95 @@ export const createOrUpdateOrderedService2 = (
     (orderedService) => orderedService?.id === service.id
   );
 
+  // if there is no ordered service with the given id, then create a new one
   if (orderedServiceIndex === -1) {
-    // maybe we should determine number of visit parts here as well
     newOrderedServices[positionOnList] = {
       ...service,
       isMainServiceForReservation,
       visitParts: [
         {
           serviceId: service.id,
-          // employeeId,
-          // numberOfUnits: Math.ceil(numberOfUnits / assignedEmployees.length)
           numberOfUnits
         }
       ]
     };
   }
 
-  const orderedService = orderedServices[orderedServiceIndex]!;
-  const oldOrderedServiceNumberOfUnits =
-    calculateServiceNumberOfUnits(orderedService);
-
-  const servicesDurations = newOrderedServices.map((service) => {
-    return service
-      ? {
-          serviceId: service.id,
-          isMainServiceForReservation: service.isMainServiceForReservation,
-          duration: calculateServiceCostAndDuration(service).durationInMinutes,
-          numberOfUnits: calculateServiceNumberOfUnits(service)
-        }
-      : undefined;
-  });
-
   const initialDuration =
-    calculateTotalCostAndDuration(newOrderedServices).durationInMinutes -
-    oldOrderedServiceNumberOfUnits +
-    numberOfUnits;
+    calculateTotalCostAndDuration(newOrderedServices).durationInMinutes;
+
+  // if estimated cleaning duration exceeds 8 hours, then assign more employees
   const minNumOfEmployeesRequired = Math.ceil(initialDuration / 480);
 
-  if (minNumOfEmployeesRequired > 1) {
-    let durationToDistribute = initialDuration / minNumOfEmployeesRequired;
+  // use greedy algorithm to create visit parts
+  // in the first order, create visit parts for the service
+  // with the longest duration per unit
+  const sortedOrderedServices = newOrderedServices.filter(
+    (service) => !!service
+  );
 
-    const mainService = newOrderedServices.find(
-      (service) => service?.isMainServiceForReservation
-    );
+  sortedOrderedServices.sort(
+    (a, b) => (b?.unit?.duration ?? 0) - (a?.unit?.duration ?? 0)
+  );
 
-    const mainServiceDuration =
-      calculateServiceCostAndDuration(mainService).durationInMinutes;
+  const visitPartsDurations = Array<number>(minNumOfEmployeesRequired).fill(0);
 
-    newOrderedServices[newOrderedServices.length - 1] = mainService
-      ? {
-          ...mainService,
-          visitParts: Array({ length: minNumOfEmployeesRequired }).map(() => ({
-            serviceId: mainService.id,
-            numberOfUnits: Math.ceil(
-              mainServiceDuration / minNumOfEmployeesRequired
-            )
-          }))
-        }
-      : undefined;
+  sortedOrderedServices.forEach((service) => {
+    if (!service) {
+      return;
+    }
 
-    durationToDistribute -= mainServiceDuration / minNumOfEmployeesRequired;
+    const serviceNumberOfUnits = calculateServiceNumberOfUnits(service);
+    let remainingServiceUnits = serviceNumberOfUnits;
 
-    const secondaryServices = newOrderedServices.filter(
-      (service) => service?.isMainServiceForReservation === false
-    );
+    const newVisitParts = [
+      ...Array<{ serviceId?: number; numberOfUnits: number }>(
+        minNumOfEmployeesRequired
+      )
+    ].map(() => ({
+      serviceId: service.id,
+      numberOfUnits: 0
+    }));
 
-    secondaryServices.sort(
-      (a, b) =>
-        calculateServiceNumberOfUnits(a) - calculateServiceNumberOfUnits(b)
-    );
-
-    secondaryServices.forEach((service) => {
-      const secondaryServiceIndex = newOrderedServices.findIndex(
-        (s) => service?.id && service?.id === s?.id
+    while (remainingServiceUnits > 0) {
+      const visitPartWithMinDurationIndex = visitPartsDurations.findIndex(
+        (duration, _, arr) => Math.min(...arr) === duration
       );
 
-      const secondaryServiceDuration =
-        calculateServiceCostAndDuration(service).durationInMinutes;
+      if (visitPartWithMinDurationIndex === -1) {
+        break;
+      }
 
-      const numberOfVisitParts = (newOrderedServices[secondaryServiceIndex] = {
-        ...service,
-        visitParts: Array({ length: minNumOfEmployeesRequired }).map(() =>
-          service
-            ? {
-                serviceId: service.id,
-                numberOfUnits: Math.ceil(
-                  secondaryServiceDuration / minNumOfEmployeesRequired
-                )
-              }
-            : undefined
-        )
-      });
-    });
+      newVisitParts[visitPartWithMinDurationIndex]!.numberOfUnits += 1;
+      remainingServiceUnits -= 1;
 
-    // newOrderedServices[newOrderedServices.length - 1] = {
+      visitPartsDurations[visitPartWithMinDurationIndex] +=
+        service.unit?.duration ?? 0;
+    }
 
-    // newOrderedServices[newOrderedServices.length - 1] = { ... }
+    const finalVisitParts = newVisitParts;
+    // const finalVisitParts = newVisitParts.filter(
+    //   (visitPart) => visitPart.numberOfUnits > 0
+    // );
 
-    //   return acc;
-    // }, [] as { serviceId: number | undefined; duration: number; isMainServiceForReservation?: boolean; numberOfUnits: number }[]);
-    // sort the services in the following order:
-    // - first is the main service for the reservation
-    // - the rest is sorted by the duration ascending
-    const sortedServicesDurations = servicesDurations.sort(
-      (a, b) =>
-        Number(b.isMainServiceForReservation ?? 0) -
-        Number(a.isMainServiceForReservation ?? 0) -
-        a.duration -
-        b.duration
+    const indexInUnsortedList = newOrderedServices.findIndex(
+      (s) => s && s.id === service?.id
     );
 
-    // uniqueServicesDurations.forEach((service) => {
-    //   const newService = {
+    if (indexInUnsortedList === -1) {
+      return;
+    }
 
-    //   }
-    // );
-  }
+    newOrderedServices[indexInUnsortedList] =
+      finalVisitParts.length > 0
+        ? {
+            ...service,
+            visitParts: finalVisitParts
+          }
+        : undefined;
+  });
+
+  return newOrderedServices;
 };
 
 export const calculateTotalCostAndDuration = (
