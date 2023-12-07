@@ -28,6 +28,7 @@ import type { CleaningFrequencyData, ValidDate } from '~/types/forms';
 import {
   calculateServiceNumberOfUnits,
   calculateTotalCostAndDuration,
+  calculateVisitCostAndDuration,
   createOrUpdateOrderedService
 } from './utils';
 
@@ -111,9 +112,11 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
         positionOnList
       );
 
+      // console.log('newServices', newServices);
       return {
         orderedServices: newServices,
-        ...calculateTotalCostAndDuration(newServices)
+        ...calculateVisitCostAndDuration(newServices)
+        // ...calculateTotalCostAndDuration(newServices)
       };
     });
   },

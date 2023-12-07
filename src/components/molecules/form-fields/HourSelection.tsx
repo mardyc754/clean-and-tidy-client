@@ -39,8 +39,8 @@ const HourSelection = ({
 
   const currentValue = useWatch({ name }) as Date;
 
-  console.log('>>> currentValue', currentValue);
-  console.log('>>> selectedDuration', selectedDuration);
+  // console.log('>>> currentValue', currentValue);
+  // console.log('>>> selectedDuration', selectedDuration);
   return (
     <div className={clsx(!errorLabel && 'mb-4', className)}>
       {/* // it will be grid probably with gaps */}

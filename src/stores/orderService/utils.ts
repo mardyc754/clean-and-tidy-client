@@ -1,6 +1,3 @@
-import { duration } from 'dayjs';
-import { min, omit } from 'lodash';
-
 import type { VisitPart } from '~/schemas/api/reservation';
 import type {
   BasicServiceData,
@@ -22,10 +19,7 @@ import {
   nextDay,
   startOfDay
 } from '~/utils/dateUtils';
-import {
-  calculateBusyHours,
-  getStartDateForService
-} from '~/utils/serviceUtils';
+import { calculateBusyHours } from '~/utils/serviceUtils';
 
 /**
  * Creates or updates ordered service data from ordereed services list
@@ -45,23 +39,16 @@ export const createOrUpdateOrderedService = (
 ) => {
   const newOrderedServices = [...orderedServices];
 
-  const orderedServiceIndex = orderedServices.findIndex(
-    (orderedService) => orderedService?.id === service.id
-  );
-
-  // if there is no ordered service with the given id, then create a new one
-  if (orderedServiceIndex === -1) {
-    newOrderedServices[positionOnList] = {
-      ...service,
-      isMainServiceForReservation,
-      visitParts: [
-        {
-          serviceId: service.id,
-          numberOfUnits
-        }
-      ]
-    };
-  }
+  newOrderedServices[positionOnList] = {
+    ...service,
+    isMainServiceForReservation,
+    visitParts: [
+      {
+        serviceId: service.id,
+        numberOfUnits
+      }
+    ]
+  };
 
   const initialDuration =
     calculateTotalCostAndDuration(newOrderedServices).durationInMinutes;
@@ -72,9 +59,7 @@ export const createOrUpdateOrderedService = (
   // use greedy algorithm to create visit parts
   // in the first order, create visit parts for the service
   // with the longest duration per unit
-  const sortedOrderedServices = newOrderedServices.filter(
-    (service) => !!service
-  );
+  const sortedOrderedServices = [...newOrderedServices];
 
   sortedOrderedServices.sort(
     (a, b) => (b?.unit?.duration ?? 0) - (a?.unit?.duration ?? 0)
@@ -95,7 +80,7 @@ export const createOrUpdateOrderedService = (
         minNumOfEmployeesRequired
       )
     ].map(() => ({
-      serviceId: service.id,
+      serviceId: service?.id,
       numberOfUnits: 0
     }));
 
@@ -121,7 +106,7 @@ export const createOrUpdateOrderedService = (
     // );
 
     const indexInUnsortedList = newOrderedServices.findIndex(
-      (s) => s && s.id === service?.id
+      (s) => s && s.id === service.id
     );
 
     if (indexInUnsortedList === -1) {
@@ -159,6 +144,46 @@ export const calculateTotalCostAndDuration = (
     },
     { totalCost: 0, durationInMinutes: 0 }
   );
+};
+
+export const calculateVisitCostAndDuration = (
+  orderedServices: (OrderedService | undefined)[]
+) => {
+  const highestNumberOfVisitParts = Math.max(
+    ...orderedServices.map((service) => service?.visitParts.length ?? 0)
+  );
+
+  const totalCost = orderedServices.reduce((acc, service) => {
+    if (!service?.unit) {
+      return acc;
+    }
+
+    const { totalCost: serviceCost } = calculateServiceCostAndDuration(service);
+
+    return acc + serviceCost;
+  }, 0);
+
+  const employeeDurations =
+    highestNumberOfVisitParts > 0
+      ? Array<number>(highestNumberOfVisitParts).fill(0)
+      : [];
+
+  orderedServices.forEach((service) => {
+    if (!service?.unit) {
+      return;
+    }
+
+    service.visitParts.forEach((visitPart, index) => {
+      employeeDurations[index] +=
+        visitPart.numberOfUnits * (service.unit?.duration ?? 0);
+    });
+  });
+
+  return {
+    totalCost,
+    durationInMinutes:
+      employeeDurations.length > 0 ? Math.max(...employeeDurations) : 0
+  };
 };
 
 export const calculateServiceCostAndDuration = (
@@ -265,8 +290,6 @@ export const getAssignedEmployees = (
   employees: EmployeeAvailabilityData[],
   visitSlot: Timeslot
 ) => {
-  console.log('employees', employees);
-  console.log('visitSlot', visitSlot);
   const notConlictingEmployees = employees.filter(
     (employee) =>
       calculateBusyHours([employee.workingHours, [visitSlot]]).length === 0
