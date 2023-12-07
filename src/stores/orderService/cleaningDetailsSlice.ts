@@ -29,7 +29,9 @@ import {
   calculateServiceNumberOfUnits,
   calculateTotalCostAndDuration,
   calculateVisitCostAndDuration,
-  createOrUpdateOrderedService
+  createOrUpdateOrderedService,
+  resetAssignedEmployees,
+  updateEmployeeServiceAssignment
 } from './utils';
 
 type StoredDate = ValidDate | string;
@@ -104,7 +106,7 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
     positionOnList
   ) => {
     set((state) => {
-      const newServices = createOrUpdateOrderedService(
+      let newServices = createOrUpdateOrderedService(
         serviceData,
         state.orderedServices,
         isMainService,
@@ -112,11 +114,21 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
         positionOnList
       );
 
-      // console.log('newServices', newServices);
+      const fullDate = get().fullStartDate();
+
+      if (fullDate) {
+        newServices = updateEmployeeServiceAssignment(
+          state.availableEmployees,
+          newServices,
+          new Date(fullDate)
+        );
+      }
+
+      console.log('>>> newServices', newServices);
+
       return {
         orderedServices: newServices,
         ...calculateVisitCostAndDuration(newServices)
-        // ...calculateTotalCostAndDuration(newServices)
       };
     });
   },
@@ -163,23 +175,43 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
     return mergeDayDateAndHourDate(new Date(startDate), new Date(hourDate));
   },
   onChangeCleaningFrequency: (cleaningFrequency, availableFrequencies) => {
-    set(() => ({
+    set((state) => ({
       cleaningFrequencyDisplayData:
         availableFrequencies.find(
           (frequency) => cleaningFrequency === frequency.value
-        ) ?? null
+        ) ?? null,
+      hourDate: null,
+      orderedServices: resetAssignedEmployees(state.orderedServices)
     }));
   },
   onChangeStartDate: (startDate) => {
     set((state) => {
       return {
         startDate,
-        hourDate: null
+        hourDate: null,
+        orderedServices: resetAssignedEmployees(state.orderedServices)
       };
     });
   },
   onChangeHourDate: (hourDate) => {
-    set(() => ({ hourDate }));
+    set((state) => {
+      const fullDate = get().fullStartDate();
+
+      return {
+        hourDate,
+        orderedServices:
+          state.startDate && hourDate && fullDate
+            ? updateEmployeeServiceAssignment(
+                state.availableEmployees,
+                state.orderedServices,
+                mergeDayDateAndHourDate(
+                  new Date(state.startDate),
+                  new Date(hourDate)
+                )
+              )
+            : resetAssignedEmployees(state.orderedServices)
+      };
+    });
   },
   getInitialCleaningDetailsFormData: () => {
     const {

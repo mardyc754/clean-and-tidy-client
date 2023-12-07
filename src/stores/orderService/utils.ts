@@ -37,7 +37,18 @@ export const createOrUpdateOrderedService = (
   numberOfUnits: number,
   positionOnList: number
 ) => {
-  const newOrderedServices = [...orderedServices];
+  const newOrderedServices =
+    orderedServices.length === 0
+      ? Array<OrderedService | undefined>(positionOnList).fill(undefined)
+      : [...orderedServices];
+
+  if (positionOnList >= newOrderedServices.length) {
+    newOrderedServices.push(
+      ...Array<OrderedService | undefined>(
+        positionOnList - orderedServices.length
+      ).fill(undefined)
+    );
+  }
 
   newOrderedServices[positionOnList] = {
     ...service,
@@ -306,4 +317,131 @@ export const getAssignedEmployees = (
   return notConlictingEmployees.length > 0
     ? [notConlictingEmployees[0]!.id]
     : [];
+};
+
+const assignEmployeesToService = (
+  service: OrderedService,
+  employees: EmployeeAvailabilityData[],
+  employeeStartDates: Date[]
+) => {
+  if (employeeStartDates.length < service.visitParts.length) {
+    return service;
+  }
+
+  const serviceVisitParts = service?.visitParts ?? [];
+
+  const assignedEmployeesToVisitParts: number[] = [];
+  const newServiceVisitParts: OrderedVisitPart[] = [];
+
+  serviceVisitParts.forEach((visitPart, index) => {
+    const { numberOfUnits } = visitPart;
+
+    const visitPartDuration = numberOfUnits * (service?.unit?.duration ?? 0);
+
+    const visitPartStartDate = new Date(employeeStartDates[index]!);
+
+    const visitPartEndDate = advanceByMinutes(
+      visitPartStartDate,
+      visitPartDuration
+    );
+
+    const visitPartTimeslot = {
+      startDate: visitPartStartDate.toISOString(),
+      endDate: visitPartEndDate.toISOString()
+    };
+
+    const availableEmployees = employees.filter(
+      (employee) =>
+        employee.services.includes(service?.id ?? 0) &&
+        calculateBusyHours([employee.workingHours, [visitPartTimeslot]])
+          .length === 0 &&
+        !assignedEmployeesToVisitParts.includes(employee.id)
+    );
+
+    availableEmployees.sort((a, b) => {
+      return a.numberOfWorkingHours - b.numberOfWorkingHours;
+    });
+
+    const assignedEmployee = availableEmployees[0]?.id;
+
+    if (assignedEmployee) {
+      assignedEmployeesToVisitParts.push(assignedEmployee);
+    }
+    newServiceVisitParts.push({
+      ...visitPart,
+      employeeId: assignedEmployee
+    });
+
+    employeeStartDates[index] = visitPartEndDate;
+  });
+
+  return {
+    ...service,
+    visitParts: newServiceVisitParts
+  };
+};
+
+export const updateEmployeeServiceAssignment = (
+  employees: EmployeeAvailabilityData[],
+  orderedServices: (OrderedService | undefined)[],
+  startDate: Date
+) => {
+  const newOrderedServices = [...orderedServices];
+
+  const numberOfNeededEmployees = Math.max(
+    ...orderedServices.map((service) => service?.visitParts.length ?? 0)
+  );
+
+  console.log('numberOfNeededEmployees', numberOfNeededEmployees);
+
+  // this can happen when no services are ordered
+  if (numberOfNeededEmployees <= 0) {
+    return orderedServices;
+  }
+
+  const employeeStartDates = Array<Date>(numberOfNeededEmployees).fill(
+    startDate
+  );
+
+  const mainService = orderedServices.find(
+    (service) => service?.isMainServiceForReservation
+  );
+
+  if (mainService) {
+    newOrderedServices[newOrderedServices.length - 1] =
+      assignEmployeesToService(mainService, employees, employeeStartDates);
+  }
+
+  const secondaryServices = orderedServices.filter(
+    (service) => !service?.isMainServiceForReservation
+  );
+
+  secondaryServices.forEach((service, index) => {
+    if (!service) {
+      return;
+    }
+
+    newOrderedServices[index] = assignEmployeesToService(
+      service,
+      employees,
+      employeeStartDates
+    );
+  });
+  return newOrderedServices;
+};
+
+export const resetAssignedEmployees = (
+  orderedServices: (OrderedService | undefined)[]
+) => {
+  return orderedServices.map((service) =>
+    service
+      ? {
+          ...service,
+          visitParts: service.visitParts.map((visitPart) => ({
+            ...visitPart,
+            employeeId: undefined
+          }))
+        }
+      : service
+  );
 };
