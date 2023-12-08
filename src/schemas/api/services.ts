@@ -49,7 +49,10 @@ export const primaryService = service.merge(
 export const orderedVisitPart = z.object({
   employeeId: z.number().int().optional(),
   serviceId: z.number().int(),
-  numberOfUnits: z.number().int()
+  numberOfUnits: z.number().int(),
+  startDate: z.string().datetime().optional(),
+  endDate: z.string().datetime().optional(),
+  cost: z.number().int().optional()
 });
 
 // TODO: divide into main service and extra service

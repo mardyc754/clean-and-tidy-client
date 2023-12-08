@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { FormProvider } from 'react-hook-form';
 
-import { type Service } from '~/schemas/api/services';
+import { DETERGENT_COST } from '~/constants/primitives';
 
-import { getAssignedEmployees } from '~/stores/orderService/utils';
+import { type Service } from '~/schemas/api/services';
 
 import { useCleaningDetailsForm } from '~/hooks/orderServiceForm/useCleaningDetailsForm';
 import { useOrderServiceFormNavigation } from '~/hooks/orderServiceForm/useOrderServiceFormNavigation';
@@ -11,12 +11,7 @@ import { useServicesBusyHours } from '~/hooks/orderServiceForm/useServicesBusyHo
 
 import { Checkbox, NumericInput } from '~/components/atoms/forms';
 
-import {
-  endOfDay,
-  endOfWeek,
-  startOfDay,
-  startOfWeek
-} from '~/utils/dateUtils';
+import { endOfWeek, startOfWeek } from '~/utils/dateUtils';
 
 import type { TimeRange } from '~/types/forms';
 
@@ -56,7 +51,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
     onChangeHourDate,
     setAvailableEmployees,
     getAvailableEmployeesForService,
-    canAddMoreServices
+    isReservationAvailable
   } = useCleaningDetailsForm({
     data,
     submitHandler: async () => await onChangeStep(2)
@@ -65,8 +60,6 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
   useEffect(() => {
     if (startDate) {
       setAvailablityRange({
-        // from: startOfDay(startDate).toISOString(),
-        // to: endOfDay(startDate).toISOString()
         from: startOfWeek(startDate).toISOString(),
         to: endOfWeek(startDate).toISOString()
       });
@@ -135,7 +128,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
           <Checkbox
             name="includeDetergents"
             label="Detergents"
-            caption="Include detergents (+15zł)"
+            caption={`Include detergents (+${DETERGENT_COST}zł)`}
             onChange={onChangeIncludeDetergents}
           />
           <CalendarWithHours
@@ -165,6 +158,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
           submitErrorLabel={errors.totalCost?.message}
           currentStep={1}
           onDecreaseStep={returnToHomePage}
+          submitButtonDisabled={!isReservationAvailable}
         />
       </form>
     </FormProvider>

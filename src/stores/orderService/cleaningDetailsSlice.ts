@@ -27,9 +27,11 @@ import type { CleaningFrequencyData, ValidDate } from '~/types/forms';
 
 import {
   calculateServiceNumberOfUnits,
-  calculateTotalCostAndDuration,
   calculateVisitCostAndDuration,
-  createOrUpdateOrderedService
+  createOrUpdateOrderedService,
+  isEmployeeAvailableInAGivenDay,
+  resetAssignedEmployees,
+  updateOrderedServices
 } from './utils';
 
 type StoredDate = ValidDate | string;
@@ -48,6 +50,7 @@ interface CleaningDetailsSliceData {
 }
 export interface CleaningDetailsSlice extends CleaningDetailsSliceData {
   availableEmployees: EmployeeAvailabilityData[];
+  isReservationAvailable: boolean;
   onChangeServiceNumberOfUnits: (
     numberOfUnits: number,
     isMainService: boolean,
@@ -75,6 +78,34 @@ export interface CleaningDetailsSlice extends CleaningDetailsSliceData {
   canAddMoreServices: (busyHours: Timeslot[]) => boolean;
 }
 
+const checkReservationAvailability = (
+  startDate: StoredDate,
+  hourDate: StoredDate,
+  orderedServices: (OrderedService | undefined)[],
+  employees: EmployeeAvailabilityData[]
+) => {
+  return (
+    !!startDate &&
+    !!hourDate &&
+    orderedServices
+      .filter((service) => !!service)
+      .every(
+        (service) =>
+          !!service?.visitParts.every((visitPart) => {
+            return (
+              visitPart.employeeId !== undefined &&
+              isEmployeeAvailableInAGivenDay(
+                visitPart.employeeId,
+                employees,
+                orderedServices,
+                new Date(startDate)
+              )
+            );
+          })
+      )
+  );
+};
+
 export const initialCleaningDetailsState = {
   ...omit(initialCleaningDetailsFormData, ['extraServices']),
   totalCost: 0,
@@ -89,6 +120,7 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
 ) => ({
   ...initialCleaningDetailsState,
   availableEmployees: [],
+  isReservationAvailable: false,
   onChangeIncludeDetergents: (includeDetergents) => {
     set((state) => ({
       includeDetergents,
@@ -104,7 +136,7 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
     positionOnList
   ) => {
     set((state) => {
-      const newServices = createOrUpdateOrderedService(
+      let newServices = createOrUpdateOrderedService(
         serviceData,
         state.orderedServices,
         isMainService,
@@ -112,11 +144,25 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
         positionOnList
       );
 
-      // console.log('newServices', newServices);
+      const fullDate = get().fullStartDate();
+
+      if (fullDate) {
+        newServices = updateOrderedServices(
+          state.availableEmployees,
+          newServices,
+          new Date(fullDate)
+        );
+      }
+
       return {
         orderedServices: newServices,
-        ...calculateVisitCostAndDuration(newServices)
-        // ...calculateTotalCostAndDuration(newServices)
+        ...calculateVisitCostAndDuration(newServices),
+        isReservationAvailable: checkReservationAvailability(
+          state.startDate,
+          state.hourDate,
+          newServices,
+          state.availableEmployees
+        )
       };
     });
   },
@@ -163,23 +209,63 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
     return mergeDayDateAndHourDate(new Date(startDate), new Date(hourDate));
   },
   onChangeCleaningFrequency: (cleaningFrequency, availableFrequencies) => {
-    set(() => ({
+    set((state) => ({
       cleaningFrequencyDisplayData:
         availableFrequencies.find(
           (frequency) => cleaningFrequency === frequency.value
-        ) ?? null
+        ) ?? null,
+      hourDate: null,
+      orderedServices: resetAssignedEmployees(state.orderedServices),
+      isReservationAvailable: checkReservationAvailability(
+        state.startDate,
+        null,
+        state.orderedServices,
+        state.availableEmployees
+      )
     }));
   },
   onChangeStartDate: (startDate) => {
     set((state) => {
       return {
         startDate,
-        hourDate: null
+        hourDate: null,
+        orderedServices: resetAssignedEmployees(state.orderedServices),
+        isReservationAvailable: checkReservationAvailability(
+          startDate,
+          null,
+          state.orderedServices,
+          state.availableEmployees
+        )
       };
     });
   },
   onChangeHourDate: (hourDate) => {
-    set(() => ({ hourDate }));
+    set((state) => {
+      const fullDate = get().fullStartDate();
+
+      const newOrderedServices =
+        state.startDate && hourDate && fullDate
+          ? updateOrderedServices(
+              state.availableEmployees,
+              state.orderedServices,
+              mergeDayDateAndHourDate(
+                new Date(state.startDate),
+                new Date(hourDate)
+              )
+            )
+          : resetAssignedEmployees(state.orderedServices);
+
+      return {
+        hourDate,
+        isReservationAvailable: checkReservationAvailability(
+          state.startDate,
+          hourDate,
+          newOrderedServices,
+          state.availableEmployees
+        ),
+        orderedServices: newOrderedServices
+      };
+    });
   },
   getInitialCleaningDetailsFormData: () => {
     const {

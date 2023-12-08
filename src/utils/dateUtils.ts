@@ -127,6 +127,13 @@ export function minutesBetween(
   return Math.abs(dayjs(endDate).diff(startDate, 'minute'));
 }
 
+export function hoursBetween(
+  startDate: ValidDayjsDate,
+  endDate: ValidDayjsDate
+) {
+  return Math.abs(dayjs(endDate).diff(startDate, 'hour'));
+}
+
 export function getWeekDayName(date: ValidDayjsDate) {
   return dayjs(date).format('dddd');
 }

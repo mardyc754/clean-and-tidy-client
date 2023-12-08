@@ -37,6 +37,7 @@ export function useCleaningDetailsForm({
     setAvailableEmployees,
     getAvailableEmployeesForService,
     canAddMoreServices,
+    isReservationAvailable,
     cleaningFrequencyDisplayData,
     duration,
     totalCost,
@@ -58,7 +59,8 @@ export function useCleaningDetailsForm({
       getAvailableEmployeesForService: state.getAvailableEmployeesForService,
       cleaningFrequencyDisplayData: state.cleaningFrequencyDisplayData,
       duration: state.durationInMinutes,
-      canAddMoreServices: state.canAddMoreServices
+      canAddMoreServices: state.canAddMoreServices,
+      isReservationAvailable: state.isReservationAvailable
     }))
   );
 
@@ -134,6 +136,7 @@ export function useCleaningDetailsForm({
     onChangeHourDate,
     setAvailableEmployees,
     getAvailableEmployeesForService,
-    canAddMoreServices
+    canAddMoreServices,
+    isReservationAvailable
   };
 }

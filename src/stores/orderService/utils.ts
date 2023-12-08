@@ -5,18 +5,15 @@ import type {
   OrderedVisitPart,
   Service
 } from '~/schemas/api/services';
-import type {
-  EmployeeAvailabilityData,
-  Timeslot
-} from '~/schemas/forms/orderService';
+import type { EmployeeAvailabilityData } from '~/schemas/forms/orderService';
 
 import {
   type ValidDayjsDate,
   advanceByMinutes,
   endOfDay,
-  getTimeSlot,
+  isAfter,
+  isBefore,
   minutesBetween,
-  nextDay,
   startOfDay
 } from '~/utils/dateUtils';
 import { calculateBusyHours } from '~/utils/serviceUtils';
@@ -37,7 +34,18 @@ export const createOrUpdateOrderedService = (
   numberOfUnits: number,
   positionOnList: number
 ) => {
-  const newOrderedServices = [...orderedServices];
+  const newOrderedServices =
+    orderedServices.length === 0
+      ? Array<OrderedService | undefined>(positionOnList).fill(undefined)
+      : [...orderedServices];
+
+  if (positionOnList > newOrderedServices.length) {
+    newOrderedServices.push(
+      ...Array<OrderedService | undefined>(
+        positionOnList - orderedServices.length
+      ).fill(undefined)
+    );
+  }
 
   newOrderedServices[positionOnList] = {
     ...service,
@@ -101,9 +109,6 @@ export const createOrUpdateOrderedService = (
     }
 
     const finalVisitParts = newVisitParts;
-    // const finalVisitParts = newVisitParts.filter(
-    //   (visitPart) => visitPart.numberOfUnits > 0
-    // );
 
     const indexInUnsortedList = newOrderedServices.findIndex(
       (s) => s && s.id === service.id
@@ -238,72 +243,202 @@ export const calculateVisitPartCostAndDuration = (
 };
 
 export const prepareVisitParts = (
-  orderedServices: (OrderedService | undefined)[],
-  startDate: Date
+  orderedServices: (OrderedService | undefined)[]
 ) => {
-  let currentDate = startDate;
-
-  orderedServices.sort((a, b) => {
-    return (
-      Number(b?.isMainServiceForReservation ?? 0) -
-      Number(a?.isMainServiceForReservation ?? 0)
-    );
-  });
-
-  return orderedServices.reduce<VisitPart[]>((acc, service) => {
-    if (!service?.unit) {
-      return acc;
-    }
-
-    const { visitParts } = service;
-
-    const visitPartsForService = visitParts.map((visitPart) => {
-      const { totalCost, durationInMinutes } =
-        calculateVisitPartCostAndDuration(visitPart, service.unit);
-
-      const visitPartEndDate = advanceByMinutes(currentDate, durationInMinutes);
-
-      const newVisitPart = {
-        ...visitPart,
-        startDate: currentDate.toISOString(),
-        endDate: visitPartEndDate.toISOString(),
-        cost: totalCost
-      } as VisitPart;
-
-      currentDate = visitPartEndDate;
-
-      return newVisitPart;
-    });
-
-    return [...acc, ...visitPartsForService];
-  }, [] as VisitPart[]);
+  return orderedServices.flatMap(
+    (service) =>
+      service?.visitParts.filter(
+        (visitPart) =>
+          visitPart.numberOfUnits > 0 &&
+          !!visitPart.startDate &&
+          !!visitPart.endDate &&
+          !!visitPart.cost
+      ) ?? []
+  ) as VisitPart[];
 };
 
 /**
- * Searches for employees that are not busy during the visit slot
- * @param employees the list of all available employees for all ordered services
- * @param visitSlot the time slot of the visit
- * @returns the list of the ids of the employees that are not busy
- *  during the visit slot ordered ascending by the number of working hours
+ * A function for assigning employees to a service
+ * It uses greedy algorithm to assign employees to visit parts
+ * Preferably, the employee with the least number of working hours
+ * is assigned to the visit part
+ * @param service
+ * @param employees
+ * @param employeeStartDates
+ * @returns
  */
-export const getAssignedEmployees = (
+const updateOrderedService = (
+  service: OrderedService,
   employees: EmployeeAvailabilityData[],
-  visitSlot: Timeslot
+  employeeStartDates: Date[]
 ) => {
-  const notConlictingEmployees = employees.filter(
-    (employee) =>
-      calculateBusyHours([employee.workingHours, [visitSlot]]).length === 0
-  );
+  if (employeeStartDates.length < service.visitParts.length) {
+    return service;
+  }
 
-  notConlictingEmployees.sort((a, b) => {
-    return a.numberOfWorkingHours - b.numberOfWorkingHours;
+  const serviceVisitParts = service?.visitParts ?? [];
+
+  // store the asignments to avoid assigning the same employee
+  const assignedEmployeesToVisitParts: number[] = [];
+
+  const newServiceVisitParts: OrderedVisitPart[] = [];
+
+  serviceVisitParts.forEach((visitPart, index) => {
+    const { durationInMinutes: visitPartDuration, totalCost } =
+      calculateVisitPartCostAndDuration(visitPart, service.unit);
+
+    // calculate start and end date of the visit part
+    const visitPartStartDate = new Date(employeeStartDates[index]!);
+    const visitPartEndDate = advanceByMinutes(
+      visitPartStartDate,
+      visitPartDuration
+    );
+
+    const visitPartTimeslot = {
+      startDate: visitPartStartDate.toISOString(),
+      endDate: visitPartEndDate.toISOString()
+    };
+
+    // find available employees for the visit part
+    // and select the one with the least number of working hours
+    const availableEmployees = employees.filter(
+      (employee) =>
+        employee.services.includes(service?.id ?? 0) &&
+        calculateBusyHours([employee.workingHours, [visitPartTimeslot]])
+          .length === 0 &&
+        !assignedEmployeesToVisitParts.includes(employee.id)
+    );
+
+    availableEmployees.sort((a, b) => {
+      return a.numberOfWorkingHours - b.numberOfWorkingHours;
+    });
+
+    const assignedEmployee = availableEmployees[0]?.id;
+
+    if (assignedEmployee) {
+      assignedEmployeesToVisitParts.push(assignedEmployee);
+    }
+    newServiceVisitParts.push({
+      ...visitPart,
+      ...visitPartTimeslot,
+      cost: totalCost,
+      employeeId: assignedEmployee
+    });
+
+    // advance visit start date to the end of the visit part
+    // for the future calculations
+    employeeStartDates[index] = visitPartEndDate;
   });
 
-  // TODO: right now only one employee is assigned,
-  // when the predicted visit slot is longer than 8 hours
-  // then the service should be split into multiple visit parts
-  // therefore multiple employees should be assigned
-  return notConlictingEmployees.length > 0
-    ? [notConlictingEmployees[0]!.id]
-    : [];
+  return {
+    ...service,
+    visitParts: newServiceVisitParts
+  };
+};
+
+export const updateOrderedServices = (
+  employees: EmployeeAvailabilityData[],
+  orderedServices: (OrderedService | undefined)[],
+  startDate: Date
+) => {
+  const newOrderedServices = [...orderedServices];
+
+  const numberOfNeededEmployees = Math.max(
+    ...orderedServices.map((service) => service?.visitParts.length ?? 0)
+  );
+
+  // this can happen when no services are ordered
+  if (numberOfNeededEmployees <= 0) {
+    return orderedServices;
+  }
+
+  const employeeStartDates = Array<Date>(numberOfNeededEmployees).fill(
+    startDate
+  );
+
+  const mainService = orderedServices.find(
+    (service) => service?.isMainServiceForReservation
+  );
+
+  if (mainService) {
+    newOrderedServices[newOrderedServices.length - 1] = updateOrderedService(
+      mainService,
+      employees,
+      employeeStartDates
+    );
+  }
+
+  const secondaryServices = orderedServices.filter(
+    (service) => !service?.isMainServiceForReservation
+  );
+
+  secondaryServices.forEach((service, index) => {
+    if (!service) {
+      return;
+    }
+
+    newOrderedServices[index] = updateOrderedService(
+      service,
+      employees,
+      employeeStartDates
+    );
+  });
+  return newOrderedServices;
+};
+
+export const resetAssignedEmployees = (
+  orderedServices: (OrderedService | undefined)[]
+) => {
+  return orderedServices.map((service) =>
+    service
+      ? {
+          ...service,
+          visitParts: service.visitParts.map((visitPart) => ({
+            ...visitPart,
+            employeeId: undefined
+          }))
+        }
+      : service
+  );
+};
+
+export const isEmployeeAvailableInAGivenDay = (
+  employeeId: number,
+  employees: EmployeeAvailabilityData[],
+  orderedServices: (OrderedService | undefined)[],
+  day: ValidDayjsDate
+) => {
+  const employee = employees.find((employee) => employee.id === employeeId);
+
+  if (!employee) {
+    return false;
+  }
+
+  const employeeVisitPartDuration = orderedServices
+    .flatMap(
+      (service) =>
+        service?.visitParts
+          .filter((visitPart) => visitPart.employeeId === employeeId)
+          .map((visitPart) =>
+            calculateVisitPartCostAndDuration(visitPart, service.unit)
+          ) ?? []
+    )
+    .reduce((acc, visitPart) => acc + visitPart.durationInMinutes, 0);
+
+  const dayStart = startOfDay(day);
+  const dayEnd = endOfDay(day);
+
+  const numberOfBusyMinutesInADay = employee?.workingHours
+    .filter(
+      (timeslot) =>
+        isAfter(timeslot.startDate, dayStart) &&
+        isBefore(timeslot.endDate, dayEnd)
+    )
+    .reduce(
+      (acc, timeslot) =>
+        acc + minutesBetween(timeslot.endDate, timeslot.startDate),
+      0
+    );
+
+  return employeeVisitPartDuration + numberOfBusyMinutesInADay <= 480;
 };
