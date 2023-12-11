@@ -7,12 +7,14 @@ type NumericControlProps = {
   icon: IconDefinition;
   onClick: VoidFunction;
   variant?: NumericInputProps['variant'];
+  disabled?: boolean;
 };
 
 const NumericInputControl = ({
   icon,
   onClick,
-  variant = 'outlined'
+  variant = 'outlined',
+  disabled = false
 }: NumericControlProps) => {
   return (
     <button

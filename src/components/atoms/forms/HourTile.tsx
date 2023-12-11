@@ -7,13 +7,15 @@ type HourTileProps = {
   selected?: boolean;
   available?: boolean;
   disabled?: boolean;
+  included?: boolean;
   onSelect: (value: string) => void;
 };
 
 const getHourTileStyle = (
   selected: boolean,
   disabled: boolean,
-  available: boolean
+  available: boolean,
+  included: boolean
 ) => {
   if (disabled) {
     // disabled hour tile is lighter than enabled
@@ -21,7 +23,15 @@ const getHourTileStyle = (
   }
 
   if (available) {
-    return selected ? 'bg-cyan-500' : 'bg-cyan-200';
+    if (selected) {
+      return 'bg-cyan-500';
+    }
+
+    if (included) {
+      return 'bg-cyan-300';
+    }
+
+    return 'bg-cyan-200';
   }
 
   // if the hour is inavailable
@@ -37,12 +47,14 @@ const HourTile = ({
   onSelect,
   available = false,
   selected = false,
-  disabled = false
+  disabled = false,
+  included = false
 }: HourTileProps) => {
   const hourTileBackgroundStyle = getHourTileStyle(
     selected,
     disabled,
-    available
+    available,
+    included
   );
 
   const cursorStyle =

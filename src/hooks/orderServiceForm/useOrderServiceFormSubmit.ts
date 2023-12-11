@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { omit } from 'lodash';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
@@ -93,7 +92,7 @@ export function useOrderServiceFormSubmit() {
     mutation.mutate({
       frequency: frequency,
       includeDetergents,
-      visitParts: prepareVisitParts(services, fullStartDate() as Date),
+      visitParts: prepareVisitParts(services),
       bookerEmail: clientData.email,
       address,
       contactDetails: clientData,

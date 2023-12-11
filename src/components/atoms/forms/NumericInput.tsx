@@ -18,6 +18,7 @@ export type NumericInputProps = {
   errorLabel?: string;
   onChange?: (value: number) => void;
   variant?: 'outlined' | 'contained-controls';
+  incrementDisabled?: boolean;
 } & SetRequired<
   Omit<
     InputHTMLAttributes<HTMLInputElement>,
@@ -36,6 +37,7 @@ const NumericInput = ({
   wrapperClassName,
   errorLabel,
   initialValue = 0,
+  incrementDisabled = false,
   onChange,
   ...props
 }: NumericInputProps) => {
@@ -97,6 +99,7 @@ const NumericInput = ({
           {...props}
         />
         <NumericInputControl
+          disabled={incrementDisabled}
           variant={variant}
           icon={faPlus}
           onClick={() => {

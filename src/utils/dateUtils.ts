@@ -127,6 +127,13 @@ export function minutesBetween(
   return Math.abs(dayjs(endDate).diff(startDate, 'minute'));
 }
 
+export function hoursBetween(
+  startDate: ValidDayjsDate,
+  endDate: ValidDayjsDate
+) {
+  return Math.abs(dayjs(endDate).diff(startDate, 'hour'));
+}
+
 export function getWeekDayName(date: ValidDayjsDate) {
   return dayjs(date).format('dddd');
 }
@@ -216,3 +223,22 @@ export const getTimeSlot = (date: ValidDayjsDate, duration: number) => {
     endDate: advanceByMinutes(date, duration).toISOString()
   };
 };
+
+export const weekOfYear = (date: ValidDayjsDate) => dayjs(date).week();
+
+export const getDaysBetween = (
+  startDate: ValidDayjsDate,
+  endDate: ValidDayjsDate
+) => {
+  const days = [];
+  let currentDate = startDate;
+
+  while (isBeforeOrSame(currentDate, endDate)) {
+    days.push(currentDate);
+    currentDate = nextDay(currentDate);
+  }
+
+  return days;
+};
+
+export const getYearFromDate = (date: ValidDayjsDate) => dayjs(date).year();

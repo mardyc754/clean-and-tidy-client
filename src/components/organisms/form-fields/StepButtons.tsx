@@ -7,6 +7,7 @@ type StepButtonsProps = {
   cancelHref?: string;
   currentStep: number;
   submitErrorLabel?: string;
+  submitButtonDisabled?: boolean;
   onDecreaseStep: VoidFunction;
 };
 
@@ -14,6 +15,7 @@ const StepButtons = ({
   cancelHref = '/',
   currentStep,
   submitErrorLabel,
+  submitButtonDisabled = false,
   onDecreaseStep
 }: StepButtonsProps) => {
   return (
@@ -40,6 +42,7 @@ const StepButtons = ({
         <Button
           type="submit"
           className="w-4/5"
+          disabled={submitButtonDisabled}
           // className="w-72 py-4"
         >
           Continue

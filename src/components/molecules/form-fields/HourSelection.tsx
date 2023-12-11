@@ -4,7 +4,7 @@ import { useFormContext, useWatch } from 'react-hook-form';
 
 import { ErrorLabel, HourTile } from '~/components/atoms/forms';
 
-import { isSame } from '~/utils/dateUtils';
+import { isAfter, isSame, minutesBetween } from '~/utils/dateUtils';
 
 import type { ValidDate } from '~/types/forms';
 import type { HourAvailability } from '~/types/service';
@@ -17,6 +17,7 @@ type HourSelectionProps = {
   errorLabel?: string;
   onChange?: (value: ValidDate) => void;
   hourAvailabilityData: HourAvailability[];
+  selectedDuration?: number;
 };
 
 const HourSelection = ({
@@ -26,6 +27,7 @@ const HourSelection = ({
   disableSelection,
   errorLabel,
   hourAvailabilityData,
+  selectedDuration = 0,
   onChange
 }: HourSelectionProps) => {
   const { register, setValue } = useFormContext();
@@ -37,6 +39,8 @@ const HourSelection = ({
 
   const currentValue = useWatch({ name }) as Date;
 
+  // console.log('>>> currentValue', currentValue);
+  // console.log('>>> selectedDuration', selectedDuration);
   return (
     <div className={clsx(!errorLabel && 'mb-4', className)}>
       {/* // it will be grid probably with gaps */}
@@ -56,6 +60,10 @@ const HourSelection = ({
             available={available}
             disabled={disableSelection}
             selected={isSame(currentValue, hour)}
+            included={
+              minutesBetween(hour, currentValue) < selectedDuration &&
+              isAfter(hour, currentValue)
+            }
             onSelect={(stringifiedHourDate) => {
               const hourDate = new Date(stringifiedHourDate);
               setValue(name, hourDate);
