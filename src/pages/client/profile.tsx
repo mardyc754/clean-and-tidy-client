@@ -10,7 +10,7 @@ import { getClientReservations } from '~/api/client';
 
 import type { ClientUser } from '~/schemas/api/auth';
 
-import { ReservationList } from '~/components/organisms/lists';
+import { ReservationTable } from '~/components/organisms/data-display';
 import { ProfilePageTemplate } from '~/components/template';
 
 import { getEventsFromReservation } from '~/utils/scheduler';
@@ -38,7 +38,8 @@ export default function ClientProfile({
       userData={userData}
       isLoadingEvents={isLoading}
     >
-      <ReservationList data={reservationList ?? []} />
+      {/* <ReservationList data={reservationList ?? []} /> */}
+      <ReservationTable data={reservationList ?? []} />
     </ProfilePageTemplate>
   );
 }

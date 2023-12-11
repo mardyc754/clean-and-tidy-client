@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { useMemo } from 'react';
 
 import type { ReservationWithExtendedVisits } from '~/schemas/api/reservation';
@@ -5,8 +6,7 @@ import type { ReservationWithExtendedVisits } from '~/schemas/api/reservation';
 import { Heading3 } from '~/components/atoms/typography/headings';
 import { VisitDisclosure } from '~/components/organisms/disclosures';
 
-import { ReservationActions } from '../button-fields';
-import { ReservationGeneralDetailsList, ServiceList } from '../lists';
+import { ReservationGeneralDetailsCard, ServiceCard } from '../cards';
 
 interface ReservationDetailsProps {
   data: ReservationWithExtendedVisits;
@@ -25,9 +25,18 @@ const ReservationDetails = ({
 
   return (
     <>
-      <ServiceList data={services} />
-      <ReservationGeneralDetailsList data={data} />
-      {manageable && <ReservationActions />}
+      <div
+        className={clsx(
+          'md:column-re md: flex flex-col-reverse py-16 md:flex-row md:space-x-4 md:space-y-0'
+        )}
+      >
+        <ReservationGeneralDetailsCard
+          className="grow"
+          data={data}
+          manageable={manageable}
+        />
+        <ServiceCard data={services} />
+      </div>
 
       <Heading3>Visits</Heading3>
       <div className="flex flex-col gap-8 py-8">

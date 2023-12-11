@@ -5,7 +5,7 @@ import { ListWrapper } from '../wrappers';
 const ReservationActions = () => {
   return (
     <ListWrapper title="Actions">
-      <div className="flex space-x-4 py-4">
+      <div className="flex space-x-4 pt-4">
         <Button>Change reservation general data</Button>
         <Button color="danger">Cancel reservation</Button>
       </div>

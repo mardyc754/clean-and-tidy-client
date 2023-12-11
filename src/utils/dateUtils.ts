@@ -242,3 +242,20 @@ export const getDaysBetween = (
 };
 
 export const getYearFromDate = (date: ValidDayjsDate) => dayjs(date).year();
+
+export const getClosestDateFromNow = (dates: ValidDayjsDate[]) => {
+  const now = dayjs();
+  const futureDates = dates.filter((date) => isAfter(date, now));
+
+  futureDates.sort((a, b) => getTime(a) - getTime(b));
+
+  return futureDates[0];
+  // const closestDate = futureDates.reduce((closest, date) => {
+  //   const dateDiff = Math.abs(dayjs(date).diff(now));
+  //   const closestDiff = Math.abs(dayjs(closest).diff(now));
+
+  //   return dateDiff < closestDiff ? date : closest;
+  // });
+
+  // return closestDate;
+};
