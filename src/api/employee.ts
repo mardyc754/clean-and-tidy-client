@@ -1,4 +1,4 @@
-import type { RequireAtLeastOne } from 'type-fest';
+import type { RequireAtLeastOne, Stringified } from 'type-fest';
 import type { ZodType } from 'zod';
 
 import { type Employee, employeeSchema } from '~/schemas/api/employee';
@@ -12,19 +12,21 @@ import {
 } from '~/schemas/api/reservation';
 import { type Service, service } from '~/schemas/api/services';
 import { basicError } from '~/schemas/common';
+import { busyHoursData } from '~/schemas/forms/orderService';
 
 import type { Status } from '~/types/enums';
 
 import { handleFetchingData } from './handleFetchingData';
+import type { EmployeeBusyHoursQueryOptions } from './types';
 
 type EmployeeReservationQueryOptions = {
   status: Status;
 };
 
-type EmployeeWorkingHoursQueryOptions = {
-  from: string;
-  to: string;
-};
+// type EmployeeWorkingHoursQueryOptions = {
+//   from: string;
+//   to: string;
+// };
 
 export type AllEmployeesQueryOptions = RequireAtLeastOne<{
   includeVisits: boolean;
@@ -88,5 +90,28 @@ export const changeEmployeeServiceAssignment = async (
     successSchema: service.array() as unknown as ZodType<Service[]>,
     errorSchema: basicError,
     data: { serviceIds }
+  });
+};
+
+export const getEmployeesBusyHours = async (
+  params?: EmployeeBusyHoursQueryOptions
+) => {
+  let parsedParams: Stringified<EmployeeBusyHoursQueryOptions> | undefined =
+    undefined;
+
+  if (params) {
+    parsedParams = {
+      ...params,
+      frequency: params.frequency as string | undefined,
+      visitIds: params.visitIds?.join(',')
+    };
+  }
+
+  return await handleFetchingData({
+    path: `/employees/busy-hours`,
+    method: 'get',
+    successSchema: busyHoursData,
+    errorSchema: basicError,
+    params: parsedParams
   });
 };

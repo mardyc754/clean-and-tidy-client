@@ -2,7 +2,10 @@ import type { GetStaticProps, InferGetServerSidePropsType } from 'next';
 
 import { getAllReservations, getReservationByName } from '~/api/reservation';
 
-import type { Reservation } from '~/schemas/api/reservation';
+import type {
+  Reservation,
+  ReservationWithExtendedVisits
+} from '~/schemas/api/reservation';
 
 import { useAuth } from '~/hooks/auth/useAuth';
 
@@ -78,7 +81,7 @@ export const getStaticProps = (async ({ params }) => {
     };
   }
 
-  let data: Reservation | null = null;
+  let data: ReservationWithExtendedVisits | null = null;
 
   try {
     data = await getReservationByName(params.id as string);
@@ -92,4 +95,4 @@ export const getStaticProps = (async ({ params }) => {
       data
     }
   };
-}) satisfies GetStaticProps<{ data: Reservation | null }>;
+}) satisfies GetStaticProps<{ data: ReservationWithExtendedVisits | null }>;

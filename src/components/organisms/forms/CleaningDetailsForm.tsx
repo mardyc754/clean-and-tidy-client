@@ -11,7 +11,11 @@ import { useServicesBusyHours } from '~/hooks/orderServiceForm/useServicesBusyHo
 
 import { Checkbox, NumericInput } from '~/components/atoms/forms';
 
-import { endOfWeek, startOfWeek } from '~/utils/dateUtils';
+import {
+  endOfWeek,
+  extractYearAndMonthFromDateToString,
+  startOfWeek
+} from '~/utils/dateUtils';
 
 import type { TimeRange } from '~/types/forms';
 
@@ -30,9 +34,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
   const { unit, id, name } = data;
   const { onChangeStep, returnToHomePage } = useOrderServiceFormNavigation();
 
-  const [availablityRange, setAvailablityRange] = useState<
-    TimeRange | undefined
-  >(undefined);
+  const [period, setPeriod] = useState<string | undefined>(undefined);
 
   const {
     methods,
@@ -59,10 +61,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
 
   useEffect(() => {
     if (startDate) {
-      setAvailablityRange({
-        from: startOfWeek(startDate).toISOString(),
-        to: endOfWeek(startDate).toISOString()
-      });
+      setPeriod(extractYearAndMonthFromDateToString(startDate));
     }
   }, [startDate]);
 
@@ -74,7 +73,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
       orderedServicesIds.length > 0
         ? Array.from(new Set([id, ...orderedServicesIds]))
         : [id],
-    ...availablityRange,
+    period,
     frequency: cleaningFrequencyDisplayData?.value
   });
 

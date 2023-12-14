@@ -9,15 +9,9 @@ import { nextDayTimeSlot } from '~/utils/dateUtils';
 
 // TODO: Maybe it can be connected with the useCleaningDetailsForm hook?
 export function useServicesBusyHours(options: ServiceBusyHoursQueryOptions) {
-  const newTimeSlot =
-    options?.from !== undefined && options?.to !== undefined
-      ? { from: options.from, to: options.to }
-      : nextDayTimeSlot();
-  const newOptions = { ...options, ...newTimeSlot };
-
   const { data: busyHoursData, isSuccess } = useQuery({
-    queryKey: service.workingHours(newOptions),
-    queryFn: () => getServicesBusyHours(newOptions)
+    queryKey: service.workingHours(options),
+    queryFn: () => getServicesBusyHours(options)
     // enabled: options?.from !== undefined || options?.to !== undefined
   });
 

@@ -5,6 +5,7 @@ import type { TimeInterval } from '~/schemas/api/services';
 
 import { MediumTypography } from '~/components/atoms/typography/regular-text';
 import { Calendar } from '~/components/molecules/calendar';
+import type { CalendarProps } from '~/components/molecules/calendar/Calendar';
 import { HourSelection } from '~/components/molecules/form-fields';
 
 import { getHourAvailabilityData } from '~/utils/serviceUtils';
@@ -22,7 +23,7 @@ type CalendarWithLabelProps = {
   onChangeDate?: (value: ValidDate) => void;
   dateErrorLabel?: string;
   hourErrorLabel?: string;
-};
+} & Omit<CalendarProps, 'name'>;
 
 const CalendarWithHours = ({
   label,
@@ -34,7 +35,8 @@ const CalendarWithHours = ({
   dateErrorLabel,
   hourErrorLabel,
   busyHours = [],
-  currentDuration = 0
+  currentDuration = 0,
+  ...props
 }: CalendarWithLabelProps) => {
   const currentDate = useWatch({ name: calendarInputName }) as ValidDate;
 
@@ -57,6 +59,7 @@ const CalendarWithHours = ({
         )}
       >
         <Calendar
+          {...props}
           name={calendarInputName}
           onChange={onChangeDate}
           errorLabel={dateErrorLabel}

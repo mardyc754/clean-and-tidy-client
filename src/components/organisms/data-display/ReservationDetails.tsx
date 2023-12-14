@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { omit } from 'lodash';
 import { useMemo } from 'react';
 
 import type { ReservationWithExtendedVisits } from '~/schemas/api/reservation';
@@ -43,6 +44,7 @@ const ReservationDetails = ({
         {visits.map((visit, i) => {
           return (
             <VisitDisclosure
+              reservationData={omit(data, 'visits', 'services')}
               defaultOpen={expandVisitDetails}
               data={visit}
               key={`ReservationDisclosure-${i}`}

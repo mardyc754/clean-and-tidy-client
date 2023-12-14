@@ -1,7 +1,10 @@
 import { useMemo } from 'react';
 import { VisitDataContext } from '~/providers/VisitDataProvider';
 
-import type { VisitWithEmployees } from '~/schemas/api/reservation';
+import type {
+  ReservationWithExtendedVisits,
+  VisitWithEmployees
+} from '~/schemas/api/reservation';
 
 import { Disclosure } from '~/components/organisms/disclosures';
 
@@ -14,22 +17,24 @@ import { getVisitEmployees, getVisitStartEndDates } from '~/utils/visitUtils';
 import { VisitActions } from '../button-fields';
 import { EmployeeSecondaryList, VisitDetailsList } from '../lists';
 
-interface ReservationDisclosureProps {
+interface VisitDisclosureProps {
+  reservationData: Omit<ReservationWithExtendedVisits, 'visits' | 'services'>;
   data: VisitWithEmployees;
   manageable?: boolean;
   defaultOpen?: boolean;
 }
 
 const VisitDisclosure = ({
+  reservationData,
   data,
   manageable = false,
   defaultOpen = false
-}: ReservationDisclosureProps) => {
+}: VisitDisclosureProps) => {
   const employees = useMemo(() => getVisitEmployees(data), [data]);
   const { startDate, endDate } = getVisitStartEndDates(data);
 
   return (
-    <VisitDataContext.Provider value={{ visitData: data }}>
+    <VisitDataContext.Provider value={{ visitData: data, reservationData }}>
       <Disclosure
         defaultOpen={defaultOpen}
         titleComponent={

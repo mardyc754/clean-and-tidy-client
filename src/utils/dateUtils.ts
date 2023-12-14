@@ -83,6 +83,10 @@ export function advanceDateByNMinutes(date: ValidDayjsDate, minutes: number) {
   return dayjs(date).add(minutes, 'm').toDate();
 }
 
+export function advanceDateByWeeks(date: ValidDayjsDate, weeks: number) {
+  return dayjs(date).add(weeks, 'w').toDate();
+}
+
 export function nextDay(date: ValidDayjsDate) {
   return dayjs(date).add(1, 'd').toDate();
 }
@@ -258,4 +262,10 @@ export const getClosestDateFromNow = (dates: ValidDayjsDate[]) => {
   // });
 
   // return closestDate;
+};
+
+export const extractYearAndMonthFromDateToString = (date: ValidDayjsDate) => {
+  const year = dayjs(date).year();
+  const month = dayjs(date).month();
+  return `${year}-${month}`;
 };

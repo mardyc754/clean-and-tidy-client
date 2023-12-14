@@ -1,93 +1,92 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
 import { VisitDataContext } from '~/providers/VisitDataProvider';
 
-import { service } from '~/constants/queryKeys';
-
-import { changeEmployeeServiceAssignment } from '~/api/employee';
-
-import type { Employee } from '~/schemas/api/employee';
-import { VisitWithEmployees } from '~/schemas/api/reservation';
-import type { ServiceWithEmployees } from '~/schemas/api/services';
+import { useEmployeesBusyHours } from '~/hooks/orderServiceForm/useEmployeesBusyHours';
 
 import Button from '~/components/atoms/buttons/Button';
-import { Checkbox } from '~/components/atoms/forms';
 import { DialogFooter } from '~/components/shadcn/ui/dialog';
 
-import { displayDateWithHours } from '~/utils/dateUtils';
+import {
+  advanceDateByWeeks,
+  displayDateWithHours,
+  displayDayDateAndHourDate,
+  extractYearAndMonthFromDateToString
+} from '~/utils/dateUtils';
+
+import { CleaningFrequency } from '~/types/enums';
+import type { NullableDate } from '~/types/forms';
 
 import { CalendarWithHours } from '../form-fields';
 
 const ChangeVisitDateForm = () => {
   const { visitData } = useContext(VisitDataContext);
   const visitStartDate = visitData?.visitParts[0]!.startDate;
+  const visitEndDate =
+    visitData?.visitParts[visitData.visitParts.length - 1]!.endDate;
+  const [period, setPeriod] = useState<string | undefined>(undefined);
 
-  // const queryClient = useQueryClient();
+  const uniqueVisitIds = visitData?.id ? [visitData.id] : [];
 
-  // const primaryServices = serviceData.filter((service) => service.isPrimary);
-  // const secondaryServices = serviceData.filter((service) => !service.isPrimary);
-
-  // const methods = useForm({
-  //   defaultValues: {
-  //     employeeServices: Object.fromEntries(
-  //       serviceData.map((service) => [
-  //         `${service.id}`,
-  //         service.employees?.some((employee) => employee.id === employeeData.id)
-  //       ])
-  //     )
-  //   }
-  // });
-  const methods = useForm({
+  const methods = useForm<{
+    startDate: NullableDate | string;
+    hourDate: NullableDate | string;
+  }>({
     defaultValues: {
       startDate: visitData?.visitParts[0]!.startDate,
       hourDate: visitData?.visitParts[0]!.startDate
     }
   });
 
-  // const mutation = useMutation({
-  //   mutationFn: (serviceIds: number[]) =>
-  //     changeEmployeeServiceAssignment(employeeData.id, serviceIds),
-  //   onSuccess: () => {
-  //     return toast.promise(
-  //       (async () => {
-  //         await queryClient.invalidateQueries({
-  //           queryKey: service.employeesWithFilters({ includeEmployee: true })
-  //         });
-  //       })(),
-  //       {
-  //         loading: 'Saving employee data changes',
-  //         success: 'Save success',
-  //         error: 'Failed to save employee data changes'
-  //       }
-  //     );
-  //   },
-  //   onError: (error) => {
-  //     toast.error(error.message);
-  //   }
-  // });
-
   const {
     handleSubmit,
+    watch,
     formState: { errors }
   } = methods;
+
+  const startDate = watch('startDate');
+
+  useEffect(() => {
+    if (startDate && visitEndDate) {
+      setPeriod(extractYearAndMonthFromDateToString(startDate));
+    }
+  }, [startDate, visitEndDate]);
+
+  const { busyHoursData } = useEmployeesBusyHours({
+    visitIds: uniqueVisitIds,
+    excludeFrom: visitStartDate,
+    excludeTo: visitEndDate,
+    period,
+    frequency: CleaningFrequency.ONCE
+  });
 
   return (
     <FormProvider {...methods}>
       <p>{`Old date: ${displayDateWithHours(
         visitData?.visitParts[0]!.startDate
       )}`}</p>
+      <p>{`New date: ${displayDayDateAndHourDate(
+        watch('startDate'),
+        watch('hourDate')
+      )}`}</p>
       <form>
         <CalendarWithHours
           calendarInputName="startDate"
           hourInputName="hourDate"
           label="Cleaning start date"
+          fromDate={
+            new Date(
+              visitData?.visitParts[visitData.visitParts.length - 1]!.endDate ??
+                Date.now()
+            )
+          }
+          toDate={advanceDateByWeeks(visitStartDate, 1)}
           // onChangeDate={onChangeStartDate}
           // onChangeHour={onChangeHourDate}
           dateErrorLabel={errors.startDate?.message}
           hourErrorLabel={errors.hourDate?.message}
-          busyHours={[]}
+          busyHours={busyHoursData?.busyHours ?? []}
+          fromMonth={visitStartDate ? new Date(visitStartDate) : undefined}
           direction="row"
         />
         <DialogFooter>
