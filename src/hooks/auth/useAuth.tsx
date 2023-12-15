@@ -29,8 +29,6 @@ export const useAuth = (
     queryFn: getCurrentUser
   });
 
-  console.log(user);
-
   const hasAccess =
     isAuthenticated(user) && (!validationCallback || validationCallback(user));
 
@@ -39,11 +37,10 @@ export const useAuth = (
   };
 
   useEffect(() => {
-    console.log({ hasAccess, isPending, redirectIfUnauthenticated });
     if (!isPending && !hasAccess && redirectIfUnauthenticated) {
       void router.push('/login');
     }
-  }, [user, isPending, router, redirectIfUnauthenticated]);
+  }, [user, isPending, router, redirectIfUnauthenticated, hasAccess]);
 
   return {
     currentUser: getUser(),

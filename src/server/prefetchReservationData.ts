@@ -4,40 +4,37 @@ import type { GetServerSidePropsContext } from 'next';
 
 import { reservation, user } from '~/constants/queryKeys';
 
-import { fetcher } from '~/lib/axios';
-
 import { getReservationByName } from '~/api/reservation';
 
 import type { User } from '~/schemas/api/auth';
+import type { ReservationWithExtendedVisits } from '~/schemas/api/reservation';
 
 import { fetchUserQuery } from './prefetchUserData';
 
-export const fetchReservationDetails = async (
-  context: GetServerSidePropsContext
-) => {
+export const fetchReservationDetails = async (reservationName: string) => {
   const queryClient = new QueryClient();
 
-  const req = context.req;
-  const reservationName = context.params?.id;
+  // const req = context.req;
+  // const reservationName = context.params?.id;
 
   if (!reservationName) {
     return {
       dehydratedState: dehydrate(queryClient),
-      reservationData: undefined,
+      // reservationData: undefined,
       userData: undefined
     };
   }
 
-  const userData = await fetchUserQuery(context, queryClient);
+  // const userData = await fetchUserQuery(context, queryClient);
 
-  let reservationData: User | undefined;
+  let reservationData: ReservationWithExtendedVisits | undefined;
 
   try {
     reservationData = await queryClient.fetchQuery({
       // eslint-disable-next-line @tanstack/query/exhaustive-deps
-      queryKey: reservation.byName(reservationName as string),
+      queryKey: reservation.byName(reservationName),
       queryFn: async () => {
-        const res = await getReservationByName(reservationName as string);
+        const res = await getReservationByName(reservationName);
 
         return res;
       }
@@ -48,7 +45,7 @@ export const fetchReservationDetails = async (
 
   return {
     dehydratedState: dehydrate(queryClient),
-    reservationData,
-    userData
+    reservationData
+    // userData
   };
 };
