@@ -45,3 +45,13 @@ export const changeVisitData = async (
     data: { startDate: newStartDate }
   });
 };
+
+export const cancelVisit = async (visitId: Visit['id']) => {
+  return await handleFetchingData({
+    path: `/visits/${visitId}/cancel`,
+    method: 'put',
+    successSchema:
+      visitSchemaWithEmployees as unknown as ZodType<VisitWithEmployees>,
+    errorSchema: basicError
+  });
+};

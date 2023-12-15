@@ -20,7 +20,15 @@ const ReservationDetails = ({
   manageable = false,
   expandVisitDetails = false
 }: ReservationDetailsProps) => {
-  const visits = useMemo(() => data.visits ?? [], [data.visits]);
+  const visits = useMemo(() => {
+    const sortedVisits = data.visits ?? [];
+    sortedVisits.sort(
+      (a, b) =>
+        (new Date(a.visitParts[0]!.startDate).getTime() ?? -Infinity) -
+        (new Date(b.visitParts[0]!.startDate).getTime() ?? -Infinity)
+    );
+    return sortedVisits;
+  }, [data.visits]);
 
   const services = useMemo(() => data.services ?? [], [data.services]);
 

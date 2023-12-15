@@ -12,7 +12,11 @@ import {
   displayDatesAsTimeslot,
   extractDateStringFromDate
 } from '~/utils/dateUtils';
-import { getVisitEmployees, getVisitStartEndDates } from '~/utils/visitUtils';
+import {
+  getVisitEmployees,
+  getVisitStartEndDates,
+  getVisitStatusDescription
+} from '~/utils/visitUtils';
 
 import { VisitActions } from '../button-fields';
 import { EmployeeSecondaryList, VisitDetailsList } from '../lists';
@@ -33,14 +37,17 @@ const VisitDisclosure = ({
   const employees = useMemo(() => getVisitEmployees(data), [data]);
   const { startDate, endDate } = getVisitStartEndDates(data);
 
+  const status = getVisitStatusDescription(data);
+
   return (
     <VisitDataContext.Provider value={{ visitData: data, reservationData }}>
       <Disclosure
         defaultOpen={defaultOpen}
         titleComponent={
           <div className="flex flex-1 flex-col py-2 md:flex-row md:items-center md:justify-between">
-            <p className="font-emphasize text-2xl">
-              {extractDateStringFromDate(startDate)}
+            <p className="space-x-3 font-emphasize text-2xl">
+              <span>{extractDateStringFromDate(startDate)}</span>
+              <span className={status?.style}>{status?.label}</span>
             </p>
             <p className="font-emphasize text-2xl">
               {displayDatesAsTimeslot(startDate, endDate)}

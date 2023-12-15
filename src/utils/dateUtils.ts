@@ -277,3 +277,10 @@ export const timeDifferenceBetween = (
   const duration = dayjs.duration(dayjs(end).diff(start));
   return duration.asMinutes();
 };
+
+export const isAtLeastOneDayBetween = (
+  end: ValidDayjsDate,
+  start: ValidDayjsDate
+) => {
+  return dayjs(end).diff(start, 'hours') >= 24;
+};

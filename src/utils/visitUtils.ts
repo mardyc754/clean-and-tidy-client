@@ -68,7 +68,7 @@ export const getCumulatedStatus = (statuses: Status[]) => {
       (status) => status === Status.CLOSED || status === Status.CANCELLED
     )
   ) {
-    return Status.CLOSED;
+    return statuses[0]!;
   }
 
   return Status.UNKNOWN;
