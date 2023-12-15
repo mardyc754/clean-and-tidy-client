@@ -8,6 +8,8 @@ import type {
   VisitQueryOptions
 } from '~/api/types';
 
+import type { Reservation, Visit } from '~/schemas/api/reservation';
+
 import type { Status } from '~/types/enums';
 
 // example query key factory
@@ -35,7 +37,16 @@ export const employee = {
 export const reservation = {
   all: ['reservations'] as const,
   find: () => [...reservation.all, 'find'] as const,
-
+  byName: (reservationName: Reservation['name']) =>
+    [
+      ...reservation.find(),
+      reservationName,
+      {
+        includeVisits: true,
+        includeServices: true,
+        includeAddress: true
+      }
+    ] as const,
   client: (email: string) =>
     [...reservation.find(), 'client', { email }] as const,
   employee: (id: number) =>
@@ -60,7 +71,8 @@ export const visit = {
   detail: (id: number, options?: VisitQueryOptions) =>
     [...visit.details(), id, { options }] as const,
   reservationVisitDetail: (id: number) =>
-    [...reservation.details(), ...visit.detail(id)] as const
+    [...reservation.details(), ...visit.detail(id)] as const,
+  change: (id: Visit['id']) => [...visit.detail(id), 'change'] as const
 };
 
 export const service = {

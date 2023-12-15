@@ -1,4 +1,4 @@
-import type { VisitPart } from '~/schemas/api/reservation';
+import type { VisitPart, VisitWithEmployees } from '~/schemas/api/reservation';
 import type {
   BasicServiceData,
   OrderedService,
@@ -424,6 +424,41 @@ export const isEmployeeAvailableInAGivenDay = (
           ) ?? []
     )
     .reduce((acc, visitPart) => acc + visitPart.durationInMinutes, 0);
+
+  const dayStart = startOfDay(day);
+  const dayEnd = endOfDay(day);
+
+  const numberOfBusyMinutesInADay = employee?.workingHours
+    .filter(
+      (timeslot) =>
+        isAfter(timeslot.startDate, dayStart) &&
+        isBefore(timeslot.endDate, dayEnd)
+    )
+    .reduce(
+      (acc, timeslot) =>
+        acc + minutesBetween(timeslot.endDate, timeslot.startDate),
+      0
+    );
+
+  return employeeVisitPartDuration + numberOfBusyMinutesInADay <= 480;
+};
+
+export const isEmployeeAvailableForTheVisit = (
+  employeeId: number,
+  employees: EmployeeAvailabilityData[],
+  visit: VisitWithEmployees,
+  day: ValidDayjsDate
+) => {
+  const employee = employees.find((employee) => employee.id === employeeId);
+
+  if (!employee) {
+    return false;
+  }
+
+  const employeeVisitPartDuration = visit.visitParts
+    .filter((visitPart) => visitPart.employeeId === employeeId)
+    .map((visitPart) => minutesBetween(visitPart.endDate, visitPart.startDate))
+    .reduce((acc, visitPartDuration) => acc + visitPartDuration, 0);
 
   const dayStart = startOfDay(day);
   const dayEnd = endOfDay(day);

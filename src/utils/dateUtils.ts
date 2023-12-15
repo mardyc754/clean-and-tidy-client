@@ -25,16 +25,12 @@ export function extractHourStringFromDate(date: ValidDayjsDate) {
   return date ? dayjs(date).format('HH:mm') : '--:--';
 }
 
-export function extractHourFromDate(date: ValidDayjsDate) {
-  return dayjs(date).hour();
-}
-
 export function changeHourToDate(hour: number) {
   return dayjs().hour(hour).minute(0).format('HH:mm');
 }
 
-export function dateWithHour(date: ValidDayjsDate, hour: number) {
-  return dayjs(date).hour(hour).minute(0).second(0).toDate();
+export function dateWithHour(date: ValidDayjsDate, hour: number, minute = 0) {
+  return dayjs(date).hour(hour).minute(minute).second(0).toDate();
 }
 
 export function create(date: ValidDayjsDate, hour: number) {
@@ -49,7 +45,11 @@ export function mergeDayDateAndHourDate(
   dayDate: ValidDayjsDate,
   hourDate: ValidDayjsDate
 ) {
-  return dateWithHour(dayDate, extractHourFromDate(hourDate));
+  return dateWithHour(
+    dayDate,
+    dayjs(hourDate).hour(),
+    dayjs(hourDate).minute()
+  );
 }
 
 export function displayDayDateAndHourDate(
@@ -268,4 +268,12 @@ export const extractYearAndMonthFromDateToString = (date: ValidDayjsDate) => {
   const year = dayjs(date).year();
   const month = dayjs(date).month();
   return `${year}-${month}`;
+};
+
+export const timeDifferenceBetween = (
+  end: ValidDayjsDate,
+  start: ValidDayjsDate
+) => {
+  const duration = dayjs.duration(dayjs(end).diff(start));
+  return duration.asMinutes();
 };

@@ -10,6 +10,8 @@ import type {
 
 import { Status } from '~/types/enums';
 
+import { minutesBetween } from './dateUtils';
+
 export function getVisitEmployees(visit: VisitWithEmployees) {
   const { visitParts } = visit;
 
@@ -24,7 +26,8 @@ export function getVisitEmployees(visit: VisitWithEmployees) {
 }
 
 export function getVisitStartEndDates(visit: Visit) {
-  const visitParts = visit.visitParts.toSorted(
+  const visitParts = visit.visitParts;
+  visitParts.sort(
     (a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
   );
 
@@ -103,4 +106,10 @@ export const getVisitEmployeesWithStatuses = (visit: VisitWithEmployees) => {
     employee: employee,
     status: getEmployeeStatusFromVisit(visit, employee.id)
   }));
+};
+
+export const getVisitDuration = (visit: VisitWithEmployees) => {
+  const { startDate, endDate } = getVisitStartEndDates(visit);
+
+  return minutesBetween(endDate, startDate);
 };
