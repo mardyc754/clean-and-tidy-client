@@ -24,8 +24,17 @@ export type VisitQueryOptions = RequireAtLeastOne<{
 }>;
 
 export type ServiceBusyHoursQueryOptions = Partial<{
-  from: string;
-  to: string;
+  period: string;
   serviceIds: number[];
   frequency: Omit<CleaningFrequency, 'ONCE'>;
+  excludeFrom?: string;
+  excludeTo?: string;
+}>;
+
+export type EmployeeBusyHoursQueryOptions = Partial<{
+  period: string;
+  visitIds: number[];
+  frequency: Omit<CleaningFrequency, 'ONCE'>;
+  excludeFrom?: string;
+  excludeTo?: string;
 }>;

@@ -9,15 +9,7 @@ export const useReservation = (
   options?: { retry: boolean; enabled: boolean }
 ) => {
   const { data, status, error, refetch, isLoading } = useQuery({
-    queryKey: [
-      ...reservation.find(),
-      name,
-      {
-        includeVisits: true,
-        includeServices: true,
-        includeAddress: true
-      }
-    ],
+    queryKey: reservation.byName(name),
     queryFn: () => getReservationByName(name),
     ...options
   });

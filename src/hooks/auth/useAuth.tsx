@@ -40,7 +40,7 @@ export const useAuth = (
     if (!isPending && !hasAccess && redirectIfUnauthenticated) {
       void router.push('/login');
     }
-  }, [user, isPending, router, redirectIfUnauthenticated]);
+  }, [user, isPending, router, redirectIfUnauthenticated, hasAccess]);
 
   return {
     currentUser: getUser(),

@@ -9,11 +9,9 @@ import { useCleaningDetailsForm } from '~/hooks/orderServiceForm/useCleaningDeta
 import { useOrderServiceFormNavigation } from '~/hooks/orderServiceForm/useOrderServiceFormNavigation';
 import { useServicesBusyHours } from '~/hooks/orderServiceForm/useServicesBusyHours';
 
-import { Checkbox, NumericInput } from '~/components/atoms/forms';
+import { FormCheckbox, NumericInput } from '~/components/atoms/forms';
 
-import { endOfWeek, startOfWeek } from '~/utils/dateUtils';
-
-import type { TimeRange } from '~/types/forms';
+import { extractYearAndMonthFromDateToString } from '~/utils/dateUtils';
 
 import {
   CalendarWithHours,
@@ -30,9 +28,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
   const { unit, id, name } = data;
   const { onChangeStep, returnToHomePage } = useOrderServiceFormNavigation();
 
-  const [availablityRange, setAvailablityRange] = useState<
-    TimeRange | undefined
-  >(undefined);
+  const [period, setPeriod] = useState<string | undefined>(undefined);
 
   const {
     methods,
@@ -59,10 +55,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
 
   useEffect(() => {
     if (startDate) {
-      setAvailablityRange({
-        from: startOfWeek(startDate).toISOString(),
-        to: endOfWeek(startDate).toISOString()
-      });
+      setPeriod(extractYearAndMonthFromDateToString(startDate));
     }
   }, [startDate]);
 
@@ -74,7 +67,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
       orderedServicesIds.length > 0
         ? Array.from(new Set([id, ...orderedServicesIds]))
         : [id],
-    ...availablityRange,
+    period,
     frequency: cleaningFrequencyDisplayData?.value
   });
 
@@ -125,7 +118,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
               errorLabel={errors.cleaningFrequency?.message}
             />
           )}
-          <Checkbox
+          <FormCheckbox
             name="includeDetergents"
             label="Detergents"
             caption={`Include detergents (+${DETERGENT_COST}zł)`}

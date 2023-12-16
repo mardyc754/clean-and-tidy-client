@@ -5,38 +5,37 @@ import {
   reservationStatusMap
 } from '~/constants/mappings';
 
-import type {
-  Reservation,
-  ReservationWithExtendedVisits
-} from '~/schemas/api/reservation';
+import type { ReservationWithExtendedVisits } from '~/schemas/api/reservation';
 
 import { LabeledTypography } from '~/components/atoms/typography/labeled-text';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle
+} from '~/components/shadcn/ui/card';
 
 import { displayDateWithHours } from '~/utils/dateUtils';
 import { convertToCamelCase } from '~/utils/stringUtils';
 
-import ListWrapper from '../wrappers/ListWrapper';
+import { ReservationActions } from '../button-fields';
 
-interface ReservationDetailsListProps {
-  data: ReservationWithExtendedVisits; // TODO: maybe use simplified version of Reservation
+interface ReservationDetailsCardProps {
+  data: ReservationWithExtendedVisits; // TODO: maybe use simplified version of Reservation,
+  manageable?: boolean;
+  className?: string;
 }
 
-const ReservationGeneralDetailsList = ({
-  data
-}: ReservationDetailsListProps) => {
-  const {
-    status,
-    name,
-    frequency,
-    endDate,
-    bookerFirstName,
-    bookerLastName,
-    extraInfo
-  } = data;
+const ReservationGeneralDetailsCard = ({
+  data,
+  className,
+  manageable = false
+}: ReservationDetailsCardProps) => {
+  const { status, name, frequency, endDate, bookerFirstName, bookerLastName } =
+    data;
   const statusData = reservationStatusMap.get(status);
 
   const reservationDetailsData = new Map([
-    ['Name', name],
     ['Booker', `${bookerFirstName} ${bookerLastName}`],
     ['Frequency', `${frequencyToDescriptionMap.get(frequency)}`],
     ['Status', `${statusData?.label}`],
@@ -44,8 +43,11 @@ const ReservationGeneralDetailsList = ({
   ]);
 
   return (
-    <>
-      <ListWrapper title="Details">
+    <Card className={clsx('flex flex-col', className)}>
+      <CardHeader>
+        <CardTitle>{name}</CardTitle>
+      </CardHeader>
+      <CardContent>
         {Array.from(reservationDetailsData).map(([key, value]) => (
           <LabeledTypography
             label={key}
@@ -59,14 +61,10 @@ const ReservationGeneralDetailsList = ({
             key={`ReservationDetails-${convertToCamelCase(key)}`}
           />
         ))}
-      </ListWrapper>
-      {extraInfo && (
-        <ListWrapper title="Extra Info">
-          <p className="text-xl">{extraInfo}</p>
-        </ListWrapper>
-      )}
-    </>
+        {manageable && <ReservationActions data={data} />}
+      </CardContent>
+    </Card>
   );
 };
 
-export default ReservationGeneralDetailsList;
+export default ReservationGeneralDetailsCard;

@@ -2,23 +2,23 @@ import { faCheck, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Listbox, Transition } from '@headlessui/react';
 import clsx from 'clsx';
-import { type Dispatch, Fragment, type SetStateAction } from 'react';
+import { Fragment } from 'react';
 
-type DropdownOption = { id: number; name: string };
+type DropdownOption<T> = { id: T; name: string };
 
-type DropdownProps = {
-  options: DropdownOption[];
-  value: DropdownOption | undefined;
+type DropdownProps<T> = {
+  options: DropdownOption<T>[];
+  value: DropdownOption<T> | undefined;
   className?: string;
-  onChange: Dispatch<SetStateAction<DropdownOption | undefined>>;
+  onChange: (value: DropdownOption<T>) => void;
 };
 
-const Dropdown = ({
+const Dropdown = <T,>({
   options,
   value,
   onChange,
   className = ''
-}: DropdownProps) => {
+}: DropdownProps<T>) => {
   return (
     <div className={`w-60 ${className}`}>
       <Listbox value={value} onChange={onChange}>
@@ -39,7 +39,7 @@ const Dropdown = ({
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+            <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
               {options.map((option, personIdx) => (
                 <Listbox.Option
                   key={personIdx}

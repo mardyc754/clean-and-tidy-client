@@ -1,13 +1,14 @@
 import clsx from 'clsx';
+import { useEffect } from 'react';
 import { useWatch } from 'react-hook-form';
 
 import type { TimeInterval } from '~/schemas/api/services';
 
 import { MediumTypography } from '~/components/atoms/typography/regular-text';
 import { Calendar } from '~/components/molecules/calendar';
+import type { CalendarProps } from '~/components/molecules/calendar/Calendar';
 import { HourSelection } from '~/components/molecules/form-fields';
 
-import { endOfDay, isSame, startOfDay } from '~/utils/dateUtils';
 import { getHourAvailabilityData } from '~/utils/serviceUtils';
 
 import type { ValidDate } from '~/types/forms';
@@ -16,14 +17,14 @@ type CalendarWithLabelProps = {
   calendarInputName: string;
   hourInputName: string;
   label: string;
-  busyHours: TimeInterval[];
+  busyHours?: TimeInterval[];
   currentDuration?: number;
   direction?: 'column' | 'row';
   onChangeHour?: (value: ValidDate) => void;
   onChangeDate?: (value: ValidDate) => void;
   dateErrorLabel?: string;
   hourErrorLabel?: string;
-};
+} & Omit<CalendarProps, 'name'>;
 
 const CalendarWithHours = ({
   label,
@@ -34,8 +35,9 @@ const CalendarWithHours = ({
   onChangeHour,
   dateErrorLabel,
   hourErrorLabel,
-  busyHours,
-  currentDuration
+  busyHours = [],
+  currentDuration = 0,
+  ...props
 }: CalendarWithLabelProps) => {
   const currentDate = useWatch({ name: calendarInputName }) as ValidDate;
 
@@ -52,11 +54,13 @@ const CalendarWithHours = ({
       <MediumTypography className="py-1">{label}</MediumTypography>
       <div
         className={clsx(
-          'flex',
-          direction === 'column' && 'flex-col items-center space-x-8 space-y-4'
+          'flex items-center',
+          'space-x-8',
+          direction === 'column' && 'flex-col space-y-4'
         )}
       >
         <Calendar
+          {...props}
           name={calendarInputName}
           onChange={onChangeDate}
           errorLabel={dateErrorLabel}

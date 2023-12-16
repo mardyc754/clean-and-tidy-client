@@ -1,11 +1,14 @@
-import { AllEmployeesQueryOptions } from '~/api/employee';
+import type { AllEmployeesQueryOptions } from '~/api/employee';
 import type {
   AllServicesQueryOptions,
+  EmployeeBusyHoursQueryOptions,
   ReservationQueryOptions,
   ServiceBusyHoursQueryOptions,
   ServiceQueryOptions,
   VisitQueryOptions
 } from '~/api/types';
+
+import type { Reservation, Visit } from '~/schemas/api/reservation';
 
 import type { Status } from '~/types/enums';
 
@@ -25,8 +28,8 @@ export const employee = {
   all: ['employees'] as const,
   filters: (filters?: AllEmployeesQueryOptions) =>
     [...employee.all, 'filters', { filters }] as const,
-  workingHours: (serviceId: number) =>
-    [...employee.all, 'workingHours', { serviceId }] as const,
+  workingHours: (options: EmployeeBusyHoursQueryOptions) =>
+    [...employee.all, 'workingHours', { ...options }] as const,
   find: (id: number) => [...employee.all, { id }] as const,
   findServices: (id: number) => [...employee.find(id), 'services'] as const
 };
@@ -34,7 +37,16 @@ export const employee = {
 export const reservation = {
   all: ['reservations'] as const,
   find: () => [...reservation.all, 'find'] as const,
-
+  byName: (reservationName: Reservation['name']) =>
+    [
+      ...reservation.find(),
+      reservationName,
+      {
+        includeVisits: true,
+        includeServices: true,
+        includeAddress: true
+      }
+    ] as const,
   client: (email: string) =>
     [...reservation.find(), 'client', { email }] as const,
   employee: (id: number) =>
@@ -59,7 +71,8 @@ export const visit = {
   detail: (id: number, options?: VisitQueryOptions) =>
     [...visit.details(), id, { options }] as const,
   reservationVisitDetail: (id: number) =>
-    [...reservation.details(), ...visit.detail(id)] as const
+    [...reservation.details(), ...visit.detail(id)] as const,
+  change: (id: Visit['id']) => [...visit.detail(id), 'change'] as const
 };
 
 export const service = {

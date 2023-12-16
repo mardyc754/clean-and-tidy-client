@@ -1,11 +1,14 @@
-import type { Reservation } from '~/schemas/api/reservation';
+import type {
+  Reservation,
+  ReservationWithVisits
+} from '~/schemas/api/reservation';
 
 import { createReservationTitle } from '~/utils/reservationUtils';
 
 import SectionWithButton from './SectionWithButton';
 
 interface ReservationDetailsProps {
-  data: Reservation;
+  data: ReservationWithVisits;
 }
 
 const ReservationField = ({ data }: ReservationDetailsProps) => {

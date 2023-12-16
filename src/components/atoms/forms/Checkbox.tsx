@@ -1,20 +1,17 @@
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { type InputHTMLAttributes } from 'react';
-import { useFormContext, useWatch } from 'react-hook-form';
+import { type InputHTMLAttributes, forwardRef } from 'react';
 
 import { Label } from '~/components/atoms/forms';
 import { Checkbox as ShadcnCheckbox } from '~/components/shadcn/ui/checkbox';
 
 interface CheckboxProps
   extends Omit<
-    InputHTMLAttributes<HTMLInputElement>,
+    InputHTMLAttributes<HTMLButtonElement>,
     'type' | 'onChange' | 'name'
   > {
   name: string;
   label?: string;
   caption: string;
-  onChange?: (value: boolean) => void;
+  // onChange?: (value: boolean) => void;
 }
 
 type CheckboxWrapperProps = {
@@ -39,70 +36,23 @@ const CheckboxWrapper = ({
     <>{children}</>
   );
 
-const Checkbox = ({
-  name,
-  label,
-  caption,
-  className = '',
-  onChange,
-  ...props
-}: CheckboxProps) => {
-  const { register, setValue } = useFormContext();
-
-  const checked = useWatch({ name }) as boolean;
-
-  const wrapperStyle = checked
-    ? 'bg-cyan-500'
-    : 'border-2 border-cyan-500 bg-transparent';
-
-  return (
-    <CheckboxWrapper name={name} label={label} className={className}>
-      <div className="flex items-center">
-        {/*
-        <div className={`relative h-6 w-6 rounded-lg ${wrapperStyle}`}>
-          {checked && (
-            <div
-              className="absolute left-0 top-0 flex h-6 w-6 place-content-center"
-              aria-hidden="true"
-            >
-              <FontAwesomeIcon
-                icon={faCheck}
-                className="h-4 w-4 place-self-center text-white"
-                aria-hidden="true"
-              />
-            </div>
-          )}
-          <input
-            {...props}
-            type="checkbox"
-            className="absolute top-0 h-6 w-6 cursor-pointer appearance-none rounded-lg"
-            defaultChecked={checked}
-            {...register(name, { value: false })}
-            onChange={() => {
-              const newValue = !checked;
-              setValue(name, newValue);
-              onChange?.(newValue);
-            }}
-          />
-        </div> */}
-
-        <ShadcnCheckbox
-          defaultChecked={checked}
-          {...register(name, { value: false })}
-          onClick={() => {
-            const newValue = !checked;
-            setValue(name, newValue);
-            onChange?.(newValue);
-          }}
-        />
-        <div className="p-1">
-          <label htmlFor={name} className="text-xs">
-            {caption}
-          </label>
+const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(
+  ({ name, label, caption, className = '', ...props }, ref) => {
+    return (
+      <CheckboxWrapper name={name} label={label} className={className}>
+        <div className="flex items-center">
+          <ShadcnCheckbox ref={ref} {...props} />
+          <div className="p-1">
+            <label htmlFor={name} className="text-xs">
+              {caption}
+            </label>
+          </div>
         </div>
-      </div>
-    </CheckboxWrapper>
-  );
-};
+      </CheckboxWrapper>
+    );
+  }
+);
+
+Checkbox.displayName = 'Checkbox';
 
 export default Checkbox;

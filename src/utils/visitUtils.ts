@@ -3,12 +3,16 @@ import { DETERGENT_COST } from '~/constants/primitives';
 
 import type { Employee } from '~/schemas/api/employee';
 import type {
+  ReservationWithExtendedVisits,
   Visit,
   VisitPart,
   VisitWithEmployees
 } from '~/schemas/api/reservation';
+import type { BasicServiceData } from '~/schemas/api/services';
 
 import { Status } from '~/types/enums';
+
+import { minutesBetween } from './dateUtils';
 
 export function getVisitEmployees(visit: VisitWithEmployees) {
   const { visitParts } = visit;
@@ -24,7 +28,8 @@ export function getVisitEmployees(visit: VisitWithEmployees) {
 }
 
 export function getVisitStartEndDates(visit: Visit) {
-  const visitParts = visit.visitParts.toSorted(
+  const visitParts = visit.visitParts;
+  visitParts.sort(
     (a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
   );
 
@@ -65,7 +70,7 @@ export const getCumulatedStatus = (statuses: Status[]) => {
       (status) => status === Status.CLOSED || status === Status.CANCELLED
     )
   ) {
-    return Status.CLOSED;
+    return statuses[0]!;
   }
 
   return Status.UNKNOWN;
@@ -103,4 +108,31 @@ export const getVisitEmployeesWithStatuses = (visit: VisitWithEmployees) => {
     employee: employee,
     status: getEmployeeStatusFromVisit(visit, employee.id)
   }));
+};
+
+export const getVisitDuration = (visit: VisitWithEmployees) => {
+  const { startDate, endDate } = getVisitStartEndDates(visit);
+
+  return minutesBetween(endDate, startDate);
+};
+
+export const getServicesWithNumberOfUnitsFromReservation = (
+  data: ReservationWithExtendedVisits
+) => {
+  const { visits, services } = data;
+  const visit = visits[0]!;
+  const servicesForVisit = Array.from(
+    new Set(visit.visitParts.map((visitPart) => visitPart.serviceId))
+  );
+
+  return servicesForVisit.map((serviceId) => {
+    const service = services.find((service) => service.id === serviceId)!;
+
+    return {
+      id: service.id,
+      numberOfUnits: visit.visitParts
+        .filter((visitPart) => visitPart.serviceId === serviceId)
+        .reduce((acc, visitPart) => acc + visitPart.numberOfUnits, 0)
+    };
+  });
 };

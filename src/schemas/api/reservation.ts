@@ -38,6 +38,7 @@ export const visitSchema = z.object({
   id: z.number().int(),
   name: z.string().max(100),
   includeDetergents: z.boolean(),
+  canDateBeChanged: z.boolean(),
   reservationId: z.number().int(),
   visitParts: z.array(visitPartSchema)
 });

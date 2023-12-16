@@ -1,20 +1,37 @@
-import type { GetStaticProps, InferGetServerSidePropsType } from 'next';
+import { type DehydratedState, dehydrate } from '@tanstack/react-query';
+import type {
+  GetServerSideProps,
+  GetStaticProps,
+  InferGetServerSidePropsType
+} from 'next';
 
-import { getAllReservations, getReservationByName } from '~/api/reservation';
+import { fetchReservationDetails } from '~/server/prefetchReservationData';
 
-import type { Reservation } from '~/schemas/api/reservation';
+import { getAllReservations } from '~/api/reservation';
+
+import type { ClientUser } from '~/schemas/api/auth';
+import type {
+  Reservation,
+  ReservationWithExtendedVisits
+} from '~/schemas/api/reservation';
 
 import { useAuth } from '~/hooks/auth/useAuth';
+import { useReservation } from '~/hooks/reservation/useReservation';
 
 import { Heading1 } from '~/components/atoms/typography/headings';
 import { ReservationDetails } from '~/components/organisms/data-display';
 import { PageWrapper } from '~/components/template';
 
+import { isClientUser } from '~/utils/userUtils';
+
 export default function ReservationPage({
-  data
-}: InferGetServerSidePropsType<typeof getStaticProps>) {
+  reservationData
+}: // }: InferGetServerSidePropsType<typeof getStaticProps>) {
+InferGetServerSidePropsType<typeof getStaticProps>) {
+  const { data } = useReservation(reservationData.name);
+
   const { hasAccess } = useAuth(
-    (user) => user.email === data?.bookerEmail,
+    (user) => user.email === reservationData.bookerEmail,
     true
   );
 
@@ -22,16 +39,19 @@ export default function ReservationPage({
     <PageWrapper title="Reservation details">
       <div className="p-16">
         <Heading1>Reservation details</Heading1>
-        <ReservationDetails data={data} manageable={hasAccess} />
+        <ReservationDetails
+          data={data ?? reservationData}
+          manageable={hasAccess}
+        />
       </div>
     </PageWrapper>
   );
 }
 
 // export const getServerSideProps = (async (ctx) => {
-//   const initialData = await fetchUserData(ctx);
+//   const initialData = await fetchReservationDetails(ctx);
 
-//   const { userData, dehydratedState } = initialData;
+//   const { userData, dehydratedState, reservationData } = initialData;
 
 //   if (!isClientUser(userData)) {
 //     return {
@@ -42,15 +62,23 @@ export default function ReservationPage({
 //     };
 //   }
 
+//   if (!reservationData || Object.keys(reservationData).length === 0) {
+//     return {
+//       notFound: true
+//     };
+//   }
+
 //   return {
 //     props: {
 //       userData,
-//       dehydratedState
+//       dehydratedState,
+//       reservationData: reservationData as ReservationWithExtendedVisits
 //     }
 //   };
 // }) satisfies GetServerSideProps<{
 //   dehydratedState: DehydratedState;
 //   userData: ClientUser;
+//   reservationData: ReservationWithExtendedVisits;
 // }>;
 
 export const getStaticPaths = async () => {
@@ -78,18 +106,20 @@ export const getStaticProps = (async ({ params }) => {
     };
   }
 
-  let data: Reservation | null = null;
+  const { reservationData, dehydratedState } = await fetchReservationDetails(
+    params.id as string
+  );
 
-  try {
-    data = await getReservationByName(params.id as string);
-  } catch (error) {
+  if (!reservationData || Object.keys(reservationData).length === 0) {
     return {
       notFound: true
     };
   }
+
   return {
     props: {
-      data
+      reservationData,
+      dehydratedState
     }
   };
-}) satisfies GetStaticProps<{ data: Reservation | null }>;
+}) satisfies GetStaticProps<{ reservationData: ReservationWithExtendedVisits }>;

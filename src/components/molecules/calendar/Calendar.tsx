@@ -16,16 +16,13 @@ import { type ValidDayjsDate, isTheSameDay, nextDay } from '~/utils/dateUtils';
 
 import type { ValidDate } from '~/types/forms';
 
-type CalendarProps = {
+export type CalendarProps = {
   name: string;
   errorLabel?: string;
   defaultValue?: ValidDate;
   busyDays?: Timeslot[];
   onChange?: (value: ValidDate) => void;
-} & Omit<
-  ShadcnCalendarProps,
-  'selected' | 'onDayClick' | 'mode' | 'disabled' | 'fromMonth'
->;
+} & Omit<ShadcnCalendarProps, 'selected' | 'onDayClick' | 'mode' | 'disabled'>;
 
 const Calendar = ({
   name,
@@ -33,6 +30,8 @@ const Calendar = ({
   onChange,
   defaultValue,
   busyDays,
+  fromDate,
+  fromMonth,
   ...props
 }: CalendarProps) => {
   const { register, setValue, getValues } = useFormContext();
@@ -56,7 +55,7 @@ const Calendar = ({
       <ShadcnCalendar
         ISOWeek
         disabled={[
-          { before: nextDay(new Date()) },
+          { before: fromDate ? new Date(fromDate) : nextDay(new Date()) },
           ...holidayDates,
           ...(busyDays ?? []).map((busyDay) => new Date(busyDay.startDate))
           // to: new Date(busyDay.endDate)
@@ -72,7 +71,7 @@ const Calendar = ({
             (getValues(name) as ValidDayjsDate) ?? defaultValue
           );
         }}
-        fromMonth={nextDay(new Date())}
+        fromMonth={fromMonth ?? nextDay(new Date())}
         onMonthChange={(month) => {
           setCurrentMonth(month);
         }}

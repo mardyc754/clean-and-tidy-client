@@ -52,11 +52,10 @@ import type { User } from '~/schemas/api/auth';
 //   };
 // };
 
-export const prefetchUserData = async (context: GetServerSidePropsContext) => {
-  const queryClient = new QueryClient();
-
-  const req = context.req;
-
+export const prefetchUserQuery = async (
+  ctx: GetServerSidePropsContext,
+  queryClient: QueryClient
+) => {
   await queryClient.prefetchQuery({
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: user,
@@ -64,23 +63,20 @@ export const prefetchUserData = async (context: GetServerSidePropsContext) => {
       const res = await fetcher.get<AxiosResponse<User>>('auth/user', {
         withCredentials: true,
         headers: {
-          Cookie: req.headers.cookie
+          Cookie: ctx.req.headers.cookie
         }
       });
 
       return res.data;
     }
   });
-
-  return {
-    dehydratedState: dehydrate(queryClient)
-  };
 };
 
-export const fetchUserData = async (context: GetServerSidePropsContext) => {
-  const queryClient = new QueryClient();
-
-  const req = context.req;
+export const fetchUserQuery = async (
+  ctx: GetServerSidePropsContext,
+  queryClient: QueryClient
+) => {
+  const req = ctx.req;
 
   let userData: User | undefined;
   try {
@@ -101,6 +97,24 @@ export const fetchUserData = async (context: GetServerSidePropsContext) => {
   } catch (error) {
     console.error(error);
   }
+
+  return userData;
+};
+
+export const prefetchUserData = async (context: GetServerSidePropsContext) => {
+  const queryClient = new QueryClient();
+
+  await prefetchUserQuery(context, queryClient);
+
+  return {
+    dehydratedState: dehydrate(queryClient)
+  };
+};
+
+export const fetchUserData = async (context: GetServerSidePropsContext) => {
+  const queryClient = new QueryClient();
+
+  const userData = await fetchUserQuery(context, queryClient);
 
   return {
     dehydratedState: dehydrate(queryClient),

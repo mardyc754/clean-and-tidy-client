@@ -12,7 +12,7 @@ import {
   DialogTrigger as DialogTriggerBase
 } from '~/components/shadcn/ui/dialog';
 
-interface DialogTriggerButtonProps {
+export interface DialogTriggerButtonProps extends ButtonProps {
   buttonLabel: string;
   className?: string;
   dialogTitle?: string;
@@ -69,13 +69,14 @@ const DialogTriggerButton = ({
   dialogTitle,
   dialogDescription,
   className,
-  children
+  children,
+  ...props
 }: // actions
 DialogTriggerButtonProps) => {
   return (
     <Dialog>
       <DialogTriggerBase asChild>
-        <Button>{buttonLabel}</Button>
+        <Button {...props}>{buttonLabel}</Button>
       </DialogTriggerBase>
       <DialogContent className={clsx('sm:max-w-[425px]', className)}>
         <DialogHeader>

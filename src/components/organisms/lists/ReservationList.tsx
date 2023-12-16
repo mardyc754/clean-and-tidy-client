@@ -1,11 +1,11 @@
-import type { Reservation } from '~/schemas/api/reservation';
+import type { ReservationWithVisits } from '~/schemas/api/reservation';
 
 import { ReservationField } from '~/components/organisms/button-fields';
 
 import ListWrapper from '../wrappers/ListWrapper';
 
 interface ReservationListProps {
-  data: Reservation[];
+  data: ReservationWithVisits[];
 }
 
 const ReservationList = ({ data }: ReservationListProps) => {
