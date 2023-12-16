@@ -12,7 +12,7 @@ import { useEmployeeVisits } from '~/hooks/employee/useEmployeeVisits';
 import { Spinner } from '~/components/molecules/status-indicators';
 import { EmployeeTable } from '~/components/organisms/data-display';
 import { ReservationToConfirmList } from '~/components/organisms/lists';
-import { Scheduler } from '~/components/organisms/scheduler';
+import { AdminScheduler, Scheduler } from '~/components/organisms/scheduler';
 import { ProfilePageTemplate } from '~/components/template';
 
 import { daysBetween } from '~/utils/dateUtils';
@@ -31,16 +31,8 @@ export default function AdminProfile({
 
   const { employeeList } = useEmployeeListWithVisits();
 
-  const reservationsTimeslot = useMemo(() => {
-    const visits = getEventsFromEmployees(employeeList ?? []);
-    if (!visits) return;
-
-    return daysBetween(getMaxEndDateFromReservationVisits(visits), new Date());
-  }, [employeeList]);
-
   return (
     <ProfilePageTemplate
-      visits={getEventsFromEmployees(employeeList ?? [])}
       userData={userData}
       slots={[
         {
@@ -56,10 +48,9 @@ export default function AdminProfile({
           name: 'Employee visit calendar',
           Content: () =>
             !isLoading ? (
-              <Scheduler
+              <AdminScheduler
                 className="w-full"
-                events={getEventsFromEmployees(employeeList ?? [])}
-                length={reservationsTimeslot}
+                employeeList={getEventsFromEmployees(employeeList ?? [])}
               />
             ) : (
               <Spinner caption="Loading events..." />

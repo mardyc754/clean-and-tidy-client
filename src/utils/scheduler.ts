@@ -1,11 +1,9 @@
+import { omit } from 'lodash';
+
 import type {
   EmployeeWithVisits,
   ReservationWithVisits,
   VisitPartWithServiceAndReservation
-} from '~/schemas/api/reservation';
-import type {
-  ReservationWithExtendedVisits,
-  VisitWithReservation
 } from '~/schemas/api/reservation';
 
 import type { VisitEvent } from '~/components/organisms/scheduler/Scheduler';
@@ -52,39 +50,16 @@ export const getEventsFromVisitParts = (
   });
 };
 
-// export const getEventsFromEmployees = (employees: EmployeeWithVisits[]) => {
-//   return employees.flatMap((employee) => {
-//     const employeeVisits = employee.visits.flatMap(({ visit }) => visit);
-//     return employeeVisits.map((visit) => ({
-//       title: createReservationTitleForAdmin(employee, visit.reservation),
-//       start: convertISOStringToDate(visit.startDate),
-//       end: convertISOStringToDate(visit.endDate),
-//       resource: { visitId: visit.id }
-//     }));
-//   });
-// };
-
 export const getEventsFromEmployees = (employees: EmployeeWithVisits[]) => {
-  return employees.flatMap((employee) => {
-    return employee.visitParts.map((visit) => ({
+  return employees.map((employee) => ({
+    ...omit(employee, 'visitParts'),
+    visits: employee.visitParts.map((visit) => ({
       title: createVisitPartTitleForAdmin(employee, visit),
       start: convertISOStringToDate(visit.startDate),
       end: convertISOStringToDate(visit.endDate),
       resource: { visitId: visit.id }
-    }));
-  });
-};
-
-export const getMaxEndDateFromReservations = (
-  reservations: ReservationWithExtendedVisits[]
-) => {
-  const visits = reservations.flatMap((reservation) => reservation.visits);
-
-  const dates = visits.map((visit) => visit?.endDate);
-
-  const maxDate = Math.max(...dates.map((date) => new Date(date).getTime()));
-
-  return new Date(maxDate);
+    }))
+  }));
 };
 
 export const getMaxEndDateFromReservationVisits = (visits: VisitEvent[]) => {

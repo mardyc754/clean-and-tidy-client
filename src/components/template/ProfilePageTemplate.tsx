@@ -16,21 +16,21 @@ import { Tabs } from '../organisms/tabs';
 import type { TabsSlot } from '../organisms/tabs/Tabs';
 
 type ProfilePageTemplateProps = {
-  visits: VisitEvent[];
+  // visits: VisitEvent[];
   userData: AuthenticatedUser;
   slots: TabsSlot[];
 };
 
 const ProfilePageTemplate = ({
-  visits,
+  // visits,
   userData,
   slots
 }: ProfilePageTemplateProps) => {
-  const reservationsTimeslot = useMemo(() => {
-    if (!visits) return;
+  // const reservationsTimeslot = useMemo(() => {
+  //   if (!visits) return;
 
-    return daysBetween(getMaxEndDateFromReservationVisits(visits), new Date());
-  }, [visits]);
+  //   return daysBetween(getMaxEndDateFromReservationVisits(visits), new Date());
+  // }, [visits]);
 
   return (
     <PageWrapper title="Your profile">

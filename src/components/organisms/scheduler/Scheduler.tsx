@@ -16,6 +16,8 @@ import { dateWithHour } from '~/utils/dateUtils';
 
 import { VisitDetailsDialog } from '../dialogs';
 
+export type SchedulerProps = Omit<CalendarProps<VisitEvent>, 'localizer'>;
+
 function getRandomBackgroudColor() {
   const colors = [
     'bg-red-500',
@@ -108,10 +110,7 @@ function EventAgenda({ event }: EventProps) {
  * ```
  * @param props the props that can be used with react-big-calendar's Calendar component
  */
-const Scheduler = ({
-  className,
-  ...props
-}: Omit<CalendarProps<VisitEvent>, 'localizer'>) => {
+const Scheduler = ({ className, ...props }: SchedulerProps) => {
   const { components } = useMemo(
     () => ({
       components: {
