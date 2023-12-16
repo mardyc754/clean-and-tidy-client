@@ -12,7 +12,7 @@ import {
   DialogTrigger as DialogTriggerBase
 } from '~/components/shadcn/ui/dialog';
 
-interface DialogTriggerButtonProps extends ButtonProps {
+export interface DialogTriggerButtonProps extends ButtonProps {
   buttonLabel: string;
   className?: string;
   dialogTitle?: string;

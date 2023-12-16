@@ -15,9 +15,13 @@ import {
   isAtLeastOneDayBetween
 } from '~/utils/dateUtils';
 
-import { DialogTriggerButton } from '.';
+import DialogTriggerButton, {
+  type DialogTriggerButtonProps
+} from './DialogTriggerButton';
 
-const CancelVisitButton = () => {
+const CancelVisitButton = (
+  props: Omit<DialogTriggerButtonProps, 'buttonLabel' | 'children'>
+) => {
   const queryClient = useQueryClient();
 
   const { visitData, reservationData } = useContext(VisitDataContext);
@@ -51,6 +55,7 @@ const CancelVisitButton = () => {
 
   return (
     <DialogTriggerButton
+      {...props}
       dialogTitle="Confirm visit cancellation"
       buttonLabel="Cancel visit"
       color="danger"
