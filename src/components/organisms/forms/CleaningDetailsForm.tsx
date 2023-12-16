@@ -9,15 +9,9 @@ import { useCleaningDetailsForm } from '~/hooks/orderServiceForm/useCleaningDeta
 import { useOrderServiceFormNavigation } from '~/hooks/orderServiceForm/useOrderServiceFormNavigation';
 import { useServicesBusyHours } from '~/hooks/orderServiceForm/useServicesBusyHours';
 
-import { Checkbox, NumericInput } from '~/components/atoms/forms';
+import { FormCheckbox, NumericInput } from '~/components/atoms/forms';
 
-import {
-  endOfWeek,
-  extractYearAndMonthFromDateToString,
-  startOfWeek
-} from '~/utils/dateUtils';
-
-import type { TimeRange } from '~/types/forms';
+import { extractYearAndMonthFromDateToString } from '~/utils/dateUtils';
 
 import {
   CalendarWithHours,
@@ -124,7 +118,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
               errorLabel={errors.cleaningFrequency?.message}
             />
           )}
-          <Checkbox
+          <FormCheckbox
             name="includeDetergents"
             label="Detergents"
             caption={`Include detergents (+${DETERGENT_COST}zł)`}

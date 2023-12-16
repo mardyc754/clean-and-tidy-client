@@ -1,11 +1,17 @@
 import clsx from 'clsx';
 import { omit } from 'lodash';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 import type { ReservationWithExtendedVisits } from '~/schemas/api/reservation';
 
+import { Checkbox } from '~/components/atoms/forms';
 import { Heading3 } from '~/components/atoms/typography/headings';
+import { Dropdown } from '~/components/molecules/form-fields';
 import { VisitDisclosure } from '~/components/organisms/disclosures';
+
+import { getStatusFromVisitParts } from '~/utils/visitUtils';
+
+import { Status } from '~/types/enums';
 
 import { ReservationGeneralDetailsCard, ServiceCard } from '../cards';
 
@@ -15,20 +21,60 @@ interface ReservationDetailsProps {
   expandVisitDetails?: boolean;
 }
 
+type VisitFilterOption = 'all' | 'upcoming' | 'past';
+
+const visitFilterOptions = [
+  { id: 'upcoming', name: 'Upcoming' },
+  { id: 'all', name: 'All' },
+  { id: 'past', name: 'Past' }
+];
+
+function filterVisits(
+  visits: ReservationWithExtendedVisits['visits'],
+  filterOption: VisitFilterOption
+) {
+  const now = new Date();
+  switch (filterOption) {
+    case 'all':
+      return visits;
+    case 'upcoming':
+      return visits.filter(
+        (visit) => new Date(visit.visitParts[0]!.startDate) > now
+      );
+    case 'past':
+      return visits.filter(
+        (visit) => new Date(visit.visitParts[0]!.startDate) < now
+      );
+  }
+}
+
 const ReservationDetails = ({
   data,
   manageable = false,
   expandVisitDetails = false
 }: ReservationDetailsProps) => {
+  const [filterOption, setFilterOption] = useState(visitFilterOptions[0]!);
+  const [showCancelled, setShowCancelled] = useState(false);
+
   const visits = useMemo(() => {
-    const sortedVisits = data.visits ?? [];
+    const sortedVisits =
+      filterVisits(data.visits, filterOption.id as VisitFilterOption) ?? [];
+
     sortedVisits.sort(
       (a, b) =>
         (new Date(a.visitParts[0]!.startDate).getTime() ?? -Infinity) -
         (new Date(b.visitParts[0]!.startDate).getTime() ?? -Infinity)
     );
+
+    if (!showCancelled) {
+      return sortedVisits.filter(
+        (visit) =>
+          getStatusFromVisitParts(visit.visitParts) !== Status.CANCELLED
+      );
+    }
+
     return sortedVisits;
-  }, [data.visits]);
+  }, [data.visits, filterOption, showCancelled]);
 
   const services = useMemo(() => data.services ?? [], [data.services]);
 
@@ -47,7 +93,23 @@ const ReservationDetails = ({
         <ServiceCard data={services} />
       </div>
 
-      <Heading3>Visits</Heading3>
+      <div className="flex items-center justify-between">
+        <Heading3>Visits</Heading3>
+        <div className="flex space-x-4">
+          <Checkbox
+            name="showCancelled"
+            caption={`Show cancelled visits`}
+            onClick={() => {
+              setShowCancelled((prev) => !prev);
+            }}
+          />
+          <Dropdown
+            onChange={setFilterOption}
+            value={filterOption}
+            options={visitFilterOptions}
+          />
+        </div>
+      </div>
       <div className="flex flex-col gap-8 py-8">
         {visits.map((visit, i) => {
           return (
