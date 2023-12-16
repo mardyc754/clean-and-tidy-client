@@ -9,7 +9,10 @@ import { Heading3 } from '~/components/atoms/typography/headings';
 import { Dropdown } from '~/components/molecules/form-fields';
 import { VisitDisclosure } from '~/components/organisms/disclosures';
 
-import { getStatusFromVisitParts } from '~/utils/visitUtils';
+import {
+  getServicesWithNumberOfUnitsFromVisit,
+  getStatusFromVisitParts
+} from '~/utils/visitUtils';
 
 import { Status } from '~/types/enums';
 
@@ -90,7 +93,10 @@ const ReservationDetails = ({
           data={data}
           manageable={manageable}
         />
-        <ServiceCard data={services} />
+        <ServiceCard
+          data={services}
+          units={getServicesWithNumberOfUnitsFromVisit(visits[0]!, services)}
+        />
       </div>
 
       <div className="flex items-center justify-between">

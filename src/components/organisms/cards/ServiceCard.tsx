@@ -1,32 +1,42 @@
 import * as React from 'react';
 
+import type { VisitPart } from '~/schemas/api/reservation';
 import type { ServiceForVisitPart } from '~/schemas/api/services';
+import type { Service } from '~/schemas/api/services';
 
 import { LabeledTypography } from '~/components/atoms/typography/labeled-text';
-import { Button } from '~/components/shadcn/ui/button';
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle
 } from '~/components/shadcn/ui/card';
 
 import { convertToCamelCase } from '~/utils/stringUtils';
 
+type ServiceWithNumberOfUnits = {
+  id: Service['id'];
+  numberOfUnits: VisitPart['numberOfUnits'];
+};
 interface UserProfileCardProps {
   data: ServiceForVisitPart[];
+  units: ServiceWithNumberOfUnits[];
 }
 
-const ServiceCard = ({ data }: UserProfileCardProps) => {
+const ServiceCard = ({ data, units }: UserProfileCardProps) => {
   const mainService = data.find(
     (service) => service.isMainServiceForReservation
   );
+  const mainServiceNumberOfUnits =
+    units.find((unit) => unit.id === mainService?.id)?.numberOfUnits ?? 0;
 
-  const secondaryServices = data.filter(
-    (service) => !service.isMainServiceForReservation
-  );
+  const secondaryServices = data
+    .filter((service) => !service.isMainServiceForReservation)
+    .map((service) => ({
+      service: service,
+      numberOfUnits:
+        units.find((unit) => unit.id === service.id)?.numberOfUnits ?? 0
+    }));
 
   return (
     <Card className="flex flex-col">
@@ -38,8 +48,8 @@ const ServiceCard = ({ data }: UserProfileCardProps) => {
           <LabeledTypography
             label={mainService.name}
             value={
-              mainService.numberOfUnits > 0
-                ? `${mainService.numberOfUnits} x ${mainService.unit?.shortName}`
+              mainServiceNumberOfUnits > 0
+                ? `${mainServiceNumberOfUnits} ${mainService.unit?.shortName}`
                 : ''
             }
             contentDistribution="horizontal"
@@ -47,15 +57,15 @@ const ServiceCard = ({ data }: UserProfileCardProps) => {
             valueClasses={'text-xl font-emphasize'}
           />
         )}
-        {secondaryServices.map((serviceData, i) => (
+        {secondaryServices.map(({ service, numberOfUnits }, i) => (
           <LabeledTypography
-            label={serviceData.name}
-            value={`x ${serviceData.numberOfUnits}`}
+            label={service.name}
+            value={`x ${numberOfUnits}`}
             contentDistribution="horizontal"
             labelClasses={'text-lg'}
             valueClasses={'text-lg font-sans'}
             key={`OrderedServices-secondary-${convertToCamelCase(
-              serviceData.name
+              service.name
             )}-${i}`}
           />
         ))}

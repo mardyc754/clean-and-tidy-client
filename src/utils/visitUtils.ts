@@ -7,6 +7,7 @@ import type {
   VisitPart,
   VisitWithEmployees
 } from '~/schemas/api/reservation';
+import type { BasicServiceData } from '~/schemas/api/services';
 
 import { Status } from '~/types/enums';
 
@@ -112,4 +113,24 @@ export const getVisitDuration = (visit: VisitWithEmployees) => {
   const { startDate, endDate } = getVisitStartEndDates(visit);
 
   return minutesBetween(endDate, startDate);
+};
+
+export const getServicesWithNumberOfUnitsFromVisit = (
+  visit: Visit,
+  services: BasicServiceData[]
+) => {
+  const servicesForVisit = Array.from(
+    new Set(visit.visitParts.map((visitPart) => visitPart.serviceId))
+  );
+
+  return servicesForVisit.map((serviceId) => {
+    const service = services.find((service) => service.id === serviceId)!;
+
+    return {
+      id: service.id,
+      numberOfUnits: visit.visitParts
+        .filter((visitPart) => visitPart.serviceId === serviceId)
+        .reduce((acc, visitPart) => acc + visitPart.numberOfUnits, 0)
+    };
+  });
 };
