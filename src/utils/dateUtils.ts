@@ -10,12 +10,8 @@ import dayjs from '~/lib/dayjs';
 import type { CleaningFrequency } from '~/types/enums';
 
 export type ValidDayjsDate =
-  | dayjs.Dayjs
-  | Date
-  | string
-  | number
-  | null
-  | undefined;
+  // | dayjs.Dayjs
+  Date | string | number | null | undefined;
 
 export function extractDateStringFromDate(date: ValidDayjsDate) {
   return date ? dayjs(date).format('DD.MM.YYYY') : '--.--.----';
@@ -248,20 +244,11 @@ export const getDaysBetween = (
 export const getYearFromDate = (date: ValidDayjsDate) => dayjs(date).year();
 
 export const getClosestDateFromNow = (dates: ValidDayjsDate[]) => {
-  const now = dayjs();
+  const now = dayjs().toDate();
   const futureDates = dates.filter((date) => isAfter(date, now));
-
   futureDates.sort((a, b) => getTime(a) - getTime(b));
 
   return futureDates[0];
-  // const closestDate = futureDates.reduce((closest, date) => {
-  //   const dateDiff = Math.abs(dayjs(date).diff(now));
-  //   const closestDiff = Math.abs(dayjs(closest).diff(now));
-
-  //   return dateDiff < closestDiff ? date : closest;
-  // });
-
-  // return closestDate;
 };
 
 export const extractYearAndMonthFromDateToString = (date: ValidDayjsDate) => {

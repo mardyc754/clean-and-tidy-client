@@ -13,7 +13,8 @@ const ReservationActions = ({ data }: ReservationActionsProps) => {
   return (
     <ListWrapper title="Actions">
       <div className="flex space-x-4 pt-4">
-        <Button>Change reservation general data</Button>
+        {/* TODO */}
+        {/* <Button>Change reservation general data</Button> */}
         <CancelReservationButton reservationName={data.name} />
       </div>
     </ListWrapper>
