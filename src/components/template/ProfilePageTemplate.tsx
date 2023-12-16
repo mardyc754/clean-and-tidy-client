@@ -16,16 +16,10 @@ import { Tabs } from '../organisms/tabs';
 import type { TabsSlot } from '../organisms/tabs/Tabs';
 
 type ProfilePageTemplateProps = {
-  // visits: VisitEvent[];
-  userData: AuthenticatedUser;
   slots: TabsSlot[];
 };
 
-const ProfilePageTemplate = ({
-  // visits,
-  userData,
-  slots
-}: ProfilePageTemplateProps) => {
+const ProfilePageTemplate = ({ slots }: ProfilePageTemplateProps) => {
   // const reservationsTimeslot = useMemo(() => {
   //   if (!visits) return;
 
@@ -42,7 +36,7 @@ const ProfilePageTemplate = ({
               ...slots,
               {
                 name: 'Profile Data',
-                Content: () => <UserProfileCard data={userData} />
+                Content: () => <UserProfileCard />
               }
             ]}
           />

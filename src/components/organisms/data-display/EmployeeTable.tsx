@@ -21,12 +21,10 @@ function createEmployeeRows(data: Employee[]) {
       id: employee.id,
       employeeFullName: `${employee.firstName} ${employee.lastName}`,
       email: employee.email,
-      workingHours: displayDatesAsTimeslot(
-        employee.startHour,
-        employee.endHour
-      ),
+      phone: employee.phone ? employee.phone : '---',
       // isAdmin: employee.isAdmin
-      isAdmin: employee.isAdmin ? 'Yes' : 'No'
+      isAdmin: employee.isAdmin ? 'Yes' : 'No',
+      actions: <ManageEmployeeDialog employeeData={employee} />
     };
   });
 }
@@ -36,14 +34,7 @@ interface EmployeeTableProps {
 }
 
 const EmployeeTable = ({ data }: EmployeeTableProps) => {
-  const columns = [
-    'Id',
-    'Employee',
-    'Email',
-    'Working hours',
-    'Is admin',
-    'Actions'
-  ];
+  const columns = ['Id', 'Employee', 'Email', 'Phone', 'Is admin', 'Actions'];
 
   const rows = createEmployeeRows(data);
 
@@ -64,7 +55,7 @@ const EmployeeTable = ({ data }: EmployeeTableProps) => {
           </TableHeader>
           <TableBody>
             {rows?.length ? (
-              rows.map((row, index) => (
+              rows.map((row) => (
                 <TableRow key={`employeeList-row-body-${row.id}`}>
                   {Object.values(row).map((cell, i) => (
                     <TableCell
@@ -73,9 +64,6 @@ const EmployeeTable = ({ data }: EmployeeTableProps) => {
                       {cell}
                     </TableCell>
                   ))}
-                  <TableCell>
-                    <ManageEmployeeDialog employeeData={data[index]!} />
-                  </TableCell>
                 </TableRow>
               ))
             ) : (

@@ -23,6 +23,7 @@ const Textfield = ({
   errorLabel,
   defaultValue,
   onChange,
+  className,
   ...props
 }: TextfieldProps) => {
   const { register, setValue } = useFormContext();
@@ -46,8 +47,8 @@ const Textfield = ({
           setValue(name, newValue);
           onChange?.(newValue);
         }}
+        className={clsx('border-2 border-muted p-2 shadow-sm', className)}
         {...props}
-        className="p-4 shadow-sm"
       />
       <ErrorLabel>{errorLabel ?? ''}</ErrorLabel>
     </div>

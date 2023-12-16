@@ -35,8 +35,6 @@ export default function EmployeeProfile({
 
   return (
     <ProfilePageTemplate
-      visits={visitEvents}
-      userData={userData}
       slots={[
         {
           name: 'Awaiting reservations',

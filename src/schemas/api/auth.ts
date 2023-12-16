@@ -15,9 +15,7 @@ export const registrationSuccess = z.object({
 
 export const registrationError = basicError.merge(
   z.object({
-    affectedField: z
-      .union([z.literal('username'), z.literal('email')])
-      .optional()
+    affectedField: z.literal('email').optional()
   })
 );
 

@@ -2,8 +2,7 @@ import { FormProvider } from 'react-hook-form';
 
 import { useLogin } from '~/hooks/auth/useLogin';
 
-import { SubmitButton } from '~/components/atoms/buttons';
-import { RegularLink } from '~/components/atoms/links';
+import { Button } from '~/components/atoms/buttons';
 import { Textfield } from '~/components/molecules/form-fields';
 
 interface LoginFormProps {
@@ -18,32 +17,30 @@ const LoginForm = ({ redirectOnSuccessHandler }: LoginFormProps) => {
   } = methods;
 
   return (
-    <>
-      <FormProvider {...methods}>
-        <form
-          className="grid grid-rows-3 items-center gap-y-4 self-stretch px-16 py-8"
-          onSubmit={onSubmit}
-        >
-          <Textfield
-            name="email"
-            label="Email"
-            type="email"
-            errorLabel={errors.email?.message}
-          />
-          <Textfield
-            name="password"
-            label="Password"
-            type="password"
-            errorLabel={errors.password?.message}
-          />
-          <SubmitButton name="Login" disabled={isSubmitting} />
-        </form>
-      </FormProvider>
-      <p>
-        {`Don't have an account? `}
-        <RegularLink href="/register">Register here</RegularLink>
-      </p>
-    </>
+    <FormProvider {...methods}>
+      <form
+        className="grid w-full max-w-lg grid-rows-3 items-center space-y-1  px-16 py-8"
+        onSubmit={onSubmit}
+      >
+        <Textfield
+          name="email"
+          label="Email"
+          type="email"
+          errorLabel={errors.email?.message}
+        />
+        <Textfield
+          name="password"
+          label="Password"
+          type="password"
+          errorLabel={errors.password?.message}
+        />
+        <div className="flex items-center justify-center py-4">
+          <Button type="submit" disabled={isSubmitting} className="w-40">
+            Login
+          </Button>
+        </div>
+      </form>
+    </FormProvider>
   );
 };
 

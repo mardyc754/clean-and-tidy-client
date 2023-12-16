@@ -46,8 +46,6 @@ export default function ClientProfile({
 
   return (
     <ProfilePageTemplate
-      visits={visits}
-      userData={userData}
       slots={[
         {
           name: 'Your Reservations',

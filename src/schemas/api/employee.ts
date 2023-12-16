@@ -2,15 +2,12 @@ import { z } from 'zod';
 
 import { Status } from '~/types/enums';
 
-import { ISOString } from '../common';
-
 export const employeeSchema = z.object({
   id: z.number().int(),
   firstName: z.string().max(50),
   lastName: z.string().max(50),
+  phone: z.string().max(15).nullish(),
   email: z.string().email().max(100),
-  startHour: ISOString,
-  endHour: ISOString,
   isAdmin: z.boolean()
 });
 

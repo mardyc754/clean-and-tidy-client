@@ -1,6 +1,5 @@
 import { type DehydratedState } from '@tanstack/react-query';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import { useMemo } from 'react';
 
 import { fetchUserData } from '~/server/prefetchUserData';
 
@@ -12,14 +11,10 @@ import { useEmployeeVisits } from '~/hooks/employee/useEmployeeVisits';
 import { Spinner } from '~/components/molecules/status-indicators';
 import { EmployeeTable } from '~/components/organisms/data-display';
 import { ReservationToConfirmList } from '~/components/organisms/lists';
-import { AdminScheduler, Scheduler } from '~/components/organisms/scheduler';
+import { AdminScheduler } from '~/components/organisms/scheduler';
 import { ProfilePageTemplate } from '~/components/template';
 
-import { daysBetween } from '~/utils/dateUtils';
-import {
-  getEventsFromEmployees,
-  getMaxEndDateFromReservationVisits
-} from '~/utils/scheduler';
+import { getEventsFromEmployees } from '~/utils/scheduler';
 import { isAdminUser } from '~/utils/userUtils';
 
 export default function AdminProfile({
@@ -33,7 +28,6 @@ export default function AdminProfile({
 
   return (
     <ProfilePageTemplate
-      userData={userData}
       slots={[
         {
           name: 'Awaiting reservations',
