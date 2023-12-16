@@ -10,10 +10,16 @@ import { getClientReservations } from '~/api/client';
 
 import type { ClientUser } from '~/schemas/api/auth';
 
+import { Spinner } from '~/components/molecules/status-indicators';
 import { ReservationTable } from '~/components/organisms/data-display';
+import { Scheduler } from '~/components/organisms/scheduler';
 import { ProfilePageTemplate } from '~/components/template';
 
-import { getEventsFromReservation } from '~/utils/scheduler';
+import { daysBetween } from '~/utils/dateUtils';
+import {
+  getEventsFromReservation,
+  getMaxEndDateFromReservationVisits
+} from '~/utils/scheduler';
 import { isClientUser } from '~/utils/userUtils';
 
 export default function ClientProfile({
@@ -24,7 +30,7 @@ export default function ClientProfile({
     queryFn: () => getClientReservations(userData.id)
   });
 
-  const visitEvents = useMemo(() => {
+  const visits = useMemo(() => {
     if (!reservationList) return [];
 
     return reservationList.flatMap((reservation) =>
@@ -32,15 +38,36 @@ export default function ClientProfile({
     );
   }, [reservationList]);
 
+  const reservationsTimeslot = useMemo(() => {
+    if (!visits) return;
+
+    return daysBetween(getMaxEndDateFromReservationVisits(visits), new Date());
+  }, [visits]);
+
   return (
     <ProfilePageTemplate
-      visits={visitEvents}
+      visits={visits}
       userData={userData}
-      isLoadingEvents={isLoading}
-    >
-      {/* <ReservationList data={reservationList ?? []} /> */}
-      <ReservationTable data={reservationList ?? []} />
-    </ProfilePageTemplate>
+      slots={[
+        {
+          name: 'Your Reservations',
+          Content: () => <ReservationTable data={reservationList ?? []} />
+        },
+        {
+          name: 'Visit calendar',
+          Content: () =>
+            !isLoading ? (
+              <Scheduler
+                className="w-full"
+                events={visits}
+                length={reservationsTimeslot}
+              />
+            ) : (
+              <Spinner caption="Loading events..." />
+            )
+        }
+      ]}
+    />
   );
 }
 
