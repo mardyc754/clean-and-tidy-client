@@ -10,7 +10,7 @@ import { Dropdown } from '~/components/molecules/form-fields';
 import { VisitDisclosure } from '~/components/organisms/disclosures';
 
 import {
-  getServicesWithNumberOfUnitsFromVisit,
+  getServicesWithNumberOfUnitsFromReservation,
   getStatusFromVisitParts
 } from '~/utils/visitUtils';
 
@@ -37,6 +37,7 @@ function filterVisits(
   filterOption: VisitFilterOption
 ) {
   const now = new Date();
+
   switch (filterOption) {
     case 'all':
       return visits;
@@ -95,7 +96,7 @@ const ReservationDetails = ({
         />
         <ServiceCard
           data={services}
-          units={getServicesWithNumberOfUnitsFromVisit(visits[0]!, services)}
+          units={getServicesWithNumberOfUnitsFromReservation(data)}
         />
       </div>
 

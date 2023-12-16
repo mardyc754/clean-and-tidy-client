@@ -61,7 +61,7 @@ const ReservationGeneralDetailsCard = ({
             key={`ReservationDetails-${convertToCamelCase(key)}`}
           />
         ))}
-        {manageable && <ReservationActions />}
+        {manageable && <ReservationActions data={data} />}
       </CardContent>
     </Card>
   );

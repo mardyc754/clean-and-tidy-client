@@ -199,3 +199,13 @@ export const confirmReservation = async (
     data: { employeeId }
   });
 };
+
+export const cancelReservation = async (reservationName: string) => {
+  return await handleFetchingData({
+    path: `/reservations/${reservationName}/cancel`,
+    method: 'put',
+    successSchema:
+      reservationWithExtendedVisitsSchema as unknown as ZodType<ReservationWithExtendedVisits>,
+    errorSchema: basicError
+  });
+};

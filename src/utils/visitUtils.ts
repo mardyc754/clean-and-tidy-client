@@ -3,6 +3,7 @@ import { DETERGENT_COST } from '~/constants/primitives';
 
 import type { Employee } from '~/schemas/api/employee';
 import type {
+  ReservationWithExtendedVisits,
   Visit,
   VisitPart,
   VisitWithEmployees
@@ -115,10 +116,11 @@ export const getVisitDuration = (visit: VisitWithEmployees) => {
   return minutesBetween(endDate, startDate);
 };
 
-export const getServicesWithNumberOfUnitsFromVisit = (
-  visit: Visit,
-  services: BasicServiceData[]
+export const getServicesWithNumberOfUnitsFromReservation = (
+  data: ReservationWithExtendedVisits
 ) => {
+  const { visits, services } = data;
+  const visit = visits[0]!;
   const servicesForVisit = Array.from(
     new Set(visit.visitParts.map((visitPart) => visitPart.serviceId))
   );
