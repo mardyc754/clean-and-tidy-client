@@ -10,6 +10,8 @@ import { PageWrapper } from '~/components/template';
 import { daysBetween } from '~/utils/dateUtils';
 import { getMaxEndDateFromReservationVisits } from '~/utils/scheduler';
 
+import { UserRole } from '~/types/enums';
+
 import { UserProfileCard } from '../organisms/cards';
 import type { VisitEvent } from '../organisms/scheduler/Scheduler';
 import { Tabs } from '../organisms/tabs';
@@ -17,9 +19,10 @@ import type { TabsSlot } from '../organisms/tabs/Tabs';
 
 type ProfilePageTemplateProps = {
   slots: TabsSlot[];
+  userRole: AuthenticatedUser['role'];
 };
 
-const ProfilePageTemplate = ({ slots }: ProfilePageTemplateProps) => {
+const ProfilePageTemplate = ({ slots, userRole }: ProfilePageTemplateProps) => {
   // const reservationsTimeslot = useMemo(() => {
   //   if (!visits) return;
 
@@ -32,6 +35,9 @@ const ProfilePageTemplate = ({ slots }: ProfilePageTemplateProps) => {
         <Heading1>Your profile</Heading1>
         <div className="py-8">
           <Tabs
+            tabsListClasses={
+              userRole === UserRole.ADMIN ? 'grid-cols-4' : 'grid-cols-3'
+            }
             slots={[
               ...slots,
               {

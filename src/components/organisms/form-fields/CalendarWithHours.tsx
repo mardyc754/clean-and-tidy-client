@@ -41,14 +41,6 @@ const CalendarWithHours = ({
 }: CalendarWithLabelProps) => {
   const currentDate = useWatch({ name: calendarInputName }) as ValidDate;
 
-  // const busyDays = busyHours.filter(
-  //   (busyHour) =>
-  //     isSame(busyHour.startDate, startOfDay(busyHour.startDate)) &&
-  //     isSame(busyHour.endDate, endOfDay(busyHour.endDate))
-  // );
-
-  // console.log('>>> busyDays', busyDays);
-
   return (
     <div className="flex flex-col">
       <MediumTypography className="py-1">{label}</MediumTypography>

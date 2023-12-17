@@ -28,6 +28,7 @@ export default function AdminProfile({
 
   return (
     <ProfilePageTemplate
+      userRole={userData.role}
       slots={[
         {
           name: 'Awaiting reservations',

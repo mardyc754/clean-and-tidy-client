@@ -55,28 +55,9 @@ export const logout = async () => {
   });
 };
 
-export const changeUserData = async (
-  userId: AuthenticatedUser['id'],
-  data: ChangeUserData,
-  role: AuthenticatedUser['role']
-) => {
-  let path: string | undefined;
-
-  switch (role) {
-    case UserRole.CLIENT:
-      path = `/clients/${userId}`;
-      break;
-    case UserRole.EMPLOYEE:
-    case UserRole.ADMIN:
-      path = `/employees/${userId}`;
-      break;
-    default:
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      throw new Error(`Unhandled role: ${role}`);
-  }
-
+export const changeCurrentUserData = async (data: ChangeUserData) => {
   return await handleFetchingData({
-    path,
+    path: '/auth/user',
     method: 'put',
     successSchema: userSchema,
     errorSchema: basicError,

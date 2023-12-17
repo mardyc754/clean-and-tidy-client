@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 
 import { user as userQueryKey } from '~/constants/queryKeys';
 
-import { changeUserData } from '~/api/auth';
+import { changeCurrentUserData } from '~/api/auth';
 
 import {
   type ChangeUserData,
@@ -13,7 +13,7 @@ import {
 
 import { useAuth } from '~/hooks/auth/useAuth';
 
-import { Button, SubmitButton } from '~/components/atoms/buttons';
+import { Button } from '~/components/atoms/buttons';
 import { Textfield } from '~/components/molecules/form-fields';
 
 const ChangeUserDataForm = () => {
@@ -39,7 +39,7 @@ const ChangeUserDataForm = () => {
       if (!currentUser) {
         throw new Error('User not found');
       }
-      return changeUserData(currentUser.id, data, currentUser.role);
+      return changeCurrentUserData(data);
     },
     onSuccess: () => {
       return toast.promise(

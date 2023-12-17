@@ -59,7 +59,7 @@ const ReservationTable = ({ data }: ReservationTableProps) => {
 
   return (
     <DataTable
-      name="employeeTable"
+      name="reservationTable"
       columns={columns}
       rows={createReservationRows(data)}
     />

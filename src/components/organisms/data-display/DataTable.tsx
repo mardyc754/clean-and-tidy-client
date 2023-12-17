@@ -43,7 +43,7 @@ const DataTable = ({
   return (
     <div className="w-full">
       <div className="rounded-md border">
-        <Table>
+        <Table className="bg-white">
           <TableHeader>
             <TableRow>
               {columns.map((columnName, i) => {

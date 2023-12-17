@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 import {
   Tabs as ShadcnTabs,
   TabsContent,
@@ -14,12 +16,13 @@ export type TabsSlot = {
 
 type TabsProps = {
   slots: TabsSlot[];
+  tabsListClasses?: string;
 };
 
-const Tabs = ({ slots }: TabsProps) => {
+const Tabs = ({ slots, tabsListClasses }: TabsProps) => {
   return (
     <ShadcnTabs defaultValue="0" className="flex w-full flex-col space-y-8">
-      <TabsList className={`grid w-full grid-cols-${slots.length}`}>
+      <TabsList className={clsx(`grid w-full grid-cols-3`, tabsListClasses)}>
         {slots.map((slot, index) => (
           <TabsTrigger
             key={`${convertToCamelCase(slot.name)}-trigger-${index}}`}
