@@ -12,10 +12,12 @@ import { localizer } from '~/lib/dayjs';
 
 import type { VisitWithEmployees } from '~/schemas/api/reservation';
 
+import { useAuth } from '~/hooks/auth/useAuth';
+
 import { Button } from '~/components/atoms/buttons';
 
 import { dateWithHour } from '~/utils/dateUtils';
-import { generateIcsFile } from '~/utils/scheduler';
+import { generateIcsFileFromVisitEvents } from '~/utils/scheduler';
 
 import { VisitDetailsDialog } from '../dialogs';
 
@@ -27,6 +29,7 @@ export interface VisitEvent extends CalendarEvent {
 export type SchedulerProps = Omit<CalendarProps<VisitEvent>, 'localizer'> & {
   actionsSlot?: React.ReactNode;
   events: VisitEvent[];
+  onClickDownloadIcs?: () => Promise<void>;
 };
 
 function getRandomBackgroudColor() {
@@ -121,6 +124,7 @@ const Scheduler = ({
   className,
   actionsSlot,
   events,
+  onClickDownloadIcs,
   ...props
 }: SchedulerProps) => {
   const { components } = useMemo(
@@ -141,7 +145,7 @@ const Scheduler = ({
     <>
       <div className="flex items-center justify-end space-x-2 py-4">
         {actionsSlot}
-        <Button onClick={() => generateIcsFile(events)}>Export to .ics</Button>
+        <Button onClick={onClickDownloadIcs}>Export to .ics</Button>
       </div>
       <div className={clsx('h-[80vh]', className)}>
         <Calendar

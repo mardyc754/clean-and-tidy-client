@@ -1,7 +1,6 @@
 import { type DehydratedState } from '@tanstack/react-query';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
-import { object } from 'zod';
 
 import { fetchUserData } from '~/server/prefetchUserData';
 

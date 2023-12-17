@@ -5,9 +5,13 @@ import type { EmployeeWithVisits } from '~/schemas/api/reservation';
 import { useAuth } from '~/hooks/auth/useAuth';
 
 import { LabeledDropdown } from '~/components/molecules/form-fields';
+import { IconIndicator } from '~/components/molecules/status-indicators';
 
 import { daysBetween } from '~/utils/dateUtils';
-import { getMaxEndDateFromReservationVisits } from '~/utils/scheduler';
+import {
+  generateIcsFileFromVisitEvents,
+  getMaxEndDateFromReservationVisits
+} from '~/utils/scheduler';
 
 import Scheduler, { type SchedulerProps, type VisitEvent } from './Scheduler';
 
@@ -20,7 +24,7 @@ type AdminSchedulerProps = {
 } & Omit<SchedulerProps, 'length' | 'events'>;
 
 const AdminScheduler = ({ employeeList, ...props }: AdminSchedulerProps) => {
-  const { currentUser } = useAuth();
+  const { currentUser, isPending } = useAuth();
 
   const dropdownOptions = [
     {
@@ -57,11 +61,23 @@ const AdminScheduler = ({ employeeList, ...props }: AdminSchedulerProps) => {
     return daysBetween(getMaxEndDateFromReservationVisits(visits), new Date());
   }, [visits]);
 
+  if (!currentUser && !isPending) {
+    return (
+      <IconIndicator variant="error" caption="Cannot load calendar data" />
+    );
+  }
+
   return (
     <Scheduler
       {...props}
       events={visits}
       length={reservationsTimeslot}
+      onClickDownloadIcs={() =>
+        generateIcsFileFromVisitEvents(visits, currentUser!, {
+          calendarNameSuffix:
+            selectedEmployee.name !== 'You' ? selectedEmployee.name : undefined
+        })
+      }
       actionsSlot={
         <LabeledDropdown
           label="Show events for"

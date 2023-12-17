@@ -1,6 +1,5 @@
 import { type DehydratedState, useQuery } from '@tanstack/react-query';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import { useMemo } from 'react';
 
 import { fetchUserData } from '~/server/prefetchUserData';
 
@@ -12,14 +11,9 @@ import type { ClientUser } from '~/schemas/api/auth';
 
 import { Spinner } from '~/components/molecules/status-indicators';
 import { ReservationTable } from '~/components/organisms/data-display';
-import { Scheduler } from '~/components/organisms/scheduler';
+import { ClientScheduler } from '~/components/organisms/scheduler';
 import { ProfilePageTemplate } from '~/components/template';
 
-import { daysBetween } from '~/utils/dateUtils';
-import {
-  getEventsFromReservation,
-  getMaxEndDateFromReservationVisits
-} from '~/utils/scheduler';
 import { isClientUser } from '~/utils/userUtils';
 
 export default function ClientProfile({
@@ -30,22 +24,9 @@ export default function ClientProfile({
     queryFn: () => getClientReservations(userData.id)
   });
 
-  const visits = useMemo(() => {
-    if (!reservationList) return [];
-
-    return reservationList.flatMap((reservation) =>
-      getEventsFromReservation(reservation)
-    );
-  }, [reservationList]);
-
-  const reservationsTimeslot = useMemo(() => {
-    if (!visits) return;
-
-    return daysBetween(getMaxEndDateFromReservationVisits(visits), new Date());
-  }, [visits]);
-
   return (
     <ProfilePageTemplate
+      userRole={userData.role}
       slots={[
         {
           name: 'Your Reservations',
@@ -55,11 +36,7 @@ export default function ClientProfile({
           name: 'Visit calendar',
           Content: () =>
             !isLoading ? (
-              <Scheduler
-                className="w-full"
-                events={visits}
-                length={reservationsTimeslot}
-              />
+              <ClientScheduler reservationList={reservationList ?? []} />
             ) : (
               <Spinner caption="Loading events..." />
             )

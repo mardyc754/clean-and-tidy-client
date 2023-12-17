@@ -6,20 +6,23 @@ import type {
   RegularEmployeeUser,
   User
 } from '~/schemas/api/auth';
+import { Address } from '~/schemas/forms/orderService';
 
 import { UserRole } from '~/types/enums';
 
-export function getUserFullName(user: EmployeeUser | ClientUser) {
+export function getUserFullName(
+  user: Omit<AuthenticatedUser, 'isAdmin' | 'role'>
+) {
   return user.firstName && user.lastName
     ? `${user.firstName} ${user.lastName}`
     : null;
 }
 
-export function getUserDisplayName(user: EmployeeUser | ClientUser) {
+export function getUserDisplayName(user: AuthenticatedUser) {
   return getUserFullName(user) ?? user.email;
 }
 
-export function getUserLabel(user: EmployeeUser | ClientUser) {
+export function getUserLabel(user: AuthenticatedUser) {
   return getUserFullName(user) ?? user.email;
 }
 
@@ -51,4 +54,9 @@ export const isAuthenticated = (
   user: User | undefined
 ): user is AuthenticatedUser => {
   return !!user && 'role' in user;
+};
+
+export const generateAddressAsString = (address: Address) => {
+  const { street, houseNumber, city, postCode } = address;
+  return `${street} ${houseNumber}, ${postCode} ${city}`;
 };

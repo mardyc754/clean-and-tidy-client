@@ -14,15 +14,19 @@ import { Scheduler } from '~/components/organisms/scheduler';
 import { ProfilePageTemplate } from '~/components/template';
 
 import { daysBetween } from '~/utils/dateUtils';
-import { getMaxEndDateFromReservationVisits } from '~/utils/scheduler';
+import {
+  generateIscFileForReservationVisits,
+  getMaxEndDateFromReservationVisits
+} from '~/utils/scheduler';
 import { isRegularEmployeeUser } from '~/utils/userUtils';
 
 export default function EmployeeProfile({
   userData
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const { visitEvents, reservationList, isLoading } = useEmployeeVisits({
-    employeeId: userData.id
-  });
+  const { visitEvents, reservationList, isLoading, visitList } =
+    useEmployeeVisits({
+      employeeId: userData.id
+    });
 
   const reservationsTimeslot = useMemo(() => {
     if (!visitEvents) return;
@@ -35,6 +39,7 @@ export default function EmployeeProfile({
 
   return (
     <ProfilePageTemplate
+      userRole={userData.role}
       slots={[
         {
           name: 'Awaiting reservations',
@@ -50,6 +55,9 @@ export default function EmployeeProfile({
           Content: () =>
             !isLoading ? (
               <Scheduler
+                onClickDownloadIcs={() =>
+                  generateIscFileForReservationVisits(visitList ?? [], userData)
+                }
                 className="w-full"
                 events={visitEvents}
                 length={reservationsTimeslot}

@@ -1,8 +1,10 @@
-import { EventAttributes, createEvent, createEvents } from 'ics';
+import { type EventAttributes, createEvents } from 'ics';
 import { omit } from 'lodash';
 
+import type { AuthenticatedUser } from '~/schemas/api/auth';
 import type {
   EmployeeWithVisits,
+  ReservationWithExtendedVisits,
   ReservationWithVisits,
   VisitPartWithServiceAndReservation
 } from '~/schemas/api/reservation';
@@ -15,6 +17,7 @@ import {
   createReservationTitleForEmployee,
   createVisitPartTitleForAdmin
 } from './reservationUtils';
+import { generateAddressAsString, getUserFullName } from './userUtils';
 import { getVisitStartEndDates } from './visitUtils';
 
 export const getEventsFromReservation = (
@@ -71,35 +74,30 @@ export const getMaxEndDateFromReservationVisits = (visits: VisitEvent[]) => {
   return new Date(maxDate);
 };
 
-// export const generateIcsFile = async (reservation: ReservationWithVisits) => {
-export const generateIcsFile = async (visitEvents: VisitEvent[]) => {
-  const events = visitEvents.map((visitEvent) => {
-    const { start, end, title } = visitEvent;
-
-    return {
-      startOutputType: 'local',
-      start: start!.getTime(),
-      end: end!.getTime(),
-      title: title
-      // alarms: alarms
-    } satisfies EventAttributes;
-  });
-
-  const filename = 'ExampleEvent.ics';
+const generateIcsFile = async (
+  events: EventAttributes[],
+  calendarNamePrefix: string,
+  calendarNameSuffix?: string
+) => {
+  const filename = `${calendarNamePrefix}${
+    calendarNameSuffix ? `- ${calendarNameSuffix}` : ''
+  }.ics`;
   const file = await new Promise<File>((resolve, reject) => {
     createEvents(events, (error, value) => {
       if (error) {
         reject(error);
       }
 
-      resolve(new File([value], filename, { type: 'text/calendar' }));
+      resolve(
+        new File([value], filename, {
+          type: 'text/calendar'
+        })
+      );
     });
   });
 
   const url = URL.createObjectURL(file);
 
-  // trying to assign the file URL to a window could cause cross-site
-  // issues so this is a workaround using HTML5
   const anchor = document.createElement('a');
   anchor.href = url;
   anchor.download = filename;
@@ -109,4 +107,107 @@ export const generateIcsFile = async (visitEvents: VisitEvent[]) => {
   document.body.removeChild(anchor);
 
   URL.revokeObjectURL(url);
+};
+
+export const generateIcsFileFromVisitEvents = async (
+  visitEvents: VisitEvent[],
+  owner: Omit<AuthenticatedUser, 'isAdmin'>,
+  extraOptions?: Partial<{
+    calendarNameSuffix: string;
+    organizer: EventAttributes['organizer'];
+    attendees: EventAttributes['attendees'];
+    location: EventAttributes['location'];
+  }>
+) => {
+  const calendarNamePrefix = getUserFullName(owner) ?? 'Visit calendar';
+
+  const events = visitEvents.map((visitEvent) => {
+    const { start, end, title } = visitEvent;
+
+    return {
+      startOutputType: 'local',
+      start: start!.getTime(),
+      end: end!.getTime(),
+      title: title,
+      calName: calendarNamePrefix,
+      attendees: extraOptions?.attendees,
+      organizer: extraOptions?.organizer,
+      location: extraOptions?.location
+    } satisfies EventAttributes;
+  });
+
+  await generateIcsFile(
+    events,
+    calendarNamePrefix,
+    extraOptions?.calendarNameSuffix
+  );
+};
+
+export const generateIcsFromReservationList = async (
+  reservationList: ReservationWithExtendedVisits[],
+  owner: Omit<AuthenticatedUser, 'isAdmin'>,
+  extraOptions?: Partial<{
+    calendarNameSuffix: string;
+  }>
+) => {
+  const calendarNamePrefix = getUserFullName(owner) ?? 'Visit calendar';
+
+  const events = reservationList.flatMap((reservation) => {
+    const { visits, address, extraInfo } = reservation;
+
+    return visits.map((visit) => {
+      const numberOfVisitParts = visit.visitParts.length;
+
+      return {
+        start: convertISOStringToDate(visit.visitParts[0]!.startDate).getTime(),
+        end: convertISOStringToDate(
+          visit.visitParts[numberOfVisitParts - 1]!.endDate
+        ).getTime(),
+        calName: calendarNamePrefix,
+        title: createReservationTitle(reservation),
+        location: address ? generateAddressAsString(address) : undefined,
+        description: extraInfo ?? undefined
+      } satisfies EventAttributes;
+    });
+  });
+
+  await generateIcsFile(
+    events,
+    calendarNamePrefix,
+    extraOptions?.calendarNameSuffix
+  );
+};
+
+export const generateIscFileForReservationVisits = async (
+  visitEvents: VisitPartWithServiceAndReservation[],
+  owner: Omit<AuthenticatedUser, 'isAdmin'>,
+  extraOptions?: Partial<{
+    calendarNameSuffix: string;
+    organizer: EventAttributes['organizer'];
+    attendees: EventAttributes['attendees'];
+    location: EventAttributes['location'];
+  }>
+) => {
+  const calendarNamePrefix = getUserFullName(owner) ?? 'Visit calendar';
+
+  const events = visitEvents.map((visitEvent) => {
+    const { reservation, service, startDate, endDate } = visitEvent;
+
+    return {
+      startOutputType: 'local',
+      start: new Date(startDate).getTime(),
+      end: new Date(endDate).getTime(),
+      title: createReservationTitleForEmployee(reservation, service),
+      calName: calendarNamePrefix,
+      location: reservation.address
+        ? generateAddressAsString(reservation.address)
+        : undefined
+    } satisfies EventAttributes;
+  });
+
+  await generateIcsFile(
+    events,
+    calendarNamePrefix,
+    extraOptions?.calendarNameSuffix
+  );
 };

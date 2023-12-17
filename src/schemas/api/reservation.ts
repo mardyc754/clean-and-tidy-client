@@ -92,7 +92,9 @@ export const visitPartWithService = visitPartSchema.extend({
 });
 
 export const visitPartWithServiceAndReservation = visitPartWithService.extend({
-  reservation: reservationSchema
+  reservation: reservationSchema.extend({
+    address: address.optional()
+  })
 });
 
 export const employeeWithVisitsSchema = employeeSchema.extend({

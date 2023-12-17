@@ -14,7 +14,7 @@ import {
 import { type Service, service } from '~/schemas/api/services';
 import { basicError } from '~/schemas/common';
 import {
-  CreateEmployeeData,
+  type CreateEmployeeData,
   createEmployeeErrorSchema
 } from '~/schemas/forms/admin';
 import { busyHoursData } from '~/schemas/forms/orderService';

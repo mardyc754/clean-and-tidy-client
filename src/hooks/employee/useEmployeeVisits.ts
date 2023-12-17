@@ -5,7 +5,10 @@ import { reservation, visit } from '~/constants/queryKeys';
 
 import { getEmployeeReservations, getEmployeeVisits } from '~/api/employee';
 
-import { getEventsFromVisitParts } from '~/utils/scheduler';
+import {
+  generateIscFileForReservationVisits,
+  getEventsFromVisitParts
+} from '~/utils/scheduler';
 
 import { Status } from '~/types/enums';
 
