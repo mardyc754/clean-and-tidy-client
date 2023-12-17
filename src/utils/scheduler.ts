@@ -1,3 +1,4 @@
+import { EventAttributes, createEvent, createEvents } from 'ics';
 import { omit } from 'lodash';
 
 import type {
@@ -68,4 +69,44 @@ export const getMaxEndDateFromReservationVisits = (visits: VisitEvent[]) => {
   const maxDate = Math.max(...endDates.map((date) => new Date(date).getTime()));
 
   return new Date(maxDate);
+};
+
+// export const generateIcsFile = async (reservation: ReservationWithVisits) => {
+export const generateIcsFile = async (visitEvents: VisitEvent[]) => {
+  const events = visitEvents.map((visitEvent) => {
+    const { start, end, title } = visitEvent;
+
+    return {
+      startOutputType: 'local',
+      start: start!.getTime(),
+      end: end!.getTime(),
+      title: title
+      // alarms: alarms
+    } satisfies EventAttributes;
+  });
+
+  const filename = 'ExampleEvent.ics';
+  const file = await new Promise<File>((resolve, reject) => {
+    createEvents(events, (error, value) => {
+      if (error) {
+        reject(error);
+      }
+
+      resolve(new File([value], filename, { type: 'text/calendar' }));
+    });
+  });
+
+  const url = URL.createObjectURL(file);
+
+  // trying to assign the file URL to a window could cause cross-site
+  // issues so this is a workaround using HTML5
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = filename;
+
+  document.body.appendChild(anchor);
+  anchor.click();
+  document.body.removeChild(anchor);
+
+  URL.revokeObjectURL(url);
 };

@@ -62,7 +62,7 @@ export default function AdminProfile({
           Content: () => <EmployeeTable data={employeeList ?? []} />
         }
       ]}
-    ></ProfilePageTemplate>
+    />
   );
 }
 

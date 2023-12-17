@@ -17,7 +17,7 @@ export type EmployeeWithVisitEvents = Omit<EmployeeWithVisits, 'visitParts'> & {
 
 type AdminSchedulerProps = {
   employeeList: EmployeeWithVisitEvents[];
-} & Omit<SchedulerProps, 'length'>;
+} & Omit<SchedulerProps, 'length' | 'events'>;
 
 const AdminScheduler = ({ employeeList, ...props }: AdminSchedulerProps) => {
   const { currentUser } = useAuth();
@@ -58,17 +58,19 @@ const AdminScheduler = ({ employeeList, ...props }: AdminSchedulerProps) => {
   }, [visits]);
 
   return (
-    <>
-      <div className="flex justify-end py-4">
+    <Scheduler
+      {...props}
+      events={visits}
+      length={reservationsTimeslot}
+      actionsSlot={
         <LabeledDropdown
           label="Show events for"
           options={dropdownOptions}
           value={selectedEmployee}
           onChange={(value) => setSelectedEmployee(value)}
         />
-      </div>
-      <Scheduler {...props} events={visits} length={reservationsTimeslot} />;
-    </>
+      }
+    />
   );
 };
 
