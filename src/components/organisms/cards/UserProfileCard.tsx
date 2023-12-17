@@ -29,25 +29,27 @@ interface UserProfileCardProps {
   data: AuthenticatedUser;
 }
 
-const UserCard = ({ data }: UserCardProps) => {
-  const userFullName = getUserFullName(data);
+const UserCard = ({ data: currentUser }: UserCardProps) => {
+  const userFullName = getUserFullName(currentUser);
   return (
     <Card className="min-w-[400px]">
       <CardHeader>
         <CardTitle>Your data</CardTitle>
       </CardHeader>
-      {'phone' in data && (
+      {'phone' in currentUser && (
         <CardContent className="py-4">
-          {userFullName && <p className="text-xl">{getUserFullName(data)}</p>}
+          {userFullName && (
+            <p className="text-xl">{getUserFullName(currentUser)}</p>
+          )}
           <div className="py-4">
             <div className="flex items-center space-x-2">
               <FontAwesomeIcon icon={faEnvelope} />
-              <p>{`${data.email}`}</p>
+              <p>{`${currentUser.email}`}</p>
             </div>
-            {data.phone && (
+            {currentUser.phone && (
               <div className="flex items-center space-x-2">
                 <FontAwesomeIcon icon={faPhone} />
-                <p>{`${data.phone}`}</p>
+                <p>{`${currentUser.phone}`}</p>
               </div>
             )}
           </div>
@@ -65,10 +67,34 @@ const UserProfileCard = () => {
       <IconIndicator variant="error" caption="Error when loading user data" />
     );
   }
+  const userFullName = getUserFullName(currentUser);
 
   return (
     <div className="grid grid-cols-1 space-y-4 md:grid-cols-3 md:space-x-8 md:space-y-0">
-      <UserCard data={currentUser} />
+      <Card className="min-w-[400px]">
+        <CardHeader>
+          <CardTitle>Your data</CardTitle>
+        </CardHeader>
+        {'phone' in currentUser && (
+          <CardContent className="py-4">
+            {userFullName && (
+              <p className="text-xl">{getUserFullName(currentUser)}</p>
+            )}
+            <div className="py-4">
+              <div className="flex items-center space-x-2">
+                <FontAwesomeIcon icon={faEnvelope} />
+                <p>{`${currentUser.email}`}</p>
+              </div>
+              {currentUser.phone && (
+                <div className="flex items-center space-x-2">
+                  <FontAwesomeIcon icon={faPhone} />
+                  <p>{`${currentUser.phone}`}</p>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        )}
+      </Card>
       <Card className="md:col-span-2">
         <CardHeader>
           <CardTitle>Change your profile data</CardTitle>

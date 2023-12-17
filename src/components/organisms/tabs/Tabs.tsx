@@ -16,12 +16,16 @@ export type TabsSlot = {
 
 type TabsProps = {
   slots: TabsSlot[];
+  defaultTab?: string;
   tabsListClasses?: string;
 };
 
-const Tabs = ({ slots, tabsListClasses }: TabsProps) => {
+const Tabs = ({ slots, tabsListClasses, defaultTab = '0' }: TabsProps) => {
   return (
-    <ShadcnTabs defaultValue="0" className="flex w-full flex-col space-y-8">
+    <ShadcnTabs
+      defaultValue={defaultTab}
+      className="flex w-full flex-col space-y-8"
+    >
       <TabsList className={clsx(`grid w-full grid-cols-3`, tabsListClasses)}>
         {slots.map((slot, index) => (
           <TabsTrigger

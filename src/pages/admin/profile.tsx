@@ -1,5 +1,7 @@
 import { type DehydratedState } from '@tanstack/react-query';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { useRouter } from 'next/router';
+import { object } from 'zod';
 
 import { fetchUserData } from '~/server/prefetchUserData';
 
@@ -23,11 +25,15 @@ export default function AdminProfile({
   const { reservationList, isLoading } = useEmployeeVisits({
     employeeId: userData.id
   });
+  const router = useRouter();
+
+  const { defaultTab } = router.query;
 
   const { employeeList } = useEmployeeListWithVisits();
 
   return (
     <ProfilePageTemplate
+      defaultTab={typeof defaultTab === 'string' ? defaultTab : undefined}
       userRole={userData.role}
       slots={[
         {

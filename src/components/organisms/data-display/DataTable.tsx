@@ -15,13 +15,15 @@ interface DataTableProps {
   name: string;
   rows: Record<string, React.ReactNode>[];
   rowsPerPage?: number;
+  leftButtonSlot?: React.ReactNode;
 }
 
 const DataTable = ({
   name,
   columns,
   rows,
-  rowsPerPage = 5
+  rowsPerPage = 5,
+  leftButtonSlot
 }: DataTableProps) => {
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
 
@@ -79,19 +81,22 @@ const DataTable = ({
           </TableBody>
         </Table>
       </div>
-      <div>
-        <Button
-          onClick={() => setCurrentPageIndex((prev) => prev - 1)}
-          disabled={currentPageIndex === 0}
-        >
-          Prev
-        </Button>
-        <Button
-          onClick={() => setCurrentPageIndex((prev) => prev + 1)}
-          disabled={currentPageIndex === totalPages - 1}
-        >
-          Next
-        </Button>
+      <div className="flex justify-between space-x-2 py-4">
+        <div className="flex items-center space-x-2">{leftButtonSlot}</div>
+        <div className="flex space-x-2">
+          <Button
+            onClick={() => setCurrentPageIndex((prev) => prev - 1)}
+            disabled={currentPageIndex === 0}
+          >
+            Previous
+          </Button>
+          <Button
+            onClick={() => setCurrentPageIndex((prev) => prev + 1)}
+            disabled={currentPageIndex === totalPages - 1}
+          >
+            Next
+          </Button>
+        </div>
       </div>
     </div>
   );

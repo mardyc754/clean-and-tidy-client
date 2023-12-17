@@ -10,8 +10,9 @@ import type { Employee } from '~/schemas/api/employee';
 import type { ServiceWithEmployees } from '~/schemas/api/services';
 
 import Button from '~/components/atoms/buttons/Button';
-import { Checkbox } from '~/components/atoms/forms';
 import { DialogFooter } from '~/components/shadcn/ui/dialog';
+
+import { ServicesMultiSelect } from '../form-fields';
 
 interface ChangeEmployeeDataFormProps {
   employeeData: Employee;
@@ -23,9 +24,6 @@ const ChangeEmployeeDataForm = ({
   serviceData
 }: ChangeEmployeeDataFormProps) => {
   const queryClient = useQueryClient();
-
-  const primaryServices = serviceData.filter((service) => service.isPrimary);
-  const secondaryServices = serviceData.filter((service) => !service.isPrimary);
 
   const methods = useForm({
     defaultValues: {
@@ -75,35 +73,7 @@ const ChangeEmployeeDataForm = ({
         })}
       >
         <div className="max-h-[60vh] space-y-4 overflow-auto">
-          <div className="flex flex-col space-y-4">
-            <p className="font-emphasize text-lg">Services</p>
-            <div>
-              <div className="flex flex-col space-y-2">
-                <p>Primary services</p>
-                <div>
-                  {primaryServices.map((service) => (
-                    <Checkbox
-                      key={`serviceDataCheckbox-${service.id}`}
-                      name={`employeeServices.${service.id}`}
-                      caption={service.name}
-                    />
-                  ))}
-                </div>
-              </div>
-              <div className="flex flex-col space-y-2">
-                <p>Secondary services</p>
-                <div>
-                  {secondaryServices.map((service) => (
-                    <Checkbox
-                      key={`serviceDataCheckbox-${service.id}`}
-                      name={`employeeServices.${service.id}`}
-                      caption={service.name}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
+          <ServicesMultiSelect serviceData={serviceData} />
         </div>
         <DialogFooter>
           <Button>Save changes</Button>

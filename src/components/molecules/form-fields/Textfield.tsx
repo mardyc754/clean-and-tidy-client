@@ -47,7 +47,11 @@ const Textfield = ({
           setValue(name, newValue);
           onChange?.(newValue);
         }}
-        className={clsx('border-2 border-muted p-2 shadow-sm', className)}
+        className={clsx(
+          'border-2 border-muted p-2 shadow-sm',
+          className,
+          errorLabel && 'border-red-500'
+        )}
         {...props}
       />
       <ErrorLabel>{errorLabel ?? ''}</ErrorLabel>

@@ -136,6 +136,7 @@ const Scheduler = ({ className, ...props }: SchedulerProps) => {
         localizer={localizer}
         startAccessor="start"
         endAccessor="end"
+        className="bg-white"
         // culture='pl'
         min={dateWithHour(undefined, 6)}
         // max={dateWithHour(undefined, 22)}

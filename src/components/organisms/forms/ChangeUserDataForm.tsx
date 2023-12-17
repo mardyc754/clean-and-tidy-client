@@ -88,8 +88,8 @@ const ChangeUserDataForm = () => {
           errorLabel={errors.phone?.message}
         />
         <div className="py-4">
-          <Button type="submit" disabled={isSubmitting}>
-            Submit
+          <Button type="submit" disabled={isSubmitting} className="w-24">
+            Save
           </Button>
         </div>
       </form>
