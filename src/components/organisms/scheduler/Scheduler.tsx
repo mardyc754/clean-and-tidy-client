@@ -4,20 +4,16 @@ import {
   Calendar,
   type Event as CalendarEvent,
   type CalendarProps,
-  type EventProps,
-  EventWrapperProps
+  type EventProps
 } from 'react-big-calendar';
 
 import { localizer } from '~/lib/dayjs';
 
 import type { VisitWithEmployees } from '~/schemas/api/reservation';
 
-import { useAuth } from '~/hooks/auth/useAuth';
-
 import { Button } from '~/components/atoms/buttons';
 
 import { dateWithHour } from '~/utils/dateUtils';
-import { generateIcsFileFromVisitEvents } from '~/utils/scheduler';
 
 import { VisitDetailsDialog } from '../dialogs';
 

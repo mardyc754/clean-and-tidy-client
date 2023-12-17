@@ -5,12 +5,7 @@ import { reservation, visit } from '~/constants/queryKeys';
 
 import { getEmployeeReservations, getEmployeeVisits } from '~/api/employee';
 
-import {
-  generateIscFileForReservationVisits,
-  getEventsFromVisitParts
-} from '~/utils/scheduler';
-
-import { Status } from '~/types/enums';
+import { getEventsFromVisitParts } from '~/utils/scheduler';
 
 type useEmployeeVisitsOptions = {
   employeeId: number;
@@ -24,8 +19,7 @@ export function useEmployeeVisits({ employeeId }: useEmployeeVisitsOptions) {
 
   const { data: reservationList } = useQuery({
     queryKey: reservation.employee(employeeId),
-    queryFn: () =>
-      getEmployeeReservations(employeeId, { status: Status.TO_BE_CONFIRMED })
+    queryFn: () => getEmployeeReservations(employeeId)
   });
 
   const visitEvents = useMemo(

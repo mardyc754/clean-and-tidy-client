@@ -6,3 +6,4 @@ export { default as DialogTriggerButton } from './DialogTriggerButton';
 export { default as ManageEmployeeDialog } from './ManageEmployeeDialog';
 export { default as ChangeVisitDateButton } from './ChangeVisitDateButton';
 export { default as CancelVisitButton } from './CancelVisitButton';
+export { default as ReservationDetailsButton } from './ReservationDetailsButton';

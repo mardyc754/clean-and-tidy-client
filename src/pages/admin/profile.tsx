@@ -10,8 +10,10 @@ import { useEmployeeListWithVisits } from '~/hooks/employee/useEmployeeList';
 import { useEmployeeVisits } from '~/hooks/employee/useEmployeeVisits';
 
 import { Spinner } from '~/components/molecules/status-indicators';
-import { EmployeeTable } from '~/components/organisms/data-display';
-import { ReservationToConfirmList } from '~/components/organisms/lists';
+import {
+  EmployeeReservationTable,
+  EmployeeTable
+} from '~/components/organisms/data-display';
 import { AdminScheduler } from '~/components/organisms/scheduler';
 import { ProfilePageTemplate } from '~/components/template';
 
@@ -39,7 +41,7 @@ export default function AdminProfile({
           name: 'Awaiting reservations',
           Content: () =>
             reservationList ? (
-              <ReservationToConfirmList data={reservationList ?? []} />
+              <EmployeeReservationTable data={reservationList} />
             ) : (
               <></>
             )

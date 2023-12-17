@@ -2,9 +2,8 @@ import * as React from 'react';
 
 import { frequencyToDescriptionMap } from '~/constants/mappings';
 
-import type { ReservationWithVisits } from '~/schemas/api/reservation';
+import type { EmployeeReservation } from '~/schemas/api/reservation';
 
-import { Button } from '~/components/atoms/buttons';
 import { StatusIndicator } from '~/components/atoms/typography';
 
 import { displayDateWithHours, getClosestDateFromNow } from '~/utils/dateUtils';
@@ -13,9 +12,10 @@ import { getVisitStartEndDates } from '~/utils/visitUtils';
 
 import { Status } from '~/types/enums';
 
+import { ReservationDetailsButton } from '../dialogs';
 import DataTable from './DataTable';
 
-function createReservationRows(data: ReservationWithVisits[]) {
+function createReservationRows(data: EmployeeReservation[]) {
   const statusWeightMap = new Map([
     [Status.TO_BE_CONFIRMED, 0],
     [Status.ACTIVE, 1],
@@ -35,7 +35,7 @@ function createReservationRows(data: ReservationWithVisits[]) {
         reservation.visits?.flatMap((visit) => visit?.visitParts[0]?.startDate)
       ),
       status: reservation.status,
-      action: <Button href={`/reservations/${reservation.name}`}>Manage</Button>
+      action: <ReservationDetailsButton reservationName={reservation.name} />
     };
   });
 
@@ -53,15 +53,15 @@ function createReservationRows(data: ReservationWithVisits[]) {
     upcomingVisitDate: row.upcomingVisitDate
       ? displayDateWithHours(row.upcomingVisitDate)
       : 'No upcoming visit',
-    status: <StatusIndicator perspective="client" status={row.status} />
+    status: <StatusIndicator perspective="employee" status={row.status} />
   }));
 }
 
 interface ReservationTableProps {
-  data: ReservationWithVisits[];
+  data: EmployeeReservation[];
 }
 
-const ReservationTable = ({ data }: ReservationTableProps) => {
+const EmployeeReservationTable = ({ data }: ReservationTableProps) => {
   const columns = [
     'Id',
     'Reservation name',
@@ -81,4 +81,4 @@ const ReservationTable = ({ data }: ReservationTableProps) => {
   );
 };
 
-export default ReservationTable;
+export default EmployeeReservationTable;

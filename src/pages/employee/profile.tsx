@@ -9,6 +9,7 @@ import type { RegularEmployeeUser } from '~/schemas/api/auth';
 import { useEmployeeVisits } from '~/hooks/employee/useEmployeeVisits';
 
 import { Spinner } from '~/components/molecules/status-indicators';
+import { EmployeeReservationTable } from '~/components/organisms/data-display';
 import { ReservationToConfirmList } from '~/components/organisms/lists';
 import { Scheduler } from '~/components/organisms/scheduler';
 import { ProfilePageTemplate } from '~/components/template';
@@ -45,7 +46,7 @@ export default function EmployeeProfile({
           name: 'Awaiting reservations',
           Content: () =>
             reservationList ? (
-              <ReservationToConfirmList data={reservationList ?? []} />
+              <EmployeeReservationTable data={reservationList} />
             ) : (
               <></>
             )
