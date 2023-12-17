@@ -17,8 +17,8 @@ import DataTable from './DataTable';
 
 function createReservationRows(data: ReservationWithVisits[]) {
   const statusWeightMap = new Map([
+    [Status.ACTIVE, 0],
     [Status.TO_BE_CONFIRMED, 0],
-    [Status.ACTIVE, 1],
     [Status.CANCELLED, 2],
     [Status.CLOSED, 3]
   ]);
@@ -40,11 +40,17 @@ function createReservationRows(data: ReservationWithVisits[]) {
   });
 
   rows.sort((a, b) => {
+    const firstUpcomingVisitDate = a.upcomingVisitDate
+      ? new Date(a.upcomingVisitDate).getTime()
+      : Infinity;
+    const secondUpcomingVisitDate = b.upcomingVisitDate
+      ? new Date(b.upcomingVisitDate).getTime()
+      : Infinity;
+
     return (
       (statusWeightMap.get(a.status) ?? -Infinity) -
         (statusWeightMap.get(b.status) ?? -Infinity) ||
-      new Date(a.upcomingVisitDate ?? 0).getTime() -
-        new Date(b.upcomingVisitDate ?? 0).getTime()
+      firstUpcomingVisitDate - secondUpcomingVisitDate
     );
   });
 

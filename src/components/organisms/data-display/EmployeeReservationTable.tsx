@@ -40,14 +40,19 @@ function createReservationRows(data: EmployeeReservation[]) {
   });
 
   rows.sort((a, b) => {
+    const firstUpcomingVisitDate = a.upcomingVisitDate
+      ? new Date(a.upcomingVisitDate).getTime()
+      : Infinity;
+    const secondUpcomingVisitDate = b.upcomingVisitDate
+      ? new Date(b.upcomingVisitDate).getTime()
+      : Infinity;
+
     return (
       (statusWeightMap.get(a.status) ?? -Infinity) -
         (statusWeightMap.get(b.status) ?? -Infinity) ||
-      new Date(a.upcomingVisitDate ?? 0).getTime() -
-        new Date(b.upcomingVisitDate ?? 0).getTime()
+      firstUpcomingVisitDate - secondUpcomingVisitDate
     );
   });
-
   return rows.map((row) => ({
     ...row,
     upcomingVisitDate: row.upcomingVisitDate
