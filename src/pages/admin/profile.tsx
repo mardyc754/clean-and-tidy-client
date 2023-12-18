@@ -6,15 +6,17 @@ import { fetchUserData } from '~/server/prefetchUserData';
 
 import type { AdminUser } from '~/schemas/api/auth';
 
+import { useServicesWithEmployees } from '~/hooks/adminForms/useServices';
 import { useEmployeeListWithVisits } from '~/hooks/employee/useEmployeeList';
 import { useEmployeeVisits } from '~/hooks/employee/useEmployeeVisits';
 
 import { Spinner } from '~/components/molecules/status-indicators';
+import { AdminScheduler } from '~/components/organisms/scheduler';
 import {
   EmployeeReservationTable,
-  EmployeeTable
-} from '~/components/organisms/data-display';
-import { AdminScheduler } from '~/components/organisms/scheduler';
+  EmployeeTable,
+  ServiceTable
+} from '~/components/organisms/tables';
 import { ProfilePageTemplate } from '~/components/template';
 
 import { getEventsFromEmployees } from '~/utils/scheduler';
@@ -31,6 +33,8 @@ export default function AdminProfile({
   const { defaultTab } = router.query;
 
   const { employeeList } = useEmployeeListWithVisits();
+
+  const { services } = useServicesWithEmployees();
 
   return (
     <ProfilePageTemplate
@@ -61,6 +65,10 @@ export default function AdminProfile({
         {
           name: 'Employees',
           Content: () => <EmployeeTable data={employeeList ?? []} />
+        },
+        {
+          name: 'Services',
+          Content: () => <ServiceTable data={services ?? []} />
         }
       ]}
     />

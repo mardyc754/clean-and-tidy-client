@@ -1,11 +1,14 @@
 import { DialogPortal, DialogTrigger } from '@radix-ui/react-dialog';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 
-import { visitPart } from '~/constants/queryKeys';
+import { visit, visitPart } from '~/constants/queryKeys';
 
-import { getVisitPartById } from '~/api/visit';
+import { cancelVisitPart, getVisitPartById } from '~/api/visit';
 
 import type { VisitWithEmployees } from '~/schemas/api/reservation';
+
+import { useAuth } from '~/hooks/auth/useAuth';
 
 import { Button } from '~/components/atoms/buttons';
 import { Spinner } from '~/components/molecules/status-indicators';
@@ -29,12 +32,37 @@ const VisitPartDetailsDialog = ({
   children,
   title
 }: VisitPartDetailsDialogProps) => {
+  const { currentUser } = useAuth();
+
+  const queryClient = useQueryClient();
+
   const { data, isLoading, refetch } = useQuery({
     queryKey: visitPart.detail(visitId, { includeEmployee: true }),
     queryFn: () => getVisitPartById(visitId),
     enabled: false
   });
 
+  const cancelVisitPartMutation = useMutation({
+    mutationFn: () => cancelVisitPart(visitId),
+    onSuccess: () => {
+      return toast.promise(
+        (async () => {
+          await queryClient.invalidateQueries({
+            queryKey: visit.employee(currentUser!.id)
+          });
+
+          await queryClient.invalidateQueries({
+            queryKey: visitPart.detail(visitId, { includeEmployee: true })
+          });
+        })(),
+        {
+          loading: 'Canceling visit...',
+          success: 'Visit cancelled',
+          error: 'Failed to cancel visit'
+        }
+      );
+    }
+  });
   return (
     <Dialog>
       <DialogTrigger
@@ -49,12 +77,21 @@ const VisitPartDetailsDialog = ({
           {!data || isLoading ? (
             <Spinner caption="Loading visit data..." />
           ) : (
-            <VisitPartDetailsList data={data} />
+            <>
+              <VisitPartDetailsList data={data} />
+            </>
           )}
           <DialogFooter className="flex items-center justify-between space-x-4">
-            <Button>Manage</Button>
+            {/* <Button>Manage</Button> */}
             {/* <Button>Confirm</Button> */}
-            <Button color="danger">Cancel visit</Button>
+            <Button
+              color="danger"
+              onClick={() => {
+                cancelVisitPartMutation.mutate();
+              }}
+            >
+              Cancel visit
+            </Button>
           </DialogFooter>
         </DialogContent>
       </DialogPortal>

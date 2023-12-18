@@ -63,28 +63,32 @@ export const getEventsFromReservation = (
 export const getEventsFromVisitParts = (
   visits: VisitPartWithServiceAndReservation[]
 ) => {
-  return visits.map((visit) => {
-    return {
-      title: createReservationTitleForEmployee(
-        visit.reservation,
-        visit.service
-      ),
-      start: convertISOStringToDate(visit.startDate),
-      end: convertISOStringToDate(visit.endDate),
-      resource: { visitId: visit.id, serviceFullName: visit.service.name }
-    };
-  });
+  return visits
+    .filter((visit) => visit.status !== Status.CANCELLED)
+    .map((visit) => {
+      return {
+        title: createReservationTitleForEmployee(
+          visit.reservation,
+          visit.service
+        ),
+        start: convertISOStringToDate(visit.startDate),
+        end: convertISOStringToDate(visit.endDate),
+        resource: { visitId: visit.id, serviceFullName: visit.service.name }
+      };
+    });
 };
 
 export const getEventsFromEmployees = (employees: EmployeeWithVisits[]) => {
   return employees.map((employee) => ({
     ...omit(employee, 'visitParts'),
-    visits: employee.visitParts.map((visit) => ({
-      title: createVisitPartTitleForAdmin(employee, visit),
-      start: convertISOStringToDate(visit.startDate),
-      end: convertISOStringToDate(visit.endDate),
-      resource: { visitId: visit.id, serviceFullName: visit.service.name }
-    }))
+    visits: employee.visitParts
+      .filter((visit) => visit.status !== Status.CANCELLED)
+      .map((visit) => ({
+        title: createVisitPartTitleForAdmin(employee, visit),
+        start: convertISOStringToDate(visit.startDate),
+        end: convertISOStringToDate(visit.endDate),
+        resource: { visitId: visit.id, serviceFullName: visit.service.name }
+      }))
   }));
 };
 

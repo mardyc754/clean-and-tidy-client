@@ -9,8 +9,8 @@ import type { RegularEmployeeUser } from '~/schemas/api/auth';
 import { useEmployeeVisits } from '~/hooks/employee/useEmployeeVisits';
 
 import { Spinner } from '~/components/molecules/status-indicators';
-import { EmployeeReservationTable } from '~/components/organisms/data-display';
 import { Scheduler } from '~/components/organisms/scheduler';
+import { EmployeeReservationTable } from '~/components/organisms/tables';
 import { ProfilePageTemplate } from '~/components/template';
 
 import { daysBetween } from '~/utils/dateUtils';

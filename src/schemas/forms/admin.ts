@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
-import { basicError } from '../common';
+import { basicError, price } from '../common';
 import { loginDataValidator } from './auth';
 
 export const createEmployeeSchema = z
@@ -48,3 +48,14 @@ export const createEmployeeErrorSchema = basicError.extend({
 });
 
 export type CreateEmployeeError = z.infer<typeof createEmployeeErrorSchema>;
+
+export const updateServiceSchema = z.object({
+  unit: z.object({
+    // price: z.number().min(0.01, { message: 'Price must be greater than 0' })
+    price: price
+  })
+});
+
+export const updateServiceResolver = zodResolver(updateServiceSchema);
+
+export type UpdateServiceData = z.infer<typeof updateServiceSchema>;

@@ -14,7 +14,7 @@ import { Button } from '~/components/atoms/buttons';
 import { Spinner } from '~/components/molecules/status-indicators';
 import { DialogFooter } from '~/components/shadcn/ui/dialog';
 
-import { ReservationDetails } from '../data-display';
+import { ReservationDetails } from '../tables';
 import DialogTriggerButton from './DialogTriggerButton';
 
 type ReservationDetailsButtonProps = {

@@ -10,10 +10,12 @@ import {
   TableRow
 } from '~/components/shadcn/ui/table';
 
+type RowType = { id: number } & Record<string, React.ReactNode>;
+
 interface DataTableProps {
   columns: string[];
   name: string;
-  rows: Record<string, React.ReactNode>[];
+  rows: RowType[];
   rowsPerPage?: number;
   leftButtonSlot?: React.ReactNode;
 }
@@ -27,9 +29,9 @@ const DataTable = ({
 }: DataTableProps) => {
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
 
-  const [currentRows, setCurrentRows] = useState<
-    Record<string, React.ReactNode>[]
-  >(rows.slice(0, rowsPerPage));
+  const [currentRows, setCurrentRows] = useState<RowType[]>(
+    rows.slice(0, rowsPerPage)
+  );
 
   useEffect(() => {
     setCurrentRows(
@@ -60,9 +62,11 @@ const DataTable = ({
           <TableBody>
             {currentRows.length ? (
               currentRows.map((row, index) => (
-                <TableRow key={`${name}-row-body-${index}`}>
+                <TableRow key={`${name}-row-body-${index}-${row.id}`}>
                   {Object.values(row).map((cell, i) => (
-                    <TableCell key={`${name}-row-body-${index}-cell-${i}`}>
+                    <TableCell
+                      key={`${name}-row-body-${index}-cell-${i}-${row.id}`}
+                    >
                       {cell}
                     </TableCell>
                   ))}

@@ -10,8 +10,8 @@ import { getClientReservations } from '~/api/client';
 import type { ClientUser } from '~/schemas/api/auth';
 
 import { Spinner } from '~/components/molecules/status-indicators';
-import { ReservationTable } from '~/components/organisms/data-display';
 import { ClientScheduler } from '~/components/organisms/scheduler';
+import { ReservationTable } from '~/components/organisms/tables';
 import { ProfilePageTemplate } from '~/components/template';
 
 import { isClientUser } from '~/utils/userUtils';

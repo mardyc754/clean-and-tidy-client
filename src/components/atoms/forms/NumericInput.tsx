@@ -12,6 +12,7 @@ import NumericInputControl from './NumericInputControl';
 export type NumericInputProps = {
   max?: number;
   min?: number;
+  step?: number;
   label?: string;
   wrapperClassName?: string;
   initialValue?: number;
@@ -31,6 +32,7 @@ const NumericInput = ({
   className = '',
   max = 9999,
   min = -9999,
+  step = 1,
   variant = 'outlined',
   name,
   label,
@@ -70,7 +72,9 @@ const NumericInput = ({
       <div
         className={clsx(
           'flex rounded-lg',
-          variant === 'outlined' ? ' bg-white' : ' bg-transparent',
+          variant === 'outlined' && ' border-2 border-muted bg-white',
+          variant === 'contained-controls' && ' bg-transparent',
+          variant === 'outlined' && errorLabel && 'border-red-500',
           className
         )}
       >
@@ -78,7 +82,8 @@ const NumericInput = ({
           variant={variant}
           icon={faMinus}
           onClick={() => {
-            const newValue = currentValue - 1;
+            const newValue = currentValue - step;
+            if (newValue < min) return;
             setValue(name, newValue);
             onChange?.(newValue);
           }}
@@ -93,7 +98,9 @@ const NumericInput = ({
           })}
           className={clsx(
             'text-center',
-            variant === 'outlined' ? ' w-[150px] p-4' : ' w-[80px] p-1'
+            variant === 'outlined'
+              ? ' w-[150px] p-2 shadow-sm'
+              : ' w-[80px] p-1'
           )}
           onChange={handleValueChange}
           {...props}
@@ -103,7 +110,8 @@ const NumericInput = ({
           variant={variant}
           icon={faPlus}
           onClick={() => {
-            const newValue = currentValue + 1;
+            const newValue = currentValue + step;
+            if (newValue > max) return;
             setValue(name, newValue);
             onChange?.(newValue);
           }}

@@ -7,3 +7,4 @@ export { default as ChangeVisitDateButton } from './ChangeVisitDateButton';
 export { default as CancelVisitButton } from './CancelVisitButton';
 export { default as ReservationDetailsButton } from './ReservationDetailsButton';
 export { default as VisitDetailsDialog } from './VisitDetailsDialog';
+export { default as ManageServiceButton } from './ManageServiceButton';

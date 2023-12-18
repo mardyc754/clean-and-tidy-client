@@ -157,7 +157,7 @@ const CreateEmployeeForm = () => {
         </div>
         <div className="flex justify-end py-4">
           <Button className="w-28" type="submit">
-            Submit
+            Create
           </Button>
         </div>
       </form>

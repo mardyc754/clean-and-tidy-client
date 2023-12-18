@@ -57,3 +57,13 @@ export const getVisitPartById = async (id: VisitPart['id']) => {
     params: { includeEmployee: true }
   });
 };
+
+export const cancelVisitPart = async (visitId: VisitPart['id']) => {
+  return await handleFetchingData({
+    path: `/visit-parts/${visitId}/cancel`,
+    method: 'put',
+    successSchema:
+      visitPartWithVisitData as unknown as ZodType<VisitPartWithVisitData>,
+    errorSchema: basicError
+  });
+};

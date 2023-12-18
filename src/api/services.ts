@@ -11,6 +11,7 @@ import {
   services
 } from '~/schemas/api/services';
 import { basicError } from '~/schemas/common';
+import { UpdateServiceData } from '~/schemas/forms/admin';
 import { busyHoursData } from '~/schemas/forms/orderService';
 
 import { handleFetchingData } from './handleFetchingData';
@@ -92,5 +93,22 @@ export const getServicesBusyHours = async (
     successSchema: busyHoursData,
     errorSchema: basicError,
     params: parsedParams
+  });
+};
+
+export const changeServiceData = async (
+  id: Service['id'],
+  data: UpdateServiceData
+) => {
+  return await handleFetchingData({
+    path: `/services/${id}`,
+    method: 'put',
+    successSchema: service as ZodType<Service>,
+    errorSchema: basicError,
+    params: {
+      includeSecondaryServices: true,
+      includeCleaningFrequencies: true
+    },
+    data
   });
 };

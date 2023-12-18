@@ -28,7 +28,7 @@ const ProfilePageTemplate = ({
           <Tabs
             defaultTab={defaultTab}
             tabsListClasses={
-              userRole === UserRole.ADMIN ? 'grid-cols-4' : 'grid-cols-3'
+              userRole === UserRole.ADMIN ? 'grid-cols-5' : 'grid-cols-3'
             }
             slots={[
               ...slots,
