@@ -75,6 +75,21 @@ export const visit = {
   change: (id: Visit['id']) => [...visit.detail(id), 'change'] as const
 };
 
+export const visitPart = {
+  all: ['visitParts'] as const,
+  find: () => [...visit.all, 'find'] as const,
+  lists: () => [...visit.all, 'list'] as const,
+  client: (id: number) => [...visit.find(), 'client', { id }] as const,
+  employee: (id: number) => [...visit.find(), 'employee', id] as const,
+  list: (filters: string) => [...visit.lists(), { filters }] as const,
+  details: () => [...visit.all, 'detail'] as const,
+  detail: (id: number, options?: VisitQueryOptions) =>
+    [...visit.details(), id, { options }] as const,
+  reservationVisitDetail: (id: number) =>
+    [...reservation.details(), ...visit.detail(id)] as const,
+  change: (id: Visit['id']) => [...visit.detail(id), 'change'] as const
+};
+
 export const service = {
   all: ['services'] as const,
   filter: (filters?: ServiceQueryOptions | AllServicesQueryOptions) =>

@@ -15,17 +15,22 @@ import { Button } from '~/components/atoms/buttons';
 
 import { dateWithHour } from '~/utils/dateUtils';
 
-import { VisitDetailsDialog } from '../dialogs';
+import { VisitDetailsDialog, VisitPartDetailsDialog } from '../dialogs';
 
 export interface VisitEvent extends CalendarEvent {
   title: string;
-  resource: { visitId: VisitWithEmployees['id'] };
+  resource: {
+    visitId: VisitWithEmployees['id'];
+    serviceFullName: string;
+    reservationName?: string;
+  };
 }
 
 export type SchedulerProps = Omit<CalendarProps<VisitEvent>, 'localizer'> & {
   actionsSlot?: React.ReactNode;
   events: VisitEvent[];
   onClickDownloadIcs?: () => Promise<void>;
+  userRole: 'client' | 'employee';
 };
 
 function getRandomBackgroudColor() {
@@ -52,24 +57,36 @@ function getRandomBackgroudColor() {
   return colors[Math.floor(Math.random() * colors.length)];
 }
 
-const Event = React.memo(({ event, ...props }: EventProps<VisitEvent>) => {
-  const { resource } = event;
-  const [isOpen, setIsOpen] = React.useState(false);
-  return (
-    <div className="h-full" onClick={() => setIsOpen(true)}>
-      <p>{event.title}</p>
-      {isOpen && (
-        <VisitDetailsDialog
-          isOpen
-          onClose={() => setIsOpen(false)}
-          visitId={resource.visitId}
-        />
-      )}
-    </div>
-  );
-});
+const EmployeeEvent = React.memo(
+  ({ event, ...props }: EventProps<VisitEvent>) => {
+    return (
+      <VisitPartDetailsDialog
+        title={event.resource.serviceFullName}
+        visitId={event.resource.visitId}
+      >
+        <p className="text-left">{event.title}</p>
+      </VisitPartDetailsDialog>
+    );
+  }
+);
 
-Event.displayName = 'Event';
+EmployeeEvent.displayName = 'EmployeeEvent';
+
+const ClientEvent = React.memo(
+  ({ event, ...props }: EventProps<VisitEvent>) => {
+    return (
+      <VisitDetailsDialog
+        title={event.resource.serviceFullName}
+        visitId={event.resource.visitId}
+        reservationName={event.resource.reservationName ?? ''}
+      >
+        <p className="text-left">{event.title}</p>
+      </VisitDetailsDialog>
+    );
+  }
+);
+
+ClientEvent.displayName = 'ClientEvent';
 
 // function Event({ event, ...props }: EventProps<VisitEvent>) {
 //   const { resource } = event;
@@ -120,6 +137,7 @@ const Scheduler = ({
   className,
   actionsSlot,
   events,
+  userRole,
   onClickDownloadIcs,
   ...props
 }: SchedulerProps) => {
@@ -129,7 +147,7 @@ const Scheduler = ({
         // agenda: {
         //   event: EventAgenda
         // },
-        event: Event
+        event: userRole === 'employee' ? EmployeeEvent : ClientEvent
         // eventContentWrapper: Event
         // eventContentWrapper: ({ children }) => <div>{children}</div>
       }

@@ -24,7 +24,7 @@ export type EmployeeWithVisitEvents = Omit<EmployeeWithVisits, 'visitParts'> & {
 
 type AdminSchedulerProps = {
   reservationList: ReservationWithExtendedVisits[];
-} & Omit<SchedulerProps, 'length' | 'events'>;
+} & Omit<SchedulerProps, 'length' | 'events' | 'userRole'>;
 
 const ClientScheduler = ({
   reservationList,
@@ -60,6 +60,7 @@ const ClientScheduler = ({
       onClickDownloadIcs={() =>
         generateIcsFromReservationList(reservationList, currentUser!)
       }
+      userRole="client"
     />
   );
 };

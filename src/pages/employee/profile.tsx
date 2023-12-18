@@ -56,6 +56,7 @@ export default function EmployeeProfile({
           Content: () =>
             !isLoading ? (
               <Scheduler
+                userRole="employee"
                 onClickDownloadIcs={() =>
                   generateIscFileForReservationVisits(visitList ?? [], userData)
                 }

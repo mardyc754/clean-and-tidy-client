@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react';
 
+import { user } from '~/constants/queryKeys';
+
 import type { EmployeeWithVisits } from '~/schemas/api/reservation';
 
 import { useAuth } from '~/hooks/auth/useAuth';
@@ -21,7 +23,7 @@ export type EmployeeWithVisitEvents = Omit<EmployeeWithVisits, 'visitParts'> & {
 
 type AdminSchedulerProps = {
   employeeList: EmployeeWithVisitEvents[];
-} & Omit<SchedulerProps, 'length' | 'events'>;
+} & Omit<SchedulerProps, 'length' | 'events' | 'userRole'>;
 
 const AdminScheduler = ({ employeeList, ...props }: AdminSchedulerProps) => {
   const { currentUser, isPending } = useAuth();
@@ -78,6 +80,7 @@ const AdminScheduler = ({ employeeList, ...props }: AdminSchedulerProps) => {
             selectedEmployee.name !== 'You' ? selectedEmployee.name : undefined
         })
       }
+      userRole="employee"
       actionsSlot={
         <LabeledDropdown
           label="Show events for"

@@ -28,7 +28,9 @@ const ReservationDetailsButton = ({
 
   const { currentUser } = useAuth();
 
-  const { data, isLoading } = useReservation(reservationName);
+  const { data, isLoading, refetch } = useReservation(reservationName, {
+    enabled: false
+  });
 
   const mutation = useMutation({
     mutationFn: (userId: number) => confirmReservation(reservationName, userId),
@@ -41,7 +43,11 @@ const ReservationDetailsButton = ({
   });
 
   return (
-    <DialogTriggerButton buttonLabel="Manage" dialogTitle="Reservation Details">
+    <DialogTriggerButton
+      buttonLabel="Manage"
+      dialogTitle="Reservation Details"
+      onClick={async () => await refetch()}
+    >
       {isLoading || !data ? (
         <Spinner caption="Loading reservation data..." />
       ) : (

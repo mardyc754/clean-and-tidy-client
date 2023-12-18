@@ -25,7 +25,7 @@ const DialogBase = ({
     <Portal>
       <Dialog open={isOpen} onClose={onClose}>
         {/* grey out the area outside the dialog */}
-        <div className="pointer-events-none fixed top-0 h-full w-full bg-black opacity-30" />
+        <div className="pointer-events-none fixed top-0 h-full w-full bg-black opacity-70" />
         {/* dialog wrapper */}
         <Dialog.Panel
           className={clsx(

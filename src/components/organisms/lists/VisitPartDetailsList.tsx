@@ -1,11 +1,6 @@
 import clsx from 'clsx';
 
-import type {
-  VisitPartWithEmployees,
-  VisitWithEmployees
-} from '~/schemas/api/reservation';
-
-import { calculateVisitCostAndDuration } from '~/stores/orderService/utils';
+import type { VisitPartWithEmployees } from '~/schemas/api/reservation';
 
 import { LabeledTypography } from '~/components/atoms/typography/labeled-text';
 
@@ -14,22 +9,20 @@ import {
   extractDateStringFromDate
 } from '~/utils/dateUtils';
 import { convertToCamelCase } from '~/utils/stringUtils';
-import {
-  getVisitStartEndDates,
-  getVisitStatusDescription
-} from '~/utils/visitUtils';
+import { getVisitPartStatusDescription } from '~/utils/visitUtils';
 
-interface VisitDetailsListProps {
-  data: VisitWithEmployees;
+interface VisitPartDetailsListProps {
+  data: VisitPartWithEmployees;
 }
 
-const ExtendedVisitDetailsList = ({ data }: VisitDetailsListProps) => {
-  const status = getVisitStatusDescription(data);
-  const { startDate, endDate } = getVisitStartEndDates(data);
+const VisitPartDetailsList = ({ data }: VisitPartDetailsListProps) => {
+  const status = getVisitPartStatusDescription(data);
 
   const listedData = new Map([
-    ['Date', extractDateStringFromDate(startDate)],
-    ['Hours', displayDatesAsTimeslot(startDate, endDate)]
+    ['Date', extractDateStringFromDate(data.startDate)],
+    ['Hours', displayDatesAsTimeslot(data.startDate, data.endDate)],
+    ['Status', status?.label ?? ''],
+    ['Cost', `${data.cost.toFixed(2)} zł`]
   ]);
 
   return (
@@ -48,4 +41,4 @@ const ExtendedVisitDetailsList = ({ data }: VisitDetailsListProps) => {
   );
 };
 
-export default ExtendedVisitDetailsList;
+export default VisitPartDetailsList;

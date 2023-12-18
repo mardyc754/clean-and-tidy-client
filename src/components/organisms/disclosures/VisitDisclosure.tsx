@@ -20,6 +20,7 @@ import {
 
 import { VisitActions } from '../button-fields';
 import { EmployeeSecondaryList, VisitDetailsList } from '../lists';
+import { SecondaryListWrapper } from '../wrappers';
 
 interface VisitDisclosureProps {
   reservationData: Omit<ReservationWithExtendedVisits, 'visits' | 'services'>;
@@ -40,7 +41,9 @@ const VisitDisclosure = ({
   const status = getVisitStatusDescription(data);
 
   return (
-    <VisitDataContext.Provider value={{ visitData: data, reservationData }}>
+    <VisitDataContext.Provider
+      value={{ visitData: data, reservationName: reservationData.name }}
+    >
       <Disclosure
         defaultOpen={defaultOpen}
         titleComponent={
@@ -60,7 +63,13 @@ const VisitDisclosure = ({
             <VisitDetailsList data={data} />
           </div>
           {employees.length > 0 && <EmployeeSecondaryList data={data} />}
-          {manageable && <VisitActions />}
+          {manageable && (
+            <SecondaryListWrapper title="Actions">
+              <div className="flex space-x-4">
+                <VisitActions />
+              </div>
+            </SecondaryListWrapper>
+          )}
         </div>
       </Disclosure>
     </VisitDataContext.Provider>

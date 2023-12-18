@@ -35,7 +35,7 @@ DialogTriggerButtonProps) => {
       <DialogTriggerBase asChild>
         <Button {...props}>{buttonLabel}</Button>
       </DialogTriggerBase>
-      <DialogContent className={clsx('sm:max-w-4xl', className)}>
+      <DialogContent className={clsx(className)}>
         <DialogHeader>
           {dialogTitle && <DialogTitle>{dialogTitle}</DialogTitle>}
           {dialogDescription && (
