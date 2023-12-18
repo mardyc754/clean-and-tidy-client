@@ -24,6 +24,7 @@ const FormPageTemplate = ({
           <Image
             alt="Living room"
             src={FormPageImage}
+            // from https://pixabay.com/pl/photos/kanapa-salon-meble-krzes%C5%82o-tabela-1845270/
             style={{
               width: '100%',
               height: '100%',

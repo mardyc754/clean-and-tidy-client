@@ -27,6 +27,7 @@ const HeroSection = ({ services }: HeroSectionProps) => {
       <Image
         alt="Living room"
         src={HeroSectionImage}
+        // from https://pixabay.com/pl/photos/salon-krzes%C5%82o-sofa-kanapa-dom-2155376/
         style={{
           width: '100%',
           height: '100%',
