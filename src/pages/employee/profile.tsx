@@ -10,7 +10,6 @@ import { useEmployeeVisits } from '~/hooks/employee/useEmployeeVisits';
 
 import { Spinner } from '~/components/molecules/status-indicators';
 import { EmployeeReservationTable } from '~/components/organisms/data-display';
-import { ReservationToConfirmList } from '~/components/organisms/lists';
 import { Scheduler } from '~/components/organisms/scheduler';
 import { ProfilePageTemplate } from '~/components/template';
 
