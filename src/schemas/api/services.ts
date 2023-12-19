@@ -17,7 +17,7 @@ export const basicService = z.object({
       duration: z.number().max(480)
     })
     .nullish(),
-  minNumberOfUnitsIfPrimary: z.number().int().min(1).nullish(),
+  minNumberOfUnitsIfPrimary: z.number().int().min(0).nullish(),
   minCostIfPrimary: decimalToFloat.nullish()
 });
 

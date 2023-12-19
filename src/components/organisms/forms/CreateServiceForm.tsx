@@ -3,22 +3,26 @@ import { useRouter } from 'next/router';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
-import { employee } from '~/constants/queryKeys';
+import { employee, service } from '~/constants/queryKeys';
 
-import { createEmployee } from '~/api/employee';
 import type { ResponseError } from '~/api/errors/ResponseError';
+import { createService } from '~/api/services';
 
-import type { Employee } from '~/schemas/api/employee';
+import type { Service } from '~/schemas/api/services';
 import {
-  type CreateEmployeeData,
-  type CreateEmployeeError,
-  createEmployeeResolver
+  type CreateServiceData,
+  type CreateServiceError,
+  createServiceResolver
 } from '~/schemas/forms/admin';
 
 import { useServices } from '~/hooks/adminForms/useServices';
 
 import { Button } from '~/components/atoms/buttons';
-import { ErrorLabel } from '~/components/atoms/forms';
+import {
+  ErrorLabel,
+  FormCheckbox,
+  NumericInput
+} from '~/components/atoms/forms';
 import { Heading2 } from '~/components/atoms/typography/headings';
 import { Textfield } from '~/components/molecules/form-fields';
 import {
@@ -36,43 +40,46 @@ const CreateEmployeeForm = () => {
 
   const { services } = useServices();
 
-  const methods = useForm<CreateEmployeeData>({
+  const methods = useForm<CreateServiceData>({
     defaultValues: {
-      services: Object.fromEntries(
+      secondaryServices: Object.fromEntries(
         (services ?? []).map((service) => [`${service.id}`, false])
       )
     },
 
-    resolver: createEmployeeResolver
+    resolver: createServiceResolver
   });
 
   const {
     formState: { errors },
     handleSubmit,
-    setError
+    setError,
+    watch
   } = methods;
 
+  console.log(watch());
+
   const mutation = useMutation<
-    Employee,
-    ResponseError<CreateEmployeeError>,
-    CreateEmployeeData
+    Service,
+    ResponseError<CreateServiceError>,
+    CreateServiceData
   >({
-    mutationFn: createEmployee,
+    mutationFn: createService,
     onSuccess: () => {
       return toast.promise(
         (async () => {
           await queryClient.invalidateQueries({
-            queryKey: employee.filters({ includeVisits: true })
+            queryKey: service.employeesWithFilters({ includeEmployee: true })
           });
           await router.push({
             pathname: '/admin/profile',
-            query: { ...router.query, defaultTab: '2' }
+            query: { ...router.query, defaultTab: '3' }
           });
         })(),
         {
-          loading: 'Creating employee',
-          success: 'Employee created',
-          error: 'Failed to create employee'
+          loading: 'Creating service',
+          success: 'Service created',
+          error: 'Failed to create service'
         }
       );
     },
@@ -84,6 +91,8 @@ const CreateEmployeeForm = () => {
       }
     }
   });
+
+  console.log(errors);
 
   return (
     <FormProvider {...methods}>
@@ -101,53 +110,67 @@ const CreateEmployeeForm = () => {
             </CardHeader>
             <CardContent className="max-w-sm">
               <Textfield
-                label="First Name"
-                name="firstName"
-                placeholder="First Name"
-                errorLabel={errors.firstName?.message}
+                label="Service name"
+                name="name"
+                placeholder="Service name"
+                errorLabel={errors.name?.message}
               />
               <Textfield
-                label="Last Name"
-                name="lastName"
-                placeholder="Last Name"
-                errorLabel={errors.lastName?.message}
+                label="Unit name"
+                name="unit.fullName"
+                placeholder="Unit full name"
+                errorLabel={errors.unit?.fullName?.message}
               />
               <Textfield
-                label="Email"
-                name="email"
-                type="email"
-                placeholder="Email"
-                errorLabel={errors.email?.message}
-              />
-              <Textfield label="Phone" name="phone" placeholder="Phone" />
-              <Textfield
-                type="password"
-                label="Password"
-                name="password"
-                placeholder="Password"
-                errorLabel={errors.password?.message}
+                label="Unit short name"
+                name="unit.shortName"
+                placeholder="Unit short name"
+                errorLabel={errors.unit?.shortName?.message}
               />
               <Textfield
-                type="password"
-                label="Confirm Password"
-                name="confirmPassword"
-                placeholder="Confirm Password"
-                errorLabel={errors.confirmPassword?.message}
+                label="Price per unit"
+                name="unit.price"
+                placeholder="Price per unit"
+                errorLabel={errors.unit?.price?.message}
+              />
+
+              <NumericInput
+                name="unit.duration"
+                min={1}
+                label="Duration per unit (in minutes)"
+                max={480}
+                errorLabel={errors.unit?.duration?.message}
+              />
+              <FormCheckbox name="isPrimary" caption="Is primary service?" />
+              <NumericInput
+                name="minNumberOfUnitsIfPrimary"
+                min={1}
+                label="Minimum number of units if primary"
+                max={500}
+                errorLabel={errors.minNumberOfUnitsIfPrimary?.message}
+              />
+              <Textfield
+                label="Minimum required cost if primary"
+                name="minCostIfPrimary"
+                placeholder="Price per unit"
+                errorLabel={errors.minCostIfPrimary?.message}
               />
             </CardContent>
           </Card>
           <Card>
             <CardHeader>
-              <Heading2>Assigned services</Heading2>
+              <Heading2>Select extra services</Heading2>
             </CardHeader>
             <CardContent>
               <ServicesMultiSelect
-                serviceData={services ?? []}
-                name="services"
+                serviceData={services?.filter((service) => service.unit) ?? []}
+                name="secondaryServices"
               />
               <CardFooter className="py-4">
-                {errors.services?.root?.message && (
-                  <ErrorLabel>{errors.services.root?.message}</ErrorLabel>
+                {errors.secondaryServices?.root?.message && (
+                  <ErrorLabel>
+                    {errors.secondaryServices.root?.message}
+                  </ErrorLabel>
                 )}
               </CardFooter>
             </CardContent>

@@ -14,6 +14,7 @@ type HourSelectionProps = {
   className?: string;
   direction?: 'row' | 'column';
   disableSelection: boolean;
+  disableHours?: boolean;
   errorLabel?: string;
   onChange?: (value: ValidDate) => void;
   hourAvailabilityData: HourAvailability[];
@@ -25,6 +26,7 @@ const HourSelection = ({
   className = '',
   direction = 'column',
   disableSelection,
+  disableHours = false,
   errorLabel,
   hourAvailabilityData,
   selectedDuration = 0,
@@ -55,7 +57,7 @@ const HourSelection = ({
           <HourTile
             key={`HourTile-${hour}`}
             value={hour}
-            available={available}
+            available={available && !disableHours}
             disabled={disableSelection}
             selected={isSame(currentValue, hour)}
             included={

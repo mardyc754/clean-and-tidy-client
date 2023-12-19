@@ -7,11 +7,13 @@ import { FormCheckbox } from '~/components/atoms/forms';
 interface ChangeEmployeeDataFormProps {
   serviceData: Array<ServiceWithEmployees | Service>;
   checkboxGroupsDirection?: 'row' | 'column';
+  showHeader?: boolean;
   name?: string;
 }
 
 const ServicesMultiSelect = ({
   serviceData,
+  showHeader = false,
   name = 'employeeServices',
   checkboxGroupsDirection = 'column'
 }: ChangeEmployeeDataFormProps) => {
@@ -20,7 +22,7 @@ const ServicesMultiSelect = ({
 
   return (
     <div className="flex flex-col space-y-4">
-      <p className="font-emphasize text-lg">Services</p>
+      {showHeader && <p className="font-emphasize text-lg">Services</p>}
       <div className={clsx('flex flex-col lg:flex-row lg:space-x-12')}>
         <div className="flex flex-col space-y-2">
           <p>Primary services</p>

@@ -81,18 +81,20 @@ const VisitPartDetailsDialog = ({
               <VisitPartDetailsList data={data} />
             </>
           )}
-          <DialogFooter className="flex items-center justify-between space-x-4">
-            {/* <Button>Manage</Button> */}
-            {/* <Button>Confirm</Button> */}
-            <Button
-              color="danger"
-              onClick={() => {
-                cancelVisitPartMutation.mutate();
-              }}
-            >
-              Cancel visit
-            </Button>
-          </DialogFooter>
+          {currentUser?.id === data?.employeeId && (
+            <DialogFooter className="flex items-center justify-between space-x-4">
+              {/* <Button>Manage</Button> */}
+              {/* <Button>Confirm</Button> */}
+              <Button
+                color="danger"
+                onClick={() => {
+                  cancelVisitPartMutation.mutate();
+                }}
+              >
+                Cancel visit
+              </Button>
+            </DialogFooter>
+          )}
         </DialogContent>
       </DialogPortal>
     </Dialog>

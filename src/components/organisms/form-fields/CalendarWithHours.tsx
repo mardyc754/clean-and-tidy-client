@@ -19,6 +19,7 @@ type CalendarWithLabelProps = {
   label: string;
   busyHours?: TimeInterval[];
   currentDuration?: number;
+  disableHourSelection?: boolean;
   direction?: 'column' | 'row';
   onChangeHour?: (value: ValidDate) => void;
   onChangeDate?: (value: ValidDate) => void;
@@ -37,6 +38,7 @@ const CalendarWithHours = ({
   hourErrorLabel,
   busyHours = [],
   currentDuration = 0,
+  disableHourSelection = false,
   ...props
 }: CalendarWithLabelProps) => {
   const currentDate = useWatch({ name: calendarInputName }) as ValidDate;
@@ -65,6 +67,7 @@ const CalendarWithHours = ({
           hourAvailabilityData={getHourAvailabilityData(currentDate, busyHours)}
           name={hourInputName}
           disableSelection={!currentDate}
+          disableHours={disableHourSelection}
           onChange={onChangeHour}
           errorLabel={hourErrorLabel}
         />

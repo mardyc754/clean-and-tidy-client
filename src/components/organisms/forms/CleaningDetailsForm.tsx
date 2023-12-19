@@ -135,6 +135,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
             busyHours={busyHoursData?.busyHours ?? []}
             currentDuration={duration}
             direction="column"
+            disableHourSelection={!busyHoursData?.employees.length}
           />
           {secondaryServicesWithUnit.length > 0 && unit && (
             <NumericInputMultiSelect
