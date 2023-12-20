@@ -15,7 +15,7 @@ const OrderServiceHome = ({
   data
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
-    <PageWrapper title="Check Reservation">
+    <PageWrapper title="Order service">
       <div className="p-16">
         <Heading1>Select service</Heading1>
 

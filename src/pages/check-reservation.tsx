@@ -11,7 +11,7 @@ import {
   IconIndicator,
   Spinner
 } from '~/components/molecules/status-indicators';
-import { ReservationDetails } from '~/components/organisms/data-display';
+import { ReservationDetails } from '~/components/organisms/tables';
 import { PageWrapper } from '~/components/template';
 
 const CheckReservation = () => {

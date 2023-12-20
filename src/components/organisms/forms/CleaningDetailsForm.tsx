@@ -15,8 +15,8 @@ import { extractYearAndMonthFromDateToString } from '~/utils/dateUtils';
 
 import {
   CalendarWithHours,
+  NumericInputMultiSelect,
   RadioGroup,
-  ServiceMultiSelect,
   StepButtons
 } from '../form-fields';
 
@@ -94,7 +94,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
       }
     />
   ) : secondaryServicesWithUnit.length > 0 ? (
-    <ServiceMultiSelect
+    <NumericInputMultiSelect
       title="Select services"
       defaultValues={methods.watch('extraServices')}
       name="extraServices"
@@ -135,9 +135,10 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
             busyHours={busyHoursData?.busyHours ?? []}
             currentDuration={duration}
             direction="column"
+            disableHourSelection={!busyHoursData?.employees.length}
           />
           {secondaryServicesWithUnit.length > 0 && unit && (
-            <ServiceMultiSelect
+            <NumericInputMultiSelect
               title="Extra services"
               defaultValues={methods.watch('extraServices')}
               name="extraServices"

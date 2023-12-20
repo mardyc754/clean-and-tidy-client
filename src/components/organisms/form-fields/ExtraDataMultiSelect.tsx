@@ -20,7 +20,7 @@ type ExtraDataMultiSelectProps = {
   ) => EmployeeAvailabilityData[];
 };
 
-const ServiceMultiSelect = ({
+const NumericInputMultiSelect = ({
   title,
   name,
   data,
@@ -50,4 +50,4 @@ const ServiceMultiSelect = ({
   );
 };
 
-export default ServiceMultiSelect;
+export default NumericInputMultiSelect;

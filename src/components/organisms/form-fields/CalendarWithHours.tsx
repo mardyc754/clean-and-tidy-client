@@ -19,6 +19,7 @@ type CalendarWithLabelProps = {
   label: string;
   busyHours?: TimeInterval[];
   currentDuration?: number;
+  disableHourSelection?: boolean;
   direction?: 'column' | 'row';
   onChangeHour?: (value: ValidDate) => void;
   onChangeDate?: (value: ValidDate) => void;
@@ -37,17 +38,10 @@ const CalendarWithHours = ({
   hourErrorLabel,
   busyHours = [],
   currentDuration = 0,
+  disableHourSelection = false,
   ...props
 }: CalendarWithLabelProps) => {
   const currentDate = useWatch({ name: calendarInputName }) as ValidDate;
-
-  // const busyDays = busyHours.filter(
-  //   (busyHour) =>
-  //     isSame(busyHour.startDate, startOfDay(busyHour.startDate)) &&
-  //     isSame(busyHour.endDate, endOfDay(busyHour.endDate))
-  // );
-
-  // console.log('>>> busyDays', busyDays);
 
   return (
     <div className="flex flex-col">
@@ -73,6 +67,7 @@ const CalendarWithHours = ({
           hourAvailabilityData={getHourAvailabilityData(currentDate, busyHours)}
           name={hourInputName}
           disableSelection={!currentDate}
+          disableHours={disableHourSelection}
           onChange={onChangeHour}
           errorLabel={hourErrorLabel}
         />

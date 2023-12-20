@@ -1,6 +1,5 @@
 import { type DehydratedState, useQuery } from '@tanstack/react-query';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import { useMemo } from 'react';
 
 import { fetchUserData } from '~/server/prefetchUserData';
 
@@ -10,10 +9,11 @@ import { getClientReservations } from '~/api/client';
 
 import type { ClientUser } from '~/schemas/api/auth';
 
-import { ReservationTable } from '~/components/organisms/data-display';
+import { Spinner } from '~/components/molecules/status-indicators';
+import { ClientScheduler } from '~/components/organisms/scheduler';
+import { ReservationTable } from '~/components/organisms/tables';
 import { ProfilePageTemplate } from '~/components/template';
 
-import { getEventsFromReservation } from '~/utils/scheduler';
 import { isClientUser } from '~/utils/userUtils';
 
 export default function ClientProfile({
@@ -24,23 +24,25 @@ export default function ClientProfile({
     queryFn: () => getClientReservations(userData.id)
   });
 
-  const visitEvents = useMemo(() => {
-    if (!reservationList) return [];
-
-    return reservationList.flatMap((reservation) =>
-      getEventsFromReservation(reservation)
-    );
-  }, [reservationList]);
-
   return (
     <ProfilePageTemplate
-      visits={visitEvents}
-      userData={userData}
-      isLoadingEvents={isLoading}
-    >
-      {/* <ReservationList data={reservationList ?? []} /> */}
-      <ReservationTable data={reservationList ?? []} />
-    </ProfilePageTemplate>
+      userRole={userData.role}
+      slots={[
+        {
+          name: 'Your Reservations',
+          Content: () => <ReservationTable data={reservationList ?? []} />
+        },
+        {
+          name: 'Visit calendar',
+          Content: () =>
+            !isLoading ? (
+              <ClientScheduler reservationList={reservationList ?? []} />
+            ) : (
+              <Spinner caption="Loading events..." />
+            )
+        }
+      ]}
+    />
   );
 }
 

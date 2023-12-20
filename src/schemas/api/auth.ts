@@ -15,9 +15,7 @@ export const registrationSuccess = z.object({
 
 export const registrationError = basicError.merge(
   z.object({
-    affectedField: z
-      .union([z.literal('username'), z.literal('email')])
-      .optional()
+    affectedField: z.literal('email').optional()
   })
 );
 
@@ -46,23 +44,31 @@ export const clientUserSchema = clientSchema.extend({
   role: z.literal(UserRole.CLIENT)
 });
 
-export const regularEmployeeUserSchema = employeeSchema.extend({
-  role: z.literal(UserRole.EMPLOYEE)
-});
+export const regularEmployeeUserSchema = employeeSchema
+  .extend({
+    role: z.literal(UserRole.EMPLOYEE)
+  })
+  .omit({ isAdmin: true });
 
-export const adminUserSchema = employeeSchema.extend({
-  role: z.literal(UserRole.ADMIN)
-});
+export const adminUserSchema = employeeSchema
+  .extend({
+    role: z.literal(UserRole.ADMIN)
+  })
+  .omit({ isAdmin: true });
 
 export const employeeUserSchema = employeeSchema.extend({
   role: z.union([z.literal(UserRole.EMPLOYEE), z.literal(UserRole.ADMIN)])
 });
 
-export const userSchema = z.union([
-  clientUserSchema,
-  employeeUserSchema,
-  z.object({})
-]);
+export const userSchema = z
+  .discriminatedUnion('role', [
+    adminUserSchema,
+    regularEmployeeUserSchema,
+    clientUserSchema
+  ])
+  .or(z.object({}).strict());
+
+// export const userSchema = employeeUserSchema;
 
 export type RegistrationSuccessData = z.infer<typeof registrationSuccess>;
 

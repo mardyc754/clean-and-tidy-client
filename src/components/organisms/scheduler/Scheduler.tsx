@@ -4,17 +4,34 @@ import {
   Calendar,
   type Event as CalendarEvent,
   type CalendarProps,
-  type EventProps,
-  EventWrapperProps
+  type EventProps
 } from 'react-big-calendar';
 
 import { localizer } from '~/lib/dayjs';
 
 import type { VisitWithEmployees } from '~/schemas/api/reservation';
 
+import { Button } from '~/components/atoms/buttons';
+
 import { dateWithHour } from '~/utils/dateUtils';
 
-import { VisitDetailsDialog } from '../dialogs';
+import { VisitDetailsDialog, VisitPartDetailsDialog } from '../dialogs';
+
+export interface VisitEvent extends CalendarEvent {
+  title: string;
+  resource: {
+    visitId: VisitWithEmployees['id'];
+    serviceFullName: string;
+    reservationName?: string;
+  };
+}
+
+export type SchedulerProps = Omit<CalendarProps<VisitEvent>, 'localizer'> & {
+  actionsSlot?: React.ReactNode;
+  events: VisitEvent[];
+  onClickDownloadIcs?: () => Promise<void>;
+  userRole: 'client' | 'employee';
+};
 
 function getRandomBackgroudColor() {
   const colors = [
@@ -40,28 +57,36 @@ function getRandomBackgroudColor() {
   return colors[Math.floor(Math.random() * colors.length)];
 }
 
-export interface VisitEvent extends CalendarEvent {
-  resource: { visitId: VisitWithEmployees['id'] };
-}
+const EmployeeEvent = React.memo(
+  ({ event, ...props }: EventProps<VisitEvent>) => {
+    return (
+      <VisitPartDetailsDialog
+        title={event.resource.serviceFullName}
+        visitId={event.resource.visitId}
+      >
+        <p className="text-left">{event.title}</p>
+      </VisitPartDetailsDialog>
+    );
+  }
+);
 
-const Event = React.memo(({ event, ...props }: EventProps<VisitEvent>) => {
-  const { resource } = event;
-  const [isOpen, setIsOpen] = React.useState(false);
-  return (
-    <div className="h-full" onClick={() => setIsOpen(true)}>
-      <p>{event.title}</p>
-      {isOpen && (
-        <VisitDetailsDialog
-          isOpen
-          onClose={() => setIsOpen(false)}
-          visitId={resource.visitId}
-        />
-      )}
-    </div>
-  );
-});
+EmployeeEvent.displayName = 'EmployeeEvent';
 
-Event.displayName = 'Event';
+const ClientEvent = React.memo(
+  ({ event, ...props }: EventProps<VisitEvent>) => {
+    return (
+      <VisitDetailsDialog
+        title={event.resource.serviceFullName}
+        visitId={event.resource.visitId}
+        reservationName={event.resource.reservationName ?? ''}
+      >
+        <p className="text-left">{event.title}</p>
+      </VisitDetailsDialog>
+    );
+  }
+);
+
+ClientEvent.displayName = 'ClientEvent';
 
 // function Event({ event, ...props }: EventProps<VisitEvent>) {
 //   const { resource } = event;
@@ -110,15 +135,19 @@ function EventAgenda({ event }: EventProps) {
  */
 const Scheduler = ({
   className,
+  actionsSlot,
+  events,
+  userRole,
+  onClickDownloadIcs,
   ...props
-}: Omit<CalendarProps<VisitEvent>, 'localizer'>) => {
+}: SchedulerProps) => {
   const { components } = useMemo(
     () => ({
       components: {
         // agenda: {
         //   event: EventAgenda
         // },
-        event: Event
+        event: userRole === 'employee' ? EmployeeEvent : ClientEvent
         // eventContentWrapper: Event
         // eventContentWrapper: ({ children }) => <div>{children}</div>
       }
@@ -127,21 +156,29 @@ const Scheduler = ({
   );
 
   return (
-    <div className={clsx('h-[80vh]', className)}>
-      <Calendar
-        {...props}
-        components={components}
-        // eventPropGetter={() => ({ className: getRandomBackgroudColor() })}
-        // eventPropGetter={() => ({ className: 'bg-cyan-500 overflow-visible' })}
-        // dayPropGetter={() => ({ className: 'overflow-visible' })}
-        localizer={localizer}
-        startAccessor="start"
-        endAccessor="end"
-        // culture='pl'
-        min={dateWithHour(undefined, 6)}
-        // max={dateWithHour(undefined, 22)}
-      />
-    </div>
+    <>
+      <div className="flex items-center justify-end space-x-2 py-4">
+        {actionsSlot}
+        <Button onClick={onClickDownloadIcs}>Export to .ics</Button>
+      </div>
+      <div className={clsx('h-[80vh]', className)}>
+        <Calendar
+          {...props}
+          events={events}
+          components={components}
+          // eventPropGetter={() => ({ className: getRandomBackgroudColor() })}
+          // eventPropGetter={() => ({ className: 'bg-cyan-500 overflow-visible' })}
+          // dayPropGetter={() => ({ className: 'overflow-visible' })}
+          localizer={localizer}
+          startAccessor="start"
+          endAccessor="end"
+          className="bg-white"
+          // culture='pl'
+          min={dateWithHour(undefined, 6)}
+          // max={dateWithHour(undefined, 22)}
+        />
+      </div>
+    </>
   );
 };
 

@@ -19,7 +19,7 @@ import { useAuth } from '~/hooks/auth/useAuth';
 import { useReservation } from '~/hooks/reservation/useReservation';
 
 import { Heading1 } from '~/components/atoms/typography/headings';
-import { ReservationDetails } from '~/components/organisms/data-display';
+import { ReservationDetails } from '~/components/organisms/tables';
 import { PageWrapper } from '~/components/template';
 
 import { isClientUser } from '~/utils/userUtils';

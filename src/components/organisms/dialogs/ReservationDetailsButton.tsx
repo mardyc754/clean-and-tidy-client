@@ -12,26 +12,25 @@ import { useReservation } from '~/hooks/reservation/useReservation';
 
 import { Button } from '~/components/atoms/buttons';
 import { Spinner } from '~/components/molecules/status-indicators';
+import { DialogFooter } from '~/components/shadcn/ui/dialog';
 
-import { ReservationDetails } from '../data-display';
-import DialogBase from './DialogBase';
+import { ReservationDetails } from '../tables';
+import DialogTriggerButton from './DialogTriggerButton';
 
-type ReservationDetailsDialogProps = {
-  isOpen: boolean;
-  onClose: VoidFunction;
+type ReservationDetailsButtonProps = {
   reservationName: Reservation['name'];
 };
 
-const ReservationDetailsDialog = ({
-  isOpen,
-  onClose,
+const ReservationDetailsButton = ({
   reservationName
-}: ReservationDetailsDialogProps) => {
+}: ReservationDetailsButtonProps) => {
   const queryClient = useQueryClient();
 
   const { currentUser } = useAuth();
 
-  const { data, isLoading } = useReservation(reservationName);
+  const { data, isLoading, refetch } = useReservation(reservationName, {
+    enabled: false
+  });
 
   const mutation = useMutation({
     mutationFn: (userId: number) => confirmReservation(reservationName, userId),
@@ -44,29 +43,26 @@ const ReservationDetailsDialog = ({
   });
 
   return (
-    <DialogBase
-      className="min-w-[60vw]"
-      onClose={onClose}
-      isOpen={isOpen}
-      title="Reservation Details"
-      buttonRenderer={() => (
-        <div className="flex items-center justify-between space-x-4">
-          <Button
-            onClick={() => currentUser && mutation.mutate(currentUser.id)}
-          >
-            Accept
-          </Button>
-          <Button color="danger">Reject</Button>
-        </div>
-      )}
+    <DialogTriggerButton
+      buttonLabel="Manage"
+      dialogTitle="Reservation Details"
+      onClick={async () => await refetch()}
     >
       {isLoading || !data ? (
         <Spinner caption="Loading reservation data..." />
       ) : (
-        <ReservationDetails data={data} expandVisitDetails />
+        <div className=" max-h-[60vh] space-y-4 overflow-auto p-4">
+          <ReservationDetails data={data} expandVisitDetails />
+        </div>
       )}
-    </DialogBase>
+      <DialogFooter>
+        <Button onClick={() => currentUser && mutation.mutate(currentUser.id)}>
+          Accept
+        </Button>
+        {/* <Button color="danger">Reject</Button> */}
+      </DialogFooter>
+    </DialogTriggerButton>
   );
 };
 
-export default ReservationDetailsDialog;
+export default ReservationDetailsButton;

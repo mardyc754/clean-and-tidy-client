@@ -1,9 +1,10 @@
 import type { ZodType } from 'zod';
 
 import {
-  Visit,
+  type Visit,
+  type VisitPart,
   type VisitPartWithVisitData,
-  VisitWithEmployees,
+  type VisitWithEmployees,
   visitPartWithVisitData,
   visitSchemaWithEmployees
 } from '~/schemas/api/reservation';
@@ -11,22 +12,12 @@ import { basicError } from '~/schemas/common';
 
 import { handleFetchingData } from './handleFetchingData';
 
-export const getVisitById = async (id: number) => {
+export const getVisitById = async (id: VisitPart['id']) => {
   return await handleFetchingData({
     path: `/visits/${id}`,
     method: 'get',
     successSchema:
-      visitPartWithVisitData as unknown as ZodType<VisitPartWithVisitData>,
-    errorSchema: basicError
-  });
-};
-
-export const getVisitByIdWithEmployees = async (id: number) => {
-  return await handleFetchingData({
-    path: `/visits/${id}`,
-    method: 'get',
-    successSchema:
-      visitPartWithVisitData as unknown as ZodType<VisitPartWithVisitData>,
+      visitSchemaWithEmployees as unknown as ZodType<VisitWithEmployees>,
     errorSchema: basicError,
     params: { includeEmployee: true }
   });
@@ -52,6 +43,27 @@ export const cancelVisit = async (visitId: Visit['id']) => {
     method: 'put',
     successSchema:
       visitSchemaWithEmployees as unknown as ZodType<VisitWithEmployees>,
+    errorSchema: basicError
+  });
+};
+
+export const getVisitPartById = async (id: VisitPart['id']) => {
+  return await handleFetchingData({
+    path: `/visit-parts/${id}`,
+    method: 'get',
+    successSchema:
+      visitPartWithVisitData as unknown as ZodType<VisitPartWithVisitData>,
+    errorSchema: basicError,
+    params: { includeEmployee: true }
+  });
+};
+
+export const cancelVisitPart = async (visitId: VisitPart['id']) => {
+  return await handleFetchingData({
+    path: `/visit-parts/${visitId}/cancel`,
+    method: 'put',
+    successSchema:
+      visitPartWithVisitData as unknown as ZodType<VisitPartWithVisitData>,
     errorSchema: basicError
   });
 };

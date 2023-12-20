@@ -4,7 +4,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { VisitDataContext } from '~/providers/VisitDataProvider';
 
-import { reservation } from '~/constants/queryKeys';
+import { reservation, visit } from '~/constants/queryKeys';
 
 import { changeVisitData } from '~/api/visit';
 
@@ -12,6 +12,7 @@ import { changeVisitDataResolver } from '~/schemas/forms/reservationManagement';
 
 import { isEmployeeAvailableForTheVisit } from '~/stores/orderService/utils';
 
+import { useAuth } from '~/hooks/auth/useAuth';
 import { useEmployeesBusyHours } from '~/hooks/orderServiceForm/useEmployeesBusyHours';
 
 import Button from '~/components/atoms/buttons/Button';
@@ -34,8 +35,8 @@ import type { NullableDate } from '~/types/forms';
 import { CalendarWithHours } from '../form-fields';
 
 const ChangeVisitDateForm = () => {
-  const { visitData, reservationData } = useContext(VisitDataContext);
-
+  const { visitData, reservationName } = useContext(VisitDataContext);
+  const { currentUser } = useAuth();
   const queryClient = useQueryClient();
   const visitStartDate = visitData?.visitParts[0]!.startDate;
   const visitEndDate =
@@ -78,7 +79,15 @@ const ChangeVisitDateForm = () => {
       return toast.promise(
         (async () => {
           await queryClient.invalidateQueries({
-            queryKey: reservation.byName(reservationData!.name)
+            queryKey: reservation.byName(reservationName!)
+          });
+
+          await queryClient.invalidateQueries({
+            queryKey: visit.detail(visitData.id)
+          });
+
+          await queryClient.invalidateQueries({
+            queryKey: visit.client(currentUser!.id)
           });
         })(),
         {

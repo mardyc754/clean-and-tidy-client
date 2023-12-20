@@ -6,3 +6,6 @@ export { default as ChangeCleaningDataForm } from './ChangeCleaningDataForm';
 export { default as SummaryForm } from './SummaryForm';
 export { default as ChangeEmployeeDataForm } from './ChangeEmployeeDataForm';
 export { default as ChangeVisitDateForm } from './ChangeVisitDateForm';
+export { default as ChangeUserDataForm } from './ChangeUserDataForm';
+export { default as CreateEmployeeForm } from './CreateEmployeeForm';
+export { default as CreateServiceForm } from './CreateServiceForm';

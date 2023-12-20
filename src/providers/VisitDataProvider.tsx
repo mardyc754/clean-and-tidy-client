@@ -11,20 +11,17 @@ type VisitDataProviderProps = {
 
 export const VisitDataContext = createContext<{
   visitData: VisitWithEmployees | null;
-  reservationData: Omit<
-    ReservationWithExtendedVisits,
-    'visits' | 'services'
-  > | null;
+  reservationName: ReservationWithExtendedVisits['name'] | null;
 }>({
   visitData: null,
-  reservationData: null
+  reservationName: null
 });
 
 const VisitDataProvicder = ({ children }: VisitDataProviderProps) => {
   const [visitData, setVisitData] = useState(null);
 
   return (
-    <VisitDataContext.Provider value={{ visitData, reservationData: null }}>
+    <VisitDataContext.Provider value={{ visitData, reservationName: null }}>
       {children}
     </VisitDataContext.Provider>
   );

@@ -10,17 +10,19 @@ type FormPageTemplateProps = {
   title: string;
   headingTitle: string;
   children: React.ReactNode;
+  descriptionComponent?: React.ReactNode;
 };
 
 const FormPageTemplate = ({
   title,
   headingTitle,
+  descriptionComponent,
   children
 }: FormPageTemplateProps) => {
   return (
     <PageWrapper title={title}>
-      <div className="flex flex-1">
-        <div className="relative flex w-1/2 bg-blue-950">
+      <div className="flex flex-1 flex-col lg:flex-row">
+        <div className="relative flex h-56 w-full bg-blue-950 lg:h-auto lg:w-1/2">
           <Image
             alt="Living room"
             src={FormPageImage}
@@ -34,11 +36,12 @@ const FormPageTemplate = ({
             }}
           />
         </div>
-        <div className="flex w-1/2 flex-col items-center justify-center p-16">
+        <div className="flex w-full flex-col items-center justify-center p-16 lg:w-1/2">
           <div className="p-4">
             <Heading1>{headingTitle}</Heading1>
           </div>
           {children}
+          {descriptionComponent}
         </div>
       </div>
     </PageWrapper>

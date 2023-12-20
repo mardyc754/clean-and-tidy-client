@@ -1,15 +1,22 @@
 import { type DehydratedState } from '@tanstack/react-query';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { useRouter } from 'next/router';
 
 import { fetchUserData } from '~/server/prefetchUserData';
 
 import type { AdminUser } from '~/schemas/api/auth';
 
+import { useServicesWithEmployees } from '~/hooks/adminForms/useServices';
 import { useEmployeeListWithVisits } from '~/hooks/employee/useEmployeeList';
 import { useEmployeeVisits } from '~/hooks/employee/useEmployeeVisits';
 
-import { EmployeeTable } from '~/components/organisms/data-display';
-import { ReservationToConfirmList } from '~/components/organisms/lists';
+import { Spinner } from '~/components/molecules/status-indicators';
+import { AdminScheduler } from '~/components/organisms/scheduler';
+import {
+  EmployeeReservationTable,
+  EmployeeTable,
+  ServiceTable
+} from '~/components/organisms/tables';
 import { ProfilePageTemplate } from '~/components/template';
 
 import { getEventsFromEmployees } from '~/utils/scheduler';
@@ -21,18 +28,50 @@ export default function AdminProfile({
   const { reservationList, isLoading } = useEmployeeVisits({
     employeeId: userData.id
   });
+  const router = useRouter();
+
+  const { defaultTab } = router.query;
 
   const { employeeList } = useEmployeeListWithVisits();
 
+  const { services } = useServicesWithEmployees();
+
   return (
     <ProfilePageTemplate
-      visits={getEventsFromEmployees(employeeList ?? [])}
-      userData={userData}
-      isLoadingEvents={isLoading}
-    >
-      {employeeList && <EmployeeTable data={employeeList} />}
-      {reservationList && <ReservationToConfirmList data={reservationList} />}
-    </ProfilePageTemplate>
+      defaultTab={typeof defaultTab === 'string' ? defaultTab : undefined}
+      userRole={userData.role}
+      slots={[
+        {
+          name: 'Awaiting reservations',
+          Content: () =>
+            reservationList ? (
+              <EmployeeReservationTable data={reservationList} />
+            ) : (
+              <></>
+            )
+        },
+        {
+          name: 'Employee visit calendar',
+          Content: () =>
+            !isLoading ? (
+              <AdminScheduler
+                className="w-full"
+                employeeList={getEventsFromEmployees(employeeList ?? [])}
+              />
+            ) : (
+              <Spinner caption="Loading events..." />
+            )
+        },
+        {
+          name: 'Employees',
+          Content: () => <EmployeeTable data={employeeList ?? []} />
+        },
+        {
+          name: 'Services',
+          Content: () => <ServiceTable data={services ?? []} />
+        }
+      ]}
+    />
   );
 }
 

@@ -8,7 +8,6 @@ import type {
   VisitPart,
   VisitWithEmployees
 } from '~/schemas/api/reservation';
-import type { BasicServiceData } from '~/schemas/api/services';
 
 import { Status } from '~/types/enums';
 

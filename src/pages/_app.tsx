@@ -74,7 +74,7 @@ const MyApp: AppType<{
           />
         </SessionProvider>
       </HydrationBoundary>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     </QueryClientProvider>
   );
 };

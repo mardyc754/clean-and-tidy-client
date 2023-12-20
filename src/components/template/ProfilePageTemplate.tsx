@@ -1,59 +1,43 @@
-import { useMemo } from 'react';
-
 import type { AuthenticatedUser } from '~/schemas/api/auth';
 
-import { Heading1, Heading2 } from '~/components/atoms/typography/headings';
-import { Spinner } from '~/components/molecules/status-indicators';
-import { Scheduler } from '~/components/organisms/scheduler';
+import { Heading1 } from '~/components/atoms/typography/headings';
 import { PageWrapper } from '~/components/template';
 
-import { daysBetween } from '~/utils/dateUtils';
-import { getMaxEndDateFromReservationVisits } from '~/utils/scheduler';
+import { UserRole } from '~/types/enums';
 
 import { UserProfileCard } from '../organisms/cards';
-import type { VisitEvent } from '../organisms/scheduler/Scheduler';
+import { Tabs } from '../organisms/tabs';
+import type { TabsSlot } from '../organisms/tabs/Tabs';
 
 type ProfilePageTemplateProps = {
-  visits: VisitEvent[];
-  userData: AuthenticatedUser;
-  isLoadingEvents?: boolean;
-  children?: React.ReactNode;
+  slots: TabsSlot[];
+  userRole: AuthenticatedUser['role'];
+  defaultTab?: string;
 };
 
 const ProfilePageTemplate = ({
-  children,
-  visits,
-  userData,
-  isLoadingEvents = false
+  slots,
+  userRole,
+  defaultTab = '0'
 }: ProfilePageTemplateProps) => {
-  const reservationsTimespan = useMemo(() => {
-    if (!visits) return;
-
-    return daysBetween(getMaxEndDateFromReservationVisits(visits), new Date());
-  }, [visits]);
-
   return (
     <PageWrapper title="Your profile">
       <div className="p-16">
         <Heading1>Your profile</Heading1>
-
         <div className="py-8">
-          <UserProfileCard data={userData} />
-        </div>
-        {children}
-        <div className="flex flex-col items-baseline py-8">
-          <Heading2>Visit calendar</Heading2>
-          <div className="flex w-full items-center justify-center py-8">
-            {!isLoadingEvents ? (
-              <Scheduler
-                className="w-full"
-                events={visits}
-                length={reservationsTimespan}
-              />
-            ) : (
-              <Spinner caption="Loading events..." />
-            )}
-          </div>
+          <Tabs
+            defaultTab={defaultTab}
+            tabsListClasses={
+              userRole === UserRole.ADMIN ? 'grid-cols-5' : 'grid-cols-3'
+            }
+            slots={[
+              ...slots,
+              {
+                name: 'Profile Data',
+                Content: () => <UserProfileCard />
+              }
+            ]}
+          />
         </div>
       </div>
     </PageWrapper>

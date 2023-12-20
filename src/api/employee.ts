@@ -12,6 +12,10 @@ import {
 } from '~/schemas/api/reservation';
 import { type Service, service } from '~/schemas/api/services';
 import { basicError } from '~/schemas/common';
+import {
+  type CreateEmployeeData,
+  createEmployeeErrorSchema
+} from '~/schemas/forms/admin';
 import { busyHoursData } from '~/schemas/forms/orderService';
 
 import type { Status } from '~/types/enums';
@@ -113,5 +117,20 @@ export const getEmployeesBusyHours = async (
     successSchema: busyHoursData,
     errorSchema: basicError,
     params: parsedParams
+  });
+};
+
+export const createEmployee = async (data: CreateEmployeeData) => {
+  return await handleFetchingData({
+    path: '/employees',
+    method: 'post',
+    successSchema: employeeSchema,
+    errorSchema: createEmployeeErrorSchema,
+    data: {
+      ...data,
+      services: Object.entries(data.services)
+        .filter(([, value]) => value)
+        .map(([key]) => parseInt(key))
+    }
   });
 };

@@ -6,7 +6,7 @@ import { getReservationByName } from '~/api/reservation';
 
 export const useReservation = (
   name: string,
-  options?: { retry: boolean; enabled: boolean }
+  options?: Partial<{ retry: boolean; enabled: boolean }>
 ) => {
   const { data, status, error, refetch, isLoading } = useQuery({
     queryKey: reservation.byName(name),

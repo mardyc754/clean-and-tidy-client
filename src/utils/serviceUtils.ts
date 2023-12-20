@@ -1,6 +1,6 @@
 import { difference } from 'lodash';
 
-import type { OrderedService } from '~/schemas/api/services';
+import type { OrderedService, Service } from '~/schemas/api/services';
 
 import { calculateServiceCostAndDuration } from '~/stores/orderService/utils';
 
@@ -170,3 +170,8 @@ export function getStartDateForService(
     return advanceByMinutes(acc, duration);
   }, baseStartDate);
 }
+
+export const getLabelForServiceUnit = (service: Service) => {
+  const { unit } = service;
+  return unit ? `${unit.price} zł/${unit.shortName}` : '---';
+};

@@ -1,4 +1,4 @@
-import { Stringified } from 'type-fest';
+import type { Stringified } from 'type-fest';
 import type { ZodType } from 'zod';
 
 import {
@@ -11,6 +11,11 @@ import {
   services
 } from '~/schemas/api/services';
 import { basicError } from '~/schemas/common';
+import {
+  type CreateServiceData,
+  type UpdateServiceData,
+  createServiceErrorSchema
+} from '~/schemas/forms/admin';
 import { busyHoursData } from '~/schemas/forms/orderService';
 
 import { handleFetchingData } from './handleFetchingData';
@@ -92,5 +97,42 @@ export const getServicesBusyHours = async (
     successSchema: busyHoursData,
     errorSchema: basicError,
     params: parsedParams
+  });
+};
+
+export const changeServiceData = async (
+  id: Service['id'],
+  data: UpdateServiceData
+) => {
+  return await handleFetchingData({
+    path: `/services/${id}`,
+    method: 'put',
+    successSchema: service as ZodType<Service>,
+    errorSchema: basicError,
+    params: {
+      includeSecondaryServices: true,
+      includeCleaningFrequencies: true
+    },
+    data
+  });
+};
+
+export const createService = async (data: CreateServiceData) => {
+  const secondaryServices = Object.entries(data.secondaryServices).filter(
+    ([_, value]) => value
+  );
+
+  return await handleFetchingData({
+    path: '/services',
+    method: 'post',
+    successSchema: service as ZodType<Service>,
+    errorSchema: createServiceErrorSchema,
+    data: {
+      ...data,
+      secondaryServices:
+        data.isPrimary && secondaryServices.length > 0
+          ? secondaryServices.map(([key]) => parseInt(key))
+          : undefined
+    }
   });
 };

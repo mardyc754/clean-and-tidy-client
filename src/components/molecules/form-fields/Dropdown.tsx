@@ -6,7 +6,7 @@ import { Fragment } from 'react';
 
 type DropdownOption<T> = { id: T; name: string };
 
-type DropdownProps<T> = {
+export type DropdownProps<T> = {
   options: DropdownOption<T>[];
   value: DropdownOption<T> | undefined;
   className?: string;
