@@ -1,4 +1,5 @@
 import { frequencyToDescriptionMap } from '~/constants/mappings';
+import { reservation } from '~/constants/queryKeys';
 
 import type { EmployeeWithVisits } from '~/schemas/api/reservation';
 import type {
@@ -65,4 +66,16 @@ export const createReservationTitleForEmployee = (
   const frequencyName = frequencyToDescriptionMap.get(reservation.frequency);
 
   return `${bookerFirstName} ${bookerLastName}, ${serviceName}, ${frequencyName}`;
+};
+
+export const getReservationEndDate = (
+  reservation: ReservationWithExtendedVisits
+) => {
+  const visitParts = reservation.visits.flatMap((visit) => visit.visitParts);
+
+  visitParts.sort((a, b) => {
+    return new Date(b.endDate).getTime() - new Date(a.endDate).getTime();
+  });
+
+  return visitParts[0]!.endDate;
 };

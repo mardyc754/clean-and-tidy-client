@@ -16,6 +16,7 @@ import {
 } from '~/components/shadcn/ui/card';
 
 import { displayDateWithHours } from '~/utils/dateUtils';
+import { getReservationEndDate } from '~/utils/reservationUtils';
 import { convertToCamelCase } from '~/utils/stringUtils';
 
 import { ReservationActions } from '../button-fields';
@@ -31,15 +32,14 @@ const ReservationGeneralDetailsCard = ({
   className,
   manageable = false
 }: ReservationDetailsCardProps) => {
-  const { status, name, frequency, endDate, bookerFirstName, bookerLastName } =
-    data;
+  const { status, name, frequency, bookerFirstName, bookerLastName } = data;
   const statusData = reservationStatusMap.get(status);
 
   const reservationDetailsData = new Map([
     ['Booker', `${bookerFirstName} ${bookerLastName}`],
     ['Frequency', `${frequencyToDescriptionMap.get(frequency)}`],
     ['Status', `${statusData?.label}`],
-    ['End date', displayDateWithHours(endDate)]
+    ['End date', displayDateWithHours(getReservationEndDate(data))]
   ]);
 
   return (

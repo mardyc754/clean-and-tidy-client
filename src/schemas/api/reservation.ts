@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { CleaningFrequency, Status } from '~/types/enums';
 
-import { ISOString, decimalToFloat } from '../common';
+import { decimalToFloat } from '../common';
 import { address } from '../forms/orderService';
 import { employeeSchema } from './employee';
 import { basicService, serviceForVisitPart } from './services';
@@ -36,7 +36,6 @@ export type VisitPartWithEmployees = z.infer<
 
 export const visitSchema = z.object({
   id: z.number().int(),
-  name: z.string().max(100),
   includeDetergents: z.boolean(),
   canDateBeChanged: z.boolean(),
   reservationId: z.number().int(),
@@ -51,8 +50,7 @@ export const reservationSchema = z.object({
   id: z.number().int(),
   name: z.string().max(100),
   frequency: z.nativeEnum(CleaningFrequency),
-  endDate: ISOString,
-  weekDay: z.number().int().min(0).max(6),
+  // endDate: ISOString,
   status: z.nativeEnum(Status),
   bookerEmail: z.string().email(),
   addressId: z.number().int(),
