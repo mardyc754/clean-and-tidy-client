@@ -4,7 +4,6 @@ import { z } from 'zod';
 import { CleaningFrequency } from '~/types/enums';
 
 import { decimalToFloat } from '../common';
-import { employeeSchema } from './employee';
 
 export const basicService = z.object({
   id: z.number().int(),
@@ -33,10 +32,6 @@ export const service = basicService.merge(
     primaryServices: z.array(basicService).optional()
   })
 );
-
-export const serviceWithEmployees = service.extend({
-  employees: employeeSchema.array()
-});
 
 export const services = z.array(service);
 
@@ -88,8 +83,6 @@ export type BasicServiceData = z.infer<typeof basicService>;
 export type PrimaryService = z.infer<typeof primaryService>;
 
 export type OrderedService = z.infer<typeof orderedServiceSchema>;
-
-export type ServiceWithEmployees = z.infer<typeof serviceWithEmployees>;
 
 export type OrderedVisitPart = z.infer<typeof orderedVisitPart>;
 

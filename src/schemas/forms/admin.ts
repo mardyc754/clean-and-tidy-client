@@ -1,7 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
-import { Service } from '../api/services';
 import { basicError, price } from '../common';
 import { loginDataValidator } from './auth';
 
@@ -49,6 +48,32 @@ export const createEmployeeErrorSchema = basicError.extend({
 });
 
 export type CreateEmployeeError = z.infer<typeof createEmployeeErrorSchema>;
+
+export const changeEmployeeDataSchema = z.object({
+  firstName: z
+    .string()
+    .min(1, { message: 'First name is required' })
+    .max(50, { message: 'First name is too long' }),
+  lastName: z
+    .string()
+    .min(1, { message: 'Last name is required' })
+    .max(50, { message: 'Last name is too long' }),
+  phone: z
+    .string()
+    .min(9, { message: 'Phone number must have at least 9 digits' })
+    .max(15, { message: 'Phone number is too long' })
+    .nullish(),
+  services: z
+    .record(z.string(), z.boolean())
+    .refine((data) => Object.values(data).find((value) => value === true), {
+      message: 'At least one service must be selected'
+    }),
+  isAdmin: z.boolean().optional()
+});
+
+export type EmployeeChangeData = z.infer<typeof changeEmployeeDataSchema>;
+
+export const changeEmployeeDataResolver = zodResolver(changeEmployeeDataSchema);
 
 export const updateServiceSchema = z.object({
   unit: z.object({
@@ -98,24 +123,6 @@ export const createServiceDataSchema = z
       .optional(),
     secondaryServices: z.record(z.string(), z.boolean())
   })
-  // .transform((data) => {
-  //   const secondaryServices =
-  //     data.isPrimary &&
-  //     Object.entries(data.secondaryServices).filter(([_, value]) => value)
-  //       .length > 0
-  //       ? Object.entries(data.secondaryServices)
-  //           .filter(([, value]) => value)
-  //           .map(([key]) => parseInt(key))
-  //       : undefined;
-
-  //   // const secondaryServices = data.isPrimary
-  //   //   ? data.secondaryServices
-  //   //   : undefined;
-  //   return {
-  //     ...data,
-  //     secondaryServices
-  //   };
-  // })
   .refine(
     (data) => {
       if (!data.isPrimary) return true;

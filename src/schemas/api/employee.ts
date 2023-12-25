@@ -2,6 +2,8 @@ import { z } from 'zod';
 
 import { Status } from '~/types/enums';
 
+import { service } from './services';
+
 export const employeeSchema = z.object({
   id: z.number().int(),
   firstName: z.string().max(50),
@@ -20,8 +22,14 @@ export const employeeWithStatusSchema = z.object({
   status: z.nativeEnum(Status)
 });
 
+export const employeeWithServicesSchema = employeeSchema.extend({
+  services: z.array(service)
+});
+
 export type Employee = z.infer<typeof employeeSchema>;
 
 export type Admin = z.infer<typeof adminSchema>;
 
 export type EmployeeWithStatus = z.infer<typeof employeeWithStatusSchema>;
+
+export type EmployeeWithServices = z.infer<typeof employeeWithServicesSchema>;

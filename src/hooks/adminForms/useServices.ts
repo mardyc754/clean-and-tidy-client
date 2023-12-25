@@ -2,22 +2,12 @@ import { useQuery } from '@tanstack/react-query';
 
 import { service } from '~/constants/queryKeys';
 
-import { getAllServices, getAllServicesWithEmployees } from '~/api/services';
-import type { AllServicesQueryOptions } from '~/api/types';
+import { getAllServices } from '~/api/services';
 
-export function useServices(options?: AllServicesQueryOptions) {
+export function useServices() {
   const { data: services, isLoading } = useQuery({
-    queryKey: service.employeesWithFilters(options),
-    queryFn: () => getAllServices(options)
-  });
-
-  return { services, isLoading };
-}
-
-export function useServicesWithEmployees() {
-  const { data: services, isLoading } = useQuery({
-    queryKey: service.employeesWithFilters({ includeEmployee: true }),
-    queryFn: getAllServicesWithEmployees
+    queryKey: service.all,
+    queryFn: () => getAllServices()
   });
 
   return { services, isLoading };

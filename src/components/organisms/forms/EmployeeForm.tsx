@@ -1,9 +1,6 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/router';
+import type { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
 import { FormProvider, useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
-
-import { employee } from '~/constants/queryKeys';
 
 import { createEmployee } from '~/api/employee';
 import type { ResponseError } from '~/api/errors/ResponseError';
@@ -11,8 +8,7 @@ import type { ResponseError } from '~/api/errors/ResponseError';
 import type { Employee } from '~/schemas/api/employee';
 import {
   type CreateEmployeeData,
-  type CreateEmployeeError,
-  createEmployeeResolver
+  type CreateEmployeeError
 } from '~/schemas/forms/admin';
 
 import { useServices } from '~/hooks/adminForms/useServices';
@@ -30,20 +26,24 @@ import {
 
 import { ServicesMultiSelect } from '../form-fields';
 
-const CreateEmployeeForm = () => {
-  const queryClient = useQueryClient();
-  const router = useRouter();
+interface EmployeeFormProps {
+  onSuccess: () => void;
+  resolver: ReturnType<typeof zodResolver>;
+  defaultValues?: Partial<CreateEmployeeData>;
+}
 
+const EmployeeForm = ({
+  onSuccess,
+  resolver,
+  defaultValues
+}: EmployeeFormProps) => {
   const { services } = useServices();
 
   const methods = useForm<CreateEmployeeData>({
     defaultValues: {
-      services: Object.fromEntries(
-        (services ?? []).map((service) => [`${service.id}`, false])
-      )
+      ...defaultValues
     },
-
-    resolver: createEmployeeResolver
+    resolver
   });
 
   const {
@@ -58,24 +58,7 @@ const CreateEmployeeForm = () => {
     CreateEmployeeData
   >({
     mutationFn: createEmployee,
-    onSuccess: () => {
-      return toast.promise(
-        (async () => {
-          await queryClient.invalidateQueries({
-            queryKey: employee.filters({ includeVisits: true })
-          });
-          await router.push({
-            pathname: '/admin/profile',
-            query: { ...router.query, defaultTab: '2' }
-          });
-        })(),
-        {
-          loading: 'Creating employee',
-          success: 'Employee created',
-          error: 'Failed to create employee'
-        }
-      );
-    },
+    onSuccess,
     onError: (error) => {
       // need to throw an error or at least reject the promise
       if (error.data.affectedField) {
@@ -99,7 +82,7 @@ const CreateEmployeeForm = () => {
             <CardHeader>
               <Heading2>General data</Heading2>
             </CardHeader>
-            <CardContent className="grid-rows-7 grid max-w-sm ">
+            <CardContent className="grid-rows-7 grid max-w-sm">
               <Textfield
                 label="First Name"
                 name="firstName"
@@ -163,4 +146,4 @@ const CreateEmployeeForm = () => {
   );
 };
 
-export default CreateEmployeeForm;
+export default EmployeeForm;

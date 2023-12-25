@@ -6,7 +6,6 @@ import type { Employee } from '~/schemas/api/employee';
 
 import { Button } from '~/components/atoms/buttons';
 
-import { ManageEmployeeDialog } from '../dialogs';
 import DataTable from './DataTable';
 
 function createEmployeeRows(data: Employee[]) {
@@ -17,7 +16,7 @@ function createEmployeeRows(data: Employee[]) {
       email: employee.email,
       phone: employee.phone ? employee.phone : '---',
       isAdmin: employee.isAdmin ? 'Yes' : 'No',
-      actions: <ManageEmployeeDialog employeeData={employee} />
+      actions: <Button href={`/employee/${employee.id}/change`}>Manage</Button>
     };
   });
 }

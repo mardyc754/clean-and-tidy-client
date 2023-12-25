@@ -1,7 +1,12 @@
 import type { RequireAtLeastOne, Stringified } from 'type-fest';
 import type { ZodType } from 'zod';
 
-import { type Employee, employeeSchema } from '~/schemas/api/employee';
+import {
+  type Employee,
+  EmployeeWithServices,
+  employeeSchema,
+  employeeWithServicesSchema
+} from '~/schemas/api/employee';
 import {
   type EmployeeReservation,
   type EmployeeWithVisits,
@@ -14,6 +19,7 @@ import { type Service, service } from '~/schemas/api/services';
 import { basicError } from '~/schemas/common';
 import {
   type CreateEmployeeData,
+  EmployeeChangeData,
   createEmployeeErrorSchema
 } from '~/schemas/forms/admin';
 import { busyHoursData } from '~/schemas/forms/orderService';
@@ -84,16 +90,22 @@ export const getAllEmployeesWithVisits = async () => {
   });
 };
 
-export const changeEmployeeServiceAssignment = async (
+export const changeEmployeeData = async (
   employeeId: Employee['id'],
-  serviceIds: Array<Service['id']>
+  data: Partial<EmployeeChangeData>
 ) => {
+  const changeData = {
+    ...data,
+    services: Object.entries(data.services ?? {})
+      .filter(([, value]) => value)
+      .map(([key]) => parseInt(key))
+  };
   return await handleFetchingData({
-    path: `/employees/${employeeId}/services`,
+    path: `/employees/${employeeId}`,
     method: 'put',
-    successSchema: service.array() as unknown as ZodType<Service[]>,
+    successSchema: employeeSchema,
     errorSchema: basicError,
-    data: { serviceIds }
+    data: changeData
   });
 };
 
@@ -132,5 +144,25 @@ export const createEmployee = async (data: CreateEmployeeData) => {
         .filter(([, value]) => value)
         .map(([key]) => parseInt(key))
     }
+  });
+};
+
+export const getEmployeeById = async (id: string) => {
+  return await handleFetchingData({
+    path: `/employees/${id}`,
+    method: 'get',
+    successSchema: employeeSchema,
+    errorSchema: basicError
+  });
+};
+
+export const getEmployeeWithServices = async (id: string) => {
+  return await handleFetchingData({
+    path: `/employees/${id}`,
+    method: 'get',
+    successSchema:
+      employeeWithServicesSchema as unknown as ZodType<EmployeeWithServices>,
+    errorSchema: basicError,
+    params: { includeServices: true }
   });
 };

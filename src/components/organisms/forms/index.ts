@@ -9,3 +9,4 @@ export { default as ChangeVisitDateForm } from './ChangeVisitDateForm';
 export { default as ChangeUserDataForm } from './ChangeUserDataForm';
 export { default as CreateEmployeeForm } from './CreateEmployeeForm';
 export { default as CreateServiceForm } from './CreateServiceForm';
+export { default as EmployeeForm } from './EmployeeForm';

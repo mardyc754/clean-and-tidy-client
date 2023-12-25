@@ -1,31 +1,20 @@
 import { QueryClient, dehydrate } from '@tanstack/react-query';
-import type { AxiosResponse } from 'axios';
-import type { GetServerSidePropsContext } from 'next';
 
-import { reservation, user } from '~/constants/queryKeys';
+import { reservation } from '~/constants/queryKeys';
 
 import { getReservationByName } from '~/api/reservation';
 
-import type { User } from '~/schemas/api/auth';
 import type { ReservationWithExtendedVisits } from '~/schemas/api/reservation';
-
-import { fetchUserQuery } from './prefetchUserData';
 
 export const fetchReservationDetails = async (reservationName: string) => {
   const queryClient = new QueryClient();
 
-  // const req = context.req;
-  // const reservationName = context.params?.id;
-
   if (!reservationName) {
     return {
       dehydratedState: dehydrate(queryClient),
-      // reservationData: undefined,
       userData: undefined
     };
   }
-
-  // const userData = await fetchUserQuery(context, queryClient);
 
   let reservationData: ReservationWithExtendedVisits | undefined;
 
@@ -46,6 +35,5 @@ export const fetchReservationDetails = async (reservationName: string) => {
   return {
     dehydratedState: dehydrate(queryClient),
     reservationData
-    // userData
   };
 };

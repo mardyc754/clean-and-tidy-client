@@ -6,7 +6,7 @@ import { fetchUserData } from '~/server/prefetchUserData';
 
 import type { AdminUser } from '~/schemas/api/auth';
 
-import { useServicesWithEmployees } from '~/hooks/adminForms/useServices';
+import { useServices } from '~/hooks/adminForms/useServices';
 import { useEmployeeListWithVisits } from '~/hooks/employee/useEmployeeList';
 import { useEmployeeVisits } from '~/hooks/employee/useEmployeeVisits';
 
@@ -34,7 +34,7 @@ export default function AdminProfile({
 
   const { employeeList } = useEmployeeListWithVisits();
 
-  const { services } = useServicesWithEmployees();
+  const { services } = useServices();
 
   return (
     <ProfilePageTemplate
