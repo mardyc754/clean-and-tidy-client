@@ -12,7 +12,7 @@ import { IconIndicator } from '~/components/molecules/status-indicators';
 import { daysBetween } from '~/utils/dateUtils';
 import {
   generateIcsFromReservationList,
-  getEventsFromReservation,
+  getEventsForClient,
   getMaxEndDateFromReservationVisits
 } from '~/utils/scheduler';
 
@@ -36,7 +36,7 @@ const ClientScheduler = ({
     if (!reservationList) return [];
 
     return reservationList.flatMap((reservation) =>
-      getEventsFromReservation(reservation)
+      getEventsForClient(reservation)
     );
   }, [reservationList]);
 

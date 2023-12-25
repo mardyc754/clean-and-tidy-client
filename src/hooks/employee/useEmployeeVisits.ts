@@ -5,7 +5,7 @@ import { reservation, visit } from '~/constants/queryKeys';
 
 import { getEmployeeReservations, getEmployeeVisits } from '~/api/employee';
 
-import { getEventsFromVisitParts } from '~/utils/scheduler';
+import { getEventsForEmployee } from '~/utils/scheduler';
 
 type useEmployeeVisitsOptions = {
   employeeId: number;
@@ -23,7 +23,7 @@ export function useEmployeeVisits({ employeeId }: useEmployeeVisitsOptions) {
   });
 
   const visitEvents = useMemo(
-    () => getEventsFromVisitParts(visitList ?? []),
+    () => getEventsForEmployee(visitList ?? []),
     [visitList]
   );
 

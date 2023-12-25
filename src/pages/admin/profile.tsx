@@ -19,7 +19,7 @@ import {
 } from '~/components/organisms/tables';
 import { ProfilePageTemplate } from '~/components/template';
 
-import { getEventsFromEmployees } from '~/utils/scheduler';
+import { getEventsForAdmin } from '~/utils/scheduler';
 import { isAdminUser } from '~/utils/userUtils';
 
 export default function AdminProfile({
@@ -56,7 +56,7 @@ export default function AdminProfile({
             !isLoading ? (
               <AdminScheduler
                 className="w-full"
-                employeeList={getEventsFromEmployees(employeeList ?? [])}
+                employeeList={getEventsForAdmin(employeeList ?? [])}
               />
             ) : (
               <Spinner caption="Loading events..." />

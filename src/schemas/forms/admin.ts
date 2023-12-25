@@ -63,11 +63,7 @@ export const changeEmployeeDataSchema = z.object({
     .min(9, { message: 'Phone number must have at least 9 digits' })
     .max(15, { message: 'Phone number is too long' })
     .nullish(),
-  services: z
-    .record(z.string(), z.boolean())
-    .refine((data) => Object.values(data).find((value) => value === true), {
-      message: 'At least one service must be selected'
-    }),
+  services: z.record(z.string(), z.boolean()),
   isAdmin: z.boolean().optional()
 });
 

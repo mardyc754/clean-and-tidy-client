@@ -31,9 +31,8 @@ const reservationStatusesToEventOnes = new Map([
   [Status.UNKNOWN, 'TENTATIVE']
 ]);
 
-export const getEventsFromReservation = (
-  reservation: ReservationWithVisits
-) => {
+// client events
+export const getEventsForClient = (reservation: ReservationWithVisits) => {
   const visits =
     reservation.visits.filter((visit) => {
       const visitStatus = getStatusFromVisitParts(visit.visitParts);
@@ -54,13 +53,15 @@ export const getEventsFromReservation = (
           reservation.services.find((service) => {
             return service.isMainServiceForReservation;
           })?.name ?? 'Visit Details',
-        reservationName: reservation.name
+        reservationName: reservation.name,
+        groupId: reservation.id
       }
     };
   });
 };
 
-export const getEventsFromVisitParts = (
+// employee events
+export const getEventsForEmployee = (
   visits: VisitPartWithServiceAndReservation[]
 ) => {
   return visits
@@ -73,12 +74,17 @@ export const getEventsFromVisitParts = (
         ),
         start: convertISOStringToDate(visit.startDate),
         end: convertISOStringToDate(visit.endDate),
-        resource: { visitId: visit.id, serviceFullName: visit.service.name }
+        resource: {
+          visitId: visit.id,
+          serviceFullName: visit.service.name,
+          groupId: visit.reservation.id
+        }
       };
     });
 };
 
-export const getEventsFromEmployees = (employees: EmployeeWithVisits[]) => {
+// admin events
+export const getEventsForAdmin = (employees: EmployeeWithVisits[]) => {
   return employees.map((employee) => ({
     ...omit(employee, 'visitParts'),
     visits: employee.visitParts
@@ -87,7 +93,11 @@ export const getEventsFromEmployees = (employees: EmployeeWithVisits[]) => {
         title: createVisitPartTitleForAdmin(employee, visit),
         start: convertISOStringToDate(visit.startDate),
         end: convertISOStringToDate(visit.endDate),
-        resource: { visitId: visit.id, serviceFullName: visit.service.name }
+        resource: {
+          visitId: visit.id,
+          serviceFullName: visit.service.name,
+          groupId: employee.id
+        }
       }))
   }));
 };
