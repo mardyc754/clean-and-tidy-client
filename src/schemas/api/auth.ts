@@ -8,7 +8,6 @@ import { employeeSchema } from './employee';
 
 export const registrationSuccess = z.object({
   id: z.number().int(),
-  username: z.string().max(30),
   email: z.string().email(),
   message: z.literal('Client created succesfully')
 });
