@@ -4,6 +4,7 @@ import { useAuth } from '~/hooks/auth/useAuth';
 import { useContactDetailsForm } from '~/hooks/orderServiceForm/useContactDetailsForm';
 import { useOrderServiceFormNavigation } from '~/hooks/orderServiceForm/useOrderServiceFormNavigation';
 
+import { Heading3 } from '~/components/atoms/typography/headings';
 import { TextArea, Textfield } from '~/components/molecules/form-fields';
 
 import { StepButtons } from '../form-fields';
@@ -26,9 +27,9 @@ const ContactDetailsForm = () => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={onSubmit}>
-        <div className="grid grid-cols-6 grid-rows-6 gap-10 py-16">
+        <div className="grid grid-cols-8 grid-rows-6 gap-10 py-16">
           <Textfield
-            wrapperProps="col-span-3 row-span-1"
+            wrapperProps="col-span-4 row-span-1"
             label="First name"
             name="firstName"
             required
@@ -39,7 +40,7 @@ const ContactDetailsForm = () => {
             errorLabel={errors.firstName?.message}
           />
           <Textfield
-            wrapperProps="col-span-3 row-span-1"
+            wrapperProps="col-span-4 row-span-1"
             label="Last name"
             name="lastName"
             required
@@ -51,7 +52,7 @@ const ContactDetailsForm = () => {
           />
 
           <Textfield
-            wrapperProps="col-span-3 row-span-1"
+            wrapperProps="col-span-4 row-span-1"
             label="Email"
             type="email"
             name="email"
@@ -65,7 +66,7 @@ const ContactDetailsForm = () => {
             errorLabel={errors.email?.message}
           />
           <Textfield
-            wrapperProps="col-span-3 row-span-1"
+            wrapperProps="col-span-4 row-span-1"
             label="Phone number"
             type="tel"
             name="phone"
@@ -76,7 +77,10 @@ const ContactDetailsForm = () => {
             }}
             errorLabel={errors.phone?.message}
           />
-
+          <div className="col-span-8 row-span-1 self-end">
+            <Heading3>Address</Heading3>
+            <p>Enter valid Krakow address</p>
+          </div>
           <Textfield
             wrapperProps="col-span-4 row-span-1"
             label="Street"
@@ -111,22 +115,12 @@ const ContactDetailsForm = () => {
             }}
             errorLabel={errors.postCode?.message}
           />
-
-          <Textfield
-            wrapperProps="col-span-4 row-span-1"
-            label="City"
-            name="city"
-            required
-            className="w-full"
-            onChange={(value) => {
-              onChangeAddressData('city', value);
-            }}
-            errorLabel={errors.city?.message}
-          />
           <TextArea
-            wrapperProps="col-span-6 row-span-2"
+            wrapperProps="col-span-8 row-span-2"
             className="h-full w-full"
-            label="Extra Info"
+            label="Extra Data"
+            sublabel="Staircase number, floor, intercom code and other information if you want to share with us"
+            placeholder='e.g. "Staircase 2, 3rd floor, intercom code 1234'
             name="extraInfo"
             onChange={(value) => {
               onChangeExtraInfo(value);

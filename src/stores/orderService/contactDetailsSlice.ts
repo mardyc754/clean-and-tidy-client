@@ -35,8 +35,7 @@ export const initialContactDetailsState = {
     houseNumber: '',
     // floor: '',
     // door: '',
-    postCode: '',
-    city: ''
+    postCode: ''
   },
   extraInfo: null
 };

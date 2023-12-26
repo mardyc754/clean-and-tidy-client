@@ -109,8 +109,7 @@ export type BusyHoursData = z.infer<typeof busyHoursData>;
 export const address = z.object({
   street: z.string().max(40),
   houseNumber: z.string().max(6),
-  postCode: z.string().length(6),
-  city: z.string().max(40)
+  postCode: z.string().length(6)
 });
 
 export const contactDetails = z.object({
