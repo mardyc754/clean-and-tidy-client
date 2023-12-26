@@ -43,7 +43,7 @@ export default function EmployeeProfile({
       slots={[
         {
           name: 'Awaiting reservations',
-          Content: () =>
+          content: () =>
             reservationList ? (
               <EmployeeReservationTable data={reservationList} />
             ) : (
@@ -52,7 +52,7 @@ export default function EmployeeProfile({
         },
         {
           name: 'Visit calendar',
-          Content: () =>
+          content: () =>
             !isLoading ? (
               <Scheduler
                 userRole="employee"

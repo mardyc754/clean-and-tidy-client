@@ -7,8 +7,15 @@ import type { ReservationWithVisits } from '~/schemas/api/reservation';
 import { Button } from '~/components/atoms/buttons';
 import { StatusIndicator } from '~/components/atoms/typography';
 
-import { displayDateWithHours, getClosestDateFromNow } from '~/utils/dateUtils';
-import { getMainServiceForReservation } from '~/utils/reservationUtils';
+import {
+  displayDateWithHours,
+  getClosestDateFromNow,
+  isAfter
+} from '~/utils/dateUtils';
+import {
+  getMainServiceForReservation,
+  getReservationEndDate
+} from '~/utils/reservationUtils';
 import { getVisitStartEndDates } from '~/utils/visitUtils';
 
 import { Status } from '~/types/enums';
@@ -35,7 +42,14 @@ function createReservationRows(data: ReservationWithVisits[]) {
         reservation.visits?.flatMap((visit) => visit?.visitParts[0]?.startDate)
       ),
       status: reservation.status,
-      action: <Button href={`/reservations/${reservation.name}`}>Manage</Button>
+      action: (
+        <Button
+          href={`/reservations/${reservation.name}`}
+          disabled={isAfter(new Date(), getReservationEndDate(reservation))}
+        >
+          Manage
+        </Button>
+      )
     };
   });
 

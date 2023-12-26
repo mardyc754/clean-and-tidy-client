@@ -30,11 +30,11 @@ export default function ClientProfile({
       slots={[
         {
           name: 'Your Reservations',
-          Content: () => <ReservationTable data={reservationList ?? []} />
+          content: () => <ReservationTable data={reservationList ?? []} />
         },
         {
           name: 'Visit calendar',
-          Content: () =>
+          content: () =>
             !isLoading ? (
               <ClientScheduler reservationList={reservationList ?? []} />
             ) : (

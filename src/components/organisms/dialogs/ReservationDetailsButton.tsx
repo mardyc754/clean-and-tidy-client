@@ -44,6 +44,7 @@ const ReservationDetailsButton = ({
 
   return (
     <DialogTriggerButton
+      className="h-full min-w-full lg:h-[unset] lg:min-w-[70vw]"
       buttonLabel="Manage"
       dialogTitle="Reservation Details"
       onClick={async () => await refetch()}
@@ -51,7 +52,7 @@ const ReservationDetailsButton = ({
       {isLoading || !data ? (
         <Spinner caption="Loading reservation data..." />
       ) : (
-        <div className=" max-h-[60vh] space-y-4 overflow-auto p-4">
+        <div className="space-y-4 overflow-auto p-4 md:max-h-[60vh]">
           <ReservationDetails data={data} expandVisitDetails />
         </div>
       )}

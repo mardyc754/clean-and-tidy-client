@@ -53,11 +53,8 @@ const CreateEmployeeForm = () => {
   const {
     formState: { errors },
     handleSubmit,
-    setError,
-    watch
+    setError
   } = methods;
-
-  console.log(watch());
 
   const mutation = useMutation<
     Service,
@@ -91,8 +88,6 @@ const CreateEmployeeForm = () => {
       }
     }
   });
-
-  console.log(errors);
 
   return (
     <FormProvider {...methods}>

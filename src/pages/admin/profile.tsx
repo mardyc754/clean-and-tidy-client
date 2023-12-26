@@ -43,7 +43,7 @@ export default function AdminProfile({
       slots={[
         {
           name: 'Awaiting reservations',
-          Content: () =>
+          content: () =>
             reservationList ? (
               <EmployeeReservationTable data={reservationList} />
             ) : (
@@ -52,7 +52,7 @@ export default function AdminProfile({
         },
         {
           name: 'Employee visit calendar',
-          Content: () =>
+          content: () =>
             !isLoading ? (
               <AdminScheduler
                 className="w-full"
@@ -64,11 +64,11 @@ export default function AdminProfile({
         },
         {
           name: 'Employees',
-          Content: () => <EmployeeTable data={employeeList ?? []} />
+          content: () => <EmployeeTable data={employeeList ?? []} />
         },
         {
           name: 'Services',
-          Content: () => <ServiceTable data={services ?? []} />
+          content: () => <ServiceTable data={services ?? []} />
         }
       ]}
     />

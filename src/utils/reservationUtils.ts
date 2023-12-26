@@ -1,7 +1,10 @@
 import { frequencyToDescriptionMap } from '~/constants/mappings';
 import { reservation } from '~/constants/queryKeys';
 
-import type { EmployeeWithVisits } from '~/schemas/api/reservation';
+import type {
+  EmployeeWithVisits,
+  ReservationWithVisits
+} from '~/schemas/api/reservation';
 import type {
   EmployeeReservation,
   Reservation,
@@ -69,7 +72,7 @@ export const createReservationTitleForEmployee = (
 };
 
 export const getReservationEndDate = (
-  reservation: ReservationWithExtendedVisits
+  reservation: ReservationWithVisits | ReservationWithExtendedVisits
 ) => {
   const visitParts = reservation.visits.flatMap((visit) => visit.visitParts);
 
