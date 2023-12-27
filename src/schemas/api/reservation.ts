@@ -52,7 +52,7 @@ export const reservationSchema = z.object({
   frequency: z.nativeEnum(CleaningFrequency),
   // endDate: ISOString,
   status: z.nativeEnum(Status),
-  bookerEmail: z.string().email(),
+  bookerEmail: z.string().email().optional(),
   addressId: z.number().int(),
   bookerFirstName: z.string().max(50),
   bookerLastName: z.string().max(50),

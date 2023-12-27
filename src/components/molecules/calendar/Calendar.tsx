@@ -53,6 +53,7 @@ const Calendar = ({
   return (
     <div className={clsx('flex flex-col', !errorLabel && 'mb-4')}>
       <ShadcnCalendar
+        className="rounded-xl bg-white"
         ISOWeek
         disabled={[
           { before: fromDate ? new Date(fromDate) : nextDay(new Date()) },

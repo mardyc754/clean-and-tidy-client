@@ -23,7 +23,9 @@ InferGetServerSidePropsType<typeof getStaticProps>) {
   const { data } = useReservation(reservationData.name);
 
   const { hasAccess } = useAuth(
-    (user) => user.email === reservationData.bookerEmail,
+    (user) =>
+      !!reservationData.bookerEmail &&
+      user.email === reservationData.bookerEmail,
     true
   );
 

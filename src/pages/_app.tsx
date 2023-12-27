@@ -7,7 +7,7 @@ import {
   QueryClient,
   QueryClientProvider
 } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+// import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import type { Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 import type { AppType } from 'next/app';
@@ -17,16 +17,8 @@ import { Toaster } from 'react-hot-toast';
 
 import '~/styles/globals.css';
 
-// import '~/styles/Calendar.css';
-
 config.autoAddCss = false;
 library.add(fas);
-
-// const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
-//   const { isLoading } = useAuth();
-
-//   return isLoading ? null : <>{children}</>;
-// };
 
 const MyApp: AppType<{
   session: Session | null;
