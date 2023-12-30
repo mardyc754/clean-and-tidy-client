@@ -3,7 +3,7 @@ import type { ZodType } from 'zod';
 
 import {
   type Employee,
-  EmployeeWithServices,
+  type EmployeeWithServices,
   employeeSchema,
   employeeWithServicesSchema
 } from '~/schemas/api/employee';
@@ -15,11 +15,10 @@ import {
   employeeWithVisitsSchema,
   visitPartWithServiceAndReservation
 } from '~/schemas/api/reservation';
-import { type Service, service } from '~/schemas/api/services';
 import { basicError } from '~/schemas/common';
 import {
   type CreateEmployeeData,
-  EmployeeChangeData,
+  type EmployeeChangeData,
   createEmployeeErrorSchema
 } from '~/schemas/forms/admin';
 import { busyHoursData } from '~/schemas/forms/orderService';
@@ -32,11 +31,6 @@ import type { EmployeeBusyHoursQueryOptions } from './types';
 type EmployeeReservationQueryOptions = {
   status: Status;
 };
-
-// type EmployeeWorkingHoursQueryOptions = {
-//   from: string;
-//   to: string;
-// };
 
 export type AllEmployeesQueryOptions = RequireAtLeastOne<{
   includeVisits: boolean;
