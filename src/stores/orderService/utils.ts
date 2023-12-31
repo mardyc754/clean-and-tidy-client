@@ -16,7 +16,7 @@ import {
   minutesBetween,
   startOfDay
 } from '~/utils/dateUtils';
-import { calculateBusyHours } from '~/utils/serviceUtils';
+import { timeslotsIntersection } from '~/utils/serviceUtils';
 
 /**
  * Creates or updates ordered service data from ordereed services list
@@ -73,15 +73,13 @@ export const createOrUpdateOrderedService = (
     (a, b) => (b?.unit?.duration ?? 0) - (a?.unit?.duration ?? 0)
   );
 
+  // array with the total duration for each assigned employee
   const visitPartsDurations = Array<number>(minNumOfEmployeesRequired).fill(0);
 
   sortedOrderedServices.forEach((service) => {
-    if (!service) {
-      return;
-    }
+    if (!service) return;
 
-    const serviceNumberOfUnits = calculateServiceNumberOfUnits(service);
-    let remainingServiceUnits = serviceNumberOfUnits;
+    let remainingServiceUnits = calculateServiceNumberOfUnits(service);
 
     const newVisitParts = [
       ...Array<{ serviceId?: number; numberOfUnits: number }>(
@@ -97,9 +95,7 @@ export const createOrUpdateOrderedService = (
         (duration, _, arr) => Math.min(...arr) === duration
       );
 
-      if (visitPartWithMinDurationIndex === -1) {
-        break;
-      }
+      if (visitPartWithMinDurationIndex === -1) break;
 
       newVisitParts[visitPartWithMinDurationIndex]!.numberOfUnits += 1;
       remainingServiceUnits -= 1;
@@ -108,21 +104,17 @@ export const createOrUpdateOrderedService = (
         service.unit?.duration ?? 0;
     }
 
-    const finalVisitParts = newVisitParts;
-
     const indexInUnsortedList = newOrderedServices.findIndex(
       (s) => s && s.id === service.id
     );
 
-    if (indexInUnsortedList === -1) {
-      return;
-    }
+    if (indexInUnsortedList === -1) return;
 
     newOrderedServices[indexInUnsortedList] =
-      finalVisitParts.length > 0
+      newVisitParts.length > 0
         ? {
             ...service,
-            visitParts: finalVisitParts
+            visitParts: newVisitParts
           }
         : undefined;
   });
@@ -267,7 +259,7 @@ export const prepareVisitParts = (
  * @param employeeStartDates
  * @returns
  */
-const updateOrderedService = (
+const assignEmployeesAndTimeslotsToService = (
   service: OrderedService,
   employees: EmployeeAvailabilityData[],
   employeeStartDates: Date[]
@@ -304,7 +296,7 @@ const updateOrderedService = (
     const availableEmployees = employees.filter(
       (employee) =>
         employee.services.includes(service?.id ?? 0) &&
-        calculateBusyHours([employee.workingHours, [visitPartTimeslot]])
+        timeslotsIntersection([employee.workingHours, [visitPartTimeslot]])
           .length === 0 &&
         !assignedEmployeesToVisitParts.includes(employee.id)
     );
@@ -336,7 +328,7 @@ const updateOrderedService = (
   };
 };
 
-export const updateOrderedServices = (
+export const assignEmployeesToServices = (
   employees: EmployeeAvailabilityData[],
   orderedServices: (OrderedService | undefined)[],
   startDate: Date
@@ -361,11 +353,12 @@ export const updateOrderedServices = (
   );
 
   if (mainService) {
-    newOrderedServices[newOrderedServices.length - 1] = updateOrderedService(
-      mainService,
-      employees,
-      employeeStartDates
-    );
+    newOrderedServices[newOrderedServices.length - 1] =
+      assignEmployeesAndTimeslotsToService(
+        mainService,
+        employees,
+        employeeStartDates
+      );
   }
 
   const secondaryServices = orderedServices.filter(
@@ -377,7 +370,7 @@ export const updateOrderedServices = (
       return;
     }
 
-    newOrderedServices[index] = updateOrderedService(
+    newOrderedServices[index] = assignEmployeesAndTimeslotsToService(
       service,
       employees,
       employeeStartDates

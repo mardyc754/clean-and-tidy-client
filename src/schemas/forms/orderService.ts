@@ -113,9 +113,18 @@ export const address = z.object({
 });
 
 export const contactDetails = z.object({
-  firstName: z.string().max(50),
-  lastName: z.string().max(50),
-  phone: z.string().max(15),
+  firstName: z
+    .string()
+    .min(1, { message: 'First name is required' })
+    .max(50, { message: 'First name must have at most 50 characters' }),
+  lastName: z
+    .string()
+    .min(1, { message: 'Last name is required' })
+    .max(50, { message: 'Last name must have at most 50 characters' }),
+  phone: z
+    .string()
+    .min(1, { message: 'Phone number is required' })
+    .max(15, { message: 'Phone number must have at most 15 characters' }),
   email: z.string().email()
 });
 

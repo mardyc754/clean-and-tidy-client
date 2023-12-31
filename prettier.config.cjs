@@ -26,7 +26,8 @@ const config = {
     '^[./]'
   ],
   importOrderSeparation: true,
-  importOrderSortSpecifiers: true
+  importOrderSortSpecifiers: true,
+  printWidth: 80
 };
 
 module.exports = config;

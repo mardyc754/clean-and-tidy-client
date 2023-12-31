@@ -27,40 +27,19 @@ export function useCleaningDetailsForm({
   ) as ServiceWithUnit[];
 
   const {
-    onChangeIncludeDetergents,
     onChangeServiceNumberOfUnits,
-    onChangeCleaningFrequency,
-    onChangeStartDate,
-    onChangeHourDate,
     getInitialCleaningDetailsFormData,
     getOrderedServicesIds,
-    setAvailableEmployees,
-    getAvailableEmployeesForService,
     canAddMoreServices,
-    isReservationAvailable,
-    cleaningFrequencyDisplayData,
-    duration,
-    totalCost,
-    startDate
+    totalCost
   } = useOrderServiceFormStore(
     useShallow((state) => ({
-      onChangeIncludeDetergents: state.onChangeIncludeDetergents,
       onChangeServiceNumberOfUnits: state.onChangeServiceNumberOfUnits,
-      onChangeCleaningFrequency: state.onChangeCleaningFrequency,
-      onChangeStartDate: state.onChangeStartDate,
-      onChangeHourDate: state.onChangeHourDate,
-      currentStep: state.currentStep,
-      totalCost: state.totalCost,
-      startDate: state.startDate,
       getOrderedServicesIds: state.getOrderedServicesIds,
       getInitialCleaningDetailsFormData:
         state.getInitialCleaningDetailsFormData,
-      setAvailableEmployees: state.setAvailableEmployees,
-      getAvailableEmployeesForService: state.getAvailableEmployeesForService,
-      cleaningFrequencyDisplayData: state.cleaningFrequencyDisplayData,
-      duration: state.durationInMinutes,
       canAddMoreServices: state.canAddMoreServices,
-      isReservationAvailable: state.isReservationAvailable
+      totalCost: state.totalCost
     }))
   );
 
@@ -123,20 +102,8 @@ export function useCleaningDetailsForm({
     },
     cleaningFrequencyData,
     secondaryServicesWithUnit,
-    totalCost,
-    startDate,
     orderedServicesIds: getOrderedServicesIds(),
-    cleaningFrequencyDisplayData,
-    duration,
     onSubmit,
-    onChangeIncludeDetergents,
-    onChangeServiceNumberOfUnits,
-    onChangeCleaningFrequency,
-    onChangeStartDate,
-    onChangeHourDate,
-    setAvailableEmployees,
-    getAvailableEmployeesForService,
-    canAddMoreServices,
-    isReservationAvailable
+    canAddMoreServices
   };
 }

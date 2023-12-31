@@ -26,7 +26,7 @@ import {
   extractYearAndMonthFromDateToString,
   mergeDayDateAndHourDate
 } from '~/utils/dateUtils';
-import { calculateBusyHours } from '~/utils/serviceUtils';
+import { timeslotsIntersection } from '~/utils/serviceUtils';
 import { getVisitDuration } from '~/utils/visitUtils';
 
 import { CleaningFrequency } from '~/types/enums';
@@ -130,7 +130,7 @@ const ChangeVisitDateForm = () => {
     );
 
     return (
-      calculateBusyHours([
+      timeslotsIntersection([
         busyHoursData?.busyHours ?? [],
         [
           {

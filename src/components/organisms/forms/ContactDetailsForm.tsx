@@ -1,5 +1,7 @@
 import { FormProvider } from 'react-hook-form';
 
+import { useOrderServiceFormStore } from '~/stores/orderService/orderServiceFormStore';
+
 import { useAuth } from '~/hooks/auth/useAuth';
 import { useContactDetailsForm } from '~/hooks/orderServiceForm/useContactDetailsForm';
 import { useOrderServiceFormNavigation } from '~/hooks/orderServiceForm/useOrderServiceFormNavigation';
@@ -11,18 +13,17 @@ import { StepButtons } from '../form-fields';
 
 const ContactDetailsForm = () => {
   const { currentUser } = useAuth();
-
   const { onChangeStep } = useOrderServiceFormNavigation();
-  const {
-    methods,
-    errors,
-    onSubmit,
-    onChangeAddressData,
-    onChangeClientData,
-    onChangeExtraInfo
-  } = useContactDetailsForm({
+  const { methods, errors, onSubmit } = useContactDetailsForm({
     submitHandler: async () => await onChangeStep(3)
   });
+
+  const { onChangeClientData, onChangeAddressData, onChangeExtraInfo } =
+    useOrderServiceFormStore((state) => ({
+      onChangeAddressData: state.onChangeAddressData,
+      onChangeClientData: state.onChangeClientData,
+      onChangeExtraInfo: state.onChangeExtraInfo
+    }));
 
   return (
     <FormProvider {...methods}>

@@ -8,11 +8,7 @@ import { getCurrentUser } from '~/api/auth';
 
 import type { AuthenticatedUser } from '~/schemas/api/auth';
 
-import {
-  isAuthenticated,
-  isClientUser,
-  isEmployeeUser
-} from '~/utils/userUtils';
+import { isAuthenticated } from '~/utils/userUtils';
 
 export const useAuth = (
   validationCallback?: (user: AuthenticatedUser) => boolean,
@@ -45,8 +41,6 @@ export const useAuth = (
   return {
     currentUser: getUser(),
     error,
-    isClient: isClientUser(user),
-    isEmployee: isEmployeeUser(user),
     isSuccess,
     isPending,
     hasAccess

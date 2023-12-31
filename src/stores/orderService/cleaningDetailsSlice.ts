@@ -20,18 +20,18 @@ import {
   getTimeSlot,
   mergeDayDateAndHourDate
 } from '~/utils/dateUtils';
-import { calculateBusyHours } from '~/utils/serviceUtils';
+import { timeslotsIntersection } from '~/utils/serviceUtils';
 
 import type { CleaningFrequency } from '~/types/enums';
 import type { CleaningFrequencyData, ValidDate } from '~/types/forms';
 
 import {
+  assignEmployeesToServices,
   calculateServiceNumberOfUnits,
   calculateVisitCostAndDuration,
   createOrUpdateOrderedService,
   isEmployeeAvailableInAGivenDay,
-  resetAssignedEmployees,
-  updateOrderedServices
+  resetAssignedEmployees
 } from './utils';
 
 type StoredDate = ValidDate | string;
@@ -147,7 +147,7 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
       const fullDate = get().fullStartDate();
 
       if (fullDate) {
-        newServices = updateOrderedServices(
+        newServices = assignEmployeesToServices(
           state.availableEmployees,
           newServices,
           new Date(fullDate)
@@ -245,7 +245,7 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
 
       const newOrderedServices =
         state.startDate && hourDate && fullDate
-          ? updateOrderedServices(
+          ? assignEmployeesToServices(
               state.availableEmployees,
               state.orderedServices,
               mergeDayDateAndHourDate(
@@ -327,6 +327,6 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
     const duration = get().durationInMinutes;
     const timeslot = getTimeSlot(fullStartDate, duration);
 
-    return calculateBusyHours([busyHours, [timeslot]]).length === 0;
+    return timeslotsIntersection([busyHours, [timeslot]]).length === 0;
   }
 });

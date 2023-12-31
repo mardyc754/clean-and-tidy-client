@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
 import { FormProvider } from 'react-hook-form';
+import { useShallow } from 'zustand/react/shallow';
 
 import { DETERGENT_COST } from '~/constants/primitives';
 
 import { type Service } from '~/schemas/api/services';
+
+import { useOrderServiceFormStore } from '~/stores/orderService/orderServiceFormStore';
 
 import { useCleaningDetailsForm } from '~/hooks/orderServiceForm/useCleaningDetailsForm';
 import { useOrderServiceFormNavigation } from '~/hooks/orderServiceForm/useOrderServiceFormNavigation';
@@ -35,11 +38,14 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
     errors,
     cleaningFrequencyData,
     secondaryServicesWithUnit,
-    startDate,
     orderedServicesIds,
-    cleaningFrequencyDisplayData,
-    duration,
-    onSubmit,
+    onSubmit
+  } = useCleaningDetailsForm({
+    data,
+    submitHandler: async () => await onChangeStep(2)
+  });
+
+  const {
     onChangeIncludeDetergents,
     onChangeServiceNumberOfUnits,
     onChangeCleaningFrequency,
@@ -47,11 +53,25 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
     onChangeHourDate,
     setAvailableEmployees,
     getAvailableEmployeesForService,
-    isReservationAvailable
-  } = useCleaningDetailsForm({
-    data,
-    submitHandler: async () => await onChangeStep(2)
-  });
+    isReservationAvailable,
+    cleaningFrequencyDisplayData,
+    duration,
+    startDate
+  } = useOrderServiceFormStore(
+    useShallow((state) => ({
+      onChangeIncludeDetergents: state.onChangeIncludeDetergents,
+      onChangeServiceNumberOfUnits: state.onChangeServiceNumberOfUnits,
+      onChangeCleaningFrequency: state.onChangeCleaningFrequency,
+      onChangeStartDate: state.onChangeStartDate,
+      onChangeHourDate: state.onChangeHourDate,
+      setAvailableEmployees: state.setAvailableEmployees,
+      getAvailableEmployeesForService: state.getAvailableEmployeesForService,
+      cleaningFrequencyDisplayData: state.cleaningFrequencyDisplayData,
+      duration: state.durationInMinutes,
+      startDate: state.startDate,
+      isReservationAvailable: state.isReservationAvailable
+    }))
+  );
 
   useEffect(() => {
     if (startDate) {

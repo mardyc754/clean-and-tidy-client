@@ -10,7 +10,6 @@ import {
   type ValidDayjsDate,
   advanceByMinutes,
   dateWithHour,
-  getTime,
   isAfter,
   isAfterOrSame,
   isBeforeOrSame,
@@ -23,7 +22,7 @@ import {
  * @param allEmployeeWorkingHours the working hours of all employees
  * @returns the list with time intervals when all employees are busy
  */
-export const calculateBusyHours = (
+export const timeslotsIntersection = (
   allEmployeeWorkingHours: TimeInterval[][]
 ) => {
   let busyHours = allEmployeeWorkingHours[0] ?? [];
@@ -61,53 +60,6 @@ export const calculateBusyHours = (
   });
 
   return busyHours;
-};
-
-/**
- * Merges busy hours into larger intervals
- * by using the sum of the sets of working hours
- *
- * This is useful when calculating busy hours for multiple services at once
- * @param busyHours
- * @returns
- */
-export const mergeBusyHours = (busyHours: TimeInterval[][]) => {
-  const currentInterval = {
-    startDate: new Date(0).toISOString(),
-    endDate: new Date(0).toISOString()
-  };
-
-  const mergedBusyHours = busyHours.flatMap((busyHours) => busyHours);
-
-  mergedBusyHours.sort((a, b) => getTime(a.startDate) - getTime(b.startDate));
-
-  const newBusyHours: TimeInterval[] = [];
-
-  mergedBusyHours.forEach((conflict, i) => {
-    if (i === 0) {
-      currentInterval.startDate = conflict.startDate;
-      currentInterval.endDate = conflict.endDate;
-    }
-    const nextConflict = mergedBusyHours[i + 1];
-
-    if (
-      nextConflict &&
-      isAfterOrSame(conflict.endDate, nextConflict.startDate)
-    ) {
-      currentInterval.endDate = nextConflict.endDate;
-    } else {
-      newBusyHours.push({ ...currentInterval });
-
-      currentInterval.endDate = nextConflict
-        ? nextConflict.endDate
-        : conflict.endDate;
-      currentInterval.startDate = nextConflict
-        ? nextConflict.startDate
-        : conflict.startDate;
-    }
-  });
-
-  return newBusyHours;
 };
 
 export function getDisplayedHours(

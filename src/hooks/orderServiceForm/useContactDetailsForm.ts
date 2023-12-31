@@ -1,6 +1,4 @@
-import { set } from 'lodash';
-import { type SubmitHandler, useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
+import { useForm } from 'react-hook-form';
 
 import { getAddress } from '~/api/address';
 import { ResponseError } from '~/api/errors/ResponseError';
@@ -13,28 +11,22 @@ import {
 import { useOrderServiceFormStore } from '~/stores/orderService/orderServiceFormStore';
 
 type UseContactDetailsFormProps = {
-  // submitHandler: SubmitHandler<ContactDetailsFormData>;
   submitHandler: () => Promise<void>;
 };
 export function useContactDetailsForm({
   submitHandler
 }: UseContactDetailsFormProps) {
-  const {
-    onChangeClientData,
-    onChangeAddressData,
-    contactDetailsFormData,
-    onChangeExtraInfo
-  } = useOrderServiceFormStore((state) => ({
-    onChangeAddressData: state.onChangeAddressData,
-    onChangeClientData: state.onChangeClientData,
-    currentStep: state.currentStep,
-    contactDetailsFormData: state.contactDetailsFormData,
-    onChangeExtraInfo: state.onChangeExtraInfo
+  const { contactDetailsFormData } = useOrderServiceFormStore((state) => ({
+    contactDetailsFormData: state.contactDetailsFormData
   }));
 
   const methods = useForm<ContactDetailsFormData>({
     resolver: contactDetailsResolver,
-    defaultValues: contactDetailsFormData()
+    defaultValues: {
+      street: '',
+      houseNumber: '',
+      postCode: ''
+    }
   });
 
   const {
@@ -62,10 +54,6 @@ export function useContactDetailsForm({
   return {
     methods,
     errors,
-    onSubmit,
-    onChangeClientData,
-    onChangeAddressData,
-    onChangeExtraInfo,
-    contactDetailsFormData
+    onSubmit
   };
 }
