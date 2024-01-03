@@ -5,8 +5,6 @@ import { service } from '~/constants/queryKeys';
 import { getServicesBusyHours } from '~/api/services';
 import type { ServiceBusyHoursQueryOptions } from '~/api/types';
 
-import { nextDayTimeSlot } from '~/utils/dateUtils';
-
 // TODO: Maybe it can be connected with the useCleaningDetailsForm hook?
 export function useServicesBusyHours(options: ServiceBusyHoursQueryOptions) {
   const { data: busyHoursData, isSuccess } = useQuery({

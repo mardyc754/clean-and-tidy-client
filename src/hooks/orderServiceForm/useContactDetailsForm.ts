@@ -22,11 +22,7 @@ export function useContactDetailsForm({
 
   const methods = useForm<ContactDetailsFormData>({
     resolver: contactDetailsResolver,
-    defaultValues: {
-      street: '',
-      houseNumber: '',
-      postCode: ''
-    }
+    defaultValues: contactDetailsFormData()
   });
 
   const {

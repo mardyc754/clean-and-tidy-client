@@ -10,8 +10,6 @@ import { changeVisitData } from '~/api/visit';
 
 import { changeVisitDataResolver } from '~/schemas/forms/reservationManagement';
 
-import { isEmployeeAvailableForTheVisit } from '~/stores/orderService/utils';
-
 import { useAuth } from '~/hooks/auth/useAuth';
 import { useEmployeesBusyHours } from '~/hooks/orderServiceForm/useEmployeesBusyHours';
 
@@ -138,15 +136,7 @@ const ChangeVisitDateForm = () => {
             endDate: newEndDate.toISOString()
           }
         ]
-      ]).length === 0 &&
-      employees.every((employee) =>
-        isEmployeeAvailableForTheVisit(
-          employee.id,
-          employees,
-          visitData,
-          startDate
-        )
-      )
+      ]).length === 0
     );
   };
 

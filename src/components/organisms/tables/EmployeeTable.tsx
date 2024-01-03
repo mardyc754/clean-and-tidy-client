@@ -36,7 +36,7 @@ const EmployeeTable = ({ data }: EmployeeTableProps) => {
       leftButtonSlot={
         <Button
           className="flex items-center justify-center space-x-1"
-          href="/employee/create"
+          href="/create-employee"
         >
           <FontAwesomeIcon icon={faPlus} />
           <span>Add employee</span>

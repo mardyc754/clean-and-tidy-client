@@ -1,4 +1,8 @@
-import type { GetStaticProps, InferGetServerSidePropsType } from 'next';
+import type {
+  GetStaticProps,
+  InferGetServerSidePropsType,
+  InferGetStaticPropsType
+} from 'next';
 
 import { fetchReservationDetails } from '~/server/prefetchReservationData';
 
@@ -19,7 +23,7 @@ import { PageWrapper } from '~/components/template';
 export default function ReservationPage({
   reservationData
 }: // }: InferGetServerSidePropsType<typeof getStaticProps>) {
-InferGetServerSidePropsType<typeof getStaticProps>) {
+InferGetStaticPropsType<typeof getStaticProps>) {
   const { data } = useReservation(reservationData.name);
 
   const { hasAccess } = useAuth(

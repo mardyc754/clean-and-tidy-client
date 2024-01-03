@@ -1,10 +1,9 @@
 import { difference } from 'lodash';
 
 import type { OrderedService, Service } from '~/schemas/api/services';
+import type { Timeslot } from '~/schemas/forms/orderService';
 
 import { calculateServiceCostAndDuration } from '~/stores/orderService/utils';
-
-import type { TimeInterval } from '~/types/service';
 
 import {
   type ValidDayjsDate,
@@ -23,12 +22,12 @@ import {
  * @returns the list with time intervals when all employees are busy
  */
 export const timeslotsIntersection = (
-  allEmployeeWorkingHours: TimeInterval[][]
+  allEmployeeWorkingHours: Timeslot[][]
 ) => {
   let busyHours = allEmployeeWorkingHours[0] ?? [];
 
   allEmployeeWorkingHours.slice(1).forEach((singleEmployeeWorkingHours) => {
-    const newBusyHours: TimeInterval[] = [];
+    const newBusyHours: Timeslot[] = [];
 
     // check the hour conflicts between employees
     // by comparing employee working hours with the rest of the employees
@@ -87,7 +86,7 @@ export function getDisplayedHours(
 
 export function getHourAvailabilityData(
   currentDate: ValidDayjsDate,
-  busyHours: TimeInterval[]
+  busyHours: Timeslot[]
 ) {
   return getDisplayedHours(currentDate, 7, 19, 30).map((hour) => ({
     hour,
