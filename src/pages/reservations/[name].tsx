@@ -1,8 +1,4 @@
-import type {
-  GetStaticProps,
-  InferGetServerSidePropsType,
-  InferGetStaticPropsType
-} from 'next';
+import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 
 import { fetchReservationDetails } from '~/server/prefetchReservationData';
 
@@ -90,7 +86,7 @@ export const getStaticPaths = async () => {
   return {
     paths: data.map(({ name }) => ({
       params: {
-        id: `${name}`
+        name: `${name}`
       }
     })),
     fallback: true
@@ -105,7 +101,7 @@ export const getStaticProps = (async ({ params }) => {
   }
 
   const { reservationData, dehydratedState } = await fetchReservationDetails(
-    params.id as string
+    params.name as string
   );
 
   if (!reservationData || Object.keys(reservationData).length === 0) {

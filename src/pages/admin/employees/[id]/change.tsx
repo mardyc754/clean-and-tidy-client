@@ -7,15 +7,19 @@ import { getAllEmployees } from '~/api/employee';
 import type { Employee, EmployeeWithServices } from '~/schemas/api/employee';
 
 import { useServices } from '~/hooks/adminForms/useServices';
+import { useAuth } from '~/hooks/auth/useAuth';
 
 import { Heading1 } from '~/components/atoms/typography/headings';
 import { ChangeEmployeeDataForm } from '~/components/organisms/forms';
 import { PageWrapper } from '~/components/template';
 
-export default function ReservationPage({
+import { isAdminUser } from '~/utils/userUtils';
+
+export default function ChangeEmployeeData({
   data
-}: // }: InferGetServerSidePropsType<typeof getStaticProps>) {
-InferGetServerSidePropsType<typeof getStaticProps>) {
+}: InferGetServerSidePropsType<typeof getStaticProps>) {
+  useAuth((user) => isAdminUser(user), true);
+
   const { services } = useServices();
 
   return (
