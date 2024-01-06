@@ -124,7 +124,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={onSubmit}>
-        <div className="flex flex-col space-y-4 py-16">
+        <div className="flex flex-col items-center space-y-4 py-16 md:items-stretch">
           {mainSlot}
           {cleaningFrequencyData.length > 1 && (
             <RadioGroup

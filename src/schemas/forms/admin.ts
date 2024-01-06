@@ -29,7 +29,7 @@ export const createEmployeeSchema = z
   .extend({
     confirmPassword: z
       .string()
-      .min(8, { message: 'Password must be atleast 8 characters' })
+      .min(8, { message: 'Password must have at least 8 characters' })
       .max(32, { message: 'Password is too long' })
   })
   .refine((data) => data.password === data.confirmPassword, {

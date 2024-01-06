@@ -1,6 +1,7 @@
 import type { DehydratedState } from '@tanstack/react-query';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
+import { getIsSsrMobile } from '~/server/getIsMobile';
 import { fetchUserData } from '~/server/prefetchUserData';
 
 import { getAllServices } from '~/api/services';
@@ -24,6 +25,7 @@ const Home = ({
 
 export const getServerSideProps = (async (ctx) => {
   const fetchedUser = await fetchUserData(ctx);
+  const isSsrMobile = getIsSsrMobile(ctx);
 
   if (isRegularEmployeeUser(fetchedUser.userData)) {
     return {
@@ -50,6 +52,7 @@ export const getServerSideProps = (async (ctx) => {
     return {
       props: {
         ...fetchedUser,
+        isSsrMobile,
         data: []
       }
     }; // temporary
@@ -58,12 +61,14 @@ export const getServerSideProps = (async (ctx) => {
   return {
     props: {
       ...fetchedUser,
-      data
+      data,
+      isSsrMobile
     }
   };
 }) satisfies GetServerSideProps<{
   data: Service[];
   dehydratedState: DehydratedState;
+  isSsrMobile: boolean;
 }>;
 
 export default Home;

@@ -36,7 +36,7 @@ const FormPageTemplate = ({
             }}
           />
         </div>
-        <div className="flex w-full flex-col items-center justify-center p-16 lg:w-1/2">
+        <div className="flex w-full flex-col items-center justify-center py-16 lg:w-1/2 lg:px-16">
           <div className="p-4">
             <Heading1>{headingTitle}</Heading1>
           </div>

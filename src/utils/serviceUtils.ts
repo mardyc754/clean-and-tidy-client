@@ -124,5 +124,5 @@ export function getStartDateForService(
 
 export const getLabelForServiceUnit = (service: Service) => {
   const { unit } = service;
-  return unit ? `${unit.price} zł/${unit.shortName}` : '---';
+  return unit ? `${unit.price} PLN/${unit.shortName}` : '---';
 };

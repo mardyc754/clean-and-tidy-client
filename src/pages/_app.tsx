@@ -12,6 +12,7 @@ import type { AppType } from 'next/app';
 import { useState } from 'react';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { Toaster } from 'react-hot-toast';
+import { IsSsrMobileContext } from '~/providers/IsMobileContext';
 
 import '~/styles/globals.css';
 
@@ -20,6 +21,7 @@ library.add(fas);
 
 const MyApp: AppType<{
   dehydratedState: DehydratedState;
+  isSsrMobile: boolean;
 }> = ({ Component, pageProps: { ...pageProps } }) => {
   const [queryClient] = useState(
     () =>
@@ -37,29 +39,31 @@ const MyApp: AppType<{
   return (
     <QueryClientProvider client={queryClient}>
       <HydrationBoundary state={pageProps.dehydratedState}>
-        <Component {...pageProps} />
-        <Toaster
-          toastOptions={
-            {
-              // success: {
-              //   style: {
-              //     background: 'green',
-              //     color: 'white'
-              //   }
-              // },
-              // error: {
-              //   style: {
-              //     background: 'red',
-              //     color: 'white'
-              //   },
-              //   iconTheme: {
-              //     primary: 'white',
-              //     secondary: 'red'
-              //   }
-              // }
+        <IsSsrMobileContext.Provider value={pageProps.isSsrMobile}>
+          <Component {...pageProps} />
+          <Toaster
+            toastOptions={
+              {
+                // success: {
+                //   style: {
+                //     background: 'green',
+                //     color: 'white'
+                //   }
+                // },
+                // error: {
+                //   style: {
+                //     background: 'red',
+                //     color: 'white'
+                //   },
+                //   iconTheme: {
+                //     primary: 'white',
+                //     secondary: 'red'
+                //   }
+                // }
+              }
             }
-          }
-        />
+          />
+        </IsSsrMobileContext.Provider>
       </HydrationBoundary>
       {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     </QueryClientProvider>

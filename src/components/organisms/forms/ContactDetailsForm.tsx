@@ -28,9 +28,9 @@ const ContactDetailsForm = () => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={onSubmit}>
-        <div className="grid grid-cols-8 grid-rows-6 gap-10 py-16">
+        <div className="grid grid-cols-3 grid-rows-1 gap-10 py-16 md:grid-cols-8 md:grid-rows-6">
           <Textfield
-            wrapperProps="col-span-4 row-span-1"
+            wrapperProps="md:col-span-4 row-span-1 col-span-3"
             label="First name"
             name="firstName"
             required
@@ -41,7 +41,7 @@ const ContactDetailsForm = () => {
             errorLabel={errors.firstName?.message}
           />
           <Textfield
-            wrapperProps="col-span-4 row-span-1"
+            wrapperProps="md:col-span-4 row-span-1 col-span-3"
             label="Last name"
             name="lastName"
             required
@@ -53,7 +53,7 @@ const ContactDetailsForm = () => {
           />
 
           <Textfield
-            wrapperProps="col-span-4 row-span-1"
+            wrapperProps="md:col-span-4 row-span-1 col-span-3"
             label="Email"
             type="email"
             name="email"
@@ -67,7 +67,7 @@ const ContactDetailsForm = () => {
             errorLabel={errors.email?.message}
           />
           <Textfield
-            wrapperProps="col-span-4 row-span-1"
+            wrapperProps="md:col-span-4 row-span-1 col-span-3"
             label="Phone number"
             type="tel"
             name="phone"
@@ -78,12 +78,12 @@ const ContactDetailsForm = () => {
             }}
             errorLabel={errors.phone?.message}
           />
-          <div className="col-span-8 row-span-1 self-end">
+          <div className="col-span-3 row-span-1 self-end md:col-span-8">
             <Heading3>Address</Heading3>
             <p>Enter valid Krakow address</p>
           </div>
           <Textfield
-            wrapperProps="col-span-4 row-span-1"
+            wrapperProps="md:col-span-4 row-span-1 col-span-3"
             label="Street"
             name="street"
             required
@@ -95,7 +95,7 @@ const ContactDetailsForm = () => {
           />
 
           <Textfield
-            wrapperProps="col-span-2 row-span-1"
+            wrapperProps="md:col-span-2 row-span-1 col-span-3"
             label="House number"
             name="houseNumber"
             required
@@ -106,7 +106,7 @@ const ContactDetailsForm = () => {
             errorLabel={errors.houseNumber?.message}
           />
           <Textfield
-            wrapperProps="col-span-2 row-span-1"
+            wrapperProps="md:col-span-2 row-span-1 col-span-3"
             label="Postcode"
             name="postCode"
             required
@@ -117,11 +117,11 @@ const ContactDetailsForm = () => {
             errorLabel={errors.postCode?.message}
           />
           <TextArea
-            wrapperProps="col-span-8 row-span-2"
+            wrapperProps="md:col-span-8 row-span-2 col-span-3"
             className="h-full w-full"
             label="Extra Data"
-            sublabel="Staircase number, floor, intercom code and other information if you want to share with us"
-            placeholder='e.g. "Staircase 2, 3rd floor, intercom code 1234'
+            sublabel="Staircase number, floor, intercom code and other information that will help us find you"
+            placeholder="Extra data"
             name="extraInfo"
             onChange={(value) => {
               onChangeExtraInfo(value);
