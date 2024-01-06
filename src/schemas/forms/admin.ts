@@ -36,7 +36,7 @@ export const createEmployeeSchema = z
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Passwords do not match',
-    path: ['confirmPassword', 'password']
+    path: ['confirmPassword']
   });
 
 export type CreateEmployeeData = z.infer<typeof createEmployeeSchema>;

@@ -18,7 +18,7 @@ export const registrationDataValidator = loginDataValidator
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Passwords do not match',
-    path: ['confirmPassword', 'password']
+    path: ['confirmPassword']
   });
 
 export type LoginData = z.infer<typeof loginDataValidator>;

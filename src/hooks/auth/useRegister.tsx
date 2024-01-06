@@ -37,10 +37,18 @@ export const useRegister = ({ redirectOnSuccessHandler }: useRegisterProps) => {
     Omit<RegistrationData, 'confirmPassword'>
   >({
     mutationFn: register,
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: user });
-      await redirectOnSuccessHandler?.();
-    },
+    onSuccess: () =>
+      toast.promise(
+        (async () => {
+          await queryClient.invalidateQueries({ queryKey: user });
+          await redirectOnSuccessHandler?.();
+        })(),
+        {
+          loading: 'Loading...',
+          success: 'Registration successfull',
+          error: 'Registration failed'
+        }
+      ),
     onError: (result) => {
       if (result.data.affectedField) {
         setError(result.data.affectedField, { message: result.message });
@@ -49,28 +57,20 @@ export const useRegister = ({ redirectOnSuccessHandler }: useRegisterProps) => {
     }
   });
 
-  const onSubmit = (event: FormEvent<HTMLFormElement>) =>
-    toast.promise(
-      handleSubmit((values, e) => {
-        e?.preventDefault();
+  const onSubmit = handleSubmit((values, e) => {
+    e?.preventDefault();
 
-        const { password, confirmPassword } = values;
+    const { password, confirmPassword } = values;
 
-        if (password !== confirmPassword) {
-          const doNotMatchMessage = 'Passwords do not match';
-          setError('password', { message: doNotMatchMessage });
-          setError('confirmPassword', { message: doNotMatchMessage });
-          return;
-        }
+    if (password !== confirmPassword) {
+      const doNotMatchMessage = 'Passwords do not match';
+      setError('password', { message: doNotMatchMessage });
+      setError('confirmPassword', { message: doNotMatchMessage });
+      return;
+    }
 
-        mutation.mutate(omit(values, ['confirmPassword']));
-      })(event),
-      {
-        loading: 'Loading...',
-        success: 'Registration successfull',
-        error: 'Registration failed'
-      }
-    );
+    mutation.mutate(omit(values, ['confirmPassword']));
+  });
 
   return { onSubmit, methods };
 };
