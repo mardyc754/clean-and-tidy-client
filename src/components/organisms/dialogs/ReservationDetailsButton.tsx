@@ -14,15 +14,21 @@ import { Button } from '~/components/atoms/buttons';
 import { Spinner } from '~/components/molecules/status-indicators';
 import { DialogFooter } from '~/components/shadcn/ui/dialog';
 
+import { getReservationStatus } from '~/utils/reservationUtils';
+
+import { Status } from '~/types/enums';
+
 import { ReservationDetails } from '../tables';
 import DialogTriggerButton from './DialogTriggerButton';
 
 type ReservationDetailsButtonProps = {
   reservationName: Reservation['name'];
+  disabled?: boolean;
 };
 
 const ReservationDetailsButton = ({
-  reservationName
+  reservationName,
+  disabled = false
 }: ReservationDetailsButtonProps) => {
   const queryClient = useQueryClient();
 
@@ -44,8 +50,9 @@ const ReservationDetailsButton = ({
 
   return (
     <DialogTriggerButton
+      disabled={disabled}
       className="h-full min-w-full lg:h-[unset] lg:min-w-[70vw]"
-      buttonLabel="Manage"
+      buttonLabel="Details"
       dialogTitle="Reservation Details"
       onClick={async () => await refetch()}
     >
@@ -57,9 +64,13 @@ const ReservationDetailsButton = ({
         </div>
       )}
       <DialogFooter>
-        <Button onClick={() => currentUser && mutation.mutate(currentUser.id)}>
-          Accept
-        </Button>
+        {data && getReservationStatus(data) === Status.TO_BE_CONFIRMED && (
+          <Button
+            onClick={() => currentUser && mutation.mutate(currentUser.id)}
+          >
+            Accept
+          </Button>
+        )}
         {/* <Button color="danger">Reject</Button> */}
       </DialogFooter>
     </DialogTriggerButton>

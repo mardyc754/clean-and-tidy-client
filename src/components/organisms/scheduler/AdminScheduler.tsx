@@ -1,7 +1,5 @@
 import { useMemo, useState } from 'react';
 
-import { user } from '~/constants/queryKeys';
-
 import type { EmployeeWithVisits } from '~/schemas/api/reservation';
 
 import { useAuth } from '~/hooks/auth/useAuth';

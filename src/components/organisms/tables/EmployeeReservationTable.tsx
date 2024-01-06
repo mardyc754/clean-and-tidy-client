@@ -28,6 +28,8 @@ function createReservationRows(data: EmployeeReservation[]) {
   ]);
 
   const rows = data.map((reservation) => {
+    const status = getReservationStatus(reservation);
+
     return {
       id: reservation.id,
       mainServiceName: getMainServiceForReservation(reservation)?.name,
@@ -38,7 +40,7 @@ function createReservationRows(data: EmployeeReservation[]) {
       upcomingVisitDate: getClosestDateFromNow(
         reservation.visits?.flatMap((visit) => visit?.visitParts[0]?.startDate)
       ),
-      status: getReservationStatus(reservation),
+      status,
       action: <ReservationDetailsButton reservationName={reservation.name} />
     };
   });
