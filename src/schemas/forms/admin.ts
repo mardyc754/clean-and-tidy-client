@@ -1,6 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
+import { CleaningFrequency } from '~/types/enums';
+
 import { basicError, price } from '../common';
 import { loginDataValidator } from './auth';
 
@@ -108,6 +110,10 @@ export const createServiceDataSchema = z
       .strict()
       .optional(),
     isPrimary: z.boolean(),
+    detergentsCost: z
+      .string()
+      .transform((val) => parseFloat(val))
+      .optional(),
     minNumberOfUnitsIfPrimary: z
       .number()
       .int()
@@ -117,7 +123,10 @@ export const createServiceDataSchema = z
       .string()
       .transform((val) => parseFloat(val))
       .optional(),
-    secondaryServices: z.record(z.string(), z.boolean())
+    secondaryServices: z.record(z.string(), z.boolean()),
+    frequencies: z
+      .record(z.nativeEnum(CleaningFrequency), z.boolean())
+      .optional()
   })
   .refine(
     (data) => {

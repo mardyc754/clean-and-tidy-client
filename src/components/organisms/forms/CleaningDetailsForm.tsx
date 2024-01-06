@@ -124,7 +124,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={onSubmit}>
-        <div className="flex flex-col items-center space-y-4 py-16 md:items-stretch">
+        <div className="flex flex-col items-stretch space-y-4 py-16">
           {mainSlot}
           {cleaningFrequencyData.length > 1 && (
             <RadioGroup
@@ -136,7 +136,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
               errorLabel={errors.cleaningFrequency?.message}
             />
           )}
-          {detergentsCost && detergentsCost > 0 && (
+          {detergentsCost && detergentsCost > 0 ? (
             <FormCheckbox
               name="includeDetergents"
               label="Detergents"
@@ -147,6 +147,8 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
                 )
               }
             />
+          ) : (
+            <></>
           )}
           <CalendarWithHours
             calendarInputName="startDate"

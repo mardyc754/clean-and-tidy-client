@@ -17,7 +17,7 @@ function createEmployeeRows(data: Employee[]) {
       phone: employee.phone ? employee.phone : '---',
       isAdmin: employee.isAdmin ? 'Yes' : 'No',
       actions: (
-        <Button href={`admin/employees/${employee.id}/change`}>Manage</Button>
+        <Button href={`/admin/employees/${employee.id}/change`}>Manage</Button>
       )
     };
   });
@@ -38,7 +38,7 @@ const EmployeeTable = ({ data }: EmployeeTableProps) => {
       leftButtonSlot={
         <Button
           className="flex items-center justify-center space-x-1"
-          href="/employees/create"
+          href="/admin/employees/create"
         >
           <FontAwesomeIcon icon={faPlus} />
           <span>Add employee</span>

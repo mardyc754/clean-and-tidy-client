@@ -11,6 +11,7 @@ const Logo = ({ color = 'black' }: LogoProps) => {
     <p className={`${robotoBold.className} text-${color}`}>
       <Link href="/">Clean and Tidy</Link>
     </p>
+    // from https://thenounproject.com/icon/cleaning-111269/
   );
 };
 

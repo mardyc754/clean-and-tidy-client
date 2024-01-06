@@ -62,6 +62,7 @@ const CalendarWithHours = ({
           // busyDays={busyDays}
         />
         <HourSelection
+          className="w-full"
           selectedDuration={currentDuration}
           direction="row"
           hourAvailabilityData={getHourAvailabilityData(currentDate, busyHours)}

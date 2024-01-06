@@ -14,7 +14,7 @@ import type {
 import type { BasicServiceData } from '~/schemas/api/services';
 
 import { displayDateWithHours } from './dateUtils';
-import { getVisitStartEndDates } from './visitUtils';
+import { getCumulatedStatus, getVisitStartEndDates } from './visitUtils';
 
 export const getMainServiceForReservation = (
   reservation: EmployeeReservation | ReservationWithExtendedVisits
@@ -81,4 +81,20 @@ export const getReservationEndDate = (
   });
 
   return visitParts[0]!.endDate;
+};
+
+export const getVisitPartsFromReservation = (
+  reservation: ReservationWithVisits | ReservationWithExtendedVisits
+) => {
+  return reservation.visits.flatMap((visit) => visit.visitParts);
+};
+
+export const getReservationStatus = (
+  reservation: ReservationWithVisits | ReservationWithExtendedVisits
+) => {
+  return getCumulatedStatus(
+    getVisitPartsFromReservation(reservation).map(
+      (visitPart) => visitPart.status
+    )
+  );
 };

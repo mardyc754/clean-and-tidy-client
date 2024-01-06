@@ -30,6 +30,7 @@ const SummaryView = ({
         valueClasses={valueClasses}
         name="SummarySection"
       />
+
       <SummaryTypography
         size={summaryTypographySize}
         label="Total costs"

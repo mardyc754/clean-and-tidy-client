@@ -39,7 +39,7 @@ export function getVisitStartEndDates(visit: Visit) {
 }
 
 export function getVisitCost(visit: VisitWithEmployees) {
-  const detergentsCost = visit.includeDetergents ? DETERGENT_COST : 0;
+  const detergentsCost = visit.detergentsCost ?? 0;
 
   return (
     detergentsCost +

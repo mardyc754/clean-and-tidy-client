@@ -13,7 +13,7 @@ const NavbarButtons = () => {
 
   return (
     <div className="flex w-full items-center justify-evenly">
-      {!isEmployeeUser(currentUser) && (
+      {(!currentUser || !isEmployeeUser(currentUser)) && (
         <NavbarButton href="/order-service">Order service</NavbarButton>
       )}
       <NavbarButton href="/check-reservation">Check reservation</NavbarButton>

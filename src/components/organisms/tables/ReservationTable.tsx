@@ -14,7 +14,8 @@ import {
 } from '~/utils/dateUtils';
 import {
   getMainServiceForReservation,
-  getReservationEndDate
+  getReservationEndDate,
+  getReservationStatus
 } from '~/utils/reservationUtils';
 import { getVisitStartEndDates } from '~/utils/visitUtils';
 
@@ -41,7 +42,7 @@ function createReservationRows(data: ReservationWithVisits[]) {
       upcomingVisitDate: getClosestDateFromNow(
         reservation.visits?.flatMap((visit) => visit?.visitParts[0]?.startDate)
       ),
-      status: reservation.status,
+      status: getReservationStatus(reservation),
       action: (
         <Button
           href={`/reservations/${reservation.name}`}

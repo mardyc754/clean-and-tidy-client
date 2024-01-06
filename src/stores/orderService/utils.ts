@@ -47,6 +47,10 @@ export const createOrUpdateOrderedService = (
     );
   }
 
+  if (numberOfUnits <= 0) {
+    newOrderedServices[positionOnList] = undefined;
+    return newOrderedServices;
+  }
   newOrderedServices[positionOnList] = {
     ...service,
     isMainServiceForReservation,

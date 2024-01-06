@@ -18,7 +18,7 @@ const VisitDetailsList = ({ data }: VisitDetailsListProps) => {
     ['Status', status?.label ?? ''],
     [
       'Detergents included',
-      data.detergentCost && data.detergentCost > 0 ? 'Yes' : 'No'
+      data.detergentsCost && data.detergentsCost > 0 ? 'Yes' : 'No'
     ],
     ['Cost', `${getVisitCost(data).toFixed(2)} PLN`]
   ]);

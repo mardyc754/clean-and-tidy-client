@@ -42,7 +42,7 @@ export function useContactDetailsForm({
       })
       .catch((err) => {
         if (err instanceof ResponseError) {
-          setError('street', { message: err.message });
+          setError('postCode', { message: err.message });
         }
       });
   });

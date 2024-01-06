@@ -76,6 +76,7 @@ export interface CleaningDetailsSlice extends CleaningDetailsSliceData {
     serviceId: Service['id']
   ) => EmployeeAvailabilityData[];
   canAddMoreServices: (busyHours: Timeslot[]) => boolean;
+  getAssignedEmployees: () => EmployeeAvailabilityData[];
 }
 
 const checkReservationAvailability = (
@@ -329,5 +330,16 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
     const timeslot = getTimeSlot(fullStartDate, duration);
 
     return timeslotsIntersection([busyHours, [timeslot]]).length === 0;
+  },
+  getAssignedEmployees: () => {
+    const { orderedServices, availableEmployees } = get();
+
+    return availableEmployees.filter((employee) =>
+      orderedServices.some((service) =>
+        service?.visitParts.some(
+          (visitPart) => visitPart.employeeId === employee.id
+        )
+      )
+    );
   }
 });

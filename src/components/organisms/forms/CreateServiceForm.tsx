@@ -3,7 +3,8 @@ import { useRouter } from 'next/router';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
-import { employee, service } from '~/constants/queryKeys';
+import { frequencyValues } from '~/constants/mappings';
+import { service } from '~/constants/queryKeys';
 
 import type { ResponseError } from '~/api/errors/ResponseError';
 import { createService } from '~/api/services';
@@ -44,6 +45,9 @@ const CreateEmployeeForm = () => {
     defaultValues: {
       secondaryServices: Object.fromEntries(
         (services ?? []).map((service) => [`${service.id}`, false])
+      ),
+      frequencies: Object.fromEntries(
+        frequencyValues.map((frequency) => [frequency.value, false])
       )
     },
 
@@ -66,7 +70,7 @@ const CreateEmployeeForm = () => {
       return toast.promise(
         (async () => {
           await queryClient.invalidateQueries({
-            queryKey: service.employeesWithFilters({ includeEmployee: true })
+            queryKey: service.all
           });
           await router.push({
             pathname: '/admin/profile',
@@ -128,13 +132,17 @@ const CreateEmployeeForm = () => {
                 placeholder="Price per unit"
                 errorLabel={errors.unit?.price?.message}
               />
-
               <NumericInput
                 name="unit.duration"
                 min={1}
                 label="Duration per unit (in minutes)"
                 max={480}
                 errorLabel={errors.unit?.duration?.message}
+              />
+              <Textfield
+                name="detergentsCost"
+                label="Detergents cost"
+                errorLabel={errors.detergentsCost?.message}
               />
               <FormCheckbox name="isPrimary" caption="Is primary service?" />
               <NumericInput
@@ -161,6 +169,16 @@ const CreateEmployeeForm = () => {
                 serviceData={services?.filter((service) => service.unit) ?? []}
                 name="secondaryServices"
               />
+              <div className="pt-4">
+                <p>Available frequencies:</p>
+                {frequencyValues.map((frequency) => (
+                  <FormCheckbox
+                    key={`frequencyCheckbox-${frequency.value}`}
+                    name={`frequencies.${frequency.value}`}
+                    caption={frequency.name}
+                  />
+                ))}
+              </div>
               <CardFooter className="py-4">
                 {errors.secondaryServices?.root?.message && (
                   <ErrorLabel>

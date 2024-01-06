@@ -8,12 +8,11 @@ import { changeServiceData } from '~/api/services';
 
 import type { Service } from '~/schemas/api/services';
 import {
-  UpdateServiceData,
+  type UpdateServiceData,
   updateServiceResolver
 } from '~/schemas/forms/admin';
 
 import { Button } from '~/components/atoms/buttons';
-import { NumericInput } from '~/components/atoms/forms';
 import { Textfield } from '~/components/molecules/form-fields';
 import { DialogFooter } from '~/components/shadcn/ui/dialog';
 
@@ -28,7 +27,7 @@ interface ManageServiceButtonProps {
 const ManageServiceButton = ({ serviceData }: ManageServiceButtonProps) => {
   const queryClient = useQueryClient();
 
-  const { unit } = serviceData;
+  const { unit, name } = serviceData;
 
   const methods = useForm({
     defaultValues: {
@@ -69,7 +68,7 @@ const ManageServiceButton = ({ serviceData }: ManageServiceButtonProps) => {
   return (
     <DialogTriggerButton
       className="sm:max-w-[40vw]"
-      dialogTitle="Change service price"
+      dialogTitle={`Change ${name} unit price`}
       buttonLabel="Manage"
       actions={[{ children: 'Save changes', type: 'submit' }]}
     >

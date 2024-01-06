@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { useMobileCheck } from '~/hooks/useMobileCheck';
 
 import { Logo } from '~/components/atoms/logo';
-import { NavbarButtons, NavigationButtons } from '~/components/molecules';
+import { NavbarButtons } from '~/components/molecules';
 
 const Navbar = () => {
   const { isMobile } = useMobileCheck();
@@ -19,7 +19,7 @@ const Navbar = () => {
         <Logo />
       </div>
 
-      <nav className={clsx(!isMobile && 'w-3/4 lg:w-1/2')}>
+      <nav className={clsx(!isMobile && 'flex w-3/4 items-end lg:w-1/2')}>
         {!isMobile && <NavbarButtons />}
         {/* <NavigationButtons /> */}
       </nav>

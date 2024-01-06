@@ -94,6 +94,8 @@ export const createService = async (data: CreateServiceData) => {
     ([_, value]) => value
   );
 
+  console.log(data);
+
   return await handleFetchingData({
     path: '/services',
     method: 'post',
@@ -104,7 +106,12 @@ export const createService = async (data: CreateServiceData) => {
       secondaryServices:
         data.isPrimary && secondaryServices.length > 0
           ? secondaryServices.map(([key]) => parseInt(key))
-          : undefined
+          : undefined,
+      frequencies: data.frequencies
+        ? Object.entries(data.frequencies)
+            .filter(([_, value]) => value)
+            .map(([key]) => key)
+        : undefined
     }
   });
 };
