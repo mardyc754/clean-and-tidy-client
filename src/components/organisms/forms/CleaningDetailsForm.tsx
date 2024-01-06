@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 import { FormProvider } from 'react-hook-form';
 import { useShallow } from 'zustand/react/shallow';
 
-import { DETERGENT_COST } from '~/constants/primitives';
-
 import { type Service } from '~/schemas/api/services';
 
 import { useOrderServiceFormStore } from '~/stores/orderService/orderServiceFormStore';
@@ -28,7 +26,7 @@ interface CleaningDetailsFormProps {
 }
 
 const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
-  const { unit, id, name } = data;
+  const { unit, id, name, detergentsCost } = data;
   const { onChangeStep, returnToHomePage } = useOrderServiceFormNavigation();
 
   const [period, setPeriod] = useState<string | undefined>(undefined);
@@ -46,7 +44,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
   });
 
   const {
-    onChangeIncludeDetergents,
+    onChangeDetergentsCost,
     onChangeServiceNumberOfUnits,
     onChangeCleaningFrequency,
     onChangeStartDate,
@@ -59,7 +57,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
     startDate
   } = useOrderServiceFormStore(
     useShallow((state) => ({
-      onChangeIncludeDetergents: state.onChangeIncludeDetergents,
+      onChangeDetergentsCost: state.onChangeDetergentsCost,
       onChangeServiceNumberOfUnits: state.onChangeServiceNumberOfUnits,
       onChangeCleaningFrequency: state.onChangeCleaningFrequency,
       onChangeStartDate: state.onChangeStartDate,
@@ -138,12 +136,18 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
               errorLabel={errors.cleaningFrequency?.message}
             />
           )}
-          <FormCheckbox
-            name="includeDetergents"
-            label="Detergents"
-            caption={`Include detergents (+${DETERGENT_COST}zł)`}
-            onChange={onChangeIncludeDetergents}
-          />
+          {detergentsCost && detergentsCost > 0 && (
+            <FormCheckbox
+              name="includeDetergents"
+              label="Detergents"
+              caption={`Include detergents (+${detergentsCost} PLN)`}
+              onChange={(newValue: boolean) =>
+                onChangeDetergentsCost(
+                  newValue ? detergentsCost : -detergentsCost
+                )
+              }
+            />
+          )}
           <CalendarWithHours
             calendarInputName="startDate"
             hourInputName="hourDate"

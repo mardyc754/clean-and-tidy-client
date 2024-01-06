@@ -19,7 +19,7 @@ export function useOrderServiceFormSubmit() {
     frequency,
     fullStartDate,
     endDate,
-    includeDetergents,
+    detergentsCost,
     address,
     clientData,
     services,
@@ -28,7 +28,7 @@ export function useOrderServiceFormSubmit() {
   } = useOrderServiceFormStore(
     useShallow((state) => ({
       frequency: state.cleaningFrequencyDisplayData?.value,
-      includeDetergents: state.includeDetergents,
+      detergentsCost: state.detergentsCost,
       address: state.addressData,
       clientData: state.clientData,
       services: state.orderedServices,
@@ -88,7 +88,7 @@ export function useOrderServiceFormSubmit() {
 
     mutation.mutate({
       frequency: frequency,
-      includeDetergents,
+      detergentsCost,
       visitParts: prepareVisitParts(services),
       bookerEmail: clientData.email,
       address,

@@ -145,7 +145,7 @@ const generateIcsFile = async (
   URL.revokeObjectURL(url);
 };
 
-export const generateIcsFileFromVisitEvents = async (
+export const generateIcsFileForAdmin = async (
   visitEvents: VisitEvent[],
   owner: Omit<AuthenticatedUser, 'isAdmin'>,
   extraOptions?: Partial<{
@@ -179,7 +179,7 @@ export const generateIcsFileFromVisitEvents = async (
   );
 };
 
-export const generateIcsFromReservationList = async (
+export const generateIcsForClient = async (
   reservationList: ReservationWithExtendedVisits[],
   owner: Omit<AuthenticatedUser, 'isAdmin'>,
   extraOptions?: Partial<{
@@ -219,7 +219,7 @@ export const generateIcsFromReservationList = async (
   );
 };
 
-export const generateIscFileForReservationVisits = async (
+export const generateIscFileForEmployee = async (
   visitEvents: VisitPartWithServiceAndReservation[],
   owner: Omit<AuthenticatedUser, 'isAdmin'>,
   extraOptions?: Partial<{

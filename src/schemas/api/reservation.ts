@@ -36,7 +36,7 @@ export type VisitPartWithEmployees = z.infer<
 
 export const visitSchema = z.object({
   id: z.number().int(),
-  includeDetergents: z.boolean(),
+  detergentCost: decimalToFloat.nullish(),
   canDateBeChanged: z.boolean(),
   reservationId: z.number().int(),
   visitParts: z.array(visitPartSchema)

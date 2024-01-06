@@ -13,7 +13,8 @@ import type { NullableDate } from '~/types/forms';
 
 export const useSummaryData = (serviceName: string) => {
   const {
-    totalCost,
+    totalCost: visitCost,
+    detergentsCost,
     totalDuration,
     cleaningFrequency,
     startDate,
@@ -30,7 +31,8 @@ export const useSummaryData = (serviceName: string) => {
       hourDate: state.hourDate,
       clientData: state.clientData,
       addressData: state.addressData,
-      extraInfo: state.extraInfo
+      extraInfo: state.extraInfo,
+      detergentsCost: state.detergentsCost
     }))
   );
 
@@ -51,7 +53,7 @@ export const useSummaryData = (serviceName: string) => {
   ]);
 
   return {
-    totalCost,
+    totalCost: visitCost + detergentsCost,
     extraInfo,
     summaryData,
     contactDetails: { ...clientData, ...addressData }

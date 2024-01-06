@@ -25,8 +25,7 @@ InferGetStaticPropsType<typeof getStaticProps>) {
   const { hasAccess } = useAuth(
     (user) =>
       !!reservationData.bookerEmail &&
-      user.email === reservationData.bookerEmail,
-    true
+      user.email === reservationData.bookerEmail
   );
 
   return (

@@ -11,7 +11,7 @@ import { IconIndicator } from '~/components/molecules/status-indicators';
 
 import { daysBetween } from '~/utils/dateUtils';
 import {
-  generateIcsFromReservationList,
+  generateIcsForClient,
   getEventsForClient,
   getMaxEndDateFromReservationVisits
 } from '~/utils/scheduler';
@@ -58,7 +58,7 @@ const ClientScheduler = ({
       events={visits}
       length={reservationsTimeslot}
       onClickDownloadIcs={() =>
-        generateIcsFromReservationList(reservationList, currentUser!)
+        generateIcsForClient(reservationList, currentUser!)
       }
       userRole="client"
     />

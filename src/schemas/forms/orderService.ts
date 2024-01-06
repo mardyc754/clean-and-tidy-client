@@ -27,7 +27,7 @@ export const orderServiceSubmitDataSchema = z.object({
     required_error: 'Select an hour',
     invalid_type_error: 'Select an hour'
   }),
-  includeDetergents: z.boolean(),
+  detergentsCost: z.number().min(0).optional(),
   extraServices: z.array(z.number().int().or(z.undefined())).optional(),
   totalCost: z.number().min(0)
 });
@@ -177,7 +177,7 @@ export const reservationCreationSchema = z
     ),
     address: address.or(z.number().int()),
     contactDetails: contactDetails,
-    includeDetergents: z.boolean(),
+    detergentsCost: z.number().min(0).optional(),
 
     services: z
       .array(

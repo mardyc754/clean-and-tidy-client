@@ -16,8 +16,11 @@ const VisitDetailsList = ({ data }: VisitDetailsListProps) => {
 
   const visitData = new Map([
     ['Status', status?.label ?? ''],
-    ['Detergents included', data.includeDetergents ? 'Yes' : 'No'],
-    ['Cost', `${getVisitCost(data).toFixed(2)} zł`]
+    [
+      'Detergents included',
+      data.detergentCost && data.detergentCost > 0 ? 'Yes' : 'No'
+    ],
+    ['Cost', `${getVisitCost(data).toFixed(2)} PLN`]
   ]);
 
   return (

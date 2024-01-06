@@ -54,8 +54,8 @@ export const summaryIndicatorData = [
 
 export const initialCleaningDetailsFormData = {
   numberOfUnits: 0,
-  cleaningFrequency: null,
   includeDetergents: false,
+  cleaningFrequency: null,
   startDate: null,
   hourDate: null,
   extraServices: [] as (number | undefined)[]

@@ -15,7 +15,7 @@ import { ProfilePageTemplate } from '~/components/template';
 
 import { daysBetween } from '~/utils/dateUtils';
 import {
-  generateIscFileForReservationVisits,
+  generateIscFileForEmployee,
   getMaxEndDateFromReservationVisits
 } from '~/utils/scheduler';
 import { isRegularEmployeeUser } from '~/utils/userUtils';
@@ -57,7 +57,7 @@ export default function EmployeeProfile({
               <Scheduler
                 userRole="employee"
                 onClickDownloadIcs={() =>
-                  generateIscFileForReservationVisits(visitList ?? [], userData)
+                  generateIscFileForEmployee(visitList ?? [], userData)
                 }
                 className="w-full"
                 events={visitEvents}

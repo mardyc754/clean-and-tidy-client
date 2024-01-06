@@ -22,7 +22,7 @@ const VisitPartDetailsList = ({ data }: VisitPartDetailsListProps) => {
     ['Date', extractDateStringFromDate(data.startDate)],
     ['Hours', displayDatesAsTimeslot(data.startDate, data.endDate)],
     ['Status', status?.label ?? ''],
-    ['Cost', `${data.cost.toFixed(2)} zł`]
+    ['Cost', `${data.cost.toFixed(2)} PLN`]
   ]);
 
   return (

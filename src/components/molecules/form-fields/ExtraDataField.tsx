@@ -64,7 +64,7 @@ const ExtraDataField = ({
         {unit && (
           <p
             className={clsx('text-sm', disabled && 'text-slate-400')}
-          >{`${unit.price} zł/${unit.shortName}`}</p>
+          >{`${unit.price} PLN/${unit.shortName}`}</p>
         )}
       </div>
       {selected ? (

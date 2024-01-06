@@ -11,7 +11,7 @@ type SummarySectionProps = {
 
 const SummarySection = ({ data, totalCost }: SummarySectionProps) => {
   return (
-    <div className="sticky top-8 rounded-lg bg-white p-16 shadow-md">
+    <div className="sticky top-8 rounded-lg bg-white p-8 shadow-md">
       <div className="pb-4">
         <Heading2 className="text-center">Summary</Heading2>
       </div>

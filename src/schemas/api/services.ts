@@ -17,7 +17,8 @@ export const basicService = z.object({
     })
     .nullish(),
   minNumberOfUnitsIfPrimary: z.number().int().min(0).nullish(),
-  minCostIfPrimary: decimalToFloat.nullish()
+  minCostIfPrimary: decimalToFloat.nullish(),
+  detergentsCost: decimalToFloat.nullish()
 });
 
 export const service = basicService.merge(

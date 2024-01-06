@@ -33,7 +33,7 @@ const SummaryView = ({
       <SummaryTypography
         size={summaryTypographySize}
         label="Total costs"
-        value={`${totalCost.toFixed(2)} zł/visit`}
+        value={`${totalCost.toFixed(2)} PLN/visit`}
       />
     </div>
   );

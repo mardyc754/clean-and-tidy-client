@@ -2,7 +2,6 @@ import { omit } from 'lodash';
 import { type StateCreator } from 'zustand';
 
 import { initialCleaningDetailsFormData } from '~/constants/orderServiceForm';
-import { DETERGENT_COST } from '~/constants/primitives';
 
 import {
   type BasicServiceData,
@@ -40,6 +39,7 @@ interface CleaningDetailsSliceData {
   totalCost: number;
   durationInMinutes: number;
   includeDetergents: boolean;
+  detergentsCost: number;
   // dates coming from the local storage are stored as ISO strings
   // in order not to mix the Date and string types together,
   // we convert the ISO strings to Date objects
@@ -57,7 +57,7 @@ export interface CleaningDetailsSlice extends CleaningDetailsSliceData {
     serviceData: BasicServiceData,
     positionOnList: number
   ) => void;
-  onChangeIncludeDetergents: (includeDetergents: boolean) => void;
+  onChangeDetergentsCost: (detergentsCost: number) => void;
   onChangeStartDate: (startDate: ValidDate) => void;
   onChangeHourDate: (hourDate: ValidDate) => void;
   fullStartDate: () => StoredDate;
@@ -120,13 +120,12 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
 ) => ({
   ...initialCleaningDetailsState,
   availableEmployees: [],
+  detergentsCost: 0,
   isReservationAvailable: false,
-  onChangeIncludeDetergents: (includeDetergents) => {
-    set((state) => ({
-      includeDetergents,
-      totalCost: includeDetergents
-        ? state.totalCost + DETERGENT_COST
-        : state.totalCost - DETERGENT_COST
+  onChangeDetergentsCost: (detergentsCost) => {
+    set(() => ({
+      detergentsCost: detergentsCost >= 0 ? detergentsCost : 0,
+      includeDetergents: detergentsCost >= 0
     }));
   },
   onChangeServiceNumberOfUnits: (
@@ -274,6 +273,7 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
       startDate,
       hourDate,
       includeDetergents,
+      detergentsCost,
       totalCost
     } = get();
 
@@ -289,7 +289,8 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
           !service ? service : calculateServiceNumberOfUnits(service)
         ) ?? [],
       totalCost,
-      includeDetergents
+      includeDetergents,
+      detergentsCost: includeDetergents ? detergentsCost : 0
     };
   },
   resetCleaningDetailsData: () => {
