@@ -21,8 +21,7 @@ const VisitPartDetailsList = ({ data }: VisitPartDetailsListProps) => {
   const listedData = new Map([
     ['Date', extractDateStringFromDate(data.startDate)],
     ['Hours', displayDatesAsTimeslot(data.startDate, data.endDate)],
-    ['Status', status?.label ?? ''],
-    ['Cost', `${data.cost.toFixed(2)} PLN`]
+    ['Status', status?.label ?? '']
   ]);
 
   return (

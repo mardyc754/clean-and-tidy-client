@@ -111,6 +111,7 @@ export const initialCleaningDetailsState = {
   ...omit(initialCleaningDetailsFormData, ['extraServices']),
   totalCost: 0,
   durationInMinutes: 0,
+  detergentsCost: 0,
   orderedServices: [],
   cleaningFrequencyDisplayData: null
 };
@@ -143,6 +144,14 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
         numberOfUnits,
         positionOnList
       );
+
+      if (!serviceData.unit) {
+        newServices[positionOnList] = {
+          ...serviceData,
+          isMainServiceForReservation: isMainService,
+          visitParts: []
+        };
+      }
 
       const fullDate = get().fullStartDate();
 
@@ -334,12 +343,20 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
   getAssignedEmployees: () => {
     const { orderedServices, availableEmployees } = get();
 
-    return availableEmployees.filter((employee) =>
-      orderedServices.some((service) =>
-        service?.visitParts.some(
-          (visitPart) => visitPart.employeeId === employee.id
-        )
-      )
+    const nonEmptyVisitParts = orderedServices.flatMap((service) =>
+      service?.visitParts.filter((visitPart) => visitPart.numberOfUnits > 0)
     );
+
+    const employeesInVisitPart = Array.from(
+      new Set(nonEmptyVisitParts.map((visitPart) => visitPart?.employeeId))
+    ).filter((employeeId) => employeeId !== undefined);
+
+    const assignedEmployees = availableEmployees.filter((employee) =>
+      employeesInVisitPart.includes(employee.id)
+    );
+
+    console.log('>>> assigned employees', assignedEmployees);
+
+    return assignedEmployees;
   }
 });

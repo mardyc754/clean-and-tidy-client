@@ -1,6 +1,8 @@
 import { type EventAttributes, type EventStatus, createEvents } from 'ics';
 import { omit } from 'lodash';
 
+import { visit } from '~/constants/queryKeys';
+
 import type { AuthenticatedUser } from '~/schemas/api/auth';
 import type {
   EmployeeWithVisits,
@@ -17,7 +19,8 @@ import { convertISOStringToDate } from './dateUtils';
 import {
   createReservationTitle,
   createReservationTitleForEmployee,
-  createVisitPartTitleForAdmin
+  createVisitPartTitleForAdmin,
+  getReservationStatus
 } from './reservationUtils';
 import { generateAddressAsString, getUserFullName } from './userUtils';
 import { getStatusFromVisitParts, getVisitStartEndDates } from './visitUtils';
@@ -248,7 +251,7 @@ export const generateIscFileForEmployee = async (
         location: reservation.address
           ? generateAddressAsString(reservation.address)
           : undefined,
-        status: reservationStatusesToEventOnes.get(reservation.status) as
+        status: reservationStatusesToEventOnes.get(visitEvent.status) as
           | EventStatus
           | undefined
       } satisfies EventAttributes;

@@ -53,6 +53,12 @@ const ReservationGeneralDetailsCard = ({
             key={`ReservationDetails-${convertToCamelCase(key)}`}
           />
         ))}
+        {manageable && data?.extraInfo && (
+          <div className="pt-4">
+            <p className="text-2xl font-semibold">Extra info</p>
+            <p>{data.extraInfo}</p>
+          </div>
+        )}
         {manageable && <ReservationActions data={data} />}
       </CardContent>
     </Card>

@@ -48,14 +48,14 @@ const SummaryForm = ({ serviceName }: SummaryFormProps) => {
         contentDistribution="stretch"
         summaryTypographySize="large"
       /> */}
-      <div className="py-16">
+      <div className="py-8">
         <Heading2>Address data</Heading2>
         <div className="pt-8">
           <AddressDataField data={contactDetails} />
         </div>
       </div>
       {extraInfo && (
-        <div className="py-16">
+        <div className="py-8">
           <Heading2>Extra info</Heading2>
           <div className="pt-8">
             <p>{extraInfo}</p>

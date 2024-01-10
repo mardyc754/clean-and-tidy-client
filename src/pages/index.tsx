@@ -11,7 +11,11 @@ import type { Service } from '~/schemas/api/services';
 import { HeroSection } from '~/components/organisms/layout';
 import { PageWrapper } from '~/components/template';
 
-import { isAdminUser, isRegularEmployeeUser } from '~/utils/userUtils';
+import {
+  isAdminUser,
+  isClientUser,
+  isRegularEmployeeUser
+} from '~/utils/userUtils';
 
 const Home = ({
   data
@@ -26,6 +30,15 @@ const Home = ({
 export const getServerSideProps = (async (ctx) => {
   const fetchedUser = await fetchUserData(ctx);
   const isSsrMobile = getIsSsrMobile(ctx);
+
+  if (isClientUser(fetchedUser.userData)) {
+    return {
+      redirect: {
+        destination: '/client/profile',
+        permanent: false
+      }
+    };
+  }
 
   if (isRegularEmployeeUser(fetchedUser.userData)) {
     return {
