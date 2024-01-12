@@ -20,7 +20,8 @@ const Navbar = () => {
       </div>
 
       <nav className={clsx(!isMobile && 'flex w-3/4 items-end lg:w-1/2')}>
-        {!isMobile && <NavbarButtons />}
+        {/* {!isMobile && <NavbarButtons />} */}
+        <NavbarButtons />
         {/* <NavigationButtons /> */}
       </nav>
     </header>

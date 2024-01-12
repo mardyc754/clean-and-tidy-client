@@ -15,6 +15,7 @@ import {
 import { displayDateWithHours } from '~/utils/dateUtils';
 import { getReservationEndDate } from '~/utils/reservationUtils';
 import { convertToCamelCase } from '~/utils/stringUtils';
+import { generateAddressAsString } from '~/utils/userUtils';
 
 import { ReservationActions } from '../button-fields';
 
@@ -29,10 +30,19 @@ const ReservationGeneralDetailsCard = ({
   className,
   manageable = false
 }: ReservationDetailsCardProps) => {
-  const { name, frequency, bookerFirstName, bookerLastName } = data;
+  const {
+    name,
+    frequency,
+    bookerFirstName,
+    bookerLastName,
+    bookerEmail,
+    address
+  } = data;
 
   const reservationDetailsData = new Map([
     ['Booker', `${bookerFirstName} ${bookerLastName}`],
+    ['Email', `${bookerEmail ?? 'N/A'}`],
+    ['Address', `${address ? generateAddressAsString(address) : '---'}`],
     ['Frequency', `${frequencyToDescriptionMap.get(frequency)}`],
     ['End date', displayDateWithHours(getReservationEndDate(data))]
   ]);
