@@ -1,7 +1,5 @@
 import { useMemo, useState } from 'react';
 
-import { user } from '~/constants/queryKeys';
-
 import type { EmployeeWithVisits } from '~/schemas/api/reservation';
 
 import { useAuth } from '~/hooks/auth/useAuth';
@@ -11,7 +9,7 @@ import { IconIndicator } from '~/components/molecules/status-indicators';
 
 import { daysBetween } from '~/utils/dateUtils';
 import {
-  generateIcsFileFromVisitEvents,
+  generateIcsFileForAdmin,
   getMaxEndDateFromReservationVisits
 } from '~/utils/scheduler';
 
@@ -75,7 +73,7 @@ const AdminScheduler = ({ employeeList, ...props }: AdminSchedulerProps) => {
       events={visits}
       length={reservationsTimeslot}
       onClickDownloadIcs={() =>
-        generateIcsFileFromVisitEvents(visits, currentUser!, {
+        generateIcsFileForAdmin(visits, currentUser!, {
           calendarNameSuffix:
             selectedEmployee.name !== 'You' ? selectedEmployee.name : undefined
         })

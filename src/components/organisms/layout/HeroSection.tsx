@@ -36,22 +36,29 @@ const HeroSection = ({ services }: HeroSectionProps) => {
           filter: 'brightness(0.7) contrast(0.8)'
         }}
       />
-      <div className="z-10 flex h-20 w-1/2 flex-1 flex-col justify-evenly p-16">
-        <Heading1 color="white" textSize="text-7xl">
-          Professional cleaning service
-        </Heading1>
-        <LargeTypography color="white">
-          Order cleaning from us and enjoy cleanliness in your home or office
-        </LargeTypography>
-        <div className="flex w-full justify-around">
-          <Dropdown
-            options={options}
-            value={selectedValue}
-            onChange={setSelectedValue}
-          />
-          <Button href={`/order-service/${selectedValue?.id}`}>
-            Order service
-          </Button>
+      <div className="z-10 flex w-full flex-1 flex-col justify-center md:p-16">
+        <div className="space-y-12 rounded-lg bg-white p-20 md:p-28">
+          <div className="flex flex-col items-center justify-center">
+            <Heading1 textSize="text-5xl">
+              Professional cleaning services
+            </Heading1>
+          </div>
+          <div className="flex flex-col items-center space-y-10">
+            <LargeTypography>
+              Order cleaning from us and enjoy cleanliness in your home or
+              office
+            </LargeTypography>
+            <div className="flex w-full flex-col items-center justify-center space-y-8 md:flex-row md:space-x-8 md:space-y-0">
+              <Dropdown
+                options={options}
+                value={selectedValue}
+                onChange={setSelectedValue}
+              />
+              <Button href={`/order-service/${selectedValue?.id}`}>
+                Order service
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -23,6 +23,7 @@ export interface VisitEvent extends CalendarEvent {
     visitId: VisitWithEmployees['id'];
     serviceFullName: string;
     reservationName?: string;
+    groupId: number;
   };
 }
 
@@ -144,16 +145,23 @@ const Scheduler = ({
   const { components } = useMemo(
     () => ({
       components: {
-        // agenda: {
-        //   event: EventAgenda
-        // },
         event: userRole === 'employee' ? EmployeeEvent : ClientEvent
-        // eventContentWrapper: Event
-        // eventContentWrapper: ({ children }) => <div>{children}</div>
       }
     }),
     []
   );
+
+  // const colorClassesMap = useMemo(() => {
+  //   const colorMap = new Map<number, string | undefined>();
+
+  //   const uniqueGroups = new Set(events.map((event) => event.resource.groupId));
+
+  //   uniqueGroups.forEach((groupId) => {
+  //     colorMap.set(groupId, getRandomBackgroudColor());
+  //   });
+
+  //   return colorMap;
+  // }, [events]);
 
   return (
     <>
@@ -166,8 +174,10 @@ const Scheduler = ({
           {...props}
           events={events}
           components={components}
-          // eventPropGetter={() => ({ className: getRandomBackgroudColor() })}
-          // eventPropGetter={() => ({ className: 'bg-cyan-500 overflow-visible' })}
+          // eventPropGetter={(event) => ({
+          //   className: colorClassesMap.get(event.resource.groupId)
+          // })}
+          eventPropGetter={() => ({ className: 'bg-cyan-500' })}
           // dayPropGetter={() => ({ className: 'overflow-visible' })}
           localizer={localizer}
           startAccessor="start"

@@ -8,6 +8,7 @@ import { ErrorLabel, Label } from '~/components/atoms/forms';
 type TextAreaProps = {
   label: string;
   className?: string;
+  sublabel?: string;
   wrapperProps?: string;
   errorLabel?: string;
   onChange?: (value: string) => void;
@@ -19,9 +20,11 @@ type TextAreaProps = {
 const TextArea = ({
   name,
   label,
+  placeholder,
   className = '',
   wrapperProps = '',
   errorLabel,
+  sublabel,
   onChange,
   ...props
 }: TextAreaProps) => {
@@ -36,8 +39,9 @@ const TextArea = ({
       )}
     >
       <Label htmlFor={name}>{label}</Label>
+      {sublabel && <p className="pb-2 text-xs">{sublabel}</p>}
       <textarea
-        placeholder={label}
+        placeholder={placeholder ?? label}
         className={`resize-none rounded-lg p-4 outline-none ${className}`}
         {...register(name)}
         onChange={(e) => {

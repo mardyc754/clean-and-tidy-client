@@ -10,8 +10,6 @@ import { changeVisitData } from '~/api/visit';
 
 import { changeVisitDataResolver } from '~/schemas/forms/reservationManagement';
 
-import { isEmployeeAvailableForTheVisit } from '~/stores/orderService/utils';
-
 import { useAuth } from '~/hooks/auth/useAuth';
 import { useEmployeesBusyHours } from '~/hooks/orderServiceForm/useEmployeesBusyHours';
 
@@ -26,7 +24,7 @@ import {
   extractYearAndMonthFromDateToString,
   mergeDayDateAndHourDate
 } from '~/utils/dateUtils';
-import { calculateBusyHours } from '~/utils/serviceUtils';
+import { timeslotsIntersection } from '~/utils/serviceUtils';
 import { getVisitDuration } from '~/utils/visitUtils';
 
 import { CleaningFrequency } from '~/types/enums';
@@ -130,7 +128,7 @@ const ChangeVisitDateForm = () => {
     );
 
     return (
-      calculateBusyHours([
+      timeslotsIntersection([
         busyHoursData?.busyHours ?? [],
         [
           {
@@ -138,15 +136,7 @@ const ChangeVisitDateForm = () => {
             endDate: newEndDate.toISOString()
           }
         ]
-      ]).length === 0 &&
-      employees.every((employee) =>
-        isEmployeeAvailableForTheVisit(
-          employee.id,
-          employees,
-          visitData,
-          startDate
-        )
-      )
+      ]).length === 0
     );
   };
 

@@ -6,7 +6,7 @@ import { fetchUserData } from '~/server/prefetchUserData';
 
 import type { AdminUser } from '~/schemas/api/auth';
 
-import { useServicesWithEmployees } from '~/hooks/adminForms/useServices';
+import { useServices } from '~/hooks/adminForms/useServices';
 import { useEmployeeListWithVisits } from '~/hooks/employee/useEmployeeList';
 import { useEmployeeVisits } from '~/hooks/employee/useEmployeeVisits';
 
@@ -19,7 +19,7 @@ import {
 } from '~/components/organisms/tables';
 import { ProfilePageTemplate } from '~/components/template';
 
-import { getEventsFromEmployees } from '~/utils/scheduler';
+import { getEventsForAdmin } from '~/utils/scheduler';
 import { isAdminUser } from '~/utils/userUtils';
 
 export default function AdminProfile({
@@ -34,7 +34,7 @@ export default function AdminProfile({
 
   const { employeeList } = useEmployeeListWithVisits();
 
-  const { services } = useServicesWithEmployees();
+  const { services } = useServices();
 
   return (
     <ProfilePageTemplate
@@ -43,7 +43,7 @@ export default function AdminProfile({
       slots={[
         {
           name: 'Awaiting reservations',
-          Content: () =>
+          content: () =>
             reservationList ? (
               <EmployeeReservationTable data={reservationList} />
             ) : (
@@ -52,11 +52,11 @@ export default function AdminProfile({
         },
         {
           name: 'Employee visit calendar',
-          Content: () =>
+          content: () =>
             !isLoading ? (
               <AdminScheduler
                 className="w-full"
-                employeeList={getEventsFromEmployees(employeeList ?? [])}
+                employeeList={getEventsForAdmin(employeeList ?? [])}
               />
             ) : (
               <Spinner caption="Loading events..." />
@@ -64,11 +64,11 @@ export default function AdminProfile({
         },
         {
           name: 'Employees',
-          Content: () => <EmployeeTable data={employeeList ?? []} />
+          content: () => <EmployeeTable data={employeeList ?? []} />
         },
         {
           name: 'Services',
-          Content: () => <ServiceTable data={services ?? []} />
+          content: () => <ServiceTable data={services ?? []} />
         }
       ]}
     />

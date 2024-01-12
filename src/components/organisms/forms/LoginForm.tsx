@@ -19,7 +19,7 @@ const LoginForm = ({ redirectOnSuccessHandler }: LoginFormProps) => {
   return (
     <FormProvider {...methods}>
       <form
-        className="grid w-full max-w-lg grid-rows-3 items-center space-y-1  px-16 py-8"
+        className="grid w-full max-w-lg grid-rows-3 items-center space-y-1 px-16 py-8"
         onSubmit={onSubmit}
       >
         <Textfield

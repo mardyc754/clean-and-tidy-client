@@ -46,8 +46,8 @@ type FetchingData<
 function handleTypeErrors(err: unknown, typeErrorMessage: string) {
   if (err instanceof ZodError) {
     // eslint-disable-next-line no-console
-    console.error(err);
-    return { message: err.message ?? typeErrorMessage, hasError: true };
+    console.error(err.errors);
+    return { message: 'Type error of received data', hasError: true };
   } else {
     throw err;
   }

@@ -1,6 +1,8 @@
 import { type EventAttributes, type EventStatus, createEvents } from 'ics';
 import { omit } from 'lodash';
 
+import { visit } from '~/constants/queryKeys';
+
 import type { AuthenticatedUser } from '~/schemas/api/auth';
 import type {
   EmployeeWithVisits,
@@ -17,7 +19,8 @@ import { convertISOStringToDate } from './dateUtils';
 import {
   createReservationTitle,
   createReservationTitleForEmployee,
-  createVisitPartTitleForAdmin
+  createVisitPartTitleForAdmin,
+  getReservationStatus
 } from './reservationUtils';
 import { generateAddressAsString, getUserFullName } from './userUtils';
 import { getStatusFromVisitParts, getVisitStartEndDates } from './visitUtils';
@@ -31,9 +34,8 @@ const reservationStatusesToEventOnes = new Map([
   [Status.UNKNOWN, 'TENTATIVE']
 ]);
 
-export const getEventsFromReservation = (
-  reservation: ReservationWithVisits
-) => {
+// client events
+export const getEventsForClient = (reservation: ReservationWithVisits) => {
   const visits =
     reservation.visits.filter((visit) => {
       const visitStatus = getStatusFromVisitParts(visit.visitParts);
@@ -54,13 +56,15 @@ export const getEventsFromReservation = (
           reservation.services.find((service) => {
             return service.isMainServiceForReservation;
           })?.name ?? 'Visit Details',
-        reservationName: reservation.name
+        reservationName: reservation.name,
+        groupId: reservation.id
       }
     };
   });
 };
 
-export const getEventsFromVisitParts = (
+// employee events
+export const getEventsForEmployee = (
   visits: VisitPartWithServiceAndReservation[]
 ) => {
   return visits
@@ -73,12 +77,17 @@ export const getEventsFromVisitParts = (
         ),
         start: convertISOStringToDate(visit.startDate),
         end: convertISOStringToDate(visit.endDate),
-        resource: { visitId: visit.id, serviceFullName: visit.service.name }
+        resource: {
+          visitId: visit.id,
+          serviceFullName: visit.service.name,
+          groupId: visit.reservation.id
+        }
       };
     });
 };
 
-export const getEventsFromEmployees = (employees: EmployeeWithVisits[]) => {
+// admin events
+export const getEventsForAdmin = (employees: EmployeeWithVisits[]) => {
   return employees.map((employee) => ({
     ...omit(employee, 'visitParts'),
     visits: employee.visitParts
@@ -87,7 +96,11 @@ export const getEventsFromEmployees = (employees: EmployeeWithVisits[]) => {
         title: createVisitPartTitleForAdmin(employee, visit),
         start: convertISOStringToDate(visit.startDate),
         end: convertISOStringToDate(visit.endDate),
-        resource: { visitId: visit.id, serviceFullName: visit.service.name }
+        resource: {
+          visitId: visit.id,
+          serviceFullName: visit.service.name,
+          groupId: employee.id
+        }
       }))
   }));
 };
@@ -135,7 +148,7 @@ const generateIcsFile = async (
   URL.revokeObjectURL(url);
 };
 
-export const generateIcsFileFromVisitEvents = async (
+export const generateIcsFileForAdmin = async (
   visitEvents: VisitEvent[],
   owner: Omit<AuthenticatedUser, 'isAdmin'>,
   extraOptions?: Partial<{
@@ -169,7 +182,7 @@ export const generateIcsFileFromVisitEvents = async (
   );
 };
 
-export const generateIcsFromReservationList = async (
+export const generateIcsForClient = async (
   reservationList: ReservationWithExtendedVisits[],
   owner: Omit<AuthenticatedUser, 'isAdmin'>,
   extraOptions?: Partial<{
@@ -209,7 +222,7 @@ export const generateIcsFromReservationList = async (
   );
 };
 
-export const generateIscFileForReservationVisits = async (
+export const generateIscFileForEmployee = async (
   visitEvents: VisitPartWithServiceAndReservation[],
   owner: Omit<AuthenticatedUser, 'isAdmin'>,
   extraOptions?: Partial<{
@@ -238,7 +251,7 @@ export const generateIscFileForReservationVisits = async (
         location: reservation.address
           ? generateAddressAsString(reservation.address)
           : undefined,
-        status: reservationStatusesToEventOnes.get(reservation.status) as
+        status: reservationStatusesToEventOnes.get(visitEvent.status) as
           | EventStatus
           | undefined
       } satisfies EventAttributes;

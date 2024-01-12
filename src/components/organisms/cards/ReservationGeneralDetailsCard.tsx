@@ -1,9 +1,6 @@
 import clsx from 'clsx';
 
-import {
-  frequencyToDescriptionMap,
-  reservationStatusMap
-} from '~/constants/mappings';
+import { frequencyToDescriptionMap } from '~/constants/mappings';
 
 import type { ReservationWithExtendedVisits } from '~/schemas/api/reservation';
 
@@ -32,13 +29,11 @@ const ReservationGeneralDetailsCard = ({
   className,
   manageable = false
 }: ReservationDetailsCardProps) => {
-  const { status, name, frequency, bookerFirstName, bookerLastName } = data;
-  const statusData = reservationStatusMap.get(status);
+  const { name, frequency, bookerFirstName, bookerLastName } = data;
 
   const reservationDetailsData = new Map([
     ['Booker', `${bookerFirstName} ${bookerLastName}`],
     ['Frequency', `${frequencyToDescriptionMap.get(frequency)}`],
-    ['Status', `${statusData?.label}`],
     ['End date', displayDateWithHours(getReservationEndDate(data))]
   ]);
 
@@ -54,13 +49,16 @@ const ReservationGeneralDetailsCard = ({
             value={value}
             contentDistribution="stretch"
             labelClasses="text-xl"
-            valueClasses={clsx(
-              'text-2xl',
-              key === 'Status' ? statusData?.style : ''
-            )}
+            valueClasses={clsx('text-2xl')}
             key={`ReservationDetails-${convertToCamelCase(key)}`}
           />
         ))}
+        {manageable && data?.extraInfo && (
+          <div className="pt-4">
+            <p className="text-2xl font-semibold">Extra info</p>
+            <p>{data.extraInfo}</p>
+          </div>
+        )}
         {manageable && <ReservationActions data={data} />}
       </CardContent>
     </Card>

@@ -7,31 +7,22 @@ import {
   QueryClient,
   QueryClientProvider
 } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import type { Session } from 'next-auth';
-import { SessionProvider } from 'next-auth/react';
+// import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import type { AppType } from 'next/app';
 import { useState } from 'react';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { Toaster } from 'react-hot-toast';
+import { IsSsrMobileContext } from '~/providers/IsMobileContext';
 
 import '~/styles/globals.css';
-
-// import '~/styles/Calendar.css';
 
 config.autoAddCss = false;
 library.add(fas);
 
-// const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
-//   const { isLoading } = useAuth();
-
-//   return isLoading ? null : <>{children}</>;
-// };
-
 const MyApp: AppType<{
-  session: Session | null;
   dehydratedState: DehydratedState;
-}> = ({ Component, pageProps: { session, ...pageProps } }) => {
+  isSsrMobile: boolean;
+}> = ({ Component, pageProps: { ...pageProps } }) => {
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -48,7 +39,7 @@ const MyApp: AppType<{
   return (
     <QueryClientProvider client={queryClient}>
       <HydrationBoundary state={pageProps.dehydratedState}>
-        <SessionProvider session={session}>
+        <IsSsrMobileContext.Provider value={pageProps.isSsrMobile}>
           <Component {...pageProps} />
           <Toaster
             toastOptions={
@@ -72,7 +63,7 @@ const MyApp: AppType<{
               }
             }
           />
-        </SessionProvider>
+        </IsSsrMobileContext.Provider>
       </HydrationBoundary>
       {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     </QueryClientProvider>

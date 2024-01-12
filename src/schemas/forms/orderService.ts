@@ -27,7 +27,7 @@ export const orderServiceSubmitDataSchema = z.object({
     required_error: 'Select an hour',
     invalid_type_error: 'Select an hour'
   }),
-  includeDetergents: z.boolean(),
+  detergentsCost: z.number().min(0).optional(),
   extraServices: z.array(z.number().int().or(z.undefined())).optional(),
   totalCost: z.number().min(0)
 });
@@ -109,14 +109,22 @@ export type BusyHoursData = z.infer<typeof busyHoursData>;
 export const address = z.object({
   street: z.string().max(40),
   houseNumber: z.string().max(6),
-  postCode: z.string().length(6),
-  city: z.string().max(40)
+  postCode: z.string().length(6)
 });
 
 export const contactDetails = z.object({
-  firstName: z.string().max(50),
-  lastName: z.string().max(50),
-  phone: z.string().max(15),
+  firstName: z
+    .string()
+    .min(1, { message: 'First name is required' })
+    .max(50, { message: 'First name must have at most 50 characters' }),
+  lastName: z
+    .string()
+    .min(1, { message: 'Last name is required' })
+    .max(50, { message: 'Last name must have at most 50 characters' }),
+  phone: z
+    .string()
+    .min(1, { message: 'Phone number is required' })
+    .max(15, { message: 'Phone number must have at most 15 characters' }),
   email: z.string().email()
 });
 
@@ -169,7 +177,7 @@ export const reservationCreationSchema = z
     ),
     address: address.or(z.number().int()),
     contactDetails: contactDetails,
-    includeDetergents: z.boolean(),
+    detergentsCost: z.number().min(0).optional(),
 
     services: z
       .array(

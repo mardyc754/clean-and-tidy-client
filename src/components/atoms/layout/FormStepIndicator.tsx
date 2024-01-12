@@ -16,12 +16,12 @@ const FormStepIndicator = ({
   const fontColor = rectangleColorClass.includes('cyan') ? 'white' : 'black';
 
   return (
-    <div className="flex w-1/3">
+    <div className="flex w-full md:w-1/3">
       {/* rectangle */}
       <div
         className={`relative flex h-[4rem] w-full items-center justify-center ${rectangleColorClass}`}
       >
-        {innerTriangleColorClass && (
+        {/* {innerTriangleColorClass && (
           <div
             className={`absolute left-0 h-0 w-0 
           border-b-[2rem] border-l-[3rem]
@@ -29,11 +29,11 @@ const FormStepIndicator = ({
           ${innerTriangleColorClass}
           border-t-transparent`}
           />
-        )}
+        )} */}
         <p className={`font-emphasize text-${fontColor}`}>{stepName}</p>
       </div>
       {/* triangle */}
-      {outerTriangleColorClass && (
+      {/* {outerTriangleColorClass && (
         <div
           className={`h-0 w-0 
             border-b-[2rem] border-l-[3rem]
@@ -41,7 +41,7 @@ const FormStepIndicator = ({
             ${outerTriangleColorClass}
             border-t-transparent`}
         />
-      )}
+      )} */}
     </div>
   );
 };

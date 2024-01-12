@@ -11,8 +11,6 @@ import { basicError } from '~/schemas/common';
 import type { LoginData, RegistrationData } from '~/schemas/forms/auth';
 import type { ChangeUserData } from '~/schemas/forms/userProfile';
 
-import { UserRole } from '~/types/enums';
-
 import { handleFetchingData } from './handleFetchingData';
 
 export const register = async (

@@ -36,7 +36,7 @@ export type VisitPartWithEmployees = z.infer<
 
 export const visitSchema = z.object({
   id: z.number().int(),
-  includeDetergents: z.boolean(),
+  detergentsCost: decimalToFloat,
   canDateBeChanged: z.boolean(),
   reservationId: z.number().int(),
   visitParts: z.array(visitPartSchema)
@@ -50,9 +50,7 @@ export const reservationSchema = z.object({
   id: z.number().int(),
   name: z.string().max(100),
   frequency: z.nativeEnum(CleaningFrequency),
-  // endDate: ISOString,
-  status: z.nativeEnum(Status),
-  bookerEmail: z.string().email(),
+  bookerEmail: z.string().email().optional(),
   addressId: z.number().int(),
   bookerFirstName: z.string().max(50),
   bookerLastName: z.string().max(50),

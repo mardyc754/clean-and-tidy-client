@@ -1,11 +1,6 @@
 import clsx from 'clsx';
 
-import type {
-  VisitPartWithEmployees,
-  VisitWithEmployees
-} from '~/schemas/api/reservation';
-
-import { calculateVisitCostAndDuration } from '~/stores/orderService/utils';
+import type { VisitWithEmployees } from '~/schemas/api/reservation';
 
 import { LabeledTypography } from '~/components/atoms/typography/labeled-text';
 

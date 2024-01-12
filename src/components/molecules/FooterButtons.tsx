@@ -6,7 +6,7 @@ const FooterButtons = () => {
   const { currentUser } = useAuth();
 
   return (
-    <div className="flex w-full justify-evenly p-10">
+    <div className="flex w-full flex-col items-center justify-center p-10 sm:flex-row sm:justify-evenly">
       <NavbarButton href="/order-service">Order service</NavbarButton>
       <NavbarButton href="/check-reservation">Check reservation</NavbarButton>
       {!currentUser && (

@@ -9,7 +9,6 @@ import { getVisitById } from '~/api/visit';
 
 import type { VisitWithEmployees } from '~/schemas/api/reservation';
 
-import { Button } from '~/components/atoms/buttons';
 import { Spinner } from '~/components/molecules/status-indicators';
 import {
   Dialog,

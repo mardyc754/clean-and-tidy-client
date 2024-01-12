@@ -2,6 +2,8 @@ import { useAuth } from '~/hooks/auth/useAuth';
 
 import { Button, NavbarButton } from '~/components/atoms/buttons';
 
+import { isEmployeeUser } from '~/utils/userUtils';
+
 import { UserOptionsButton } from './buttons';
 
 const NavbarButtons = () => {
@@ -11,7 +13,9 @@ const NavbarButtons = () => {
 
   return (
     <div className="flex w-full items-center justify-evenly">
-      <NavbarButton href="/order-service">Order service</NavbarButton>
+      {(!currentUser || !isEmployeeUser(currentUser)) && (
+        <NavbarButton href="/order-service">Order service</NavbarButton>
+      )}
       <NavbarButton href="/check-reservation">Check reservation</NavbarButton>
       {!currentUser ? (
         <>

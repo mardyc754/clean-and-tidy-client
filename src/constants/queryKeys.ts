@@ -12,16 +12,6 @@ import type { Reservation, Visit } from '~/schemas/api/reservation';
 
 import type { Status } from '~/types/enums';
 
-// example query key factory
-//
-// const todoKeys = {
-//   all: ['todos'] as const,
-//   lists: () => [...todoKeys.all, 'list'] as const,
-//   list: (filters: string) => [...todoKeys.lists(), { filters }] as const,
-//   details: () => [...todoKeys.all, 'detail'] as const,
-//   detail: (id: number) => [...todoKeys.details(), id] as const
-// };
-
 export const user = ['user'];
 
 export const employee = {

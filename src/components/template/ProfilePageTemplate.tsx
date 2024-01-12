@@ -34,7 +34,7 @@ const ProfilePageTemplate = ({
               ...slots,
               {
                 name: 'Profile Data',
-                Content: () => <UserProfileCard />
+                content: () => <UserProfileCard />
               }
             ]}
           />

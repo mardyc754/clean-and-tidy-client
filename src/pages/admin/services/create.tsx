@@ -11,7 +11,7 @@ import { PageWrapper } from '~/components/template';
 
 import { isAdminUser } from '~/utils/userUtils';
 
-const CreateEmployee = () => {
+const CreateService = () => {
   return (
     <PageWrapper title="Create service">
       <div className="px-8 py-16 md:px-16">
@@ -22,7 +22,7 @@ const CreateEmployee = () => {
   );
 };
 
-export default CreateEmployee;
+export default CreateService;
 
 export const getServerSideProps = (async (ctx) => {
   const initialData = await fetchUserData(ctx);

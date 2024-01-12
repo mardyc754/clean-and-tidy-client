@@ -39,7 +39,7 @@ const ServiceTable = ({ data }: ServiceTableProps) => {
       leftButtonSlot={
         <Button
           className="flex items-center justify-center space-x-1"
-          href="/admin/create-service"
+          href="/admin/services/create"
         >
           <FontAwesomeIcon icon={faPlus} />
           <span>Add service</span>

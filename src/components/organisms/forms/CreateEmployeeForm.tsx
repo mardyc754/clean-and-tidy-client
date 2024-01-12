@@ -95,11 +95,11 @@ const CreateEmployeeForm = () => {
         })}
       >
         <div className="grid grid-cols-1 pt-12 md:grid-cols-2 md:space-x-4 md:space-y-0">
-          <Card className="grid-rows-7 grid items-start space-y-1 px-4">
+          <Card className="space-y-1 px-4">
             <CardHeader>
               <Heading2>General data</Heading2>
             </CardHeader>
-            <CardContent className="max-w-sm">
+            <CardContent className="grid-rows-7 grid max-w-sm ">
               <Textfield
                 label="First Name"
                 name="firstName"

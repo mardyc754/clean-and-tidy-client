@@ -11,7 +11,7 @@ import { convertToCamelCase } from '~/utils/stringUtils';
 
 export type TabsSlot = {
   name: string;
-  Content: () => JSX.Element;
+  content: () => JSX.Element;
 };
 
 type TabsProps = {
@@ -41,7 +41,7 @@ const Tabs = ({ slots, tabsListClasses, defaultTab = '0' }: TabsProps) => {
           key={`${convertToCamelCase(slot.name)}-content-${index}}`}
           value={`${index}`}
         >
-          <slot.Content />
+          <slot.content />
           {/* {slot.Content} */}
         </TabsContent>
       ))}

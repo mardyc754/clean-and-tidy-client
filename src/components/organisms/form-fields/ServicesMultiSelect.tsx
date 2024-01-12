@@ -1,11 +1,11 @@
 import clsx from 'clsx';
 
-import type { Service, ServiceWithEmployees } from '~/schemas/api/services';
+import type { Service } from '~/schemas/api/services';
 
 import { FormCheckbox } from '~/components/atoms/forms';
 
 interface ChangeEmployeeDataFormProps {
-  serviceData: Array<ServiceWithEmployees | Service>;
+  serviceData: Array<Service>;
   checkboxGroupsDirection?: 'row' | 'column';
   showHeader?: boolean;
   name?: string;
@@ -14,8 +14,7 @@ interface ChangeEmployeeDataFormProps {
 const ServicesMultiSelect = ({
   serviceData,
   showHeader = false,
-  name = 'employeeServices',
-  checkboxGroupsDirection = 'column'
+  name = 'employeeServices'
 }: ChangeEmployeeDataFormProps) => {
   const primaryServices = serviceData.filter((service) => service.isPrimary);
   const secondaryServices = serviceData.filter((service) => !service.isPrimary);

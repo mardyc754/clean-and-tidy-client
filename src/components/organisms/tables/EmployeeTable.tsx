@@ -6,7 +6,6 @@ import type { Employee } from '~/schemas/api/employee';
 
 import { Button } from '~/components/atoms/buttons';
 
-import { ManageEmployeeDialog } from '../dialogs';
 import DataTable from './DataTable';
 
 function createEmployeeRows(data: Employee[]) {
@@ -17,7 +16,9 @@ function createEmployeeRows(data: Employee[]) {
       email: employee.email,
       phone: employee.phone ? employee.phone : '---',
       isAdmin: employee.isAdmin ? 'Yes' : 'No',
-      actions: <ManageEmployeeDialog employeeData={employee} />
+      actions: (
+        <Button href={`/admin/employees/${employee.id}/change`}>Manage</Button>
+      )
     };
   });
 }
@@ -37,7 +38,7 @@ const EmployeeTable = ({ data }: EmployeeTableProps) => {
       leftButtonSlot={
         <Button
           className="flex items-center justify-center space-x-1"
-          href="/employee/create"
+          href="/admin/employees/create"
         >
           <FontAwesomeIcon icon={faPlus} />
           <span>Add employee</span>

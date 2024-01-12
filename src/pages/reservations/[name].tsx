@@ -1,15 +1,9 @@
-import { type DehydratedState, dehydrate } from '@tanstack/react-query';
-import type {
-  GetServerSideProps,
-  GetStaticProps,
-  InferGetServerSidePropsType
-} from 'next';
+import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 
 import { fetchReservationDetails } from '~/server/prefetchReservationData';
 
 import { getAllReservations } from '~/api/reservation';
 
-import type { ClientUser } from '~/schemas/api/auth';
 import type {
   Reservation,
   ReservationWithExtendedVisits
@@ -22,17 +16,16 @@ import { Heading1 } from '~/components/atoms/typography/headings';
 import { ReservationDetails } from '~/components/organisms/tables';
 import { PageWrapper } from '~/components/template';
 
-import { isClientUser } from '~/utils/userUtils';
-
 export default function ReservationPage({
   reservationData
 }: // }: InferGetServerSidePropsType<typeof getStaticProps>) {
-InferGetServerSidePropsType<typeof getStaticProps>) {
+InferGetStaticPropsType<typeof getStaticProps>) {
   const { data } = useReservation(reservationData.name);
 
   const { hasAccess } = useAuth(
-    (user) => user.email === reservationData.bookerEmail,
-    true
+    (user) =>
+      !!reservationData.bookerEmail &&
+      user.email === reservationData.bookerEmail
   );
 
   return (
@@ -92,7 +85,7 @@ export const getStaticPaths = async () => {
   return {
     paths: data.map(({ name }) => ({
       params: {
-        id: `${name}`
+        name: `${name}`
       }
     })),
     fallback: true
@@ -107,7 +100,7 @@ export const getStaticProps = (async ({ params }) => {
   }
 
   const { reservationData, dehydratedState } = await fetchReservationDetails(
-    params.id as string
+    params.name as string
   );
 
   if (!reservationData || Object.keys(reservationData).length === 0) {

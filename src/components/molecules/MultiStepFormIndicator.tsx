@@ -10,7 +10,7 @@ const MultiStepFormIndicator = ({
   stepIndicatorData
 }: ThreeStepIndicatorProps) => {
   return (
-    <div className="flex w-full justify-between">
+    <div className="flex w-full flex-col justify-between md:flex-row">
       {stepIndicatorData.map(
         ({
           name,

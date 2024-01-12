@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { FormProvider } from 'react-hook-form';
-
-import { DETERGENT_COST } from '~/constants/primitives';
+import { useShallow } from 'zustand/react/shallow';
 
 import { type Service } from '~/schemas/api/services';
+
+import { useOrderServiceFormStore } from '~/stores/orderService/orderServiceFormStore';
 
 import { useCleaningDetailsForm } from '~/hooks/orderServiceForm/useCleaningDetailsForm';
 import { useOrderServiceFormNavigation } from '~/hooks/orderServiceForm/useOrderServiceFormNavigation';
@@ -25,7 +26,7 @@ interface CleaningDetailsFormProps {
 }
 
 const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
-  const { unit, id, name } = data;
+  const { unit, id, name, detergentsCost } = data;
   const { onChangeStep, returnToHomePage } = useOrderServiceFormNavigation();
 
   const [period, setPeriod] = useState<string | undefined>(undefined);
@@ -35,23 +36,40 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
     errors,
     cleaningFrequencyData,
     secondaryServicesWithUnit,
-    startDate,
     orderedServicesIds,
-    cleaningFrequencyDisplayData,
-    duration,
-    onSubmit,
-    onChangeIncludeDetergents,
+    onSubmit
+  } = useCleaningDetailsForm({
+    data,
+    submitHandler: async () => await onChangeStep(2)
+  });
+
+  const {
+    onChangeDetergentsCost,
     onChangeServiceNumberOfUnits,
     onChangeCleaningFrequency,
     onChangeStartDate,
     onChangeHourDate,
     setAvailableEmployees,
     getAvailableEmployeesForService,
-    isReservationAvailable
-  } = useCleaningDetailsForm({
-    data,
-    submitHandler: async () => await onChangeStep(2)
-  });
+    isReservationAvailable,
+    cleaningFrequencyDisplayData,
+    duration,
+    startDate
+  } = useOrderServiceFormStore(
+    useShallow((state) => ({
+      onChangeDetergentsCost: state.onChangeDetergentsCost,
+      onChangeServiceNumberOfUnits: state.onChangeServiceNumberOfUnits,
+      onChangeCleaningFrequency: state.onChangeCleaningFrequency,
+      onChangeStartDate: state.onChangeStartDate,
+      onChangeHourDate: state.onChangeHourDate,
+      setAvailableEmployees: state.setAvailableEmployees,
+      getAvailableEmployeesForService: state.getAvailableEmployeesForService,
+      cleaningFrequencyDisplayData: state.cleaningFrequencyDisplayData,
+      duration: state.durationInMinutes,
+      startDate: state.startDate,
+      isReservationAvailable: state.isReservationAvailable
+    }))
+  );
 
   useEffect(() => {
     if (startDate) {
@@ -106,7 +124,7 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={onSubmit}>
-        <div className="flex flex-col space-y-4 py-16">
+        <div className="flex flex-col items-stretch space-y-4 py-16">
           {mainSlot}
           {cleaningFrequencyData.length > 1 && (
             <RadioGroup
@@ -118,12 +136,20 @@ const CleaningDetailsForm = ({ data }: CleaningDetailsFormProps) => {
               errorLabel={errors.cleaningFrequency?.message}
             />
           )}
-          <FormCheckbox
-            name="includeDetergents"
-            label="Detergents"
-            caption={`Include detergents (+${DETERGENT_COST}zł)`}
-            onChange={onChangeIncludeDetergents}
-          />
+          {detergentsCost && detergentsCost > 0 ? (
+            <FormCheckbox
+              name="includeDetergents"
+              label="Detergents"
+              caption={`Include detergents (+${detergentsCost} PLN)`}
+              onChange={(newValue: boolean) =>
+                onChangeDetergentsCost(
+                  newValue ? detergentsCost : -detergentsCost
+                )
+              }
+            />
+          ) : (
+            <></>
+          )}
           <CalendarWithHours
             calendarInputName="startDate"
             hourInputName="hourDate"

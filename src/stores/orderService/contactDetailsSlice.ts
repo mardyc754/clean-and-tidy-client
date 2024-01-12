@@ -33,10 +33,7 @@ export const initialContactDetailsState = {
   addressData: {
     street: '',
     houseNumber: '',
-    // floor: '',
-    // door: '',
-    postCode: '',
-    city: ''
+    postCode: ''
   },
   extraInfo: null
 };

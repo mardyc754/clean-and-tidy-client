@@ -1,16 +1,14 @@
 import { difference } from 'lodash';
 
 import type { OrderedService, Service } from '~/schemas/api/services';
+import type { Timeslot } from '~/schemas/forms/orderService';
 
 import { calculateServiceCostAndDuration } from '~/stores/orderService/utils';
-
-import type { TimeInterval } from '~/types/service';
 
 import {
   type ValidDayjsDate,
   advanceByMinutes,
   dateWithHour,
-  getTime,
   isAfter,
   isAfterOrSame,
   isBeforeOrSame,
@@ -23,13 +21,13 @@ import {
  * @param allEmployeeWorkingHours the working hours of all employees
  * @returns the list with time intervals when all employees are busy
  */
-export const calculateBusyHours = (
-  allEmployeeWorkingHours: TimeInterval[][]
+export const timeslotsIntersection = (
+  allEmployeeWorkingHours: Timeslot[][]
 ) => {
   let busyHours = allEmployeeWorkingHours[0] ?? [];
 
   allEmployeeWorkingHours.slice(1).forEach((singleEmployeeWorkingHours) => {
-    const newBusyHours: TimeInterval[] = [];
+    const newBusyHours: Timeslot[] = [];
 
     // check the hour conflicts between employees
     // by comparing employee working hours with the rest of the employees
@@ -63,53 +61,6 @@ export const calculateBusyHours = (
   return busyHours;
 };
 
-/**
- * Merges busy hours into larger intervals
- * by using the sum of the sets of working hours
- *
- * This is useful when calculating busy hours for multiple services at once
- * @param busyHours
- * @returns
- */
-export const mergeBusyHours = (busyHours: TimeInterval[][]) => {
-  const currentInterval = {
-    startDate: new Date(0).toISOString(),
-    endDate: new Date(0).toISOString()
-  };
-
-  const mergedBusyHours = busyHours.flatMap((busyHours) => busyHours);
-
-  mergedBusyHours.sort((a, b) => getTime(a.startDate) - getTime(b.startDate));
-
-  const newBusyHours: TimeInterval[] = [];
-
-  mergedBusyHours.forEach((conflict, i) => {
-    if (i === 0) {
-      currentInterval.startDate = conflict.startDate;
-      currentInterval.endDate = conflict.endDate;
-    }
-    const nextConflict = mergedBusyHours[i + 1];
-
-    if (
-      nextConflict &&
-      isAfterOrSame(conflict.endDate, nextConflict.startDate)
-    ) {
-      currentInterval.endDate = nextConflict.endDate;
-    } else {
-      newBusyHours.push({ ...currentInterval });
-
-      currentInterval.endDate = nextConflict
-        ? nextConflict.endDate
-        : conflict.endDate;
-      currentInterval.startDate = nextConflict
-        ? nextConflict.startDate
-        : conflict.startDate;
-    }
-  });
-
-  return newBusyHours;
-};
-
 export function getDisplayedHours(
   currentDate: ValidDayjsDate,
   start: number,
@@ -135,7 +86,7 @@ export function getDisplayedHours(
 
 export function getHourAvailabilityData(
   currentDate: ValidDayjsDate,
-  busyHours: TimeInterval[]
+  busyHours: Timeslot[]
 ) {
   return getDisplayedHours(currentDate, 7, 19, 30).map((hour) => ({
     hour,
@@ -173,5 +124,5 @@ export function getStartDateForService(
 
 export const getLabelForServiceUnit = (service: Service) => {
   const { unit } = service;
-  return unit ? `${unit.price} zł/${unit.shortName}` : '---';
+  return unit ? `${unit.price} PLN/${unit.shortName}` : '---';
 };

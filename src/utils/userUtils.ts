@@ -57,6 +57,6 @@ export const isAuthenticated = (
 };
 
 export const generateAddressAsString = (address: Address) => {
-  const { street, houseNumber, city, postCode } = address;
-  return `${street} ${houseNumber}, ${postCode} ${city}`;
+  const { street, houseNumber, postCode } = address;
+  return `${street} ${houseNumber}, ${postCode} Kraków`;
 };

@@ -19,7 +19,7 @@ export function useOrderServiceFormSubmit() {
     frequency,
     fullStartDate,
     endDate,
-    includeDetergents,
+    detergentsCost,
     address,
     clientData,
     services,
@@ -27,16 +27,13 @@ export function useOrderServiceFormSubmit() {
     extraInfo
   } = useOrderServiceFormStore(
     useShallow((state) => ({
-      currentStep: state.currentStep,
-      // reservation creation data
       frequency: state.cleaningFrequencyDisplayData?.value,
-      includeDetergents: state.includeDetergents,
+      detergentsCost: state.detergentsCost,
       address: state.addressData,
       clientData: state.clientData,
       services: state.orderedServices,
       totalCost: state.totalCost,
       extraInfo: state.extraInfo,
-      decreaseStep: state.decreaseStep,
       fullStartDate: state.fullStartDate,
       endDate: state.endDate,
       resetOrderServiceForm: state.resetOrderServiceForm
@@ -91,7 +88,7 @@ export function useOrderServiceFormSubmit() {
 
     mutation.mutate({
       frequency: frequency,
-      includeDetergents,
+      detergentsCost,
       visitParts: prepareVisitParts(services),
       bookerEmail: clientData.email,
       address,

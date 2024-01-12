@@ -6,7 +6,7 @@ await import('./src/env.mjs');
 
 /** @type {import("next").NextConfig} */
 const config = {
-  reactStrictMode: true,
+  reactStrictMode: true
 
   /**
    * If you have `experimental: { appDir: true }` set, then you must comment the below `i18n` config
@@ -19,15 +19,6 @@ const config = {
   //   defaultLocale: 'en'
   // },
   // eslint-disable-next-line @typescript-eslint/require-await
-  async redirects() {
-    return [
-      {
-        source: '/order',
-        destination: '/order/configure-details',
-        permanent: true
-      }
-    ];
-  }
 };
 
 export default config;

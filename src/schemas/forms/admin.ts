@@ -1,7 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
-import { Service } from '../api/services';
+import { CleaningFrequency } from '~/types/enums';
+
 import { basicError, price } from '../common';
 import { loginDataValidator } from './auth';
 
@@ -30,12 +31,12 @@ export const createEmployeeSchema = z
   .extend({
     confirmPassword: z
       .string()
-      .min(8, { message: 'Password must be atleast 8 characters' })
+      .min(8, { message: 'Password must have at least 8 characters' })
       .max(32, { message: 'Password is too long' })
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Passwords do not match',
-    path: ['confirmPassword', 'password']
+    path: ['confirmPassword']
   });
 
 export type CreateEmployeeData = z.infer<typeof createEmployeeSchema>;
@@ -49,6 +50,28 @@ export const createEmployeeErrorSchema = basicError.extend({
 });
 
 export type CreateEmployeeError = z.infer<typeof createEmployeeErrorSchema>;
+
+export const changeEmployeeDataSchema = z.object({
+  firstName: z
+    .string()
+    .min(1, { message: 'First name is required' })
+    .max(50, { message: 'First name is too long' }),
+  lastName: z
+    .string()
+    .min(1, { message: 'Last name is required' })
+    .max(50, { message: 'Last name is too long' }),
+  phone: z
+    .string()
+    .min(9, { message: 'Phone number must have at least 9 digits' })
+    .max(15, { message: 'Phone number is too long' })
+    .nullish(),
+  services: z.record(z.string(), z.boolean()),
+  isAdmin: z.boolean().optional()
+});
+
+export type EmployeeChangeData = z.infer<typeof changeEmployeeDataSchema>;
+
+export const changeEmployeeDataResolver = zodResolver(changeEmployeeDataSchema);
 
 export const updateServiceSchema = z.object({
   unit: z.object({
@@ -87,6 +110,10 @@ export const createServiceDataSchema = z
       .strict()
       .optional(),
     isPrimary: z.boolean(),
+    detergentsCost: z
+      .string()
+      .transform((val) => parseFloat(val))
+      .optional(),
     minNumberOfUnitsIfPrimary: z
       .number()
       .int()
@@ -96,26 +123,11 @@ export const createServiceDataSchema = z
       .string()
       .transform((val) => parseFloat(val))
       .optional(),
-    secondaryServices: z.record(z.string(), z.boolean())
+    secondaryServices: z.record(z.string(), z.boolean()),
+    frequencies: z
+      .record(z.nativeEnum(CleaningFrequency), z.boolean())
+      .optional()
   })
-  // .transform((data) => {
-  //   const secondaryServices =
-  //     data.isPrimary &&
-  //     Object.entries(data.secondaryServices).filter(([_, value]) => value)
-  //       .length > 0
-  //       ? Object.entries(data.secondaryServices)
-  //           .filter(([, value]) => value)
-  //           .map(([key]) => parseInt(key))
-  //       : undefined;
-
-  //   // const secondaryServices = data.isPrimary
-  //   //   ? data.secondaryServices
-  //   //   : undefined;
-  //   return {
-  //     ...data,
-  //     secondaryServices
-  //   };
-  // })
   .refine(
     (data) => {
       if (!data.isPrimary) return true;

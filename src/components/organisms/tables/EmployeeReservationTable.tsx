@@ -7,8 +7,12 @@ import type { EmployeeReservation } from '~/schemas/api/reservation';
 import { StatusIndicator } from '~/components/atoms/typography';
 
 import { displayDateWithHours, getClosestDateFromNow } from '~/utils/dateUtils';
-import { getMainServiceForReservation } from '~/utils/reservationUtils';
-import { getVisitStartEndDates } from '~/utils/visitUtils';
+import {
+  getMainServiceForReservation,
+  getReservationStatus,
+  getVisitPartsFromReservation
+} from '~/utils/reservationUtils';
+import { getCumulatedStatus, getVisitStartEndDates } from '~/utils/visitUtils';
 
 import { Status } from '~/types/enums';
 
@@ -24,6 +28,8 @@ function createReservationRows(data: EmployeeReservation[]) {
   ]);
 
   const rows = data.map((reservation) => {
+    const status = getReservationStatus(reservation);
+
     return {
       id: reservation.id,
       mainServiceName: getMainServiceForReservation(reservation)?.name,
@@ -34,7 +40,7 @@ function createReservationRows(data: EmployeeReservation[]) {
       upcomingVisitDate: getClosestDateFromNow(
         reservation.visits?.flatMap((visit) => visit?.visitParts[0]?.startDate)
       ),
-      status: reservation.status,
+      status,
       action: <ReservationDetailsButton reservationName={reservation.name} />
     };
   });

@@ -13,14 +13,16 @@ import type { NullableDate } from '~/types/forms';
 
 export const useSummaryData = (serviceName: string) => {
   const {
-    totalCost,
+    totalCost: visitCost,
+    detergentsCost,
     totalDuration,
     cleaningFrequency,
     startDate,
     hourDate,
     clientData,
     addressData,
-    extraInfo
+    extraInfo,
+    getAssignedEmployees
   } = useOrderServiceFormStore(
     useShallow((state) => ({
       totalCost: state.totalCost,
@@ -30,7 +32,9 @@ export const useSummaryData = (serviceName: string) => {
       hourDate: state.hourDate,
       clientData: state.clientData,
       addressData: state.addressData,
-      extraInfo: state.extraInfo
+      extraInfo: state.extraInfo,
+      detergentsCost: state.detergentsCost,
+      getAssignedEmployees: state.getAssignedEmployees
     }))
   );
 
@@ -47,13 +51,18 @@ export const useSummaryData = (serviceName: string) => {
         startDate as NullableDate,
         hourDate as NullableDate
       )}`
+    ],
+    [
+      'Number of assigned employees',
+      `${getAssignedEmployees().length ?? EMPTY_DATA_PLACEHOLDER}`
     ]
   ]);
 
   return {
-    totalCost,
+    totalCost: visitCost + detergentsCost,
     extraInfo,
     summaryData,
-    contactDetails: { ...clientData, ...addressData }
+    contactDetails: { ...clientData, ...addressData, city: 'Kraków' },
+    assignedEmployees: getAssignedEmployees()
   };
 };
