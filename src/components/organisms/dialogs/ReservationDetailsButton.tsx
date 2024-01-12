@@ -64,13 +64,11 @@ const ReservationDetailsButton = ({
         </div>
       )}
       <DialogFooter>
-        {data && getReservationStatus(data) === Status.TO_BE_CONFIRMED && (
-          <Button
-            onClick={() => currentUser && mutation.mutate(currentUser.id)}
-          >
-            Accept
-          </Button>
-        )}
+        {/* {data && getReservationStatus(data) === Status.TO_BE_CONFIRMED && ( */}
+        <Button onClick={() => currentUser && mutation.mutate(currentUser.id)}>
+          Accept
+        </Button>
+        {/* )} */}
         {/* <Button color="danger">Reject</Button> */}
       </DialogFooter>
     </DialogTriggerButton>

@@ -355,8 +355,6 @@ export const createCleaningDetailsSlice: StateCreator<CleaningDetailsSlice> = (
       employeesInVisitPart.includes(employee.id)
     );
 
-    console.log('>>> assigned employees', assignedEmployees);
-
     return assignedEmployees;
   }
 });

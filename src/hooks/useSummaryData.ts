@@ -58,8 +58,6 @@ export const useSummaryData = (serviceName: string) => {
     ]
   ]);
 
-  console.log(getAssignedEmployees());
-
   return {
     totalCost: visitCost + detergentsCost,
     extraInfo,

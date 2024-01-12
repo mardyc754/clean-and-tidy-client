@@ -94,8 +94,6 @@ export const createService = async (data: CreateServiceData) => {
     ([_, value]) => value
   );
 
-  console.log(data);
-
   return await handleFetchingData({
     path: '/services',
     method: 'post',

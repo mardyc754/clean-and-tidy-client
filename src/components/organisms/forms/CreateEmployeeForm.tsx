@@ -85,8 +85,6 @@ const CreateEmployeeForm = () => {
     }
   });
 
-  console.log(errors);
-
   return (
     <FormProvider {...methods}>
       <form
