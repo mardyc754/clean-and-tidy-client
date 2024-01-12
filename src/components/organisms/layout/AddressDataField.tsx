@@ -5,8 +5,7 @@ type AddressDataFieldProps = {
 };
 
 const AddressDataField = ({ data }: AddressDataFieldProps) => {
-  const { firstName, lastName, street, houseNumber, postCode, city, phone } =
-    data;
+  const { firstName, lastName, street, houseNumber, postCode, phone } = data;
 
   return (
     <>
@@ -16,9 +15,7 @@ const AddressDataField = ({ data }: AddressDataFieldProps) => {
       <p>
         {street} {houseNumber}
       </p>
-      <p>
-        {postCode} {city}
-      </p>
+      <p>{`${postCode} Kraków`}</p>
       <br />
       <p>Phone: {phone}</p>
     </>

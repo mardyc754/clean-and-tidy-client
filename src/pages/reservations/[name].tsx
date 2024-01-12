@@ -20,7 +20,7 @@ export default function ReservationPage({
   reservationData
 }: // }: InferGetServerSidePropsType<typeof getStaticProps>) {
 InferGetStaticPropsType<typeof getStaticProps>) {
-  const { data } = useReservation(reservationData.name);
+  const { data } = useReservation(reservationData?.name);
 
   const { hasAccess } = useAuth(
     (user) =>
@@ -79,7 +79,7 @@ export const getStaticPaths = async () => {
   try {
     data = await getAllReservations();
   } catch (error) {
-    return { paths: [], fallback: false }; // temporary
+    return { paths: null, fallback: false }; // temporary
   }
 
   return {
@@ -115,4 +115,6 @@ export const getStaticProps = (async ({ params }) => {
       dehydratedState
     }
   };
-}) satisfies GetStaticProps<{ reservationData: ReservationWithExtendedVisits }>;
+}) satisfies GetStaticProps<{
+  reservationData: ReservationWithExtendedVisits | null;
+}>;

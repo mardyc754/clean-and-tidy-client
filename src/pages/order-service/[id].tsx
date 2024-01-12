@@ -87,8 +87,11 @@ function OrderService({
 
 export const getStaticPaths = async () => {
   const data = await getAllServices({ primaryOnly: true });
-  if ('hasError' in data) {
-    return { paths: [], fallback: false }; // temporary
+  if (!data) {
+    return {
+      paths: null,
+      fallback: true
+    };
   }
 
   return {
@@ -110,7 +113,7 @@ export const getStaticProps = (async ({ params }) => {
 
   const data = await getServiceById(params.id as string);
 
-  if ('hasError' in data) {
+  if (!data) {
     return {
       notFound: true
     };

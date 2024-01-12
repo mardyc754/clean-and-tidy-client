@@ -39,7 +39,7 @@ export const getStaticPaths = async () => {
   try {
     data = await getAllEmployees();
   } catch (error) {
-    return { paths: [], fallback: false }; // temporary
+    return { paths: [], fallback: true }; // temporary
   }
 
   return {
@@ -72,4 +72,4 @@ export const getStaticProps = (async ({ params }) => {
       data: employeeData
     }
   };
-}) satisfies GetStaticProps<{ data: EmployeeWithServices }>;
+}) satisfies GetStaticProps<{ data: EmployeeWithServices | null }>;

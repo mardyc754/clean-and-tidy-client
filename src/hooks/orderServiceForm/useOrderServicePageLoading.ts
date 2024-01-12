@@ -5,7 +5,7 @@ import type { Service } from '~/schemas/api/services';
 import { useOrderServiceFormStore } from '~/stores/orderService/orderServiceFormStore';
 
 type UseOrderServicePageLoadingProps = {
-  data: Service;
+  data: Service | null;
 };
 
 export const useOrderServicePageLoading = ({
@@ -24,16 +24,16 @@ export const useOrderServicePageLoading = ({
       initializeWithNewServiceId(data.id);
     }
     setServiceIdChecked(true);
-  }, [data.id, initializeWithNewServiceId, data]);
+  }, [data?.id, initializeWithNewServiceId, data]);
 
   useEffect(() => {
-    if (data.cleaningFrequencies?.length == 1) {
+    if (data?.cleaningFrequencies?.length == 1) {
       onChangeCleaningFrequency(
         data.cleaningFrequencies[0]!.value,
         data.cleaningFrequencies
       );
     }
-  }, [data.cleaningFrequencies, onChangeCleaningFrequency]);
+  }, [data?.cleaningFrequencies, onChangeCleaningFrequency]);
 
   return { serviceIdChecked };
 };
